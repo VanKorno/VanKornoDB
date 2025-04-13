@@ -1,0 +1,31 @@
+# Gradle
+.gradle/
+build/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS / Misc
+.DS_Store
+Thumbs.db
+
+# Android
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Kotlin compiler
+.kotlinc/
+
+# AARs / Artifacts (for libraries)
+*.aar
+*.jar
+*.module
+*.pom
+
+# Log files
+*.log
