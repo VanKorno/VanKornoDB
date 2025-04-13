@@ -4,7 +4,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.vankorno.vankornodb.DbManager.mainDb
 import kotlin.collections.forEach
 
 private const val TAG = "DbMaker"
@@ -12,7 +11,7 @@ private const val TAG = "DbMaker"
 open class DbMaker(                   context: Context,
                                        dbName: String,
                                     dbVersion: Int,
-                         private val entities: Array<LibDbTableAndEntt> = emptyArray<LibDbTableAndEntt>(),
+                         private val entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
                             val onCreateStart: (SQLiteDatabase)->Unit = {},
                            val onCreateFinish: (SQLiteDatabase)->Unit = {},
                                 val onUpgrade: (SQLiteDatabase)->Unit = {}

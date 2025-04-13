@@ -10,7 +10,7 @@ private const val TAG = "DbHelper"
 open class DbHelper(            context: Context,
                                  dbName: String,
                               dbVersion: Int,
-                               entities: Array<LibDbTableAndEntt> = emptyArray<LibDbTableAndEntt>(),
+                               entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
                           onCreateStart: (SQLiteDatabase)->Unit = {},
                          onCreateFinish: (SQLiteDatabase)->Unit = {},
                               onUpgrade: (SQLiteDatabase)->Unit = {}
@@ -43,7 +43,7 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: String
     ): Int = readDB {
-        LibGetSetDB(it).getInt(tableName, column, whereClause, whereArg)
+        DbGetSet(it).getInt(tableName, column, whereClause, whereArg)
     }
     
     fun getStr(                                                                tableName: String,
@@ -51,7 +51,7 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: String
     ): String = readDB {
-        LibGetSetDB(it).getStr(tableName, column, whereClause, whereArg)
+        DbGetSet(it).getStr(tableName, column, whereClause, whereArg)
     }
     
     fun getBool(                                                               tableName: String,
@@ -59,7 +59,7 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: String
     ): Boolean = readDB { 
-        LibGetSetDB(it).getBool(tableName, column, whereClause, whereArg)
+        DbGetSet(it).getBool(tableName, column, whereClause, whereArg)
     }
     
     fun getLong(                                                               tableName: String,
@@ -67,7 +67,7 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: String
     ): Long = readDB { 
-        LibGetSetDB(it).getLong(tableName, column, whereClause, whereArg)
+        DbGetSet(it).getLong(tableName, column, whereClause, whereArg)
     }
     
     fun getFloat(                                                              tableName: String,
@@ -75,7 +75,7 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: String
     ): Float = readDB { 
-        LibGetSetDB(it).getFloat(tableName, column, whereClause, whereArg)
+        DbGetSet(it).getFloat(tableName, column, whereClause, whereArg)
     }
     
     
@@ -91,7 +91,7 @@ open class DbHelper(            context: Context,
                                                                                 whereArg: String
     ) {
         writeDB {
-            LibGetSetDB(it).setStr(value, tableName, column, whereClause, whereArg)
+            DbGetSet(it).setStr(value, tableName, column, whereClause, whereArg)
         }
     }
     fun setInt(                                                                    value: Int,
@@ -101,7 +101,7 @@ open class DbHelper(            context: Context,
                                                                                 whereArg: String
     ) {
         writeDB {
-            LibGetSetDB(it).setInt(value, tableName, column, whereClause, whereArg)
+            DbGetSet(it).setInt(value, tableName, column, whereClause, whereArg)
         }
     }
     fun setBool(                                                                   value: Boolean,
@@ -111,7 +111,7 @@ open class DbHelper(            context: Context,
                                                                                 whereArg: String
     ) {
         writeDB {
-            LibGetSetDB(it).setBool(value, tableName, column, whereClause, whereArg)
+            DbGetSet(it).setBool(value, tableName, column, whereClause, whereArg)
         }
     }
     fun setLong(                                                                   value: Long,
@@ -121,7 +121,7 @@ open class DbHelper(            context: Context,
                                                                                 whereArg: String
     ) {
         writeDB {
-            LibGetSetDB(it).setLong(value, tableName, column, whereClause, whereArg)
+            DbGetSet(it).setLong(value, tableName, column, whereClause, whereArg)
         }
     }
     fun setFloat(                                                                  value: Float,
@@ -131,7 +131,7 @@ open class DbHelper(            context: Context,
                                                                                 whereArg: String
     ) {
         writeDB {
-            LibGetSetDB(it).setFloat(value, tableName, column, whereClause, whereArg)
+            DbGetSet(it).setFloat(value, tableName, column, whereClause, whereArg)
         }
     }
     
@@ -139,9 +139,9 @@ open class DbHelper(            context: Context,
     
     
     
-    fun checkIfEmpty(tableName: String) = readDB { LibGetSetDB(it).isEmpty(tableName) }
+    fun checkIfEmpty(tableName: String) = readDB { DbGetSet(it).isEmpty(tableName) }
     
-    fun getLastID(tableName: String) = readDB { LibGetSetDB(it).getLastID(tableName) }
+    fun getLastID(tableName: String) = readDB { DbGetSet(it).getLastID(tableName) }
     
     
     

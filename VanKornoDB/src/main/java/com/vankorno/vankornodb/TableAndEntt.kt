@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb
 
-data class LibDbTableAndEntt(
+data class TableAndEntt(
                               val tableName: String,
                                  val entity: ArrayList<Array<String>>
 )

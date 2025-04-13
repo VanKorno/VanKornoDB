@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.*
 
-private const val TAG = ""
+private const val TAG = "DbGetSet"
 
-open class LibGetSetDB(val db: SQLiteDatabase) {
+open class DbGetSet(val db: SQLiteDatabase) {
     
     // ============================== GETTERS ===========================================
     
