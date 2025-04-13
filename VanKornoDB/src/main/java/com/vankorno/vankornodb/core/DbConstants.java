@@ -29,6 +29,6 @@ dbLong=" BIGINT NOT NULL",
 dbFloat=" REAL NOT NULL",
 dbBlob=" BLOB NOT NULL",
 
-Name="Name"
+Name="Name", Priority = "Priority"
 ;
 }

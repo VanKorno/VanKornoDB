@@ -20,14 +20,30 @@ Designed primarily for Android, but with potential to support other platforms in
 
 ```kotlin
 val cursor = db.query(
+    table = RoundTable,
+    where = {
+        ID greaterEqual 1
+        and { Priority equal 1 }
+        and { Volume notEqual 1.1F }
+        or  { Time less 1L }
+    }
+)
+
+// Or just a bit more fun and safe manual building with constants:
+selectAllFrom + SmallTable + orderBy + Size
+
+
+// Or more advanced stuff, with nested "queries":
+
+val cursor = db.query(
     table = Users,
-    columns = arrayOf(ColumnName),
+    columns = arrayOf(Name, Address, Phone),
     where = {
         innerQuery(
             table = Posts,
             columns = arrayOf(countAll), // COUNT(*)
             where = {
-                Posts dot user_id  equal  Users dot id
+                (Posts dot user_id)  equal  (Users dot ID)
             }
         ) greater 10
     }
