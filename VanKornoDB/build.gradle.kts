@@ -43,7 +43,7 @@ dependencies {
 }
 
 
-val versionTag = "0.1"
+val versionTag = System.getenv("VERSION") ?: "unspecified"
 
 publishing {
     publications {
