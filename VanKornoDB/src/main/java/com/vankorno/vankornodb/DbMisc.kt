@@ -16,14 +16,12 @@ class DbMisc() {
     }
     
     
-    fun buildQuery(                                              tableName: String,
+    fun buildCreateTableQuery(                                              tableName: String,
                                                                     entity: ArrayList<Array<String>>
     ) = buildString {
         append(dbCreateT)
         append(tableName)
         append(" (")
-        append(dbAutoID)
-        append(comma)
         entity.forEachIndexed { idx, column ->
             append(column[0] + column[1])
             if (idx < entity.lastIndex)

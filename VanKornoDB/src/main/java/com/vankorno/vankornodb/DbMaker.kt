@@ -31,7 +31,7 @@ open class DbMaker(                   context: Context,
             
             val dbMisc = DbMisc()
             entities.forEach {
-                db.execSQL(dbMisc.buildQuery(it.tableName, it.entity))
+                db.execSQL(dbMisc.buildCreateTableQuery(it.tableName, it.entity))
             }
             onCreateFinish(db)
         }
