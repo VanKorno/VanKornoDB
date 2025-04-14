@@ -52,6 +52,19 @@ val cursor = db.getCursor(
                 (Posts dot user_id)  equal  (Users dot ID)
             }
         ) greater 10
+        
+        and { ID notEqual 3 }
+        
+        andGroup {
+            ID notEqual 4
+            orGroup {
+                ID notEqual 5
+                if (someBool)
+                    ID less someInt
+                else
+                    ID greater someInt
+            }
+        }
     }
 )
 ```
