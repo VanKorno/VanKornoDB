@@ -9,12 +9,12 @@ fun getQuery(                                               table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                             joins: JoinBuilder.()->Unit = {},
                                                             where: CondBuilder.()->Unit = {},
-                                                          groupBy: String? = null,
-                                                           having: String? = null,
-                                                          orderBy: String? = null,
-                                                            limit: String? = null,
-                                                           offset: String? = null,
-                                                        customEnd: String? = null
+                                                          groupBy: String = "",
+                                                           having: String = "",
+                                                          orderBy: String = "",
+                                                            limit: String = "",
+                                                           offset: String = "",
+                                                        customEnd: String = ""
 ): Pair<String, Array<String>> {
     val conditions = CondBuilder().apply(where)
     val joinBuilder = JoinBuilder().apply(joins)
@@ -32,27 +32,27 @@ fun getQuery(                                               table: String,
             append(" WHERE ")
             append(conditions.clauses.joinToString(" "))
         }
-        if (groupBy != null) {
+        if (groupBy.isNotBlank()) {
             append(" GROUP BY ")
             append(groupBy)
         }
-        if (having != null) {
+        if (having.isNotBlank()) {
             append(" HAVING ")
             append(having)
         }
-        if (orderBy != null) {
+        if (orderBy.isNotBlank()) {
             append(" ORDER BY ")
             append(orderBy)
         }
-        if (limit != null) {
+        if (limit.isNotBlank()) {
             append(" LIMIT ")
             append(limit)
         }
-        if (offset != null) {
+        if (offset.isNotBlank()) {
             append(" OFFSET ")
             append(offset)
         }
-        if (customEnd != null) {
+        if (customEnd.isNotBlank()) {
             append(customEnd)
         }
     }
@@ -145,12 +145,12 @@ class CondBuilder {
                                                           columns: Array<out String> = arrayOf("*"),
                                                             joins: JoinBuilder.()->Unit = {},
                                                             where: CondBuilder.()->Unit = {},
-                                                          groupBy: String? = null,
-                                                           having: String? = null,
-                                                          orderBy: String? = null,
-                                                            limit: String? = null,
-                                                           offset: String? = null,
-                                                        customEnd: String? = null
+                                                          groupBy: String = "",
+                                                           having: String = "",
+                                                          orderBy: String = "",
+                                                            limit: String = "",
+                                                           offset: String = "",
+                                                        customEnd: String = ""
     ): String {
         val innerBuilder = getQuery(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
         

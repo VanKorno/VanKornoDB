@@ -12,12 +12,12 @@ fun SQLiteDatabase.getCursor(                                      table: String
                                                                  columns: Array<out String>,
                                                                    joins: JoinBuilder.()->Unit = {},
                                                                    where: CondBuilder.()->Unit = {},
-                                                                 groupBy: String? = null,
-                                                                  having: String? = null,
-                                                                 orderBy: String? = null,
-                                                                   limit: String? = null,
-                                                                  offset: String? = null,
-                                                               customEnd: String? = null
+                                                                 groupBy: String = "",
+                                                                  having: String = "",
+                                                                 orderBy: String = "",
+                                                                   limit: String = "",
+                                                                  offset: String = "",
+                                                               customEnd: String = ""
 ): Cursor {
     val (query, args) = getQuery(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     return rawQuery(query, args)
@@ -28,12 +28,12 @@ fun SQLiteDatabase.getCursor(                                      table: String
                                                                   column: String = "*",
                                                                    joins: JoinBuilder.()->Unit = {},
                                                                    where: CondBuilder.()->Unit = {},
-                                                                 groupBy: String? = null,
-                                                                  having: String? = null,
-                                                                 orderBy: String? = null,
-                                                                   limit: String? = null,
-                                                                  offset: String? = null,
-                                                               customEnd: String? = null
+                                                                 groupBy: String = "",
+                                                                  having: String = "",
+                                                                 orderBy: String = "",
+                                                                   limit: String = "",
+                                                                  offset: String = "",
+                                                               customEnd: String = ""
 ): Cursor {
     val (query, args) = getQuery(table, arrayOf(column), joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     return rawQuery(query, args)

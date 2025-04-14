@@ -126,9 +126,10 @@ open class DbGetSet(val db: SQLiteDatabase) {
     }
     
     fun getAllIDs(                                                           tableName: String,
-                                                                            orderByStr: String = ""
+                                                                               orderBy: String = ""
     ): MutableList<Int> {
-        val cursor = db.rawQuery(select + ID + from + tableName + orderByStr,   null)
+        val cursor = db.getCursor(tableName, ID, orderBy = orderBy)
+        
         val ids = mutableListOf<Int>()
         
         if (cursor.moveToFirst()) {
