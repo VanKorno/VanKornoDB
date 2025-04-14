@@ -4,6 +4,7 @@ package com.vankorno.vankornodb
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.*
 
 class DbMisc() {
@@ -18,16 +19,22 @@ class DbMisc() {
     
     fun buildCreateTableQuery(                                              tableName: String,
                                                                     entity: ArrayList<Array<String>>
-    ) = buildString {
-        append(dbCreateT)
-        append(tableName)
-        append(" (")
-        entity.forEachIndexed { idx, column ->
-            append(column[0] + column[1])
-            if (idx < entity.lastIndex)
-                append(comma)
+    ): String {
+        val queryStr = buildString {
+            append(dbCreateT)
+            append(tableName)
+            append(" (")
+            entity.forEachIndexed { idx, column ->
+                append(column[0] + column[1])
+                if (idx < entity.lastIndex)
+                    append(comma)
+            }
+            append(")")
         }
-        append(")")
+        // region LOG
+            Log.d("DbMisc", "createTableString = $queryStr")
+        // endregion
+        return queryStr
     }
     
 }
