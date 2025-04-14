@@ -24,7 +24,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
                             cursor.getInt(0)
                         else {
                             // region LOG
-                            Log.e(TAG, "getInt() Unable to get value from DB. Returning zero")
+                            Log.e(TAG, "getInt() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
                             // endregion
                             0
                         }
@@ -43,7 +43,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
                             cursor.getString(0)
                         else {
                             // region LOG
-                            Log.e(TAG, "getString() Unable to get value from DB. Returning an empty str")
+                            Log.e(TAG, "getString() Unable to get value from DB. Returning an empty str. Condition: $whereClause = $whereArg")
                             // endregion
                             ""
                         }
@@ -61,7 +61,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
                             cursor.getBool(0)
                         else {
                             // region LOG
-                            Log.e(TAG, "getBool() Unable to get value from DB. Returning FALSE")
+                            Log.e(TAG, "getBool() Unable to get value from DB. Returning FALSE. Condition: $whereClause = $whereArg")
                             // endregion
                             false
                         }
@@ -79,7 +79,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
                             cursor.getLong(0)
                         else {
                             // region LOG
-                            Log.e(TAG, "getLong() Unable to get value from DB. Returning zero")
+                            Log.e(TAG, "getLong() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
                             // endregion
                             0L
                         }
@@ -97,7 +97,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
                             cursor.getFloat(0)
                         else {
                             // region LOG
-                            Log.e(TAG, "getFloat() Unable to get value from DB. Returning zero")
+                            Log.e(TAG, "getFloat() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
                             // endregion
                             0F
                         }
@@ -117,7 +117,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
                             cursor.getInt(0)
                         else{
                             // region LOG
-                            Log.e(TAG, "getLastID() Unable to get value from DB. Returning -1")
+                            Log.e(TAG, "getLastID() Unable to get value from DB ($tableName). Returning -1")
                             // endregion
                             -1
                         }
@@ -136,6 +136,11 @@ open class DbGetSet(val db: SQLiteDatabase) {
             do {
                 ids.add(cursor.getInt(0))
             } while (cursor.moveToNext())
+        }
+        else {
+            // region LOG
+                Log.d(TAG, "getAllIDs() didn't find any elements in $tableName")
+            // endregion
         }
         cursor.close()
         return ids

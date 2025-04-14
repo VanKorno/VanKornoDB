@@ -2,7 +2,6 @@ package com.vankorno.vankornodb
 
 import com.vankorno.vankornodb.TestConstants.*
 import com.vankorno.vankornodb.core.c
-import com.vankorno.vankornodb.core.dot
 import com.vankorno.vankornodb.core.getQuery
 import junit.framework.TestCase.assertEquals
 import org.junit.Test

@@ -17,8 +17,8 @@ class DbMisc() {
     }
     
     
-    fun buildCreateTableQuery(                                              tableName: String,
-                                                                    entity: ArrayList<Array<String>>
+    fun buildCreateTableQuery(                                  tableName: String,
+                                                                   entity: ArrayList<Array<String>>
     ): String {
         val queryStr = buildString {
             append(dbCreateT)

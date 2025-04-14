@@ -45,7 +45,7 @@ val cursor = db.getCursor(
     table = Users,
     columns = arrayOf(Name, Address, Phone),
     where = {
-        innerQuery(
+        innerQuery(  // Nested "queries"
             table = Posts,
             columns = arrayOf(countAll), // COUNT(*)
             where = {
@@ -55,11 +55,11 @@ val cursor = db.getCursor(
         
         and { ID notEqual 3 }
         
-        andGroup {
+        andGroup {  // Nested conditions
             ID notEqual 4
             orGroup {
                 ID notEqual 5
-                if (someBool)
+                if (someBool) // Custom logic inside
                     ID less someInt
                 else
                     ID greater someInt
