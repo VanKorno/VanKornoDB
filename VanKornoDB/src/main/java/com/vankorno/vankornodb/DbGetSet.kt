@@ -150,7 +150,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
     
     fun getNewPriority(                                                        tableName: String
     ): Int {
-        val cursor = db.rawQuery(select + Priority + from + tableName + orderBy + Priority,  null)
+        val cursor = db.getCursor(tableName, Priority, orderBy = Priority)
         var priority =  if (cursor.moveToLast())
                             cursor.getInt(0) + 1
                         else

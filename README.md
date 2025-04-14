@@ -22,9 +22,9 @@ Designed primarily for Android, but with potential to support other platforms in
 ## Example
 
 ```kotlin
-val cursor = db.query(SomeTable, where = { Name equal userName })
+val cursor = db.getCursor(SomeTable, where = { Name equal userName })
 
-val cursor = db.query(
+val cursor = db.getCursor(
     table = RoundTable,
     column = Name,
     where = {
@@ -41,7 +41,7 @@ selectAllFrom + SmallTable + orderBy + Size
 
 // Or more advanced stuff, with nested "queries":
 
-val cursor = db.query(
+val cursor = db.getCursor(
     table = Users,
     columns = arrayOf(Name, Address, Phone),
     where = {
