@@ -1,9 +1,8 @@
 package com.vankorno.vankornodb.core
-
-import com.vankorno.vankornodb.core.DbConstants.comma
-
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
 // If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+import com.vankorno.vankornodb.core.DbConstants.comma
 
 
 fun getQuery(                                               table: String,
@@ -104,6 +103,8 @@ class CondBuilder {
     infix fun String.lessEqual(value: Int) = condition(this, "<=", value.toString())
     infix fun String.lessEqual(value: Long) = condition(this, "<=", value.toString())
     infix fun String.lessEqual(value: Float) = condition(this, "<=", value.toString())
+    
+    infix fun String.dot(str2: String = "") = this + "." + str2
     
     
     fun group(                                                   whereBuilder: CondBuilder.()->Unit

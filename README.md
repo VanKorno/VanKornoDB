@@ -5,6 +5,9 @@ It gives developers more control over database operations than traditional ORMs,
 Use the full power of SQLite in a safe and convenient way!  
 Designed primarily for Android, but with potential to support other platforms in the future.
 
+### It's still a work in progress and before the 1.0 release, recommended only for people who don't mind experimenting.
+
+
 ## Features
 
 - Concise and readable SQL query builder (build queries with constants and DSL exclusively — no hardcoded strings)
@@ -21,15 +24,16 @@ Designed primarily for Android, but with potential to support other platforms in
 ```kotlin
 val cursor = db.query(
     table = RoundTable,
+    column = Name,
     where = {
-        ID greaterEqual 1
+        ID notEqual 1
         and { Priority equal 1 }
-        and { Volume notEqual 1.1F }
+        and { Volume greater 1.1F }
         or  { Time less 1L }
     }
 )
 
-// Or just a bit more fun and safe manual building with constants:
+// Or just a bit more fun and safe (than the usual queries) manual building with constants:
 selectAllFrom + SmallTable + orderBy + Size
 
 
