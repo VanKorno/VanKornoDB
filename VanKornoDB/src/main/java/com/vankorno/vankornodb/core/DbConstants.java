@@ -22,7 +22,7 @@ randomVal="random()",
 innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 
 ID="ID", RowID="ROWID",
-dbAutoID = "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT",
+dbAutoID = " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT",
 dbInt=" INT NOT NULL",
 dbStr=" TEXT NOT NULL",
 dbBool=" BOOL NOT NULL",
