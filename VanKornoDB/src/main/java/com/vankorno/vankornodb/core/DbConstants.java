@@ -17,6 +17,7 @@ groupBy=" GROUP BY ",   having=" HAVING ",   count="COUNT",   countAll="COUNT(*)
 orderBy=" ORDER BY ",   ascending=" ASC",    descending=" DESC",
 
 like=" LIKE ",   limit=" LIMIT ",   offset=" OFFSET ",
+randomVal="random()",
 
 innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 
