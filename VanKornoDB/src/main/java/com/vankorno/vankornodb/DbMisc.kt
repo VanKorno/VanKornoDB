@@ -25,14 +25,15 @@ class DbMisc() {
             append(tableName)
             append(" (")
             entity.forEachIndexed { idx, column ->
-                append(column[0] + column[1])
+                append(column[0])
+                append(column[1])
                 if (idx < entity.lastIndex)
                     append(comma)
             }
             append(")")
         }
         // region LOG
-            Log.d("DbMisc", "createTableString = $queryStr")
+            println("DbMisc().createTableString() returns: $queryStr")
         // endregion
         return queryStr
     }

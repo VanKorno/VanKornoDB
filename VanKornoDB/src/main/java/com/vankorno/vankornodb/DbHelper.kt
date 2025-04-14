@@ -150,14 +150,12 @@ open class DbHelper(            context: Context,
     
     // ================  Some useful utility fun  ================
     
-    fun checkIfEmpty(tableName: String) = readDB(true) { DbGetSet(it).isEmpty(tableName) }
+    fun isTableEmpty(tableName: String) = readDB(true) { DbGetSet(it).isTableEmpty(tableName) }
     
     fun getLastID(tableName: String) = readDB(0) { DbGetSet(it).getLastID(tableName) }
     
     
-    fun deleteFirstRow(tableName: String) {
-        writeDB { DbMisc().deleteFirstRow(it, tableName) }
-    }
+    fun deleteFirstRow(tableName: String) = writeDB { DbMisc().deleteFirstRow(it, tableName) }
     
     
     

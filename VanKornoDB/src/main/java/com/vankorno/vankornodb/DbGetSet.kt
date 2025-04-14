@@ -146,7 +146,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
         return ids
     }
     
-    fun isEmpty(                                                               tableName: String
+    fun isTableEmpty(                                                          tableName: String
     ): Boolean {
         val cursor = db.rawQuery(selectAllFrom + tableName, null)
         val emptiness = cursor.count < 1
