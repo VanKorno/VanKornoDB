@@ -39,13 +39,13 @@ val cursor = db.getCursor(
 selectAllFrom + SmallTable + orderBy + Size
 
 
-// Or more advanced stuff, with nested "queries":
+// Or more advanced stuff, with nested queries:
 
 val cursor = db.getCursor(
     table = Users,
     columns = arrayOf(Name, Address, Phone),
     where = {
-        innerQuery(  // Nested "queries"
+        subquery( // subqueries ;)
             table = Posts,
             columns = arrayOf(countAll), // COUNT(*)
             where = {

@@ -32,14 +32,16 @@ open class DbHelper(            context: Context,
     }
     
     // Void (can read or write in the db, but doesn't return anything)
-    inline fun writeDB(run: (SQLiteDatabase)->Unit) {
+    inline fun writeDB(                                                 run: (SQLiteDatabase)->Unit
+    ) {
         synchronized(dbLock) {
             mainDb.transaction { run(this) }
         }
     }
     
     // All-mighty
-    inline fun <T> readWriteDB(run: (SQLiteDatabase)->T): T {
+    inline fun <T> readWriteDB(                                            run: (SQLiteDatabase)->T
+    ): T {
         synchronized(dbLock) {
             return  mainDb.transaction { run(mainDb) }
         }
@@ -49,43 +51,43 @@ open class DbHelper(            context: Context,
     
     // ============================== GETTERS ===========================================
     
-    fun getInt(                                                                tableName: String,
+    fun <T> getInt(                                                            tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
-    ): Int = readDB(0) {
+                                                                                whereArg: T
+    ) = readDB(0) {
         DbGetSet(it).getInt(tableName, column, whereClause, whereArg)
     }
     
-    fun getStr(                                                                tableName: String,
+    fun <T> getStr(                                                            tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
+                                                                                whereArg: T
     ): String = readDB("") {
         DbGetSet(it).getStr(tableName, column, whereClause, whereArg)
     }
     
-    fun getBool(                                                               tableName: String,
+    fun <T> getBool(                                                           tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
-    ): Boolean = readDB(false) { 
+                                                                                whereArg: T
+    ) = readDB(false) { 
         DbGetSet(it).getBool(tableName, column, whereClause, whereArg)
     }
     
-    fun getLong(                                                               tableName: String,
+    fun <T> getLong(                                                           tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
-    ): Long = readDB(0L) { 
+                                                                                whereArg: T
+    ) = readDB(0L) { 
         DbGetSet(it).getLong(tableName, column, whereClause, whereArg)
     }
     
-    fun getFloat(                                                              tableName: String,
+    fun <T> getFloat(                                                          tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
-    ): Float = readDB(0F) { 
+                                                                                whereArg: T
+    ) = readDB(0F) { 
         DbGetSet(it).getFloat(tableName, column, whereClause, whereArg)
     }
     
@@ -95,55 +97,45 @@ open class DbHelper(            context: Context,
     
     // ============================== SETTERS ===========================================
     
-    fun setStr(                                                                    value: String,
+    fun <T> setStr(                                                                value: String,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
+                                                                                whereArg: T
     ) {
-        writeDB {
-            DbGetSet(it).setStr(value, tableName, column, whereClause, whereArg)
-        }
+        writeDB { DbGetSet(it).setStr(value, tableName, column, whereClause, whereArg) }
     }
-    fun setInt(                                                                    value: Int,
+    fun <T> setInt(                                                                value: Int,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
+                                                                                whereArg: T
     ) {
-        writeDB {
-            DbGetSet(it).setInt(value, tableName, column, whereClause, whereArg)
-        }
+        writeDB { DbGetSet(it).setInt(value, tableName, column, whereClause, whereArg) }
     }
-    fun setBool(                                                                   value: Boolean,
+    fun <T> setBool(                                                               value: Boolean,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
+                                                                                whereArg: T
     ) {
-        writeDB {
-            DbGetSet(it).setBool(value, tableName, column, whereClause, whereArg)
-        }
+        writeDB { DbGetSet(it).setBool(value, tableName, column, whereClause, whereArg) }
     }
-    fun setLong(                                                                   value: Long,
+    fun <T> setLong(                                                               value: Long,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
+                                                                                whereArg: T
     ) {
-        writeDB {
-            DbGetSet(it).setLong(value, tableName, column, whereClause, whereArg)
-        }
+        writeDB { DbGetSet(it).setLong(value, tableName, column, whereClause, whereArg) }
     }
-    fun setFloat(                                                                  value: Float,
+    fun <T> setFloat(                                                              value: Float,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
-                                                                                whereArg: String
+                                                                                whereArg: T
     ) {
-        writeDB {
-            DbGetSet(it).setFloat(value, tableName, column, whereClause, whereArg)
-        }
+        writeDB { DbGetSet(it).setFloat(value, tableName, column, whereClause, whereArg) }
     }
     
     
@@ -153,7 +145,6 @@ open class DbHelper(            context: Context,
     fun isTableEmpty(tableName: String) = readDB(true) { DbGetSet(it).isTableEmpty(tableName) }
     
     fun getLastID(tableName: String) = readDB(0) { DbGetSet(it).getLastID(tableName) }
-    
     
     fun deleteFirstRow(tableName: String) = writeDB { DbMisc().deleteFirstRow(it, tableName) }
     

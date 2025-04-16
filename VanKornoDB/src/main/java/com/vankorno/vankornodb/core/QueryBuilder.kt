@@ -12,8 +12,8 @@ fun getQuery(                                               table: String,
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
-                                                            limit: String = "",
-                                                           offset: String = "",
+                                                            limit: Int? = null,
+                                                           offset: Int? = null,
                                                         customEnd: String = ""
 ): Pair<String, Array<String>> {
     val conditions = CondBuilder().apply(where)
@@ -44,11 +44,11 @@ fun getQuery(                                               table: String,
             append(" ORDER BY ")
             append(orderBy)
         }
-        if (limit.isNotBlank()) {
+        if (limit != null) {
             append(" LIMIT ")
             append(limit)
         }
-        if (offset.isNotBlank()) {
+        if (offset != null) {
             append(" OFFSET ")
             append(offset)
         }
@@ -148,8 +148,8 @@ class CondBuilder {
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
-                                                            limit: String = "",
-                                                           offset: String = "",
+                                                            limit: Int? = null,
+                                                           offset: Int? = null,
                                                         customEnd: String = ""
     ): String {
         val innerBuilder = getQuery(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)

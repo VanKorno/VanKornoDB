@@ -13,32 +13,32 @@ open class DbGetSet(val db: SQLiteDatabase) {
     
     // ============================== GETTERS ===========================================
     
-    fun getInt(                                                              tableName: String,
-                                                                                column: String,
-                                                                           whereClause: String,
-                                                                              whereArg: String
+    fun <T> getInt(                                                            tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
     ): Int {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
-                                                                               arrayOf(whereArg) )
+                                                                    arrayOf(whereArg.toString()) )
         val mySocks =   if (cursor.moveToFirst())
                             cursor.getInt(0)
                         else {
                             // region LOG
                             Log.e(TAG, "getInt() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
                             // endregion
-                            0
+                            -1
                         }
         cursor.close()
         return mySocks
     }
     
-    fun getStr(                                                              tableName: String,
-                                                                                column: String,
-                                                                           whereClause: String,
-                                                                              whereArg: String
+    fun <T> getStr(                                                            tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
     ): String {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
-                                                                                arrayOf(whereArg) )
+                                                                    arrayOf(whereArg.toString()) )
         val mySocks =   if (cursor.moveToFirst())
                             cursor.getString(0)
                         else {
@@ -50,13 +50,13 @@ open class DbGetSet(val db: SQLiteDatabase) {
         cursor.close()
         return mySocks
     }
-    fun getBool(                                                              tableName: String,
-                                                                                 column: String,
-                                                                            whereClause: String,
-                                                                               whereArg: String
+    fun <T> getBool(                                                           tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
     ): Boolean {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
-                                                                              arrayOf(whereArg) )
+                                                                    arrayOf(whereArg.toString()) )
         val mySocks =   if (cursor.moveToFirst())
                             cursor.getBool(0)
                         else {
@@ -68,48 +68,101 @@ open class DbGetSet(val db: SQLiteDatabase) {
         cursor.close()
         return mySocks
     }
-    fun getLong(                                                             tableName: String,
-                                                                                column: String,
-                                                                           whereClause: String,
-                                                                              whereArg: String
+    fun <T> getLong(                                                           tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
     ): Long {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
-                                                                              arrayOf(whereArg) )
+                                                                   arrayOf(whereArg.toString()) )
         val mySocks =   if (cursor.moveToFirst())
                             cursor.getLong(0)
                         else {
                             // region LOG
-                            Log.e(TAG, "getLong() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
+                            Log.e(TAG, "getLong() Unable to get value from DB. Returning -1. Condition: $whereClause = $whereArg")
                             // endregion
-                            0L
+                            -1L
                         }
         cursor.close()
         return mySocks
     }
-    fun getFloat(                                                             tableName: String,
-                                                                                column: String,
-                                                                           whereClause: String,
-                                                                              whereArg: String
+    fun <T> getFloat(                                                          tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
     ): Float {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
-                                                                              arrayOf(whereArg) )
+                                                                    arrayOf(whereArg.toString()) )
         val mySocks =   if (cursor.moveToFirst())
                             cursor.getFloat(0)
                         else {
                             // region LOG
-                            Log.e(TAG, "getFloat() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
+                            Log.e(TAG, "getFloat() Unable to get value from DB. Returning -1. Condition: $whereClause = $whereArg")
                             // endregion
-                            0F
+                            -1F
                         }
         cursor.close()
         return mySocks
     }
     
     
+    // ============================== SETTERS ===========================================
     
-    // ----------------------------------------------------------------------------------
+    fun <T> setStr(                                                                value: String,
+                                                                               tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
+    ) {
+        val cv = ContentValues()
+        cv.put(column, value)
+        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg.toString()))
+    }
+    fun <T> setInt(                                                                value: Int,
+                                                                               tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
+    ) {
+        val cv = ContentValues()
+        cv.put(column, value)
+        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg.toString()))
+    }
+    fun <T> setBool(                                                               value: Boolean,
+                                                                               tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
+    ) {
+        val cv = ContentValues()
+        cv.put(column, value)
+        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg.toString()))
+    }
+    fun <T> setLong(                                                               value: Long,
+                                                                               tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
+    ) {
+        val cv = ContentValues()
+        cv.put(column, value)
+        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg.toString()))
+    }
+    fun <T> setFloat(                                                              value: Float,
+                                                                               tableName: String,
+                                                                                  column: String,
+                                                                             whereClause: String,
+                                                                                whereArg: T
+    ) {
+        val cv = ContentValues()
+        cv.put(column, value)
+        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg.toString()))
+    }
     
-    fun getLastID(                                                            tableName: String
+    
+    // --------------------------  Potentially useful fun  ----------------------------------
+    
+    fun getLastID(                                                             tableName: String
     ): Int {
         val cursor = db.rawQuery(select + ID + from + tableName, null)
         
@@ -125,8 +178,8 @@ open class DbGetSet(val db: SQLiteDatabase) {
         return mySocks
     }
     
-    fun getAllIDs(                                                           tableName: String,
-                                                                               orderBy: String = ""
+    fun getAllIDs(                                                          tableName: String,
+                                                                              orderBy: String = ""
     ): MutableList<Int> {
         val cursor = db.getCursor(tableName, ID, orderBy = orderBy)
         
@@ -167,58 +220,6 @@ open class DbGetSet(val db: SQLiteDatabase) {
     
     
     
-    // ============================== SETTERS ===========================================
-    
-    fun setStr(                                                                 value: String,
-                                                                            tableName: String,
-                                                                               column: String,
-                                                                          whereClause: String,
-                                                                             whereArg: String
-    ) {
-        val cv = ContentValues()
-        cv.put(column, value)
-        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg))
-    }
-    fun setInt(                                                                  value: Int,
-                                                                             tableName: String,
-                                                                                column: String,
-                                                                           whereClause: String,
-                                                                              whereArg: String
-    ) {
-        val cv = ContentValues()
-        cv.put(column, value)
-        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg))
-    }
-    fun setBool(                                                                value: Boolean,
-                                                                            tableName: String,
-                                                                               column: String,
-                                                                          whereClause: String,
-                                                                             whereArg: String
-    ) {
-        val cv = ContentValues()
-        cv.put(column, value)
-        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg))
-    }
-    fun setLong(                                                                value: Long,
-                                                                            tableName: String,
-                                                                               column: String,
-                                                                          whereClause: String,
-                                                                             whereArg: String
-    ) {
-        val cv = ContentValues()
-        cv.put(column, value)
-        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg))
-    }
-    fun setFloat(                                                               value: Float,
-                                                                            tableName: String,
-                                                                               column: String,
-                                                                          whereClause: String,
-                                                                             whereArg: String
-    ) {
-        val cv = ContentValues()
-        cv.put(column, value)
-        db.update(tableName, cv, whereClause+"=?", arrayOf(whereArg))
-    }
     
     
     
