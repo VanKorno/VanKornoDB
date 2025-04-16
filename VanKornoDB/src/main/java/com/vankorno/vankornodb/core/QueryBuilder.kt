@@ -72,37 +72,16 @@ class CondBuilder {
         args.add(value)
     }
     
-    infix fun String.equal(value: String) = condition(this, "=", value)
-    infix fun String.equal(value: Int) = condition(this, "=", value.toString())
-    infix fun String.equal(value: Long) = condition(this, "=", value.toString())
-    infix fun String.equal(value: Boolean) = condition(this, "=", if (value) "1" else "0")
-    infix fun String.equal(value: Float) = condition(this, "=", value.toString())
+    infix fun <T> String.equal(value: T) =
+    condition(this, "=", if (value is Boolean) if (value) "1" else "0" else value.toString())
     
-    infix fun String.notEqual(value: String) = condition(this, "!=", value)
-    infix fun String.notEqual(value: Int) = condition(this, "!=", value.toString())
-    infix fun String.notEqual(value: Long) = condition(this, "!=", value.toString())
-    infix fun String.notEqual(value: Boolean) = condition(this, "!=", if (value) "1" else "0")
-    infix fun String.notEqual(value: Float) = condition(this, "!=", value.toString())
+    infix fun <T> String.notEqual(value: T) =
+    condition(this, "!=", if (value is Boolean) if (value) "1" else "0" else value.toString())
     
-    infix fun String.greater(value: String) = condition(this, ">", value)
-    infix fun String.greater(value: Int) = condition(this, ">", value.toString())
-    infix fun String.greater(value: Long) = condition(this, ">", value.toString())
-    infix fun String.greater(value: Float) = condition(this, ">", value.toString())
-    
-    infix fun String.greaterEqual(value: String) = condition(this, ">=", value)
-    infix fun String.greaterEqual(value: Int) = condition(this, ">=", value.toString())
-    infix fun String.greaterEqual(value: Long) = condition(this, ">=", value.toString())
-    infix fun String.greaterEqual(value: Float) = condition(this, ">=", value.toString())
-    
-    infix fun String.less(value: String) = condition(this, "<", value)
-    infix fun String.less(value: Int) = condition(this, "<", value.toString())
-    infix fun String.less(value: Long) = condition(this, "<", value.toString())
-    infix fun String.less(value: Float) = condition(this, "<", value.toString())
-    
-    infix fun String.lessEqual(value: String) = condition(this, "<=", value)
-    infix fun String.lessEqual(value: Int) = condition(this, "<=", value.toString())
-    infix fun String.lessEqual(value: Long) = condition(this, "<=", value.toString())
-    infix fun String.lessEqual(value: Float) = condition(this, "<=", value.toString())
+    infix fun <T> String.greater(value: T) = condition(this, ">", value.toString())
+    infix fun <T> String.greaterEqual(value: T) = condition(this, ">=", value.toString())
+    infix fun <T> String.less(value: T) = condition(this, "<", value.toString())
+    infix fun <T> String.lessEqual(value: T) = condition(this, "<=", value.toString())
     
     infix fun String.dot(str2: String = "") = this + "." + str2
     
