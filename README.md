@@ -70,8 +70,26 @@ val cursor = db.getCursor(
 ```
 
 ## Installation
-Coming soon...
 (standard JitPack stuff)
+Add the JitPack repository to your build file settings.gradle.kts
+```kotlin
+dependencyResolutionManagement {
+	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+	repositories {
+		mavenCentral()
+		maven { url = uri("https://jitpack.io") }
+	}
+}
+```
+
+Add the dependency in build.gradle.kts (App):
+```kotlin
+dependencies {
+    implementation("com.github.VanKorno:VanKornoDB:VersionNumber")
+}
+```
+
+
 
 ## License
 This project is licensed under the Mozilla Public License 2.0.
