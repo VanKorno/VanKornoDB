@@ -8,15 +8,17 @@ import android.util.Log
 import com.vankorno.vankornodb.DbManager.mainDb
 import androidx.core.database.sqlite.transaction
 
-private const val TAG = "DbHelper"
 
-open class DbHelper(            context: Context,
+@Suppress("NOTHING_TO_INLINE", "unused")
+open class DbHelper(
+                                context: Context,
                                  dbName: String,
                               dbVersion: Int,
                                entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
                           onCreateStart: (SQLiteDatabase)->Unit = {},
                          onCreateFinish: (SQLiteDatabase)->Unit = {},
                               onUpgrade: (SQLiteDatabase)->Unit = {}
+    
 ) : DbMaker(context, dbName, dbVersion, entities, onCreateStart, onCreateFinish, onUpgrade) {
     
     // Better reading performance, optimal for reading, but writing can also be done in a less safe way
@@ -81,7 +83,7 @@ open class DbHelper(            context: Context,
     
     // ============================== GETTERS ===========================================
     
-    fun <T> getInt(                                                            tableName: String,
+    inline fun <T> getInt(                                                     tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
@@ -89,7 +91,7 @@ open class DbHelper(            context: Context,
         DbGetSet(it).getInt(tableName, column, whereClause, whereArg)
     }
     
-    fun <T> getStr(                                                            tableName: String,
+    inline fun <T> getStr(                                                     tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
@@ -97,7 +99,7 @@ open class DbHelper(            context: Context,
         DbGetSet(it).getStr(tableName, column, whereClause, whereArg)
     }
     
-    fun <T> getBool(                                                           tableName: String,
+    inline fun <T> getBool(                                                    tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
@@ -105,7 +107,7 @@ open class DbHelper(            context: Context,
         DbGetSet(it).getBool(tableName, column, whereClause, whereArg)
     }
     
-    fun <T> getLong(                                                           tableName: String,
+    inline fun <T> getLong(                                                    tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
@@ -113,7 +115,7 @@ open class DbHelper(            context: Context,
         DbGetSet(it).getLong(tableName, column, whereClause, whereArg)
     }
     
-    fun <T> getFloat(                                                          tableName: String,
+    inline fun <T> getFloat(                                                   tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
@@ -127,7 +129,7 @@ open class DbHelper(            context: Context,
     
     // ============================== SETTERS ===========================================
     
-    fun <T> setStr(                                                                value: String,
+    inline fun <T> setStr(                                                         value: String,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
@@ -137,7 +139,7 @@ open class DbHelper(            context: Context,
             DbGetSet(it).setStr(value, tableName, column, whereClause, whereArg)
         }
     }
-    fun <T> setInt(                                                                value: Int,
+    inline fun <T> setInt(                                                         value: Int,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
@@ -147,7 +149,7 @@ open class DbHelper(            context: Context,
             DbGetSet(it).setInt(value, tableName, column, whereClause, whereArg)
         }
     }
-    fun <T> setBool(                                                               value: Boolean,
+    inline fun <T> setBool(                                                        value: Boolean,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
@@ -157,7 +159,7 @@ open class DbHelper(            context: Context,
             DbGetSet(it).setBool(value, tableName, column, whereClause, whereArg)
         }
     }
-    fun <T> setLong(                                                               value: Long,
+    inline fun <T> setLong(                                                        value: Long,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
@@ -167,7 +169,7 @@ open class DbHelper(            context: Context,
             DbGetSet(it).setLong(value, tableName, column, whereClause, whereArg)
         }
     }
-    fun <T> setFloat(                                                              value: Float,
+    inline fun <T> setFloat(                                                       value: Float,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
@@ -182,11 +184,11 @@ open class DbHelper(            context: Context,
     
     // ================  Some useful utility fun  ================
     
-    fun isTableEmpty(tableName: String) = readDB(true) { DbGetSet(it).isTableEmpty(tableName) }
+    inline fun isTableEmpty(tableName: String) = readDB(true, "isTableEmpty") { DbGetSet(it).isTableEmpty(tableName) }
     
-    fun getLastID(tableName: String) = readDB(0) { DbGetSet(it).getLastID(tableName) }
+    inline fun getLastID(tableName: String) = readDB(0, "getLastID") { DbGetSet(it).getLastID(tableName) }
     
-    fun deleteFirstRow(tableName: String) = writeDB { DbMisc().deleteFirstRow(it, tableName) }
+    inline fun deleteFirstRow(tableName: String) = writeDB("deleteFirstRow") { DbMisc().deleteFirstRow(it, tableName) }
     
     
     
