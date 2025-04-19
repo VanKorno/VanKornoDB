@@ -4,6 +4,7 @@ package com.vankorno.vankornodb
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.vankorno.vankornodb.DbManager.mainDb
 import androidx.core.database.sqlite.transaction
 
@@ -18,8 +19,9 @@ open class DbHelper(            context: Context,
                               onUpgrade: (SQLiteDatabase)->Unit = {}
 ) : DbMaker(context, dbName, dbVersion, entities, onCreateStart, onCreateFinish, onUpgrade) {
     
-    // Better reading performance, a bit less safe writing
+    // Better reading performance, optimal for reading, but writing can also be done in a less safe way
     inline fun <T> readDB(                                        defaultValue: T,
+                                                                       funName: String = "readDB",
                                                                            run: (SQLiteDatabase)->T
     ): T {
         return try {
@@ -27,23 +29,51 @@ open class DbHelper(            context: Context,
                 run(mainDb)
             }
         } catch (e: Exception) {
+            // region LOG
+            Log.e("DB", "$funName() failed. Returning the default value. Details: ${e.message}", e)
+            // endregion
             defaultValue
         }
     }
     
-    // Void (can read or write in the db, but doesn't return anything)
-    inline fun writeDB(                                                 run: (SQLiteDatabase)->Unit
+    // same as readDB, but does not return anything (for reading db and setting some values from the inside)
+    inline fun voidReadDB(                                          funName: String = "voidReadDB",
+                                                                        run: (SQLiteDatabase)->Unit
     ) {
-        synchronized(dbLock) {
-            mainDb.transaction { run(this) }
+        readDB(Unit, funName){run(it)}
+    }
+    
+    
+    // Void (can read or write db, but doesn't return anything), with writing overhead
+    inline fun writeDB(                                             funName: String = "writeDB",
+                                                                        run: (SQLiteDatabase)->Unit
+    ) {
+        try {
+            synchronized(dbLock) {
+                mainDb.transaction { run(this) }
+            }
+        } catch (e: Exception) {
+            // region LOG
+                Log.e("DB", "$funName() failed. Details: ${e.message}", e)
+            // endregion
         }
     }
     
-    // All-mighty
-    inline fun <T> readWriteDB(                                            run: (SQLiteDatabase)->T
+    
+    // All-mighty, but with writing overhead
+    inline fun <T> readWriteDB(                                defaultValue: T,
+                                                                    funName: String = "readWriteDB",
+                                                                        run: (SQLiteDatabase)->T
     ): T {
-        synchronized(dbLock) {
-            return  mainDb.transaction { run(mainDb) }
+        return try {
+            synchronized(dbLock) {
+                mainDb.transaction { run(mainDb) }
+            }
+        } catch (e: Exception) {
+            // region LOG
+            Log.e("DB", "$funName() failed. Returning the default value. Details: ${e.message}", e)
+            // endregion
+            defaultValue
         }
     }
     
@@ -55,7 +85,7 @@ open class DbHelper(            context: Context,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
-    ) = readDB(0) {
+    ) = readDB(0, "getInt") {
         DbGetSet(it).getInt(tableName, column, whereClause, whereArg)
     }
     
@@ -63,7 +93,7 @@ open class DbHelper(            context: Context,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
-    ): String = readDB("") {
+    ): String = readDB("", "getStr") {
         DbGetSet(it).getStr(tableName, column, whereClause, whereArg)
     }
     
@@ -71,7 +101,7 @@ open class DbHelper(            context: Context,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
-    ) = readDB(false) { 
+    ) = readDB(false, "getBool") { 
         DbGetSet(it).getBool(tableName, column, whereClause, whereArg)
     }
     
@@ -79,7 +109,7 @@ open class DbHelper(            context: Context,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
-    ) = readDB(0L) { 
+    ) = readDB(0L, "getLong") { 
         DbGetSet(it).getLong(tableName, column, whereClause, whereArg)
     }
     
@@ -87,7 +117,7 @@ open class DbHelper(            context: Context,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
-    ) = readDB(0F) { 
+    ) = readDB(0F, "getFloat") { 
         DbGetSet(it).getFloat(tableName, column, whereClause, whereArg)
     }
     
@@ -103,7 +133,9 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: T
     ) {
-        writeDB { DbGetSet(it).setStr(value, tableName, column, whereClause, whereArg) }
+        writeDB("setStr") {
+            DbGetSet(it).setStr(value, tableName, column, whereClause, whereArg)
+        }
     }
     fun <T> setInt(                                                                value: Int,
                                                                                tableName: String,
@@ -111,7 +143,9 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: T
     ) {
-        writeDB { DbGetSet(it).setInt(value, tableName, column, whereClause, whereArg) }
+        writeDB("setInt") {
+            DbGetSet(it).setInt(value, tableName, column, whereClause, whereArg)
+        }
     }
     fun <T> setBool(                                                               value: Boolean,
                                                                                tableName: String,
@@ -119,7 +153,9 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: T
     ) {
-        writeDB { DbGetSet(it).setBool(value, tableName, column, whereClause, whereArg) }
+        writeDB("setBool") {
+            DbGetSet(it).setBool(value, tableName, column, whereClause, whereArg)
+        }
     }
     fun <T> setLong(                                                               value: Long,
                                                                                tableName: String,
@@ -127,7 +163,9 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: T
     ) {
-        writeDB { DbGetSet(it).setLong(value, tableName, column, whereClause, whereArg) }
+        writeDB("setLong") {
+            DbGetSet(it).setLong(value, tableName, column, whereClause, whereArg)
+        }
     }
     fun <T> setFloat(                                                              value: Float,
                                                                                tableName: String,
@@ -135,7 +173,9 @@ open class DbHelper(            context: Context,
                                                                              whereClause: String,
                                                                                 whereArg: T
     ) {
-        writeDB { DbGetSet(it).setFloat(value, tableName, column, whereClause, whereArg) }
+        writeDB("setFloat") {
+            DbGetSet(it).setFloat(value, tableName, column, whereClause, whereArg)
+        }
     }
     
     

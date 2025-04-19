@@ -29,7 +29,7 @@ val cursor = db.getCursor(
     column = Name,
     where = {
         ID notEqual 1
-        and { Priority equal 1 }
+        and { Priority equal 1 } // condition clause and value in one place
         and { Volume greater 1.1F }
         or  { Time less 1L }
     }
