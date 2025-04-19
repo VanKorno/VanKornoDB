@@ -120,7 +120,7 @@ class CondBuilder {
         group(whereBuilder)
     }
     
-    fun innerQuery(                                         table: String,
+    fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                             joins: JoinBuilder.()->Unit = {},
                                                             where: CondBuilder.()->Unit = {},

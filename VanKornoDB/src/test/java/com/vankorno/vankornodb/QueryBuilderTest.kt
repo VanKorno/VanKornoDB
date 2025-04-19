@@ -261,7 +261,7 @@ class QueryBuilderTest {
             table = "Users",
             columns = arrayOf(Name),
             where = {
-                innerQuery(
+                subquery(
                     table = "Posts",
                     columns = arrayOf(countAll),
                     where = {
