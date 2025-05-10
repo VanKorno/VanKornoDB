@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.core
-// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-// If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 
 import com.vankorno.vankornodb.core.DbConstants.comma
 
@@ -14,7 +15,7 @@ fun getQuery(                                               table: String,
                                                           orderBy: String = "",
                                                             limit: Int? = null,
                                                            offset: Int? = null,
-                                                        customEnd: String = ""
+                                                        customEnd: String = "" /** To pass your own string. Use with caution! (SQL-injection risk)**/
 ): Pair<String, Array<String>> {
     val conditions = CondBuilder().apply(where)
     val joinBuilder = JoinBuilder().apply(joins)
@@ -71,19 +72,35 @@ class CondBuilder {
         clauses.add(column + operator + "?")
         args.add(value)
     }
+    fun conditionRaw(                                                             column: String,
+                                                                                operator: String,
+                                                                             otherColumn: String
+    ) = clauses.add(column + operator + otherColumn)
     
-    infix fun <T> String.equal(value: T) =
-    condition(this, "=", if (value is Boolean) if (value) "1" else "0" else value.toString())
     
-    infix fun <T> String.notEqual(value: T) =
-    condition(this, "!=", if (value is Boolean) if (value) "1" else "0" else value.toString())
+    /** For comparisons to provided values. The values are automatically put into the arg array. **/
     
+    infix fun <T> String.equal(value: T) = condition(this, "=", if (value is Boolean) if (value) "1" else "0" else value.toString())
+    infix fun <T> String.notEqual(value: T) = condition(this, "!=", if (value is Boolean) if (value) "1" else "0" else value.toString())
     infix fun <T> String.greater(value: T) = condition(this, ">", value.toString())
     infix fun <T> String.greaterEqual(value: T) = condition(this, ">=", value.toString())
     infix fun <T> String.less(value: T) = condition(this, "<", value.toString())
     infix fun <T> String.lessEqual(value: T) = condition(this, "<=", value.toString())
     
+    
+    /** For comparisons to values from other columns.
+     *  The provided column names aren't treated as values and are not put into the arg array, but put directly inside the query string.
+    **/
+    infix fun String.equalCol(other: String) = conditionRaw(this, "=", other)
+    infix fun String.notEqualCol(other: String) = conditionRaw(this, "!=", other)
+    infix fun String.lessCol(other: String) = conditionRaw(this, "<", other)
+    infix fun String.lessEqualCol(other: String) = conditionRaw(this, "<=", other)
+    infix fun String.greaterCol(other: String) = conditionRaw(this, ">", other)
+    infix fun String.greaterEqualCol(other: String) = conditionRaw(this, ">=", other)
+    
+    
     infix fun String.dot(str2: String = "") = this + "." + str2
+    
     
     
     fun group(                                                   whereBuilder: CondBuilder.()->Unit
@@ -138,6 +155,9 @@ class CondBuilder {
         args.addAll(innerBuilder.second)
         return clause
     }
+    
+    /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
+    fun rawClause(str: String) = clauses.add(str)
 }
 
 

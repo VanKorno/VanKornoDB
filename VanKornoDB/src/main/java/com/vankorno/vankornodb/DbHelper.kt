@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb
-// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-// If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -21,7 +22,7 @@ open class DbHelper(
     
 ) : DbMaker(context, dbName, dbVersion, entities, onCreateStart, onCreateFinish, onUpgrade) {
     
-    // Better reading performance, optimal for reading, but writing can also be done in a less safe way
+    /** Better reading performance, optimal for reading, but writing can also be done in a less safe way **/
     inline fun <T> readDB(                                        defaultValue: T,
                                                                        funName: String = "readDB",
                                                                            run: (SQLiteDatabase)->T
@@ -38,7 +39,7 @@ open class DbHelper(
         }
     }
     
-    // same as readDB, but does not return anything (for reading db and setting some values from the inside)
+    /** Same as readDB, but does not return anything (for reading db and setting some values from the inside) **/
     inline fun voidReadDB(                                          funName: String = "voidReadDB",
                                                                         run: (SQLiteDatabase)->Unit
     ) {
@@ -46,7 +47,7 @@ open class DbHelper(
     }
     
     
-    // Void (can read or write db, but doesn't return anything), with writing overhead
+    /** Void (can read or write db, but doesn't return anything), with writing overhead **/
     inline fun writeDB(                                             funName: String = "writeDB",
                                                                         run: (SQLiteDatabase)->Unit
     ) {
@@ -62,7 +63,7 @@ open class DbHelper(
     }
     
     
-    // All-mighty, but with writing overhead
+    /** All-mighty, but with writing overhead **/
     inline fun <T> readWriteDB(                                defaultValue: T,
                                                                     funName: String = "readWriteDB",
                                                                         run: (SQLiteDatabase)->T
