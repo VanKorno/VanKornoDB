@@ -18,7 +18,7 @@ open class DbHelper(
                                entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
                           onCreateStart: (SQLiteDatabase)->Unit = {},
                          onCreateFinish: (SQLiteDatabase)->Unit = {},
-                              onUpgrade: (SQLiteDatabase)->Unit = {}
+                              onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
     
 ) : DbMaker(context, dbName, dbVersion, entities, onCreateStart, onCreateFinish, onUpgrade) {
     

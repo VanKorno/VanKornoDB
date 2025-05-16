@@ -11,14 +11,16 @@ import kotlin.collections.forEach
 
 private const val TAG = "DbMaker"
 
-open class DbMaker(                   context: Context,
-                                       dbName: String,
-                                    dbVersion: Int,
-                         private val entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
-                            val onCreateStart: (SQLiteDatabase)->Unit = {},
-                           val onCreateFinish: (SQLiteDatabase)->Unit = {},
-                                val onUpgrade: (SQLiteDatabase)->Unit = {}
+open class DbMaker(              context: Context,
+                                  dbName: String,
+                               dbVersion: Int,
+                    private val entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
+                       val onCreateStart: (SQLiteDatabase)->Unit = {},
+                      val onCreateFinish: (SQLiteDatabase)->Unit = {},
+                           val onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
+    
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
+    
     val dbLock = Any()
     
     
@@ -48,7 +50,7 @@ open class DbMaker(                   context: Context,
             Log.d(TAG, "onUpgrade() Migrating...")
         // endregion
         synchronized(dbLock) {
-            onUpgrade(db)
+            onUpgrade(db, oldVersion)
         }
     }
     
