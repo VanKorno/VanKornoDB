@@ -5,7 +5,8 @@ It gives developers more control over database operations than traditional ORMs,
 Use the full power of SQLite in a safe and convenient way!  
 Designed primarily for Android, but with potential to support other platforms in the future.
 
-### It's still a work in progress and before the 1.0 release, recommended only for people who don't mind experimenting.
+### It's still a work in progress and before the 1.0 release, recommended only for people who don't mind experimenting, don't mind everything changing all the time, without a lot of explanations, etc.
+### Until v1.0 I'll be working on it almost as if I'm the only user (which will probably be true for a long time anyway). So, don't try it at home :)
 
 
 ## Features
