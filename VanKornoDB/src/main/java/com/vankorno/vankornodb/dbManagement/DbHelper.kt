@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb
+package com.vankorno.vankornodb.dbManagement
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
@@ -6,9 +6,10 @@ package com.vankorno.vankornodb
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.DbManager.mainDb
 import androidx.core.database.sqlite.transaction
-
+import com.vankorno.vankornodb.getSet.DbGetSet
+import com.vankorno.vankornodb.DbMisc
+import com.vankorno.vankornodb.dbManagement.data.TableAndEntt
 
 @Suppress("NOTHING_TO_INLINE", "unused")
 open class DbHelper(
@@ -29,7 +30,7 @@ open class DbHelper(
     ): T {
         return try {
             synchronized(dbLock) {
-                run(mainDb)
+                run(DbManager.mainDb)
             }
         } catch (e: Exception) {
             // region LOG
@@ -53,7 +54,7 @@ open class DbHelper(
     ) {
         try {
             synchronized(dbLock) {
-                mainDb.transaction { run(this) }
+                DbManager.mainDb.transaction { run(this) }
             }
         } catch (e: Exception) {
             // region LOG
@@ -70,7 +71,7 @@ open class DbHelper(
     ): T {
         return try {
             synchronized(dbLock) {
-                mainDb.transaction { run(mainDb) }
+                DbManager.mainDb.transaction { run(DbManager.mainDb) }
             }
         } catch (e: Exception) {
             // region LOG

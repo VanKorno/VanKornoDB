@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb
+package com.vankorno.vankornodb.getSet
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
@@ -7,6 +7,8 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.getBool
+import com.vankorno.vankornodb.getCursor
 
 private const val TAG = "DbGetSet"
 
@@ -167,9 +169,9 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ): Int {
         val cursor = db.rawQuery(select + ID + from + tableName, null)
         
-        val mySocks = if (cursor.moveToLast())
+        val mySocks =  if (cursor.moveToLast())
                             cursor.getInt(0)
-                        else{
+                        else {
                             // region LOG
                             Log.e(TAG, "getLastID() Unable to get value from DB ($tableName). Returning -1")
                             // endregion
@@ -202,7 +204,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
     
     fun isTableEmpty(                                                          tableName: String
     ): Boolean {
-        val cursor = db.rawQuery(selectAllFrom + tableName, null)
+        val cursor = db.rawQuery(select + RowID + from + tableName, null)
         val emptiness = cursor.count < 1
         cursor.close()
         return emptiness

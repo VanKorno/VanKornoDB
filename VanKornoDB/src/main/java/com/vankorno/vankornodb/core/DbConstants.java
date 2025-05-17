@@ -22,14 +22,6 @@ randomVal="random()",
 innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 
 ID="ID", RowID="ROWID",
-dbAutoID = " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT",
-dbInt=" INT NOT NULL",
-dbStr=" TEXT NOT NULL",
-dbBool=" BOOL NOT NULL",
-dbLong=" BIGINT NOT NULL",
-dbFloat=" REAL NOT NULL",
-dbBlob=" BLOB NOT NULL",
-
 Name="Name", Priority = "Priority"
 ;
 }

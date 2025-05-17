@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb
+package com.vankorno.vankornodb.dbManagement
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
@@ -7,7 +7,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import kotlin.collections.forEach
+import com.vankorno.vankornodb.DbMisc
+import com.vankorno.vankornodb.dbManagement.data.TableAndEntt
 
 private const val TAG = "DbMaker"
 
@@ -32,9 +33,9 @@ open class DbMaker(              context: Context,
         synchronized(dbLock) {
             onCreateStart(db)
             
-            val dbMisc = DbMisc()
+            val builder = DbTableBuilder()
             entities.forEach {
-                db.execSQL(dbMisc.buildCreateTableQuery(it.tableName, it.entity))
+                db.execSQL(builder.newTableQuery(it.tableName, it.entity))
             }
             onCreateFinish(db)
         }

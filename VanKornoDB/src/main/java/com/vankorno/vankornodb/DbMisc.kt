@@ -5,7 +5,6 @@ package com.vankorno.vankornodb
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.*
 
 class DbMisc() {
@@ -13,31 +12,11 @@ class DbMisc() {
     fun deleteFirstRow(                                                         db: SQLiteDatabase,
                                                                          tableName: String
     ) {
-        val whereClause = RowID + " = (" + select + RowID + from + tableName+ limit + "1)"
+        val whereClause = RowID + " = (" + select + RowID + from + tableName + limit + "1)"
         db.delete(tableName, whereClause, null)
     }
     
     
-    fun buildCreateTableQuery(                                  tableName: String,
-                                                                   entity: ArrayList<Array<String>>
-    ): String {
-        val queryStr = buildString {
-            append(dbCreateT)
-            append(tableName)
-            append(" (")
-            entity.forEachIndexed { idx, column ->
-                append(column[0])
-                append(column[1])
-                if (idx < entity.lastIndex)
-                    append(comma)
-            }
-            append(")")
-        }
-        // region LOG
-            println("DbMisc().createTableString() returns: $queryStr")
-        // endregion
-        return queryStr
-    }
     
 }
 
