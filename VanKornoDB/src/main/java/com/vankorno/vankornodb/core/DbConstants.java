@@ -21,7 +21,7 @@ randomVal="random()",
 
 innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 
-ID="ID", RowID="ROWID",
-Name="Name", Priority = "Priority"
+ID="id", RowID="ROWID",
+Name="name", Priority = "priority"
 ;
 }
