@@ -23,38 +23,45 @@ import com.vankorno.vankornodb.getBool
 import kotlin.collections.indexOfFirst
 import kotlin.reflect.full.primaryConstructor
 
+/** 
+ * Ignores parameters ending with "List" or "Array" 
+**/
 
 inline fun <reified T : Any> Cursor.mapToEntity(                        entity: List<ColumnDef>
 ): T {
     val constructor = T::class.primaryConstructor
         ?: error("Class ${T::class.simpleName} must have a primary constructor")
 
-    val args = constructor.parameters.associateWithIndexed { idx, param ->
+    val args = constructor.parameters.mapNotNull  { param ->
         val colName = param.name ?: error("Constructor param must have a name")
         
-        val columnIndex = entity.indexOfFirst { it.name == colName }
-        
-        if (columnIndex == -1) error("No column found for parameter: $colName")
-
-        val type = entity[columnIndex].type
-        when (type) {
-            AutoId, IntCol       -> getInt(columnIndex)
-            StrCol               -> getString(columnIndex)
-            BoolCol              -> getBool(columnIndex)
-            LongCol              -> getLong(columnIndex)
-            FloatCol             -> getFloat(columnIndex)
-            BlobCol              -> getBlob(columnIndex)
-            AutoIdNullable,
-            IntColNullable       -> getNullable(columnIndex) { getInt(it) }
-            StrColNullable       -> getNullable(columnIndex) { getString(it) }
-            BoolColNullable      -> getNullable(columnIndex) { getBool(it) }
-            LongColNullable      -> getNullable(columnIndex) { getLong(it) }
-            FloatColNullable     -> getNullable(columnIndex) { getFloat(it) }
-            BlobColNullable      -> getNullable(columnIndex) { getBlob(it) }
-            else                 -> error("Unsupported column type: $type")
+        if (colName.endsWith("List") || colName.endsWith("Array")) {
+            null
+        } else {
+            val columnIndex = entity.indexOfFirst { it.name == colName }
+            
+            if (columnIndex == -1) error("No column found for parameter: $colName")
+    
+            val type = entity[columnIndex].type
+            val value = when (type) {
+                AutoId, IntCol       -> getInt(columnIndex)
+                StrCol               -> getString(columnIndex)
+                BoolCol              -> getBool(columnIndex)
+                LongCol              -> getLong(columnIndex)
+                FloatCol             -> getFloat(columnIndex)
+                BlobCol              -> getBlob(columnIndex)
+                AutoIdNullable,
+                IntColNullable       -> getNullable(columnIndex) { getInt(it) }
+                StrColNullable       -> getNullable(columnIndex) { getString(it) }
+                BoolColNullable      -> getNullable(columnIndex) { getBool(it) }
+                LongColNullable      -> getNullable(columnIndex) { getLong(it) }
+                FloatColNullable     -> getNullable(columnIndex) { getFloat(it) }
+                BlobColNullable      -> getNullable(columnIndex) { getBlob(it) }
+                else                 -> error("Unsupported column type: $type")
+            }
+            param to value
         }
-    }
-
+    }.toMap()
     return constructor.callBy(args)
 }
 
@@ -65,7 +72,3 @@ inline fun <T> Cursor.getNullable(                                              
             null
         else
             getter(index)
-
-
-inline fun <T> List<T>.associateWithIndexed(                   transform: (index: Int, T) -> Any?
-): Map<T, Any?> = mapIndexed { index, value -> value to transform(index, value) }.toMap()
