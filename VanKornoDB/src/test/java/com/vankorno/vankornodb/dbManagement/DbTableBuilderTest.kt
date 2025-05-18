@@ -18,7 +18,7 @@ class DbTableBuilderTest {
     fun `simple buildCreateTableQuery() returns correct beginning`() {
         assertEquals(
             "CREATE TABLE $Name ($ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)",
-            newTableQuery(
+            newTableQuerySimple(
                 Name,
                 arrayListOf(ColumnDef(ID, AutoId))
             )
@@ -30,7 +30,7 @@ class DbTableBuilderTest {
         assertEquals(
             "CREATE TABLE $Name ($ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, $Priority INT NOT NULL, " +
                 "$Name TEXT NOT NULL, PitBool BOOL NOT NULL, Live BIGINT NOT NULL, Fleet REAL NOT NULL, Img BLOB NOT NULL)",
-            newTableQuery(
+            newTableQuerySimple(
                 Name,
                 arrayListOf(
                     ColumnDef(ID, AutoId),

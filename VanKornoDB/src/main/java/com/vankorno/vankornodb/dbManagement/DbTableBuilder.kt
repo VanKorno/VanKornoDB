@@ -24,6 +24,7 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.LongColNullable
 import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.dbManagement.data.StrColNullable
+import com.vankorno.vankornodb.dbManagement.data.TableAndEntt
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import kotlin.collections.forEachIndexed
 import kotlin.collections.lastIndex
@@ -32,6 +33,37 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
+
+// ===================  S I M P L E,   S E M I - A U T O M A T I C  ===================
+
+fun SQLiteDatabase.createAllTablesSimple(tables: List<TableAndEntt>) {
+    tables.forEach { execSQL(newTableQuerySimple(it.tableName, it.entity))}
+}
+
+fun newTableQuerySimple(                                            tableName: String,
+                                                                      columns: ArrayList<ColumnDef>
+): String {
+    val queryStr = buildString {
+        append(dbCreateT)
+        append(tableName)
+        append(" (")
+        columns.forEachIndexed { idx, column ->
+            append(column.name)
+            append(column.type.sql)
+            if (idx < columns.lastIndex)
+                append(comma)
+        }
+        append(")")
+    }
+    // region LOG
+        println("DbTableBuilder().newTableQuery() returns: $queryStr")
+    // endregion
+    return queryStr
+}
+
+
+
+// ===================  A D V A N C E D,   A U T O M A T I C  ===================
 
 /** For db helper's onCreate 
  * Usage example:
@@ -51,30 +83,6 @@ fun SQLiteDatabase.createAllTables(tables: List<TableInfo>) {
     tables.forEach { execSQL(it.createQuery()) }
 }
 
-
-
-/** A simple version **/
-
-fun newTableQuery(                                                  tableName: String,
-                                                                       entity: ArrayList<ColumnDef>
-): String {
-    val queryStr = buildString {
-        append(dbCreateT)
-        append(tableName)
-        append(" (")
-        entity.forEachIndexed { idx, column ->
-            append(column.name)
-            append(column.type.sql)
-            if (idx < entity.lastIndex)
-                append(comma)
-        }
-        append(")")
-    }
-    // region LOG
-        println("DbTableBuilder().newTableQuery() returns: $queryStr")
-    // endregion
-    return queryStr
-}
 
 
 

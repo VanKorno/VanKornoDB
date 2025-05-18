@@ -23,16 +23,16 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ): Int {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
                                                                     arrayOf(whereArg.toString()) )
-        val mySocks =   if (cursor.moveToFirst())
-                            cursor.getInt(0)
-                        else {
-                            // region LOG
-                            Log.e(TAG, "getInt() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
-                            // endregion
-                            -1
-                        }
-        cursor.close()
-        return mySocks
+        cursor.use {
+            return  if (cursor.moveToFirst())
+                        cursor.getInt(0)
+                    else {
+                        // region LOG
+                        Log.e(TAG, "getInt() Unable to get value from DB. Returning zero. Condition: $whereClause = $whereArg")
+                        // endregion
+                        -1
+                    }
+        }
     }
     
     fun <T> getStr(                                                            tableName: String,
@@ -42,16 +42,16 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ): String {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
                                                                     arrayOf(whereArg.toString()) )
-        val mySocks =   if (cursor.moveToFirst())
-                            cursor.getString(0)
-                        else {
-                            // region LOG
-                            Log.e(TAG, "getString() Unable to get value from DB. Returning an empty str. Condition: $whereClause = $whereArg")
-                            // endregion
-                            ""
-                        }
-        cursor.close()
-        return mySocks
+        cursor.use {
+            return  if (cursor.moveToFirst())
+                        cursor.getString(0)
+                    else {
+                        // region LOG
+                        Log.e(TAG, "getString() Unable to get value from DB. Returning an empty str. Condition: $whereClause = $whereArg")
+                        // endregion
+                        ""
+                    }
+        }
     }
     fun <T> getBool(                                                           tableName: String,
                                                                                   column: String,
@@ -60,16 +60,16 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ): Boolean {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
                                                                     arrayOf(whereArg.toString()) )
-        val mySocks =   if (cursor.moveToFirst())
-                            cursor.getBool(0)
-                        else {
-                            // region LOG
-                            Log.e(TAG, "getBool() Unable to get value from DB. Returning FALSE. Condition: $whereClause = $whereArg")
-                            // endregion
-                            false
-                        }
-        cursor.close()
-        return mySocks
+        cursor.use {
+            return  if (cursor.moveToFirst())
+                        cursor.getBool(0)
+                    else {
+                        // region LOG
+                        Log.e(TAG, "getBool() Unable to get value from DB. Returning FALSE. Condition: $whereClause = $whereArg")
+                        // endregion
+                        false
+                    }
+        }
     }
     fun <T> getLong(                                                           tableName: String,
                                                                                   column: String,
@@ -78,16 +78,16 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ): Long {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
                                                                    arrayOf(whereArg.toString()) )
-        val mySocks =   if (cursor.moveToFirst())
-                            cursor.getLong(0)
-                        else {
-                            // region LOG
-                            Log.e(TAG, "getLong() Unable to get value from DB. Returning -1. Condition: $whereClause = $whereArg")
-                            // endregion
-                            -1L
-                        }
-        cursor.close()
-        return mySocks
+        cursor.use {
+            return  if (cursor.moveToFirst())
+                        cursor.getLong(0)
+                    else {
+                        // region LOG
+                        Log.e(TAG, "getLong() Unable to get value from DB. Returning -1. Condition: $whereClause = $whereArg")
+                        // endregion
+                        -1L
+                    }
+        }
     }
     fun <T> getFloat(                                                          tableName: String,
                                                                                   column: String,
@@ -96,16 +96,16 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ): Float {
         val cursor = db.rawQuery(select + column + from + tableName + where + whereClause+"=?",
                                                                     arrayOf(whereArg.toString()) )
-        val mySocks =   if (cursor.moveToFirst())
-                            cursor.getFloat(0)
-                        else {
-                            // region LOG
-                            Log.e(TAG, "getFloat() Unable to get value from DB. Returning -1. Condition: $whereClause = $whereArg")
-                            // endregion
-                            -1F
-                        }
-        cursor.close()
-        return mySocks
+        cursor.use {
+            return  if (cursor.moveToFirst())
+                        cursor.getFloat(0)
+                    else {
+                        // region LOG
+                        Log.e(TAG, "getFloat() Unable to get value from DB. Returning -1. Condition: $whereClause = $whereArg")
+                        // endregion
+                        -1F
+                    }
+        }
     }
     
     
@@ -169,17 +169,18 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ): Int {
         val cursor = db.rawQuery(select + ID + from + tableName, null)
         
-        val mySocks =  if (cursor.moveToLast())
-                            cursor.getInt(0)
-                        else {
-                            // region LOG
-                            Log.e(TAG, "getLastID() Unable to get value from DB ($tableName). Returning -1")
-                            // endregion
-                            -1
-                        }
-        cursor.close()
-        return mySocks
+        cursor.use {
+            return  if (cursor.moveToLast())
+                        cursor.getInt(0)
+                    else {
+                        // region LOG
+                        Log.e(TAG, "getLastID() Unable to get value from DB ($tableName). Returning -1")
+                        // endregion
+                        -1
+                    }
+        }
     }
+    
     
     fun getAllIDs(                                                          tableName: String,
                                                                               orderBy: String = ""
@@ -188,17 +189,18 @@ open class DbGetSet(val db: SQLiteDatabase) {
         
         val ids = mutableListOf<Int>()
         
-        if (cursor.moveToFirst()) {
-            do {
-                ids.add(cursor.getInt(0))
-            } while (cursor.moveToNext())
+        cursor.use {
+            if (cursor.moveToFirst()) {
+                do {
+                    ids.add(cursor.getInt(0))
+                } while (cursor.moveToNext())
+            }
+            else {
+                // region LOG
+                    Log.d(TAG, "getAllIDs() didn't find any elements in $tableName")
+                // endregion
+            }
         }
-        else {
-            // region LOG
-                Log.d(TAG, "getAllIDs() didn't find any elements in $tableName")
-            // endregion
-        }
-        cursor.close()
         return ids
     }
     
@@ -213,12 +215,12 @@ open class DbGetSet(val db: SQLiteDatabase) {
     fun getNewPriority(                                                        tableName: String
     ): Int {
         val cursor = db.getCursor(tableName, Priority, orderBy = Priority)
-        var priority =  if (cursor.moveToLast())
-                            cursor.getInt(0) + 1
-                        else
-                            1
-        cursor.close()
-        return priority
+        cursor.use {
+            return  if (cursor.moveToLast())
+                        cursor.getInt(0) + 1
+                    else
+                        1
+        }
     }
     
     
