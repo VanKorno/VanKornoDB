@@ -9,15 +9,25 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
 
-inline fun <reified T : Any> insertInto(                db: SQLiteDatabase,
-                                                     table: String,
-                                                    entity: T,
-                                                    modify: (ContentValues)->ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.insertInto(      table: String,
+                                                            entity: T,
+                                                            modify: (ContentValues)->ContentValues = { it }
 ): Long {
     val baseCV = toContentValues(entity)
     val finalCV = modify(baseCV)
-    return db.insert(table, null, finalCV)
+    return this.insert(table, null, finalCV)
 }
+
+
+inline fun <reified T : Any> SQLiteDatabase.updateIn(    tableName: String,
+                                                                id: Int,
+                                                            entity: T,
+                                                         customize: (ContentValues)->ContentValues = { it }
+): Int {
+    val cv = customize(toContentValues(entity))
+    return update(tableName, cv, "id=?", arrayOf(id.toString()))
+}
+
 
 
 inline fun <reified T : Any> toContentValues(                                     entity: T
