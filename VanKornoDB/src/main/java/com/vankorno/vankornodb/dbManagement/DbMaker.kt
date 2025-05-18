@@ -7,38 +7,25 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.vankorno.vankornodb.DbMisc
-import com.vankorno.vankornodb.dbManagement.data.TableAndEntt
 
 private const val TAG = "DbMaker"
 
 open class DbMaker(              context: Context,
                                   dbName: String,
                                dbVersion: Int,
-                    private val entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
-                       val onCreateStart: (SQLiteDatabase)->Unit = {},
-                      val onCreateFinish: (SQLiteDatabase)->Unit = {},
-                           val onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
+                         val runOnCreate: (SQLiteDatabase)->Unit = {},
+                        val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
     
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
     
     val dbLock = Any()
-    
     
     override fun onCreate(                                                      db: SQLiteDatabase
     ) {
         // region LOG
             Log.d("LibDBHelper", "onCreate runs")
         // endregion
-        synchronized(dbLock) {
-            onCreateStart(db)
-            
-            val builder = DbTableBuilder()
-            entities.forEach {
-                db.execSQL(builder.newTableQuery(it.tableName, it.entity))
-            }
-            onCreateFinish(db)
-        }
+        synchronized(dbLock) { runOnCreate(db) }
     }
     
     
@@ -51,7 +38,7 @@ open class DbMaker(              context: Context,
             Log.d(TAG, "onUpgrade() Migrating...")
         // endregion
         synchronized(dbLock) {
-            onUpgrade(db, oldVersion)
+            runOnUpgrade(db, oldVersion)
         }
     }
     
@@ -61,13 +48,5 @@ open class DbMaker(              context: Context,
         // endregion
         DbManager.init(writableDatabase)
     }
-    
-    
-    
-    
-    
-    
-    
-    
     
 }

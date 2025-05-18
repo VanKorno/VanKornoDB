@@ -6,6 +6,7 @@ InMemoryDB=":memory:",
 
 select="SELECT ",  from=" FROM ",   selectAllFrom="SELECT * FROM ",
 dbCreateT="CREATE TABLE ",
+dbDefault=" DEFAULT ",
 dbDrop="DROP TABLE IF EXISTS ",
 deleteFrom="DELETE FROM ",
 

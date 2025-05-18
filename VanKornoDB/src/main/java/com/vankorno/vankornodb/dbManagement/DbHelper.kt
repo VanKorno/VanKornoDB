@@ -9,19 +9,16 @@ import android.util.Log
 import androidx.core.database.sqlite.transaction
 import com.vankorno.vankornodb.getSet.DbGetSet
 import com.vankorno.vankornodb.DbMisc
-import com.vankorno.vankornodb.dbManagement.data.TableAndEntt
 
 @Suppress("NOTHING_TO_INLINE", "unused")
 open class DbHelper(
                                 context: Context,
                                  dbName: String,
                               dbVersion: Int,
-                               entities: Array<TableAndEntt> = emptyArray<TableAndEntt>(),
-                          onCreateStart: (SQLiteDatabase)->Unit = {},
-                         onCreateFinish: (SQLiteDatabase)->Unit = {},
+                               onCreate: (SQLiteDatabase)->Unit = {},
                               onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
     
-) : DbMaker(context, dbName, dbVersion, entities, onCreateStart, onCreateFinish, onUpgrade) {
+) : DbMaker(context, dbName, dbVersion, onCreate, onUpgrade) {
     
     /** Better reading performance, optimal for reading, but writing can also be done in a less safe way **/
     inline fun <T> readDB(                                        defaultValue: T,
