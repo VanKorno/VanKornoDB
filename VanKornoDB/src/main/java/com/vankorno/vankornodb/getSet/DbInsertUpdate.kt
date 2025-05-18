@@ -5,6 +5,7 @@ package com.vankorno.vankornodb.getSet
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.core.DbConstants.ID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
@@ -25,7 +26,7 @@ inline fun <reified T : Any> SQLiteDatabase.updateIn(    tableName: String,
                                                          customize: (ContentValues)->ContentValues = { it }
 ): Int {
     val cv = customize(toContentValues(entity))
-    return update(tableName, cv, "id=?", arrayOf(id.toString()))
+    return update(tableName, cv, ID+"=?", arrayOf(id.toString()))
 }
 
 
@@ -36,7 +37,7 @@ inline fun <reified T : Any> toContentValues(                                   
     
     T::class.memberProperties.forEach { prop ->
         val name = prop.name
-        if (name == "id") return@forEach
+        if (name == ID) return@forEach
         
         val value = prop.getter.call(entity)
         val returnType = prop.returnType
