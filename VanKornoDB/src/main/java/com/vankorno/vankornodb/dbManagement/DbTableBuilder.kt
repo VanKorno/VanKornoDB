@@ -40,11 +40,11 @@ fun SQLiteDatabase.createTablesCustom(vararg tables: TableAndStructure) = create
 
 fun SQLiteDatabase.createTablesCustom(                              tables: List<TableAndStructure>
 ) {
-    tables.forEach { execSQL(newTableQuerySimple(it.tableName, it.structure))}
+    tables.forEach { execSQL(newTableQueryCustom(it.tableName, it.structure))}
 }
 
 
-fun newTableQuerySimple(                                            tableName: String,
+fun newTableQueryCustom(                                            tableName: String,
                                                                       columns: ArrayList<ColumnDef>
 ): String {
     val queryStr = buildString {
