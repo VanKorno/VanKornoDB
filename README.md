@@ -20,12 +20,12 @@ Designed primarily for Android, but with potential to support other platforms in
 - Designed for full control over your database logic
 
 
-## Example
+## Examples
 
 ```kotlin
-val cursor = db.getCursor(SomeTable, where = { Name equal userName })
+db.getCursor(SomeTable, where = { Name equal userName })
 
-val cursor = db.getCursor(
+db.getCursor(
     table = RoundTable,
     column = Name,
     where = {
@@ -42,7 +42,7 @@ selectAllFrom + SmallTable + orderBy + Size
 
 // Or more advanced stuff, with nested queries:
 
-val cursor = db.getCursor(
+db.getCursor(
     table = Users,
     columns = arrayOf(Name, Address, Phone),
     where = {
@@ -68,6 +68,22 @@ val cursor = db.getCursor(
         }
     }
 )
+
+
+// OTHER USAGE EXAMPLES
+
+fun isEmpty(id: Int) = db.getCursor(TableName, where = {TabID equal id}).use {it.count == 0}
+
+val tables = listOf(
+    tableOf<SettingsEntity>(SettingsTable),
+    tableOf<TabEntity>(TabTable)
+)
+db.createAllTables(tables)
+
+
+db.insertInto<SettingsEntity>(SettingsTable, new) // ORM stuff... Auto-mapping based on a data class
+cursor.mapToEntity<SettingsEntity>()
+
 ```
 
 ## Installation

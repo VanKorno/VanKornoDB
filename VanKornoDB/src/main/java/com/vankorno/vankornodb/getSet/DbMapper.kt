@@ -4,60 +4,45 @@ package com.vankorno.vankornodb.getSet
 **/
 
 import android.database.Cursor
-import com.vankorno.vankornodb.dbManagement.data.AutoId
-import com.vankorno.vankornodb.dbManagement.data.AutoIdNullable
-import com.vankorno.vankornodb.dbManagement.data.BlobCol
-import com.vankorno.vankornodb.dbManagement.data.BlobColNullable
-import com.vankorno.vankornodb.dbManagement.data.BoolCol
-import com.vankorno.vankornodb.dbManagement.data.BoolColNullable
-import com.vankorno.vankornodb.dbManagement.data.ColumnDef
-import com.vankorno.vankornodb.dbManagement.data.FloatCol
-import com.vankorno.vankornodb.dbManagement.data.FloatColNullable
-import com.vankorno.vankornodb.dbManagement.data.IntCol
-import com.vankorno.vankornodb.dbManagement.data.IntColNullable
-import com.vankorno.vankornodb.dbManagement.data.LongCol
-import com.vankorno.vankornodb.dbManagement.data.LongColNullable
-import com.vankorno.vankornodb.dbManagement.data.StrCol
-import com.vankorno.vankornodb.dbManagement.data.StrColNullable
 import com.vankorno.vankornodb.getBool
-import kotlin.collections.indexOfFirst
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.jvmErasure
 
 /** 
  * Ignores parameters ending with "List" or "Array" 
 **/
 
-inline fun <reified T : Any> Cursor.mapToEntity(                        entity: List<ColumnDef>
-): T {
+inline fun <reified T : Any> Cursor.mapToEntity(): T {
     val constructor = T::class.primaryConstructor
         ?: error("Class ${T::class.simpleName} must have a primary constructor")
-
+    
     val args = constructor.parameters.mapNotNull  { param ->
         val colName = param.name ?: error("Constructor param must have a name")
         
         if (colName.endsWith("List") || colName.endsWith("Array")) {
             null
         } else {
-            val columnIndex = entity.indexOfFirst { it.name == colName }
+            val index = getColumnIndexOrThrow(colName)
+            val type = param.type.jvmErasure
             
-            if (columnIndex == -1) error("No column found for parameter: $colName")
-    
-            val type = entity[columnIndex].type
             val value = when (type) {
-                AutoId, IntCol       -> getInt(columnIndex)
-                StrCol               -> getString(columnIndex)
-                BoolCol              -> getBool(columnIndex)
-                LongCol              -> getLong(columnIndex)
-                FloatCol             -> getFloat(columnIndex)
-                BlobCol              -> getBlob(columnIndex)
-                AutoIdNullable,
-                IntColNullable       -> getNullable(columnIndex) { getInt(it) }
-                StrColNullable       -> getNullable(columnIndex) { getString(it) }
-                BoolColNullable      -> getNullable(columnIndex) { getBool(it) }
-                LongColNullable      -> getNullable(columnIndex) { getLong(it) }
-                FloatColNullable     -> getNullable(columnIndex) { getFloat(it) }
-                BlobColNullable      -> getNullable(columnIndex) { getBlob(it) }
-                else                 -> error("Unsupported column type: $type")
+                Int::class       -> getInt(index)
+                String::class    -> getString(index)
+                Boolean::class   -> getBool(index)
+                Long::class      -> getLong(index)
+                Float::class     -> getFloat(index)
+                ByteArray::class -> getBlob(index)
+                
+                else -> when { // Nullable support
+                    type == Int::class && param.type.isMarkedNullable       -> getNullable(index) { getInt(it) }
+                    type == String::class && param.type.isMarkedNullable    -> getNullable(index) { getString(it) }
+                    type == Boolean::class && param.type.isMarkedNullable   -> getNullable(index) { getBool(it) }
+                    type == Long::class && param.type.isMarkedNullable      -> getNullable(index) { getLong(it) }
+                    type == Float::class && param.type.isMarkedNullable     -> getNullable(index) { getFloat(it) }
+                    type == ByteArray::class && param.type.isMarkedNullable -> getNullable(index) { getBlob(it) }
+                    
+                    else -> error("Unsupported parameter type: $type for $colName")
+                }
             }
             param to value
         }
@@ -72,3 +57,11 @@ inline fun <T> Cursor.getNullable(                                              
             null
         else
             getter(index)
+
+
+
+
+
+
+
+
