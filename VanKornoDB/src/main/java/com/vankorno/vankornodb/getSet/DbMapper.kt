@@ -23,26 +23,18 @@ inline fun <reified T : Any> Cursor.mapToEntity(): T {
             null
         } else {
             val index = getColumnIndexOrThrow(colName)
+            val isNullable = param.type.isMarkedNullable
             val type = param.type.jvmErasure
             
             val value = when (type) {
-                Int::class       -> getInt(index)
-                String::class    -> getString(index)
-                Boolean::class   -> getBool(index)
-                Long::class      -> getLong(index)
-                Float::class     -> getFloat(index)
-                ByteArray::class -> getBlob(index)
-                
-                else -> when { // Nullable support
-                    type == Int::class && param.type.isMarkedNullable       -> getNullable(index) { getInt(it) }
-                    type == String::class && param.type.isMarkedNullable    -> getNullable(index) { getString(it) }
-                    type == Boolean::class && param.type.isMarkedNullable   -> getNullable(index) { getBool(it) }
-                    type == Long::class && param.type.isMarkedNullable      -> getNullable(index) { getLong(it) }
-                    type == Float::class && param.type.isMarkedNullable     -> getNullable(index) { getFloat(it) }
-                    type == ByteArray::class && param.type.isMarkedNullable -> getNullable(index) { getBlob(it) }
-                    
-                    else -> error("Unsupported parameter type: $type for $colName")
-                }
+                Int::class       -> if (isNullable) getNullable(index) { getInt(it) } else getInt(index)
+                String::class    -> if (isNullable) getNullable(index) { getString(it) } else getString(index)
+                Boolean::class   -> if (isNullable) getNullable(index) { getBool(it) } else getBool(index)
+                Long::class      -> if (isNullable) getNullable(index) { getLong(it) } else getLong(index)
+                Float::class     -> if (isNullable) getNullable(index) { getFloat(it) } else getFloat(index)
+                ByteArray::class -> if (isNullable) getNullable(index) { getBlob(it) } else getBlob(index)
+            
+                else -> error("Unsupported parameter type: $type for $colName")
             }
             param to value
         }
