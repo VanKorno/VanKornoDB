@@ -74,15 +74,17 @@ db.getCursor(
 
 fun isEmpty(id: Int) = db.getCursor(TableName, where = {TabID equal id}).use {it.count == 0}
 
-val tables = listOf(
+
+db.createTables(
+    tableOf<DataClass>(DbTableName),
     tableOf<SettingsEntity>(SettingsTable),
     tableOf<TabEntity>(TabTable)
 )
-db.createAllTables(tables)
 
 
 db.insertInto<SettingsEntity>(SettingsTable, new) // ORM stuff... Auto-mapping based on a data class
 cursor.mapToEntity<SettingsEntity>()
+
 
 ```
 

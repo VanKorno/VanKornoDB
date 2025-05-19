@@ -24,7 +24,7 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.LongColNullable
 import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.dbManagement.data.StrColNullable
-import com.vankorno.vankornodb.dbManagement.data.TableAndEntt
+import com.vankorno.vankornodb.dbManagement.data.TableAndStructure
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import kotlin.collections.forEachIndexed
 import kotlin.collections.lastIndex
@@ -34,11 +34,15 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 
-// ===================  S I M P L E,   S E M I - A U T O M A T I C  ===================
+// ===================  W I T H   C U S T O M   S C H E M A  ===================
 
-fun SQLiteDatabase.createAllTablesSimple(tables: List<TableAndEntt>) {
-    tables.forEach { execSQL(newTableQuerySimple(it.tableName, it.entity))}
+fun SQLiteDatabase.createTablesCustom(vararg tables: TableAndStructure) = createTablesCustom(tables.toList())
+
+fun SQLiteDatabase.createTablesCustom(                              tables: List<TableAndStructure>
+) {
+    tables.forEach { execSQL(newTableQuerySimple(it.tableName, it.structure))}
 }
+
 
 fun newTableQuerySimple(                                            tableName: String,
                                                                       columns: ArrayList<ColumnDef>
@@ -67,11 +71,10 @@ fun newTableQuerySimple(                                            tableName: S
 
 /** For db helper's onCreate 
  * Usage example:
- *      val tables = listOf(
- *          tableOf<MyUser>("users"),
- *          tableOf<Settings>("settings")
- *      )
- *      db.createAllTables(tables)
+ *     db.createAllTables(
+ *         tableOf<DataClass>(TableName),
+ *         tableOf<User>(TableUser)
+ *     )
  **/
 
 inline fun <reified T : Any> tableOf(name: String): TableInfo = object : TableInfo {
@@ -79,7 +82,11 @@ inline fun <reified T : Any> tableOf(name: String): TableInfo = object : TableIn
     override fun createQuery() = newTableQuery<T>(name)
 }
 
-fun SQLiteDatabase.createAllTables(tables: List<TableInfo>) {
+
+fun SQLiteDatabase.createTables(vararg tables: TableInfo) = createTables(tables.toList())
+
+fun SQLiteDatabase.createTables(                                           tables: List<TableInfo>
+) {
     tables.forEach { execSQL(it.createQuery()) }
 }
 
@@ -94,13 +101,13 @@ inline fun <reified T : Any> newTableQuery(                                    t
 ): String {
     val constructor = T::class.primaryConstructor
         ?: error("Class ${T::class.simpleName} must have a primary constructor")
-
+    
     val defaultsInstance = constructor.callBy(emptyMap())
-
+    
     val columns = constructor.parameters.mapNotNull { param ->
         getColumnDefinition(param, defaultsInstance)
     }
-
+    
     val queryStr = dbCreateT + tableName + " (" + columns.joinToString(", ") + ")"
     // region LOG
         println("newTableQuery<${T::class.simpleName}>(): $queryStr")

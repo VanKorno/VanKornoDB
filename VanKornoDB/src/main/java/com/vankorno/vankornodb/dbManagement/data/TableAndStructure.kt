@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.data
 
-data class TableAndEntt(
+data class TableAndStructure(
                               val tableName: String,
-                                 val entity: ArrayList<ColumnDef>
+                              val structure: ArrayList<ColumnDef>
 )
