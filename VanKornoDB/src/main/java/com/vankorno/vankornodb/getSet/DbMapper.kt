@@ -52,7 +52,17 @@ inline fun <T> Cursor.getNullable(                                              
 
 
 
-
+inline fun <reified T : Any> Cursor.mapToList(): List<T> {
+    if (!moveToFirst()) return emptyList() //\/\/\/\/\/\
+    
+    val list = mutableListOf<T>()
+    
+    do {
+        list += mapToEntity<T>()
+    } while (moveToNext())
+    
+    return list
+}
 
 
 
