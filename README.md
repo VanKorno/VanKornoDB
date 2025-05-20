@@ -83,7 +83,7 @@ db.createTables(
 
 
 db.insertInto<SettingsEntity>(SettingsTable, new) // ORM stuff... Auto-mapping based on a data class
-cursor.mapToEntity<SettingsEntity>()
+cursor.mapToEntity(SettingsEntity::class)
 
 
 ```
