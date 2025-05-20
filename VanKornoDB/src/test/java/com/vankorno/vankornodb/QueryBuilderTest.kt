@@ -249,7 +249,7 @@ class QueryBuilderTest {
             result.second.joinToString(", ")
         )
         assertEquals(
-            "SELECT * FROM DirtyTable WHERE Priority=? AND (ID>=? OR (Name=? AND (Name=? OR (Name=? OR Priority<?)))) AND Priority=? OR ID=?",
+            "SELECT * FROM $DirtyTable WHERE $Priority=? AND ($ID>=? OR ($Name=? AND ($Name=? OR ($Name=? OR $Priority<?)))) AND $Priority=? OR $ID=?",
             result.first
         )
     }
@@ -258,11 +258,11 @@ class QueryBuilderTest {
     @Test
     fun `Query in query`() {
         val result = getQuery(
-            table = "Users",
+            table = Users,
             columns = arrayOf(Name),
             where = {
                 subquery(
-                    table = "Posts",
+                    table = Posts,
                     columns = arrayOf(countAll),
                     where = {
                         (Posts dot UserID)  equal  (Users dot ID)
@@ -272,11 +272,11 @@ class QueryBuilderTest {
         )
         
         assertEquals(
-            "SELECT Name FROM Users WHERE (SELECT COUNT(*) FROM Posts WHERE Posts.user_id=?)>?",
+            "SELECT $Name FROM $Users WHERE (SELECT COUNT(*) FROM $Posts WHERE $Posts.user_id=?)>?",
             result.first
         )
         assertEquals(
-            arrayOf("Users.ID", "10").joinToString(comma),
+            arrayOf("$Users.$ID", "10").joinToString(comma),
             result.second.joinToString(comma)
         )
     }
