@@ -46,7 +46,6 @@ class DbTableBuilderTest {
     }
     
     
-    
     data class SimpleEntity(
         val id: Int = 0,
         val name: String = "default",
@@ -159,7 +158,45 @@ class DbTableBuilderTest {
     }
     
     
+    data class ListEntitySingle(
+        val id: Int = 0,
+        val scoresList: List<Int> = listOf(1, 2, 3)
+    )
     
+    @Test
+    fun testListEntitySingle() {
+        val sql = newTableQuery<ListEntitySingle>("ListSingleTable")
+        assertEquals(
+            "CREATE TABLE ListSingleTable (" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "scores1 INT NOT NULL DEFAULT 1, " +
+                "scores2 INT NOT NULL DEFAULT 1, " +
+                "scores3 INT NOT NULL DEFAULT 1" +
+            ")",
+            sql
+        )
+    }
+    
+    data class ListEntityMixed(
+        val id: Int = 0,
+        val flagsList: List<Boolean> = listOf(true, false),
+        val namesList: List<String> = listOf("alpha", "beta")
+    )
+    
+    @Test
+    fun testListEntityMixed() {
+        val sql = newTableQuery<ListEntityMixed>("ListMixedTable")
+        assertEquals(
+            "CREATE TABLE ListMixedTable (" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                "flags1 BOOL NOT NULL DEFAULT 1, " +
+                "flags2 BOOL NOT NULL DEFAULT 1, " +
+                "names1 TEXT NOT NULL DEFAULT 'alpha', " +
+                "names2 TEXT NOT NULL DEFAULT 'alpha'" +
+            ")",
+            sql
+        )
+    }
     
     
     
