@@ -4,12 +4,76 @@ package com.vankorno.vankornodb.dbManagement.migration
 **/
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.core.DbConstants.dbDrop
+import com.vankorno.vankornodb.dbManagement.createTables
 import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.defaultValueForParam
+import com.vankorno.vankornodb.dbManagement.migration.oldToNewEntt
+import com.vankorno.vankornodb.dbManagement.tableOf
 import com.vankorno.vankornodb.getCursor
+import com.vankorno.vankornodb.getSet.insertInto
 import com.vankorno.vankornodb.getSet.mapToEntity
 import kotlin.collections.get
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+
+
+/**
+ * Performs a simple migration from [OLD] to [NEW] entity structures for the given [tableNames].
+ * Automatically handles renaming and structural changes (column order).
+ *
+ * This function:
+ * 1. Reads existing rows from each table using [readAsMigrated], applying rename rules and new structure.
+ * 2. Drops and recreates each table using the schema of [NEW].
+ * 3. Reinserts the migrated data into the new table.
+ *
+ * Suitable for straightforward cases where changing the migrated table is enough and no data in other
+ * tables needs to be updated (like setting ID references to new IDs or similar).
+ * For more complex migration scenarios, users can write their own functions
+ * using the existing [readAsMigrated], [createTables], and [insertInto] directly.
+ *
+ * @param oldVersion The old database version used to resolve renaming rules.
+ * @param renameMap A mapping from new field names to old names by version.
+ * @param tableNames The names of tables to migrate.
+ */
+
+inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.migrateLite(
+                                                            oldVersion: Int,
+                                                             renameMap: Map<String, Map<Int, String>>,
+                                                            tableNames: List<String>
+) {
+    tableNames.forEach { tableName ->
+        // region LOG
+            println("Migrating table: $tableName from version $oldVersion")
+        // endregion
+        val newList = readAsMigrated<OLD, NEW>(tableName, oldVersion, renameMap)
+        // region LOG
+            println("Dropping old table: $tableName")
+        // endregion
+        this.execSQL(dbDrop + tableName)
+        // region LOG
+            println("Creating new table schema for: $tableName")
+        // endregion
+        createTables(tableOf<NEW>(tableName))
+        // region LOG
+            println("Reinserting migrated data into: $tableName, total rows: ${newList.size}")
+        // endregion
+        newList.forEach { insertInto(tableName, it) }
+        // region LOG
+            println("Migration completed for table: $tableName")
+        // endregion
+    }
+}
+
+/**
+ * Overload of [migrateLite] for a single table.
+ */
+inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.migrateLite(
+                                                            oldVersion: Int,
+                                                             renameMap: Map<String, Map<Int, String>>,
+                                                             tableName: String
+) = migrateLite<OLD, NEW>(oldVersion, renameMap, listOf(tableName))
+
+
 
 
 /**
@@ -32,7 +96,7 @@ inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.readAsMigrated(
                                                 renameMap: Map<String, Map<Int, String>> = emptyMap()
 ): List<NEW> {
     val oldItems = mutableListOf<NEW>()
-
+    
     this.getCursor(tableName).use { cursor ->
         if (cursor.moveToFirst()) {
             do {
