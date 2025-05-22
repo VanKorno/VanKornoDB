@@ -81,9 +81,10 @@ db.createTables(
     tableOf<TabEntity>(TabTable)
 )
 
-
 db.insertInto<SettingsEntity>(SettingsTable, new) // ORM stuff... Auto-mapping based on a data class
 cursor.mapToEntity(SettingsEntity::class)
+
+db.migrateLite<OldEntity, NewEntity>(oldVersion, renameMap, tableName) // easy migrations
 
 
 ```
