@@ -9,6 +9,7 @@ dbCreateT="CREATE TABLE ",
 dbDefault=" DEFAULT ",
 dbDrop="DROP TABLE IF EXISTS ",
 deleteFrom="DELETE FROM ",
+MasterTable="sqlite_master",
 
 where=" WHERE ",
 and=" AND ",   or=" OR ",
