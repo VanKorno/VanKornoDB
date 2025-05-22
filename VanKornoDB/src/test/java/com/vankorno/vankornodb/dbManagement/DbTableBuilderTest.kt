@@ -17,7 +17,7 @@ class DbTableBuilderTest {
     @Test
     fun `simple buildCreateTableQuery() returns correct beginning`() {
         assertEquals(
-            "CREATE TABLE $Name ($ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)",
+            "CREATE TABLE IF NOT EXISTS $Name ($ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)",
             newTableQueryCustom(
                 Name,
                 arrayListOf(ColumnDef(ID, AutoId))
@@ -28,7 +28,7 @@ class DbTableBuilderTest {
     @Test
     fun `simple buildCreateTableQuery() returns the rest OK`() {
         assertEquals(
-            "CREATE TABLE $Name ($ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, $Priority INT NOT NULL, " +
+            "CREATE TABLE IF NOT EXISTS $Name ($ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, $Priority INT NOT NULL, " +
                 "$Name TEXT NOT NULL, PitBool BOOL NOT NULL, Live BIGINT NOT NULL, Fleet REAL NOT NULL, Img BLOB NOT NULL)",
             newTableQueryCustom(
                 Name,
@@ -55,9 +55,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testSimpleEntityTableCreation() {
-        val sql = newTableQuery<SimpleEntity>("SimpleTable")
+        val sql = newTableQuery("SimpleTable", SimpleEntity::class)
         assertEquals(
-            "CREATE TABLE SimpleTable (" +
+            "CREATE TABLE IF NOT EXISTS SimpleTable (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT NOT NULL DEFAULT 'default', " +
                 "isActive BOOL NOT NULL DEFAULT 1, " +
@@ -76,9 +76,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testComplexEntityTableCreation() {
-        val sql = newTableQuery<ComplexEntity>("ComplexTable")
+        val sql = newTableQuery("ComplexTable", ComplexEntity::class)
         assertEquals(
-            "CREATE TABLE ComplexTable (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, data BLOB, name TEXT NOT NULL DEFAULT 'blob', flags INT NOT NULL DEFAULT 0)",
+            "CREATE TABLE IF NOT EXISTS ComplexTable (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, data BLOB, name TEXT NOT NULL DEFAULT 'blob', flags INT NOT NULL DEFAULT 0)",
             sql
         )
     }
@@ -91,9 +91,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testNullableDefaultsEntity() {
-        val sql = newTableQuery<NullableDefaultsEntity>("NullableDefaults")
+        val sql = newTableQuery("NullableDefaults", NullableDefaultsEntity::class)
         assertEquals(
-            "CREATE TABLE NullableDefaults (" +
+            "CREATE TABLE IF NOT EXISTS NullableDefaults (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "note TEXT, " +
                 "enabled BOOL" +
@@ -110,9 +110,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testUnsupportedTypesEntity() {
-        val sql = newTableQuery<UnsupportedTypesEntity>("UnsupportedTypes")
+        val sql = newTableQuery("UnsupportedTypes", UnsupportedTypesEntity::class)
         assertEquals(
-            "CREATE TABLE UnsupportedTypes (" +
+            "CREATE TABLE IF NOT EXISTS UnsupportedTypes (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT" +
             ")",
             sql
@@ -127,9 +127,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testAllNullableEntity() {
-        val sql = newTableQuery<AllNullableEntity>("NullableTable")
+        val sql = newTableQuery("NullableTable", AllNullableEntity::class)
         assertEquals(
-            "CREATE TABLE NullableTable (" +
+            "CREATE TABLE IF NOT EXISTS NullableTable (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT, " +
                 "score REAL" +
@@ -146,9 +146,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testIdInMiddleEntity() {
-        val sql = newTableQuery<IdInMiddleEntity>("MiddleIdTable")
+        val sql = newTableQuery("MiddleIdTable", IdInMiddleEntity::class)
         assertEquals(
-            "CREATE TABLE MiddleIdTable (" +
+            "CREATE TABLE IF NOT EXISTS MiddleIdTable (" +
                 "name TEXT NOT NULL DEFAULT 'middle', " +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "active BOOL NOT NULL DEFAULT 0" +
@@ -165,9 +165,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testListEntitySingle() {
-        val sql = newTableQuery<ListEntitySingle>("ListSingleTable")
+        val sql = newTableQuery("ListSingleTable", ListEntitySingle::class)
         assertEquals(
-            "CREATE TABLE ListSingleTable (" +
+            "CREATE TABLE IF NOT EXISTS ListSingleTable (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "scores1 INT NOT NULL DEFAULT 1, " +
                 "scores2 INT NOT NULL DEFAULT 1, " +
@@ -185,9 +185,9 @@ class DbTableBuilderTest {
     
     @Test
     fun testListEntityMixed() {
-        val sql = newTableQuery<ListEntityMixed>("ListMixedTable")
+        val sql = newTableQuery("ListMixedTable", ListEntityMixed::class)
         assertEquals(
-            "CREATE TABLE ListMixedTable (" +
+            "CREATE TABLE IF NOT EXISTS ListMixedTable (" +
                 "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                 "flags1 BOOL NOT NULL DEFAULT 1, " +
                 "flags2 BOOL NOT NULL DEFAULT 1, " +

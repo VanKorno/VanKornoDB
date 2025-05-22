@@ -5,38 +5,41 @@ package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.DbConstants.dbDrop
+import com.vankorno.vankornodb.dbManagement.createTableOf
 import com.vankorno.vankornodb.dbManagement.createTables
 import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.defaultValueForParam
-import com.vankorno.vankornodb.dbManagement.migration.oldToNewEntt
 import com.vankorno.vankornodb.dbManagement.tableOf
 import com.vankorno.vankornodb.getCursor
 import com.vankorno.vankornodb.getSet.insertInto
 import com.vankorno.vankornodb.getSet.mapToEntity
 import kotlin.collections.get
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 
 /**
- * Performs a simple migration from [OLD] to [NEW] entity structures for the given [tableNames].
- * Automatically handles renaming and structural changes (column order).
+ * Migrates one or more tables from [oldClass] to [newClass], adapting data to the new structure.
  *
- * This function:
- * 1. Reads existing rows from each table using [readAsMigrated], applying rename rules and new structure.
- * 2. Drops and recreates each table using the schema of [NEW].
+ * For each [tableName], this function:
+ * 1. Reads existing rows using [readAsMigrated], applying rename rules and constructor mapping.
+ * 2. Drops the old table and recreates it using the schema from [newClass].
  * 3. Reinserts the migrated data into the new table.
  *
- * Suitable for straightforward cases where changing the migrated table is enough and no data in other
- * tables needs to be updated (like setting ID references to new IDs or similar).
- * For more complex migration scenarios, users can write their own functions
- * using the existing [readAsMigrated], [createTables], and [insertInto] directly.
+ * Suitable for simple migrations where only the migrated table is affected.
+ * Use manual migration for complex cases involving external references or logic.
  *
- * @param oldVersion The old database version used to resolve renaming rules.
- * @param renameMap A mapping from new field names to old names by version.
- * @param tableNames The names of tables to migrate.
+ * @param oldClass The class representing the old entity structure.
+ * @param newClass The class representing the new entity structure.
+ * @param oldVersion The schema version used to resolve renames.
+ * @param renameMap Maps new property names to old ones by version.
+ * @param tableNames A list of tables to migrate.
  */
 
-inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.migrateLite(
+fun SQLiteDatabase.migrateLite(                               oldClass: KClass<*>,
+                                                              newClass: KClass<*>,
                                                             oldVersion: Int,
                                                              renameMap: Map<String, Map<Int, String>>,
                                                             tableNames: List<String>
@@ -45,7 +48,7 @@ inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.migrateLite(
         // region LOG
             println("Migrating table: $tableName from version $oldVersion")
         // endregion
-        val newList = readAsMigrated<OLD, NEW>(tableName, oldVersion, renameMap)
+        val newList = readAsMigrated(oldClass, newClass, tableName, oldVersion, renameMap)
         // region LOG
             println("Dropping old table: $tableName")
         // endregion
@@ -53,7 +56,7 @@ inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.migrateLite(
         // region LOG
             println("Creating new table schema for: $tableName")
         // endregion
-        createTables(tableOf<NEW>(tableName))
+        this.createTableOf(tableName, newClass)
         // region LOG
             println("Reinserting migrated data into: $tableName, total rows: ${newList.size}")
         // endregion
@@ -67,41 +70,47 @@ inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.migrateLite(
 /**
  * Overload of [migrateLite] for a single table.
  */
-inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.migrateLite(
+fun SQLiteDatabase.migrateLite(                               oldClass: KClass<*>,
+                                                              newClass: KClass<*>,
                                                             oldVersion: Int,
                                                              renameMap: Map<String, Map<Int, String>>,
                                                              tableName: String
-) = migrateLite<OLD, NEW>(oldVersion, renameMap, listOf(tableName))
+) = migrateLite(oldClass, newClass, oldVersion, renameMap, listOf(tableName))
 
 
 
 
 /**
- * Reads all rows from the specified [tableName], maps each row to an instance of [OLD]
- * using [mapToEntity], then converts each [OLD] instance to [NEW] by copying properties,
- * applying renaming rules with version awareness via [renameMap].
+ * Reads all rows from [tableName] and converts them from [oldClass] to [newClass].
  *
- * This is designed for database migrations, where:
- * - [OLD] is the legacy entity matching the old schema.
- * - [NEW] is the updated entity matching the new schema.
+ * Uses [convertEntity] to apply renaming rules and provide fallback values
+ * for missing or mismatched fields during migration.
  *
- * @param tableName The name of the database table to query.
- * @param oldVersion The version number of the old schema used to resolve property renames.
- * @param renameMap A map of new property names to maps of old versions and their corresponding old names.
- * @return A list of migrated [NEW] instances created from the old data.
+ * @param oldClass The old entity class used to parse existing data.
+ * @param newClass The new entity class to convert into.
+ * @param tableName The table to read data from.
+ * @param oldVersion The version used to resolve renames.
+ * @param renameMap Maps new property names to old ones by version.
+ * @return A list of [newClass] instances created from the old data.
  */
-inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.readAsMigrated(
+fun SQLiteDatabase.readAsMigrated(               oldClass: KClass<*>,
+                                                 newClass: KClass<*>,
                                                 tableName: String,
                                                oldVersion: Int,
                                                 renameMap: Map<String, Map<Int, String>> = emptyMap()
-): List<NEW> {
-    val oldItems = mutableListOf<NEW>()
+): List<Any> {
+    val oldItems = mutableListOf<Any>()
     
     this.getCursor(tableName).use { cursor ->
         if (cursor.moveToFirst()) {
             do {
-                val old = cursor.mapToEntity(OLD::class)
-                val new = old.oldToNewEntt<OLD, NEW>(oldVersion, renameMap)
+                val old = cursor.mapToEntity(oldClass)
+                val new = convertEntity(
+                    oldObject = old,
+                    newClass = newClass,
+                    oldVersion = oldVersion,
+                    renameMap = renameMap
+                )
                 oldItems += new
             } while (cursor.moveToNext())
         }
@@ -114,44 +123,41 @@ inline fun <reified OLD : Any, reified NEW : Any> SQLiteDatabase.readAsMigrated(
 
 
 /**
- * Creates a new instance of [TO] by mapping properties from the current [FROM] instance,
- * applying a nested renaming map with version awareness.
+ * Converts an [oldObject] to a new instance of [newClass], applying renaming rules and type matching.
  *
- * For each constructor parameter of [TO], this function:
- * - Finds the corresponding property name in [FROM] by checking [renameMap] based on [oldVersion].
- * - Uses the matching property value from [FROM] if types align.
- * - Otherwise, provides a default value for common types (Int, String, Boolean, etc.).
+ * Each constructor parameter of [newClass] is resolved by:
+ * - Mapping to the appropriate property in [oldObject], considering renames from [renameMap] and [oldVersion].
+ * - Assigning the value if the type matches, or falling back to a default value if not.
  *
- * @param oldVersion The old schema version to select the correct property rename.
- * @param renameMap Maps new property names to old property names by version.
- *                  Format: renameMap[newProperty][oldVersion] = oldProperty
- * @param overrides Optional lambda to customize or modify the created [TO] instance.
- * @return A new [TO] instance populated with mapped or default values.
+ * @param oldObject The object to convert.
+ * @param newClass The target class to construct.
+ * @param oldVersion The schema version used for renaming logic.
+ * @param renameMap Maps new properties to their old names by version.
+ * @return A new instance of [newClass] with mapped or defaulted values.
  */
-inline fun <reified FROM : Any, reified TO : Any> FROM.oldToNewEntt(
+fun convertEntity(                              oldObject: Any,
+                                                 newClass: KClass<*>,
                                                oldVersion: Int,
-                                                renameMap: Map<String, Map<Int, String>> = emptyMap(),
-                                                overrides: TO.(FROM) -> TO = { this }
-): TO {
-    val fromProps = FROM::class.memberProperties.associateBy { it.name }
-    val constructor = TO::class.primaryConstructor ?: error("TO class must have a primary constructor")
+                                                renameMap: Map<String, Map<Int, String>> = emptyMap()
+): Any {
+    val fromProps = oldObject::class.memberProperties.associateBy { it.name }
+    val constructor = newClass.primaryConstructor
+        ?: error("Target class ${newClass.simpleName} must have a primary constructor")
     
     val args = constructor.parameters.associateWith { param ->
         val toName = param.name ?: error("Constructor parameter must have a name")
-    
-        // Determine which FROM property to use via nested rename map or direct match
+        
         val fromName = MigrationUtils.findOldName(toName, oldVersion, renameMap) ?: toName
         val fromProp = fromProps[fromName]
         
-        if (fromProp != null && param.type.classifier == fromProp.returnType.classifier) {
-            fromProp.get(this)
+        if (fromProp != null && fromProp.returnType.isSubtypeOf(param.type)) {
+            @Suppress("UNCHECKED_CAST")
+            (fromProp as KProperty1<Any, *>).get(oldObject)
         } else {
             defaultValueForParam(param)
         }
-    }.filterValues { it != null }
-
-    val instance = constructor.callBy(args)
-    return overrides(instance, this)
+    }
+    return constructor.callBy(args)
 }
 
 /**
@@ -159,14 +165,14 @@ inline fun <reified FROM : Any, reified TO : Any> FROM.oldToNewEntt(
  */
 object MigrationUtils {
     /**
-     * Finds the old property name corresponding to a given new property [newName],
-     * based on the [version] and [renameMap].
+     * Resolves the old property name for a given [newName] based on [version] using [renameMap].
      *
-     * The [renameMap] is structured as:
-     * newPropertyName -> (oldVersion -> oldPropertyName)
+     * Chooses the most recent version <= [version] that has a mapping.
      *
-     * This function returns the old property name for the greatest version <= [version].
-     * Returns null if no mapping is found.
+     * @param newName The new property name.
+     * @param version The schema version being migrated from.
+     * @param renameMap A nested map: newName -> (version -> oldName).
+     * @return The matching old property name, or null if none found.
      */
     fun findOldName(                                           newName: String,
                                                                version: Int,
@@ -179,9 +185,11 @@ object MigrationUtils {
     }
     
     /**
-     * Provides default values for common Kotlin types for use when no matching property
-     * value can be found during migration.
-     * Returns null for unsupported or unknown types.
+     * Provides a default value for a constructor [param] of common types,
+     * used when no value can be mapped from the source object.
+     *
+     * Supports: Int, Long, Boolean, String, Double, Float.
+     * Returns null for other or unknown types.
      */
     fun defaultValueForParam(                                      param: kotlin.reflect.KParameter
     ): Any? = when (param.type.classifier) {
