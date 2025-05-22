@@ -183,6 +183,8 @@ open class DbHelper(
     
     // ================  Some useful utility fun  ================
     
+    inline fun tableExists(tableName: String) = readDB(false, "tableExists") { DbGetSet(it).tableExists(tableName) }
+    
     inline fun isTableEmpty(tableName: String) = readDB(true, "isTableEmpty") { DbGetSet(it).isTableEmpty(tableName) }
     
     inline fun getLastID(tableName: String) = readDB(0, "getLastID") { DbGetSet(it).getLastID(tableName) }
