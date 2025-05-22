@@ -45,15 +45,11 @@ import kotlin.reflect.full.primaryConstructor
  **/
 
 
-/** 
- * Creates a TableInfo instance for a data class and table name.
- * Used to define table schema for creation.
+/**
+ * Creates a single table in db.
+ * Usage: db.createTableOf<EntityDataClass>(tableName)
  */
-inline fun <reified T : Any> tableOf(name: String): TableInfo = object : TableInfo {
-    override val name = name
-    override fun createQuery() = newTableQuery<T>(name)
-}
-
+inline fun <reified T : Any> SQLiteDatabase.createTableOf(tableName: String) = createTables(tableOf<T>(tableName))
 
 /**
  * Creates multiple tables in the database given vararg TableInfo.
@@ -66,6 +62,16 @@ fun SQLiteDatabase.createTables(vararg tables: TableInfo) = createTables(tables.
 fun SQLiteDatabase.createTables(                                           tables: List<TableInfo>
 ) {
     tables.forEach { execSQL(it.createQuery()) }
+}
+
+
+/** 
+ * Creates a TableInfo instance for a data class and table name.
+ * Used to define table schema for creation.
+ */
+inline fun <reified T : Any> tableOf(name: String): TableInfo = object : TableInfo {
+    override val name = name
+    override fun createQuery() = newTableQuery<T>(name)
 }
 
 
