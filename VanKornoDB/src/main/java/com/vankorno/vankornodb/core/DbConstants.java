@@ -5,7 +5,7 @@ public class DbConstants {
 InMemoryDB=":memory:",
 
 select="SELECT ",  from=" FROM ",   selectAllFrom="SELECT * FROM ",
-dbCreateT="CREATE TABLE ",
+dbCreateT="CREATE TABLE IF NOT EXISTS ",
 dbDefault=" DEFAULT ",
 dbDrop="DROP TABLE IF EXISTS ",
 deleteFrom="DELETE FROM ",
