@@ -11,9 +11,9 @@ class DbMigrationTest {
     @Test
     fun `basic field rename with version map`() {
         val old = OldV1(id = 1, title = "Task 1", note = "Some note")
-        val renameMap = mapOf("name" to mapOf(1 to "title"))
+        val renameMap = mapOf(Pair("name", "title"))
         
-        val new = convertEntity(oldObject = old, newClass = NewV2::class, oldVersion = 1, renameMap = renameMap) as NewV2
+        val new = convertEntity(old, NewV2::class, renameMap) as NewV2
         
         assertEquals(old.id, new.id)
         assertEquals(old.title, new.name)
@@ -26,9 +26,9 @@ class DbMigrationTest {
     @Test
     fun `missing fields fallback to default`() {
         val old = OldV2(id = 2, title = "Legacy", extra = "ignored")
-        val renameMap = mapOf("name" to mapOf(2 to "title"))
+        val renameMap = mapOf(Pair("name", "title"))
         
-        val new = convertEntity(oldObject = old, newClass = NewV3::class, oldVersion = 2, renameMap = renameMap) as NewV3
+        val new = convertEntity(old, NewV3::class, renameMap) as NewV3
         
         assertEquals(2, new.id)
         assertEquals("Legacy", new.name)
@@ -41,7 +41,7 @@ class DbMigrationTest {
     @Test
     fun `unmapped field fallback with primitive default`() {
         val old = OldV3(id = 3, text = "abc")
-        val new = convertEntity(oldObject = old, newClass = NewV4::class, oldVersion = 3) as NewV4
+        val new = convertEntity(old, NewV4::class) as NewV4
         
         assertEquals(old.id, new.id)
         assertEquals(old.text, new.text)
