@@ -201,9 +201,94 @@ object MigrationUtils {
         Float::class -> 0f
         else -> null
     }
+    
+    
+    
+    
+    /**
+     * Generates a list of intermediate version steps needed to migrate from an older version to a target version.
+     *
+     * The migration follows a predictable and tiered strategy:
+     * 1. If the starting version is not a "tenner" (i.e. ends in a zero), the first step is the next higher tenner.
+     * 2. Then, the function ascends through progressively larger tier milestones (100, 1000, 10000, etc.)
+     *    as long as each next tier is less than the target version.
+     * 3. If the gap between the last milestone and the target version is more than 10,
+     *    the closest tenner before the target is added as the next step.
+     * 4. The final step is the target version itself.
+     *
+     * @param oldVer The starting version number.
+     * @param targetVer The version to migrate to.
+     * @return A list of version numbers representing each step in the migration path.
+     */
+    fun getMigrationSteps(                                                        oldVer: Int,
+                                                                               targetVer: Int
+    ): List<Int> {
+        val steps = mutableListOf<Int>()
+        var current = oldVer
+        
+        // Step 1: if not a tenner, move to next tenner
+        if (!isTenner(current)) {
+            val nextTenner = ((current / 10) + 1) * 10
+            if (nextTenner <= targetVer) {
+                steps += nextTenner
+                current = nextTenner
+            }
+        }
+        
+        // Step 2: go up by hardcoded tiers as long as next tier > current and < targetVer
+        val tiers = listOf(100, 1000, 10_000, 100_000)
+        tiers.forEach { tier ->
+            if (tier > current && tier < targetVer) {
+                steps += tier
+                current = tier
+            }
+        }
+        
+        // Step 3: if current is still far from target, add closest tenner before targetVer
+        val targetTenner = (targetVer / 10) * 10
+        if (targetTenner > current && targetTenner != targetVer) {
+            steps += targetTenner
+        }
+        
+        // Final step: only go to targetVer if not already there
+        if (current != targetVer)
+            steps += targetVer
+        
+        return steps
+    }
+    private fun isTenner(v: Int): Boolean = v % 10 == 0
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Probably not needed anymore
 
 /**
  * Maps the current instance of [FROM] to a new instance of [TO] by copying all properties
