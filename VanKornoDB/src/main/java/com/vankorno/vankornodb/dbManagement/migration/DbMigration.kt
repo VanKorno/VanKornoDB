@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.getMigratio
 import com.vankorno.vankornodb.getCursor
 import com.vankorno.vankornodb.getSet.insertEntity
 import com.vankorno.vankornodb.getSet.toEntity
+import java.util.concurrent.ThreadLocalRandom.current
 import kotlin.collections.get
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -30,7 +31,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
                                                   renameHistory: Map<String, List<Pair<Int, String>>>
 ) {
     val steps = getMigrationSteps(oldVersion, newVersion)
-    if (steps.isEmpty()) return
+    if (steps.isEmpty()) return //\/\/\/\/\/\
     
     val finalClass = versionedClasses[newVersion]
         ?: error("Missing entity class for version $newVersion")
@@ -119,7 +120,14 @@ fun Any.convertThroughSteps(                            fromVer: Int,
     }
 
 
-
+/**
+ * Builds a snapshot of field renames between two entity versions.
+ *
+ * @param fromVer The source version number.
+ * @param toVer The target version number.
+ * @param renameHistory A map of current field names to their rename history.
+ * @return A map where each key is the current name and each value is the corresponding old name.
+ */
 fun getRenameSnapshot(                                   fromVer: Int,
                                                            toVer: Int,
                                                    renameHistory: Map<String, List<Pair<Int, String>>>
@@ -137,6 +145,13 @@ fun getRenameSnapshot(                                   fromVer: Int,
     return snapshot
 }
 
+/**
+ * Finds the field name used at or before a specific version in the rename history.
+ *
+ * @param history A list of (version, name) pairs representing rename history.
+ * @param version The version to query.
+ * @return The name valid at the given version, or null if not found.
+ */
 private fun getNameAtVersion(                                       history: List<Pair<Int, String>>,
                                                                     version: Int
 ): String? = history
@@ -322,6 +337,8 @@ object MigrationUtils {
                                                                                targetVer: Int
     ): List<Int> {
         val steps = mutableListOf<Int>()
+        if (oldVer == targetVer) return steps //\/\/\/\/\
+        
         var current = oldVer
         
         // Step 1: if not a tenner, move to next tenner
