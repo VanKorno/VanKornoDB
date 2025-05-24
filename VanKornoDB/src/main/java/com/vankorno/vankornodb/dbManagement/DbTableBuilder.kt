@@ -35,7 +35,7 @@ import kotlin.reflect.full.primaryConstructor
 /**
  * Creates a single table in db.
  */
-fun SQLiteDatabase.createTableOf(tableName: String, entityClass: KClass<*>) = createTables(tableOf(tableName, entityClass))
+fun SQLiteDatabase.createTable(tableName: String, entityClass: KClass<*>) = createTables(tableOf(tableName, entityClass))
 
 /**
  * Creates multiple tables in the database given vararg TableInfo.

@@ -37,7 +37,7 @@ import kotlin.reflect.full.memberProperties
  * @param modify Optional lambda to customize ContentValues before insertion.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertInto(      table: String,
+inline fun <reified T : Any> SQLiteDatabase.insertEntity(    table: String,
                                                             entity: T,
                                                             modify: (ContentValues)->ContentValues = { it }
 ): Long {
@@ -57,10 +57,10 @@ inline fun <reified T : Any> SQLiteDatabase.insertInto(      table: String,
  * @param customize Optional lambda to customize ContentValues before update.
  * @return The number of rows affected.
  */
-inline fun <reified T : Any> SQLiteDatabase.updateIn(    tableName: String,
-                                                                id: Int,
-                                                            entity: T,
-                                                         customize: (ContentValues)->ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.updateEntity( tableName: String,
+                                                                 id: Int,
+                                                             entity: T,
+                                                          customize: (ContentValues)->ContentValues = { it }
 ): Int {
     val cv = customize(toContentValues(entity))
     return update(tableName, cv, ID+"=?", arrayOf(id.toString()))

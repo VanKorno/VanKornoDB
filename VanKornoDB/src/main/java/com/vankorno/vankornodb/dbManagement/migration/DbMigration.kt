@@ -5,12 +5,12 @@ package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.DbConstants.dbDrop
-import com.vankorno.vankornodb.dbManagement.createTableOf
+import com.vankorno.vankornodb.dbManagement.createTable
 import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.defaultValueForParam
 import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.getMigrationSteps
 import com.vankorno.vankornodb.getCursor
-import com.vankorno.vankornodb.getSet.insertInto
-import com.vankorno.vankornodb.getSet.mapToEntity
+import com.vankorno.vankornodb.getSet.insertEntity
+import com.vankorno.vankornodb.getSet.toEntity
 import kotlin.collections.get
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -39,8 +39,8 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
         tableName, oldVersion, newVersion, versionedClasses, renameHistory
     )
     this.execSQL(dbDrop + tableName)
-    this.createTableOf(tableName, finalClass)
-    convertedList.forEach { this.insertInto(tableName, it) }
+    this.createTable(tableName, finalClass)
+    convertedList.forEach { this.insertEntity(tableName, it) }
 }
 
 
@@ -68,7 +68,7 @@ fun SQLiteDatabase.readAsMigrated(                    tableName: String,
         val list = mutableListOf<Any>()
         if (cursor.moveToFirst()) {
             do {
-                val oldObj = cursor.mapToEntity(fromClass)
+                val oldObj = cursor.toEntity(fromClass)
                 val finalObj = oldObj.convertThroughSteps(
                     fromVer = oldVersion,
                     toVer = newVersion,
@@ -189,11 +189,11 @@ fun SQLiteDatabase.migrateLite(                           oldClass: KClass<*>,
         // region LOG
             println("Creating new table schema for: $tableName")
         // endregion
-        this.createTableOf(tableName, newClass)
+        this.createTable(tableName, newClass)
         // region LOG
             println("Reinserting migrated data into: $tableName, total rows: ${newList.size}")
         // endregion
-        newList.forEach { insertInto(tableName, it) }
+        newList.forEach { insertEntity(tableName, it) }
         // region LOG
             println("Migration completed for table: $tableName")
         // endregion
@@ -234,7 +234,7 @@ fun SQLiteDatabase.readAsMigratedSingleStep(              oldClass: KClass<*>,
     this.getCursor(tableName).use { cursor ->
         if (cursor.moveToFirst()) {
             do {
-                val old = cursor.mapToEntity(oldClass)
+                val old = cursor.toEntity(oldClass)
                 val new = convertEntity(old, newClass, renameSnapshot)
                 oldItems += new
             } while (cursor.moveToNext())
