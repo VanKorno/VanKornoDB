@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTableOf
 import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.defaultValueForParam
+import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.getMigrationSteps
 import com.vankorno.vankornodb.getCursor
 import com.vankorno.vankornodb.getSet.insertInto
 import com.vankorno.vankornodb.getSet.mapToEntity
@@ -18,12 +19,148 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 
+/**
+ * Fully migrates a table from [oldVersion] to [newVersion] by reading,
+ * converting, dropping the old table, and recreating the schema.
+ */
+fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
+                                                     oldVersion: Int,
+                                                     newVersion: Int,
+                                               versionedClasses: Map<Int, KClass<*>>,
+                                                  renameHistory: Map<String, List<Pair<Int, String>>>
+) {
+    val steps = getMigrationSteps(oldVersion, newVersion)
+    if (steps.isEmpty()) return
+    
+    val finalClass = versionedClasses[newVersion]
+        ?: error("Missing entity class for version $newVersion")
+    
+    val convertedList = readAsMigrated(
+        tableName, oldVersion, newVersion, versionedClasses, renameHistory
+    )
+    this.execSQL(dbDrop + tableName)
+    this.createTableOf(tableName, finalClass)
+    convertedList.forEach { this.insertInto(tableName, it) }
+}
+
+
+/**
+ * Reads and migrates all entities in a table from one version to another,
+ * returning the fully converted list without modifying the database.
+ *
+ * @param tableName Name of the table to read from.
+ * @param oldVersion The current version of stored entities.
+ * @param newVersion The version to migrate to.
+ * @param versionedClasses Map of all versioned entity classes.
+ * @param renameHistory History of field renames across versions.
+ * @return A list of fully converted entity instances.
+ */
+fun SQLiteDatabase.readAsMigrated(                    tableName: String,
+                                                     oldVersion: Int,
+                                                     newVersion: Int,
+                                               versionedClasses: Map<Int, KClass<*>>,
+                                                  renameHistory: Map<String, List<Pair<Int, String>>>
+): List<Any> {
+    val fromClass = versionedClasses[oldVersion]
+        ?: error("Missing entity class for version $oldVersion")
+
+    return this.getCursor(tableName).use { cursor ->
+        val list = mutableListOf<Any>()
+        if (cursor.moveToFirst()) {
+            do {
+                val oldObj = cursor.mapToEntity(fromClass)
+                val finalObj = oldObj.convertThroughSteps(
+                    fromVer = oldVersion,
+                    toVer = newVersion,
+                    versionedClasses = versionedClasses,
+                    renameHistory = renameHistory
+                )
+                list += finalObj
+            } while (cursor.moveToNext())
+        }
+        list
+    }
+}
+
+/**
+ * Converts this entity instance from one version to another through all required intermediate steps.
+ *
+ * This function performs stepwise migration using reflection and a versioned mapping of entity classes.
+ * At each step, field renaming is handled using the [renameHistory], and the conversion is done by
+ * `convertEntity(...)`.
+ *
+ * @param fromVer The version number this object currently represents.
+ * @param toVer The target version to convert this object to.
+ * @param versionedClasses Map of version numbers to their corresponding entity KClasses.
+ * @param renameHistory A map of field rename history across versions.
+ *
+ * @return A new instance of the final version's class with migrated data.
+ *
+ * @throws IllegalStateException If an entity class is missing for any required version.
+ */
+fun Any.convertThroughSteps(                            fromVer: Int,
+                                                          toVer: Int,
+                                               versionedClasses: Map<Int, KClass<*>>,
+                                                  renameHistory: Map<String, List<Pair<Int, String>>>
+    ): Any {
+        var current = this
+        var usedVersion = fromVer
+        val steps = getMigrationSteps(usedVersion, toVer)
+    
+        for (nextVer in steps) {
+            val renameSnapshot = getRenameSnapshot(usedVersion, nextVer, renameHistory)
+            val nextClass = versionedClasses[nextVer]
+                ?: error("Missing entity class for version $nextVer")
+            
+            current = convertEntity(current, nextClass, renameSnapshot)
+            usedVersion = nextVer
+        }
+        return current
+    }
+
+
+
+fun getRenameSnapshot(                                   fromVer: Int,
+                                                           toVer: Int,
+                                                   renameHistory: Map<String, List<Pair<Int, String>>>
+): Map<String, String> {
+    val snapshot = mutableMapOf<String, String>()
+    
+    for ((newestName, history) in renameHistory) {
+        val oldName = getNameAtVersion(history, fromVer)
+        val targetName = getNameAtVersion(history, toVer)
+        
+        if (oldName != null && targetName != null && oldName != targetName) {
+            snapshot[targetName] = oldName
+        }
+    }
+    return snapshot
+}
+
+private fun getNameAtVersion(                                       history: List<Pair<Int, String>>,
+                                                                    version: Int
+): String? = history
+                .filter { (ver, _) -> ver <= version }
+                .maxByOrNull{ it.first }?.second
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Migrates one or more tables from [oldClass] to [newClass], adapting data to the new structure.
  *
  * For each [tableName], this function:
- * 1. Reads existing rows using [readAsMigrated], applying rename rules and constructor mapping.
+ * 1. Reads existing rows using [readAsMigratedSingleStep], applying rename rules and constructor mapping.
  * 2. Drops the old table and recreates it using the schema from [newClass].
  * 3. Reinserts the migrated data into the new table.
  *
@@ -44,7 +181,7 @@ fun SQLiteDatabase.migrateLite(                           oldClass: KClass<*>,
         // region LOG
             println("Migrating table: $tableName")
         // endregion
-        val newList = readAsMigrated(oldClass, newClass, tableName, renameSnapshot)
+        val newList = readAsMigratedSingleStep(oldClass, newClass, tableName, renameSnapshot)
         // region LOG
             println("Dropping old table: $tableName")
         // endregion
@@ -87,7 +224,7 @@ fun SQLiteDatabase.migrateLite(                          tableName: String,
  * @param renameSnapshot Maps new property names to old ones.
  * @return A list of [newClass] instances created from the old data.
  */
-fun SQLiteDatabase.readAsMigrated(                        oldClass: KClass<*>,
+fun SQLiteDatabase.readAsMigratedSingleStep(              oldClass: KClass<*>,
                                                           newClass: KClass<*>,
                                                          tableName: String,
                                                     renameSnapshot: Map<String, String> = emptyMap()
