@@ -1,7 +1,6 @@
 package com.vankorno.vankornodb.getSet
 
 import android.database.sqlite.SQLiteDatabase
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import com.vankorno.vankornodb.core.CondBuilder
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.getBool
@@ -9,7 +8,7 @@ import com.vankorno.vankornodb.getCursor
 import kotlin.reflect.KClass
 
 
-inline fun <reified V> SQLiteDatabase.getValueList(                table: String,
+inline fun <reified V> SQLiteDatabase.getListOf(                   table: String,
                                                                   column: String,
                                                           noinline joins: JoinBuilder.()->Unit = {},
                                                           noinline where: CondBuilder.()->Unit = {},
