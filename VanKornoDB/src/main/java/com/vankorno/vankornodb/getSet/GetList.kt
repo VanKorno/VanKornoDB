@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.getSet
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.CondBuilder
+import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.getBool
 import com.vankorno.vankornodb.getCursor
@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 inline fun <reified V> SQLiteDatabase.getListOf(                   table: String,
                                                                   column: String,
                                                           noinline joins: JoinBuilder.()->Unit = {},
-                                                          noinline where: CondBuilder.()->Unit = {},
+                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                  groupBy: String = "",
                                                                   having: String = "",
                                                                  orderBy: String = "",
@@ -46,7 +46,7 @@ inline fun <reified V> SQLiteDatabase.getListOf(                   table: String
 inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                    noinline joins: JoinBuilder.()->Unit = {},
-                                                   noinline where: CondBuilder.()->Unit = {},
+                                                   noinline where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
@@ -71,7 +71,7 @@ inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
 inline fun <reified T : Any> SQLiteDatabase.getList(               table: String,
                                                                   column: String,
                                                           noinline joins: JoinBuilder.()->Unit = {},
-                                                          noinline where: CondBuilder.()->Unit = {},
+                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                  groupBy: String = "",
                                                                   having: String = "",
                                                                  orderBy: String = "",
@@ -89,7 +89,7 @@ fun <T : Any> SQLiteDatabase.getList(                       clazz: KClass<T>,
                                                             table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                             joins: JoinBuilder.()->Unit = {},
-                                                            where: CondBuilder.()->Unit = {},
+                                                            where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
@@ -114,7 +114,7 @@ fun <T : Any> SQLiteDatabase.getList(                              clazz: KClass
                                                                    table: String,
                                                                   column: String,
                                                                    joins: JoinBuilder.()->Unit = {},
-                                                                   where: CondBuilder.()->Unit = {},
+                                                                   where: WhereBuilder.()->Unit = {},
                                                                  groupBy: String = "",
                                                                   having: String = "",
                                                                  orderBy: String = "",

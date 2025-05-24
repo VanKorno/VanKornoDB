@@ -5,16 +5,14 @@ package com.vankorno.vankornodb
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.CondBuilder
-import com.vankorno.vankornodb.core.DbConstants.groupBy
-import com.vankorno.vankornodb.core.DbConstants.where
+import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.getQuery
 
 fun SQLiteDatabase.getCursor(                                      table: String,
                                                                  columns: Array<out String>,
                                                                    joins: JoinBuilder.()->Unit = {},
-                                                                   where: CondBuilder.()->Unit = {},
+                                                                   where: WhereBuilder.()->Unit = {},
                                                                  groupBy: String = "",
                                                                   having: String = "",
                                                                  orderBy: String = "",
@@ -30,7 +28,7 @@ fun SQLiteDatabase.getCursor(                                      table: String
 fun SQLiteDatabase.getCursor(                                      table: String,
                                                                   column: String = "*",
                                                                    joins: JoinBuilder.()->Unit = {},
-                                                                   where: CondBuilder.()->Unit = {},
+                                                                   where: WhereBuilder.()->Unit = {},
                                                                  groupBy: String = "",
                                                                   having: String = "",
                                                                  orderBy: String = "",

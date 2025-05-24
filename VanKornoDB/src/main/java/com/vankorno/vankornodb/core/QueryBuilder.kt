@@ -9,7 +9,7 @@ import com.vankorno.vankornodb.core.DbConstants.comma
 fun getQuery(                                               table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                             joins: JoinBuilder.()->Unit = {},
-                                                            where: CondBuilder.()->Unit = {},
+                                                            where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
@@ -17,7 +17,7 @@ fun getQuery(                                               table: String,
                                                            offset: Int? = null,
                                                         customEnd: String = "" /** To pass your own string. Use with caution! (SQL-injection risk)**/
 ): Pair<String, Array<String>> {
-    val conditions = CondBuilder().apply(where)
+    val conditions = WhereBuilder().apply(where)
     val joinBuilder = JoinBuilder().apply(joins)
     
     val query = buildString {
@@ -61,7 +61,7 @@ fun getQuery(                                               table: String,
 }
 
 
-class CondBuilder {
+class WhereBuilder {
     val clauses = mutableListOf<String>()
     val args = mutableListOf<String>()
     
@@ -103,35 +103,35 @@ class CondBuilder {
     
     
     
-    fun group(                                                   whereBuilder: CondBuilder.()->Unit
+    fun group(                                                   whereBuilder: WhereBuilder.()->Unit
     ) {
-        val innerBuilder = CondBuilder().apply(whereBuilder)
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
         clauses.add("(" + innerBuilder.clauses.joinToString(" ") + ")")
         args.addAll(innerBuilder.args)
     }
 
     
-    fun and(                                                     whereBuilder: CondBuilder.()->Unit
+    fun and(                                                     whereBuilder: WhereBuilder.()->Unit
     ) {
         clauses.add("AND")
-        val innerBuilder = CondBuilder().apply(whereBuilder)
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
         clauses.addAll(innerBuilder.clauses)
         args.addAll(innerBuilder.args)
     }
-    fun andGroup(                                                whereBuilder: CondBuilder.()->Unit
+    fun andGroup(                                                whereBuilder: WhereBuilder.()->Unit
     ) {
         clauses.add("AND")
         group(whereBuilder)
     }
     
-    fun or(                                                      whereBuilder: CondBuilder.()->Unit
+    fun or(                                                      whereBuilder: WhereBuilder.()->Unit
     ) {
         clauses.add("OR")
-        val innerBuilder = CondBuilder().apply(whereBuilder)
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
         clauses.addAll(innerBuilder.clauses)
         args.addAll(innerBuilder.args)
     }
-    fun orGroup(                                                 whereBuilder: CondBuilder.()->Unit
+    fun orGroup(                                                 whereBuilder: WhereBuilder.()->Unit
     ) {
         clauses.add("OR")
         group(whereBuilder)
@@ -140,7 +140,7 @@ class CondBuilder {
     fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                             joins: JoinBuilder.()->Unit = {},
-                                                            where: CondBuilder.()->Unit = {},
+                                                            where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
