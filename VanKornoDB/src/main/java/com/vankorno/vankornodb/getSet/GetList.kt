@@ -1,10 +1,48 @@
 package com.vankorno.vankornodb.getSet
 
 import android.database.sqlite.SQLiteDatabase
+import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import com.vankorno.vankornodb.core.CondBuilder
 import com.vankorno.vankornodb.core.JoinBuilder
+import com.vankorno.vankornodb.getBool
 import com.vankorno.vankornodb.getCursor
 import kotlin.reflect.KClass
+
+
+inline fun <reified V> SQLiteDatabase.getValueList(                table: String,
+                                                                  column: String,
+                                                          noinline joins: JoinBuilder.()->Unit = {},
+                                                          noinline where: CondBuilder.()->Unit = {},
+                                                                 groupBy: String = "",
+                                                                  having: String = "",
+                                                                 orderBy: String = "",
+                                                                   limit: Int? = null,
+                                                                  offset: Int? = null,
+                                                               customEnd: String = ""
+): List<V> = getCursor(
+    table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd
+).use { cursor ->
+    buildList {
+        while (cursor.moveToNext()) {
+            @Suppress("UNCHECKED_CAST")
+            add(
+                when (V::class) {
+                    Boolean::class -> cursor.getBool(0)
+                    Int::class -> cursor.getInt(0)
+                    Long::class -> cursor.getLong(0)
+                    Float::class -> cursor.getFloat(0)
+                    Double::class -> cursor.getDouble(0)
+                    String::class -> cursor.getString(0)
+                    ByteArray::class -> cursor.getBlob(0)
+                    else -> error("Unsupported column type: ${V::class}")
+                } as V
+            )
+        }
+    }
+}
+
+
+
 
 inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
                                                           columns: Array<out String> = arrayOf("*"),
