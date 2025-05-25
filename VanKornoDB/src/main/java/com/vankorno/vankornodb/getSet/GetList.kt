@@ -49,7 +49,6 @@ inline fun <reified V> SQLiteDatabase.getListOf(                   table: String
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
 inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
-                                                          columns: Array<out String> = arrayOf("*"),
                                                    noinline joins: JoinBuilder.()->Unit = {},
                                                    noinline where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
@@ -60,7 +59,7 @@ inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
                                                         customEnd: String = "",
                                                 noinline mapAfter: (T)->T = {it}
 ): List<T> = getCursor(
-    table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -73,25 +72,6 @@ inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
 
 
 
-/** 
- * Convenience overload of [getList] for fetching entities of type [T] from a single column. 
- * Delegates to the multi-column version with the column wrapped in an array.
- */
-inline fun <reified T : Any> SQLiteDatabase.getList(               table: String,
-                                                                  column: String,
-                                                          noinline joins: JoinBuilder.()->Unit = {},
-                                                          noinline where: WhereBuilder.()->Unit = {},
-                                                                 groupBy: String = "",
-                                                                  having: String = "",
-                                                                 orderBy: String = "",
-                                                                   limit: Int? = null,
-                                                                  offset: Int? = null,
-                                                               customEnd: String = "",
-                                                       noinline mapAfter: (T)->T = {it}
-): List<T> = getList(
-    table, arrayOf(column), joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter
-)
-
 
 
 /** 
@@ -100,7 +80,6 @@ inline fun <reified T : Any> SQLiteDatabase.getList(               table: String
  */
 fun <T : Any> SQLiteDatabase.getList(                       clazz: KClass<T>,
                                                             table: String,
-                                                          columns: Array<out String> = arrayOf("*"),
                                                             joins: JoinBuilder.()->Unit = {},
                                                             where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
@@ -111,7 +90,7 @@ fun <T : Any> SQLiteDatabase.getList(                       clazz: KClass<T>,
                                                         customEnd: String = "",
                                                          mapAfter: (T)->T = {it}
 ): List<T> = getCursor(
-    table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -124,23 +103,4 @@ fun <T : Any> SQLiteDatabase.getList(                       clazz: KClass<T>,
 
 
 
-/** 
- * Convenience overload of [getList] with explicit [clazz], for fetching entities from a single column.
- * Delegates to the multi-column version with the column wrapped in an array.
- */
-fun <T : Any> SQLiteDatabase.getList(                              clazz: KClass<T>,
-                                                                   table: String,
-                                                                  column: String,
-                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                   where: WhereBuilder.()->Unit = {},
-                                                                 groupBy: String = "",
-                                                                  having: String = "",
-                                                                 orderBy: String = "",
-                                                                   limit: Int? = null,
-                                                                  offset: Int? = null,
-                                                               customEnd: String = "",
-                                                                mapAfter: (T)->T = {it}
-): List<T> = getList(
-    clazz, table, arrayOf(column), joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter
-)
 

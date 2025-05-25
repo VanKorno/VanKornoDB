@@ -12,10 +12,11 @@ import com.vankorno.vankornodb.core.WhereBuilder
 
 fun SQLiteDatabase.getRowCount(                                    table: String,
                                                                    joins: JoinBuilder.()->Unit = {},
-                                                                   where: WhereBuilder.()->Unit = {},
-                                                                 groupBy: String = ""
+                                                                   where: WhereBuilder.()->Unit = {}
 
-): Int = getCursor(table, arrayOf("1"), joins, where, groupBy).use { it.count }
+): Int = getCursor(table, arrayOf("1"), joins, where).use { it.count }
+
+
 
 
 
