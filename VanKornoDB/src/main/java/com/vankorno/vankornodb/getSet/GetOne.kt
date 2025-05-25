@@ -6,10 +6,14 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.JoinBuilder
 import kotlin.reflect.KClass
 
+/** Retrieves a single entity of type [T] by its ID. Throws if no row found.*/
 inline fun <reified T : Any> SQLiteDatabase.getOneById(                            table: String,
                                                                                       id: Int
 ): T = getOne(table, where = {ID equal id})
 
+
+
+/** Retrieves a single entity of type [T] by its ID, or null if not found.*/
 
 inline fun <reified T : Any> SQLiteDatabase.getOneOrNullById(                      table: String,
                                                                                       id: Int
@@ -18,6 +22,11 @@ inline fun <reified T : Any> SQLiteDatabase.getOneOrNullById(                   
 
 
 
+/**
+ * Retrieves a single entity of type [T] from the given [table] selecting specified [columns].
+ * Throws if no row is found.
+ * Uses reified type parameter and default "*" column selection.
+ */
 inline fun <reified T : Any> SQLiteDatabase.getOne(         table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                    noinline joins: JoinBuilder.()->Unit = {},
@@ -35,7 +44,9 @@ inline fun <reified T : Any> SQLiteDatabase.getOne(         table: String,
 }
 
 
-
+/**
+ * Returns one result of type [T] from [table], selecting a single [column]. Fails if no row is found.
+ */
 inline fun <reified T : Any> SQLiteDatabase.getOne(                table: String,
                                                                   column: String,
                                                           noinline joins: JoinBuilder.()->Unit = {},
@@ -50,7 +61,9 @@ inline fun <reified T : Any> SQLiteDatabase.getOne(                table: String
 )
 
 
-
+/**
+ * Gets one [T] from [table] with explicit type. Throws if no result.
+ */
 fun <T : Any> SQLiteDatabase.getOne(                        clazz: KClass<T>,
                                                             table: String,
                                                           columns: Array<out String> = arrayOf("*"),
@@ -69,7 +82,9 @@ fun <T : Any> SQLiteDatabase.getOne(                        clazz: KClass<T>,
 }
 
 
-
+/**
+ * Gets one [T] from [table], single column + explicit type. Throws if no result.
+ */
 fun <T : Any> SQLiteDatabase.getOne(                               clazz: KClass<T>,
                                                                    table: String,
                                                                   column: String,
@@ -93,7 +108,9 @@ fun <T : Any> SQLiteDatabase.getOne(                               clazz: KClass
 
 
 
-
+/**
+ * Queries [table] for a single result of type [T] using [columns]. Returns null if no result found.
+ */
 inline fun <reified T : Any> SQLiteDatabase.getOneOrNull(   table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                    noinline joins: JoinBuilder.()->Unit = {},
@@ -112,7 +129,9 @@ inline fun <reified T : Any> SQLiteDatabase.getOneOrNull(   table: String,
 }
 
 
-
+/**
+ * Queries [table] for a single result of type [T] using one [column]. Returns null if no result found.
+ */
 inline fun <reified T : Any> SQLiteDatabase.getOneOrNull(          table: String,
                                                                   column: String,
                                                           noinline joins: JoinBuilder.()->Unit = {},
@@ -128,7 +147,9 @@ inline fun <reified T : Any> SQLiteDatabase.getOneOrNull(          table: String
 )
 
 
-
+/**
+ * Queries [table] for a single result of [clazz] using [columns]. Returns null if no result found.
+ */
 fun <T : Any> SQLiteDatabase.getOneOrNull(                  clazz: KClass<T>,
                                                             table: String,
                                                           columns: Array<out String> = arrayOf("*"),
@@ -148,7 +169,9 @@ fun <T : Any> SQLiteDatabase.getOneOrNull(                  clazz: KClass<T>,
 }
 
 
-
+/**
+ * Queries [table] for a single result of [clazz] using one [column]. Returns null if no result found.
+ */
 fun <T : Any> SQLiteDatabase.getOneOrNull(                         clazz: KClass<T>,
                                                                    table: String,
                                                                   column: String,

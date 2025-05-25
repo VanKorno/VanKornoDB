@@ -6,7 +6,10 @@ import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.getBool
 import kotlin.reflect.KClass
 
-
+/** 
+ * Retrieves a list of values from a single column, cast to the specified type [V]. 
+ * Supports filtering, sorting, grouping, and pagination.
+ */
 inline fun <reified V> SQLiteDatabase.getListOf(                   table: String,
                                                                   column: String,
                                                           noinline joins: JoinBuilder.()->Unit = {},
@@ -41,7 +44,10 @@ inline fun <reified V> SQLiteDatabase.getListOf(                   table: String
 
 
 
-
+/** 
+ * Retrieves a list of entities of type [T] mapped from the specified columns. 
+ * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
+ */
 inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
                                                           columns: Array<out String> = arrayOf("*"),
                                                    noinline joins: JoinBuilder.()->Unit = {},
@@ -67,6 +73,10 @@ inline fun <reified T : Any> SQLiteDatabase.getList(        table: String,
 
 
 
+/** 
+ * Convenience overload of [getList] for fetching entities of type [T] from a single column. 
+ * Delegates to the multi-column version with the column wrapped in an array.
+ */
 inline fun <reified T : Any> SQLiteDatabase.getList(               table: String,
                                                                   column: String,
                                                           noinline joins: JoinBuilder.()->Unit = {},
@@ -84,6 +94,10 @@ inline fun <reified T : Any> SQLiteDatabase.getList(               table: String
 
 
 
+/** 
+ * Retrieves a list of entities of the specified [clazz] mapped from the given columns. 
+ * Similar to the reified version but uses explicit KClass parameter.
+ */
 fun <T : Any> SQLiteDatabase.getList(                       clazz: KClass<T>,
                                                             table: String,
                                                           columns: Array<out String> = arrayOf("*"),
@@ -109,6 +123,11 @@ fun <T : Any> SQLiteDatabase.getList(                       clazz: KClass<T>,
 }
 
 
+
+/** 
+ * Convenience overload of [getList] with explicit [clazz], for fetching entities from a single column.
+ * Delegates to the multi-column version with the column wrapped in an array.
+ */
 fun <T : Any> SQLiteDatabase.getList(                              clazz: KClass<T>,
                                                                    table: String,
                                                                   column: String,
