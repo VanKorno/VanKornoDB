@@ -38,7 +38,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
                                                      newVersion: Int,
                                                versionedClasses: Map<Int, KClass<*>>,
                                                   renameHistory: Map<String, List<Pair<Int, String>>>,
-                                                  allMilestones: List<Pair<Int, MigrationStepLambda>>,
+                                                  allMilestones: List<Pair<Int, MigrMilestoneLambda>>,
                                                   onNewDbFilled: (List<Any>)->Unit = {}
 ) {
     if (newVersion <= oldVersion) return //\/\/\/\/\/\
@@ -70,7 +70,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     onNewDbFilled(migratedList)
 }
 
-typealias MigrationStepLambda = (Any) -> Any
+typealias MigrMilestoneLambda = (Any) -> Any
 
 
 
@@ -159,7 +159,7 @@ open class MigrationUtils {
                                                           steps: List<Int>,
                                                   renameHistory: Map<String, List<Pair<Int, String>>>,
                                                versionedClasses: Map<Int, KClass<*>>,
-                                                        lambdas: Map<Int, MigrationStepLambda>
+                                                        lambdas: Map<Int, MigrMilestoneLambda>
     ): Any {
         var current = original
         var currentVer = oldVersion
