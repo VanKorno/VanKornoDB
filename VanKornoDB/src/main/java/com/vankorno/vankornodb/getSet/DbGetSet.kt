@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.*
 import com.vankorno.vankornodb.getBool
-import com.vankorno.vankornodb.getCursor
 
 private const val TAG = "DbGetSet"
 

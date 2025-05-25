@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.JoinBuilder
-import com.vankorno.vankornodb.getCursor
 import kotlin.reflect.KClass
 
 inline fun <reified T : Any> SQLiteDatabase.getOneById(                            table: String,

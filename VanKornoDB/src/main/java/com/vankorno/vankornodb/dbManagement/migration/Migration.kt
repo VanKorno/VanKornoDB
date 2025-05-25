@@ -8,10 +8,9 @@ import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
 import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.defaultValueForParam
 import com.vankorno.vankornodb.dbManagement.migration.MigrationUtils.getMigrationSteps
-import com.vankorno.vankornodb.getCursor
+import com.vankorno.vankornodb.getSet.getCursor
 import com.vankorno.vankornodb.getSet.insertEntity
 import com.vankorno.vankornodb.getSet.toEntity
-import java.util.concurrent.ThreadLocalRandom.current
 import kotlin.collections.get
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
