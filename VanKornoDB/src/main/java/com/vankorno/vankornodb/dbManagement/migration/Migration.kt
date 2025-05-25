@@ -16,7 +16,6 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
-
 /**
  * Migrates the contents of a table through multiple versioned entity definitions and optional transformation lambdas.
  *

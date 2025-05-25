@@ -72,7 +72,7 @@ db.getCursor(
 
 // OTHER USAGE EXAMPLES
 
-fun isEmpty(id: Int) = db.getCursor(TableName, where = {TabID equal id}).use {it.count == 0}
+db.getCursor(TableName, where = {TabID equal id}).use {it.count == 0}
 
 
 db.createTables(
@@ -84,7 +84,9 @@ db.createTables(
 db.insertInto<SettingsEntity>(SettingsTable, new) // ORM stuff... Auto-mapping based on a data class
 cursor.mapToEntity(SettingsEntity::class)
 
-db.migrateLite<OldEntity, NewEntity>(oldVersion, renameMap, tableName) // easy migrations
+db.getList<UserEntity>(TableName, where = { Mood equal good })
+db.getOne<UserEntity>(TableName, where = { Mood equal bad })
+
 
 
 ```
