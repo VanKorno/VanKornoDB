@@ -201,7 +201,7 @@ open class DbGetSet(val db: SQLiteDatabase) {
     ).use { it.moveToFirst() }
     
     
-    fun isTableEmpty(tableName: String) = db.getCursor(tableName, RowID, limit = 1).use { !it.moveToFirst() }
+    fun isTableEmpty(tableName: String) = !db.hasRows(tableName)
     
     
     fun getNewPriority(                                                        tableName: String
