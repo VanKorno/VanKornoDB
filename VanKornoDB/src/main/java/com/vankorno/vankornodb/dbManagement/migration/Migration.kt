@@ -17,8 +17,23 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
 
-typealias MigrationStepLambda = (Any) -> Any
-
+/**
+ * Migrates the contents of a table through multiple versioned entity definitions and optional transformation lambdas.
+ *
+ * This function performs step-by-step data migration from [oldVersion] to [newVersion], converting each entity instance
+ * according to the provided versioned classes, rename history, and transformation lambdas. The table is dropped,
+ * recreated using the structure of the final version class, and repopulated with the migrated data.
+ *
+ * @param tableName The name of the table to migrate.
+ * @param oldVersion The version of the entity currently stored in the table.
+ * @param newVersion The target version of the entity to migrate to.
+ * @param versionedClasses A map of version numbers to their corresponding entity KClass definitions.
+ * @param renameHistory A map of current property names to their list of historical names and versions.
+ * @param allMilestones A list of intermediate version numbers paired with transformation lambdas to apply during migration.
+ * @param onNewDbFilled An optional callback invoked with the list of fully migrated objects after the table has been repopulated.
+ *
+ * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
+ */
 fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
                                                      oldVersion: Int,
                                                      newVersion: Int,
@@ -45,7 +60,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
         ?: error("Missing entity class for version $newVersion")
     
     val utils = MigrationUtils()
-    val oldUnits = utils.getListOfOlds(this, tableName, oldVersion, versionedClasses)
+    val oldUnits = utils.readEntitiesFromVersion(this, tableName, oldVersion, versionedClasses)
     
     val migratedList = oldUnits.map { original ->
         utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
@@ -56,10 +71,14 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     onNewDbFilled(migratedList)
 }
 
+typealias MigrationStepLambda = (Any) -> Any
 
-/**
- * Utility functions to assist with migration-related property name resolution and default value provisioning.
- */
+
+
+
+
+
+
 open class MigrationUtils {
     /**
      * Converts an [oldObject] to a new instance of [newClass], applying renaming rules and type matching.
@@ -108,14 +127,17 @@ open class MigrationUtils {
     }
     
     
-    
-    fun getListOfOlds(                                                       db: SQLiteDatabase,
+    /** 
+     * Reads all rows from the specified table and maps them to instances 
+     * of the entity class corresponding to the given version.
+     */
+    fun readEntitiesFromVersion(                                             db: SQLiteDatabase,
                                                                       tableName: String,
-                                                                     oldVersion: Int,
+                                                                        version: Int,
                                                                versionedClasses: Map<Int, KClass<*>>
     ): List<Any> {
-        val fromClass = versionedClasses[oldVersion]
-            ?: error("Missing entity class for version $oldVersion")
+        val fromClass = versionedClasses[version]
+            ?: error("Missing entity class for version $version")
         
         return db.getCursor(tableName).use { cursor ->
             buildList {
@@ -129,6 +151,10 @@ open class MigrationUtils {
     }
     
     
+    /**
+     * Converts an entity through a sequence of intermediate versions using
+     * rename snapshots and version-specific migration lambdas.
+     */
     fun convertThroughSteps(                           original: Any,
                                                      oldVersion: Int,
                                                           steps: List<Int>,
@@ -152,6 +178,7 @@ open class MigrationUtils {
         }
         return current
     }
+    
     
     /**
      * Builds a snapshot of field renames between two entity versions.
