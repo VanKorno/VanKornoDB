@@ -151,8 +151,8 @@ fun <T : Any> toContentValues(                                 entity: T,
                 putValue(columnName, elem)
         }
     }
-    // region LOG
-        Log.v(TAG, "toContentValues() result: $cv")
+    // region disabled LOG
+        //Log.v(TAG, "toContentValues() result: $cv")
     // endregion
     return cv
 }
