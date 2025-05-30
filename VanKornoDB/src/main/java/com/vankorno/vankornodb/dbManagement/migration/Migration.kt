@@ -58,9 +58,8 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     
     val steps = relevantMilestones.map { it.first }
     // region LOG
-        Log.d(TAG, "migrateMultiStep() Steps = ${steps.joinToString(", ")}")
+        Log.d(TAG, "migrateMultiStep() Steps (to-versions) = ${steps.joinToString(", ")}")
     // endregion
-    
     val lambdas = relevantMilestones.toMap()
     
     val finalClass = versionedClasses[newVersion]
