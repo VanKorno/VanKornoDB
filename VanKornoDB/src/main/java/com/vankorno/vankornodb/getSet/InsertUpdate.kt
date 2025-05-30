@@ -46,6 +46,7 @@ inline fun <reified T : Any> SQLiteDatabase.insertEntity(    table: String,
 ): Long {
     val baseCV = toContentValues(entity)
     val finalCV = modify(baseCV)
+    if (finalCV.size() == 0) return -1
     return this.insert(table, null, finalCV)
 }
 

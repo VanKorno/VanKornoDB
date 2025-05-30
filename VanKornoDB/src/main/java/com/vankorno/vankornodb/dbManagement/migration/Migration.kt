@@ -55,12 +55,11 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     val newVerIsMilestone = relevantMilestones.any { it.first == newVersion }
     if (!newVerIsMilestone)
         relevantMilestones.add(newVersion to {})
-    // region LOG
-        val relevantMilestoneShowcase = relevantMilestones.forEach { it.first.toString() + ", "}
-        Log.d(TAG, "migrateMultiStep() relevantMilestones = $relevantMilestoneShowcase")
-    // endregion
     
     val steps = relevantMilestones.map { it.first }
+    // region LOG
+        Log.d(TAG, "migrateMultiStep() Steps = ${steps.joinToString(", ")}")
+    // endregion
     
     val lambdas = relevantMilestones.toMap()
     
