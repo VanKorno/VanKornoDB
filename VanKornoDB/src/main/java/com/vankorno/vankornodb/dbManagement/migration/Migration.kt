@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.dbManagement.migration
 **/
 
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
 import com.vankorno.vankornodb.getSet.getCursor
@@ -15,6 +16,8 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
+
+private const val TAG = "DbMigration"
 
 /**
  * Migrates the contents of a table through multiple versioned entity definitions and optional transformation lambdas.
@@ -42,7 +45,9 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
                                                   onNewDbFilled: (List<Any>)->Unit = {}
 ) {
     if (newVersion <= oldVersion) return //\/\/\/\/\/\
-    
+    // region LOG
+        Log.d(TAG, "Starting migrateMultiStep()... Table = $tableName, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${allMilestones.size}")
+    // endregion
     val relevantMilestones = allMilestones
         .filter { (version, _) -> version > oldVersion && version <= newVersion }
         .toMutableList()
@@ -50,6 +55,10 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     val newVerIsMilestone = relevantMilestones.any { it.first == newVersion }
     if (!newVerIsMilestone)
         relevantMilestones.add(newVersion to {})
+    // region LOG
+        val relevantMilestoneShowcase = relevantMilestones.forEach { it.first.toString() + ", "}
+        Log.d(TAG, "migrateMultiStep() relevantMilestones = $relevantMilestoneShowcase")
+    // endregion
     
     val steps = relevantMilestones.map { it.first }
     
@@ -65,8 +74,23 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
         utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
     }
     this.execSQL(dbDrop + tableName)
+    // region LOG
+        Log.d(TAG, "migrateMultiStep() $tableName table is dropped. Recreating...")
+    // endregion
     this.createTable(tableName, finalClass)
-    migratedList.forEach { this.insertEntity(tableName, it) }
+    // region LOG
+        Log.d(TAG, "migrateMultiStep() Fresh $tableName is supposed to be recreated at this point. Starting to insert rows...")
+    // endregion
+    migratedList.forEach {
+        val result = this.insertEntity(tableName, it)
+        // region LOG
+            if (result == -1L)
+                Log.w(TAG, "migrateMultiStep() FAILED to insert row: $it")
+        // endregion
+    }
+    // region LOG
+        Log.d(TAG, "migrateMultiStep() Done inserting rows. Starting onNewDbFilled()...")
+    // endregion
     onNewDbFilled(migratedList)
 }
 
@@ -135,10 +159,13 @@ open class MigrationUtils {
                                                                         version: Int,
                                                                versionedClasses: Map<Int, KClass<*>>
     ): List<Any> {
+        // region LOG
+            Log.d(TAG, "readEntitiesFromVersion() starts. Table = $tableName, version = $version")
+        // endregion
         val fromClass = versionedClasses[version]
             ?: error("Missing entity class for version $version")
         
-        return db.getCursor(tableName).use { cursor ->
+        val elements =  db.getCursor(tableName).use { cursor ->
             buildList {
                 if (cursor.moveToFirst()) {
                     do {
@@ -147,6 +174,10 @@ open class MigrationUtils {
                 }
             }
         }
+        // region LOG
+            Log.d(TAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
+        // endregion
+        return elements
     }
     
     

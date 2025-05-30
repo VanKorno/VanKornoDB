@@ -5,9 +5,12 @@ package com.vankorno.vankornodb.getSet
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.ID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
+
+private const val TAG = "DbInsertUpdate"
 
 /**
  * ## Rules for List Parameters:
@@ -147,5 +150,8 @@ fun <T : Any> toContentValues(                                 entity: T,
                 putValue(columnName, elem)
         }
     }
+    // region LOG
+        Log.v(TAG, "toContentValues() result: $cv")
+    // endregion
     return cv
 }
