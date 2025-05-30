@@ -54,7 +54,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     
     val newVerIsMilestone = relevantMilestones.any { it.first == newVersion }
     if (!newVerIsMilestone)
-        relevantMilestones.add(newVersion to {})
+        relevantMilestones.add(newVersion to { entity -> entity })
     
     val steps = relevantMilestones.map { it.first }
     // region LOG
