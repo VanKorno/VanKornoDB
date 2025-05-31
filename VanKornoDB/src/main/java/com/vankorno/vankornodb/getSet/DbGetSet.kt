@@ -52,12 +52,14 @@ open class DbGetSet(val db: SQLiteDatabase) {
                                                                              typeName: String,
                                                            crossinline getCursorValue: (Cursor)->R
     ): R {
-        return db.rawQuery("SELECT $column FROM $tableName WHERE whereClause=? LIMIT 1",
+        return db.rawQuery("SELECT $column FROM $tableName WHERE $whereClause=? LIMIT 1",
                                                                  arrayOf(whereArg.toString() )
         ).use { cursor ->
             if (cursor.moveToFirst()) getCursorValue(cursor)
             else {
+                // region LOG
                 Log.e(TAG, "$typeName() Unable to get value from DB. Returning default. Condition: $whereClause = $whereArg")
+                // endregion
                 default
             }
         }
