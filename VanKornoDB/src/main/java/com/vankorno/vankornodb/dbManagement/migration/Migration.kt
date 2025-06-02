@@ -8,6 +8,7 @@ import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
 import com.vankorno.vankornodb.getSet.getCursor
+import com.vankorno.vankornodb.getSet.getList
 import com.vankorno.vankornodb.getSet.insertEntity
 import com.vankorno.vankornodb.getSet.toEntity
 import kotlin.reflect.KClass
@@ -163,15 +164,7 @@ open class MigrationUtils {
         val fromClass = versionedClasses[version]
             ?: error("Missing entity class for version $version")
         
-        val elements =  db.getCursor(tableName).use { cursor ->
-            buildList {
-                if (cursor.moveToFirst()) {
-                    do {
-                        add(cursor.toEntity(fromClass))
-                    } while (cursor.moveToNext())
-                }
-            }
-        }
+        val elements = db.getList(fromClass, tableName)
         // region LOG
             Log.d(TAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -247,22 +240,22 @@ open class MigrationUtils {
                     .maxByOrNull{ it.first }?.second
     
     
-    fun isPrimitive(type: KType): Boolean {
-        return type.classifier in setOf(
-            Int::class, Long::class, Float::class, Double::class, Boolean::class, String::class
-        )
-    }
+    fun isPrimitive(                                                                type: KType
+    ): Boolean = type.classifier in setOf(
+        Int::class, Long::class, Float::class, Double::class, Boolean::class, String::class
+    )
     
-    fun isSameListType(a: KType, b: KType): Boolean {
+    fun isSameListType(                                                                a: KType,
+                                                                                       b: KType
+    ): Boolean {
         if (!a.isSubtypeOf(List::class.starProjectedType) || !b.isSubtypeOf(List::class.starProjectedType)) return false
         val aArg = a.arguments.firstOrNull()?.type
         val bArg = b.arguments.firstOrNull()?.type
         return aArg != null && bArg != null && aArg == bArg
     }
     
-    fun tryAutoConvertValue(
-        value: Any?,
-        targetType: KType
+    fun tryAutoConvertValue(                                                       value: Any?,
+                                                                              targetType: KType
     ): Any? {
         if (value == null) return null
     
