@@ -42,9 +42,10 @@ import kotlin.reflect.full.memberProperties
  * @param modify Optional lambda to customize ContentValues before insertion.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertRow(    tableName: String,
-                                                             entity: T,
-                                                             modify: (ContentValues)->ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.insertRow(         tableName: String,
+                                                                  entity: T,
+                                                                  modify: (ContentValues)->
+                                                                             ContentValues = { it }
 ): Long {
     val baseCV = toContentValues(entity)
     val finalCV = modify(baseCV)
@@ -63,9 +64,10 @@ inline fun <reified T : Any> SQLiteDatabase.insertRow(    tableName: String,
  * @param modify Optional lambda to customize ContentValues before each insertion.
  * @return The number of rows successfully inserted.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertRows(   tableName: String,
-                                                           entities: List<T>,
-                                                             modify: (ContentValues)->ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.insertRows(        tableName: String,
+                                                                entities: List<T>,
+                                                                  modify: (ContentValues)->
+                                                                             ContentValues = { it }
 ): Int {
     var count = 0
     entities.forEach { entity ->
@@ -80,32 +82,33 @@ inline fun <reified T : Any> SQLiteDatabase.insertRows(   tableName: String,
 
 /**
  * Updates the row with the specified [id] in the given table with the values from [entity].
- * Converts the entity into ContentValues, optionally customizes them via [customize] lambda,
+ * Converts the entity into ContentValues, optionally customizes them via [modify] lambda,
  * then performs the SQLite update operation.
  *
  * @param tableName The name of the table to update.
  * @param id The primary key ID of the row to update.
  * @param entity The entity object with updated data.
- * @param customize Optional lambda to customize ContentValues before update.
+ * @param modify Optional lambda to customize ContentValues before update.
  * @return The number of rows affected.
  */
-inline fun <reified T : Any> SQLiteDatabase.updateRowById(
-                                                          tableName: String,
-                                                                 id: Int,
-                                                             entity: T,
-                                                          customize: (ContentValues)->ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.updateRowById(     tableName: String,
+                                                                      id: Int,
+                                                                  entity: T,
+                                                                  modify: (ContentValues)->
+                                                                             ContentValues = { it }
 ): Int {
-    val cv = customize(toContentValues(entity))
+    val cv = modify(toContentValues(entity))
     return update(tableName, cv, ID+"=?", arrayOf(id.toString()))
 }
 
 
-inline fun <reified T : Any> SQLiteDatabase.updateRow(    tableName: String,
-                                                             entity: T,
-                                                          customize: (ContentValues)->ContentValues = { it },
-                                                              where: WhereBuilder.()->Unit
+inline fun <reified T : Any> SQLiteDatabase.updateRow(        tableName: String,
+                                                                 entity: T,
+                                                                 modify: (ContentValues)->
+                                                                            ContentValues = { it },
+                                                                  where: WhereBuilder.()->Unit
 ): Int {
-    val cv = customize(toContentValues(entity))
+    val cv = modify(toContentValues(entity))
     val whereBuilder = WhereBuilder().apply(where)
     val affected = update(tableName, cv, whereBuilder.clauses.joinToString(" "), whereBuilder.args.toTypedArray())
     
