@@ -7,10 +7,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
-import com.vankorno.vankornodb.getSet.getCursor
-import com.vankorno.vankornodb.getSet.getList
-import com.vankorno.vankornodb.getSet.insertEntity
-import com.vankorno.vankornodb.getSet.toEntity
+import com.vankorno.vankornodb.getSet.getRows
+import com.vankorno.vankornodb.getSet.insertRow
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -81,7 +79,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
         Log.d(TAG, "migrateMultiStep() Fresh $tableName is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
     migratedList.forEach {
-        val result = this.insertEntity(tableName, it)
+        val result = this.insertRow(tableName, it)
         // region LOG
             if (result == -1L)
                 Log.w(TAG, "migrateMultiStep() FAILED to insert row: $it")
@@ -164,7 +162,7 @@ open class MigrationUtils {
         val fromClass = versionedClasses[version]
             ?: error("Missing entity class for version $version")
         
-        val elements = db.getList(fromClass, tableName)
+        val elements = db.getRows(fromClass, tableName)
         // region LOG
             Log.d(TAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion

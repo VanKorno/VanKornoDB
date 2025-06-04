@@ -15,7 +15,7 @@ fun getQuery(                                               table: String,
                                                           orderBy: String = "",
                                                             limit: Int? = null,
                                                            offset: Int? = null,
-                                                        customEnd: String = "" /** To pass your own string. Use with caution! (SQL-injection risk)**/
+                                                        customEnd: String = "" /* To pass your own string. */
 ): Pair<String, Array<String>> {
     val conditions = WhereBuilder().apply(where)
     val joinBuilder = JoinBuilder().apply(joins)

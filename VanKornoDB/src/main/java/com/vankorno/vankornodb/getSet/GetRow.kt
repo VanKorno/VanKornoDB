@@ -7,17 +7,17 @@ import com.vankorno.vankornodb.core.JoinBuilder
 import kotlin.reflect.KClass
 
 /** Retrieves a single entity of type [T] by its ID. Throws if no row found.*/
-inline fun <reified T : Any> SQLiteDatabase.getOneById(                            table: String,
+inline fun <reified T : Any> SQLiteDatabase.getRowById(                            table: String,
                                                                                       id: Int
-): T = getOne(table, where = {ID equal id})
+): T = getRow(table, where = {ID equal id})
 
 
 
 /** Retrieves a single entity of type [T] by its ID, or null if not found.*/
 
-inline fun <reified T : Any> SQLiteDatabase.getOneOrNullById(                      table: String,
+inline fun <reified T : Any> SQLiteDatabase.getRowOrNullById(                      table: String,
                                                                                       id: Int
-): T? = getOneOrNull(table, where = {ID equal id})
+): T? = getRowOrNull(table, where = {ID equal id})
 
 
 
@@ -27,7 +27,7 @@ inline fun <reified T : Any> SQLiteDatabase.getOneOrNullById(                   
  * Throws if no row is found.
  * Uses reified type parameter and default "*" column selection.
  */
-inline fun <reified T : Any> SQLiteDatabase.getOne(         table: String,
+inline fun <reified T : Any> SQLiteDatabase.getRow(         table: String,
                                                    noinline joins: JoinBuilder.()->Unit = {},
                                                    noinline where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
@@ -47,7 +47,7 @@ inline fun <reified T : Any> SQLiteDatabase.getOne(         table: String,
 /**
  * Gets one [T] from [table] with explicit type. Throws if no result.
  */
-fun <T : Any> SQLiteDatabase.getOne(                        clazz: KClass<T>,
+fun <T : Any> SQLiteDatabase.getRow(                        clazz: KClass<T>,
                                                             table: String,
                                                             joins: JoinBuilder.()->Unit = {},
                                                             where: WhereBuilder.()->Unit = {},
@@ -76,7 +76,7 @@ fun <T : Any> SQLiteDatabase.getOne(                        clazz: KClass<T>,
 /**
  * Queries [table] for a single result of type [T] using [columns]. Returns null if no result found.
  */
-inline fun <reified T : Any> SQLiteDatabase.getOneOrNull(   table: String,
+inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(   table: String,
                                                    noinline joins: JoinBuilder.()->Unit = {},
                                                    noinline where: WhereBuilder.()->Unit = {},
                                                           groupBy: String = "",
@@ -98,16 +98,16 @@ inline fun <reified T : Any> SQLiteDatabase.getOneOrNull(   table: String,
 /**
  * Queries [table] for a single result of [clazz] using [columns]. Returns null if no result found.
  */
-fun <T : Any> SQLiteDatabase.getOneOrNull(                  clazz: KClass<T>,
-                                                            table: String,
-                                                            joins: JoinBuilder.()->Unit = {},
-                                                            where: WhereBuilder.()->Unit = {},
-                                                          groupBy: String = "",
-                                                           having: String = "",
-                                                          orderBy: String = "",
-                                                            limit: Int? = 1,
-                                                           offset: Int? = null,
-                                                        customEnd: String = ""
+fun <T : Any> SQLiteDatabase.getRowOrNull(                        clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = 1,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
 ): T? = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->

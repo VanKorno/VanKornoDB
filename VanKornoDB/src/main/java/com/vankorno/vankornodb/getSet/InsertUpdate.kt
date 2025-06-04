@@ -5,7 +5,6 @@ package com.vankorno.vankornodb.getSet
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.ID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
@@ -40,14 +39,14 @@ private const val TAG = "DbInsertUpdate"
  * @param modify Optional lambda to customize ContentValues before insertion.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertEntity(    table: String,
+inline fun <reified T : Any> SQLiteDatabase.insertRow(       table: String,
                                                             entity: T,
                                                             modify: (ContentValues)->ContentValues = { it }
 ): Long {
     val baseCV = toContentValues(entity)
     val finalCV = modify(baseCV)
-    if (finalCV.size() == 0) return -1
-    return this.insert(table, null, finalCV)
+    if (finalCV.size() == 0) return -1 //\/\/\/\/\/\
+    return insert(table, null, finalCV)
 }
 
 /**
@@ -61,7 +60,8 @@ inline fun <reified T : Any> SQLiteDatabase.insertEntity(    table: String,
  * @param customize Optional lambda to customize ContentValues before update.
  * @return The number of rows affected.
  */
-inline fun <reified T : Any> SQLiteDatabase.updateEntity( tableName: String,
+inline fun <reified T : Any> SQLiteDatabase.updateRowById(
+                                                          tableName: String,
                                                                  id: Int,
                                                              entity: T,
                                                           customize: (ContentValues)->ContentValues = { it }
@@ -117,7 +117,7 @@ fun <T : Any> toContentValues(                                 entity: T,
         }
     }
     
-    // 2. Handle list fields (must be at end of constructor)
+    // Handle list fields (must be at the end of the constructor)
     clazz.memberProperties.forEach { prop ->
         val name = prop.name
         if (!name.endsWith("List")) return@forEach

@@ -111,8 +111,11 @@ open class DbGetSet(val db: SQLiteDatabase) {
     // --------------------------  Potentially useful fun  ----------------------------------
     
     fun getLastID(                                                             tableName: String
-    ) = db.rawQuery(select + ID + from + tableName, null).use { cursor ->
-        if (cursor.moveToLast())
+    ) = db.rawQuery(
+        select + ID + from + tableName + orderBy + RowID + descending + limit + "1",
+        null
+    ).use { cursor ->
+        if (cursor.moveToFirst())
             cursor.getInt(0)
         else {
             // region LOG
@@ -153,8 +156,11 @@ open class DbGetSet(val db: SQLiteDatabase) {
     
     
     fun getNewPriority(                                                        tableName: String
-    ) = db.getCursor(tableName, Priority, orderBy = Priority).use { cursor ->
-        if (cursor.moveToLast())
+    ) = db.rawQuery(
+        select + Priority + from + tableName + orderBy + Priority + descending + limit + "1",
+        null
+    ).use { cursor ->
+        if (cursor.moveToFirst())
             cursor.getInt(0) + 1
         else
             1
