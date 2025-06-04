@@ -7,9 +7,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.database.sqlite.transaction
-import com.vankorno.vankornodb.DbMisc
 import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.getSet.deleteFirstRow
+import com.vankorno.vankornodb.getSet.deleteLastRow
 import com.vankorno.vankornodb.getSet.getBlob
 import com.vankorno.vankornodb.getSet.getBool
 import com.vankorno.vankornodb.getSet.getFloat
@@ -340,9 +341,11 @@ open class DbHelper(
     inline fun getLastID(tableName: String) = readDB(0, "getLastID") { it.getLastID(tableName) }
     suspend fun getLastIDAsync(tableName: String) = readAsync(0, "getLastIDAsync") { it.getLastID(tableName) }
     
-    inline fun deleteFirstRow(tableName: String) = writeDB("deleteFirstRow") { DbMisc().deleteFirstRow(it, tableName) }
-    suspend fun deleteFirstRowAsync(tableName: String) = writeAsync("deleteFirstRowAsync") { DbMisc().deleteFirstRow(it, tableName) }
+    inline fun deleteFirstRow(tableName: String) = writeDB("deleteFirstRow") { it.deleteFirstRow(tableName) }
+    suspend fun deleteFirstRowAsync(tableName: String) = writeAsync("deleteFirstRowAsync") { it.deleteFirstRow(tableName) }
     
+    inline fun deleteLastRow(tableName: String) = writeDB("deleteLastRow") { it.deleteLastRow(tableName) }
+    suspend fun deleteLastRowAsync(tableName: String) = writeAsync("deleteLastRowAsync") { it.deleteLastRow(tableName) }
     
     
     

@@ -5,8 +5,10 @@ package com.vankorno.vankornodb.getSet
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.DbConstants.RowID
+import com.vankorno.vankornodb.core.DbConstants.descending
 import com.vankorno.vankornodb.core.DbConstants.from
 import com.vankorno.vankornodb.core.DbConstants.limit
+import com.vankorno.vankornodb.core.DbConstants.orderBy
 import com.vankorno.vankornodb.core.DbConstants.select
 import com.vankorno.vankornodb.core.WhereBuilder
 
@@ -31,15 +33,13 @@ fun SQLiteDatabase.deleteRow(                                      tableName: St
 
 fun SQLiteDatabase.deleteFirstRow(                                             tableName: String
 ) {
-    val whereClause = RowID + " = (" + select + RowID + from + tableName + limit + "1)"
-    delete(tableName, whereClause, null)
+    delete(tableName, "ROWID = (SELECT ROWID FROM $tableName LIMIT 1)", null)
 }
 
 
 fun SQLiteDatabase.deleteLastRow(                                             tableName: String
 ) {
-    val whereClause = RowID + " = (" + select + RowID + from + tableName + limit + "1)"
-    delete(tableName, whereClause, null)
+    delete(tableName, "ROWID = (SELECT ROWID FROM $tableName ORDER BY ROWID DESC LIMIT 1)", null)
 }
 
 
