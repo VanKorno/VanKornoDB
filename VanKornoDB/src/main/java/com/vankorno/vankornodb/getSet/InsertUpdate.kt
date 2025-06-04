@@ -5,11 +5,14 @@ package com.vankorno.vankornodb.getSet
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
+import com.vankorno.vankornodb.core.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.DbConstants.ID
+import com.vankorno.vankornodb.core.WhereBuilder
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
-private const val TAG = "DbInsertUpdate"
+// TODO Maybe: Upsert-like function — insert or update depending on whether the row exists (SQLite supports INSERT OR REPLACE, INSERT ON CONFLICT, etc.)
 
 /**
  * ## Rules for List Parameters:
@@ -34,20 +37,46 @@ private const val TAG = "DbInsertUpdate"
  * Converts the entity into ContentValues, optionally modifies them via [modify] lambda,
  * then performs the SQLite insert operation.
  *
- * @param table The name of the table to insert into.
+ * @param tableName The name of the table to insert into.
  * @param entity The entity object to insert.
  * @param modify Optional lambda to customize ContentValues before insertion.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertRow(       table: String,
-                                                            entity: T,
-                                                            modify: (ContentValues)->ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.insertRow(    tableName: String,
+                                                             entity: T,
+                                                             modify: (ContentValues)->ContentValues = { it }
 ): Long {
     val baseCV = toContentValues(entity)
     val finalCV = modify(baseCV)
     if (finalCV.size() == 0) return -1 //\/\/\/\/\/\
-    return insert(table, null, finalCV)
+    return insert(tableName, null, finalCV)
 }
+
+
+/**
+ * Inserts multiple entities into the specified database table.
+ * Converts each entity into ContentValues, optionally modifies them via [modify] lambda,
+ * then performs the SQLite insert operation for each.
+ *
+ * @param tableName The name of the table to insert into.
+ * @param entities The list of entity objects to insert.
+ * @param modify Optional lambda to customize ContentValues before each insertion.
+ * @return The number of rows successfully inserted.
+ */
+inline fun <reified T : Any> SQLiteDatabase.insertRows(   tableName: String,
+                                                           entities: List<T>,
+                                                             modify: (ContentValues)->ContentValues = { it }
+): Int {
+    var count = 0
+    entities.forEach { entity ->
+        val rowId = insertRow(tableName, entity, modify)
+        if (rowId != -1L) count++
+    }
+    return count
+}
+
+
+
 
 /**
  * Updates the row with the specified [id] in the given table with the values from [entity].
@@ -69,6 +98,28 @@ inline fun <reified T : Any> SQLiteDatabase.updateRowById(
     val cv = customize(toContentValues(entity))
     return update(tableName, cv, ID+"=?", arrayOf(id.toString()))
 }
+
+
+inline fun <reified T : Any> SQLiteDatabase.updateRow(    tableName: String,
+                                                             entity: T,
+                                                          customize: (ContentValues)->ContentValues = { it },
+                                                              where: WhereBuilder.()->Unit
+): Int {
+    val cv = customize(toContentValues(entity))
+    val whereBuilder = WhereBuilder().apply(where)
+    val affected = update(tableName, cv, whereBuilder.clauses.joinToString(" "), whereBuilder.args.toTypedArray())
+    
+    if (affected > 1) {
+        // region LOG
+        Log.w(DbTAG, "updateRow: $affected rows updated in '$tableName'. You may want to set more specific conditions if you want to update a single row.")
+        // endregion
+    }
+    return affected
+}
+
+
+
+
 
 
 /**

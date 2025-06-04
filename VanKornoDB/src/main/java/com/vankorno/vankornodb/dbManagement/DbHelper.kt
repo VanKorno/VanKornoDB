@@ -7,9 +7,19 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.database.sqlite.transaction
-import com.vankorno.vankornodb.getSet.DbGetSet
 import com.vankorno.vankornodb.DbMisc
 import com.vankorno.vankornodb.core.DbConstants.ID
+import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.getSet.getBlob
+import com.vankorno.vankornodb.getSet.getBool
+import com.vankorno.vankornodb.getSet.getFloat
+import com.vankorno.vankornodb.getSet.getInt
+import com.vankorno.vankornodb.getSet.getLastID
+import com.vankorno.vankornodb.getSet.getLong
+import com.vankorno.vankornodb.getSet.getStr
+import com.vankorno.vankornodb.getSet.isTableEmpty
+import com.vankorno.vankornodb.getSet.set
+import com.vankorno.vankornodb.getSet.tableExists
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -189,14 +199,23 @@ open class DbHelper(
     
     // ============================== SETTERS ===========================================
     
+    inline fun setById(value: Any, id: Int, tableName: String, column: String) = set(value, tableName, column, ID, id)
+    
+    suspend fun setByIdAsync(value: Any, id: Int, tableName: String, column: String) = setAsync(value, tableName, column, ID, id)
+    
+    
     inline fun <T> set(                                                            value: Any,
                                                                                tableName: String,
                                                                                   column: String,
                                                                              whereClause: String,
                                                                                 whereArg: T
-    ) = writeDB("set") {
-        DbGetSet(it).set(value, tableName, column, whereClause, whereArg)
-    }
+    ) = writeDB("set") { it.set(value, tableName, column, whereClause, whereArg) }
+    
+    inline fun <T> set(                                                value: Any,
+                                                                   tableName: String,
+                                                                      column: String,
+                                                              noinline where: WhereBuilder.()->Unit
+    ) = writeDB("set") { it.set(value, tableName, column, where) }
     
     
     suspend fun <T> setAsync(                                                      value: Any,
@@ -205,12 +224,19 @@ open class DbHelper(
                                                                              whereClause: String,
                                                                                 whereArg: T
     ) = writeAsync("setAsync") {
-        DbGetSet(it).set(value, tableName, column, whereClause, whereArg)
+        it.set(value, tableName, column, whereClause, whereArg)
     }
     
-    inline fun setById(value: Any, id: Int, tableName: String, column: String) = set(value, tableName, column, ID, id)
+    suspend fun <T> setAsync(                                          value: Any,
+                                                                   tableName: String,
+                                                                      column: String,
+                                                                       where: WhereBuilder.()->Unit
+    ) = writeAsync("setAsync") { it.set(value, tableName, column, where) }
     
-    suspend fun setByIdAsync(value: Any, id: Int, tableName: String, column: String) = setAsync(value, tableName, column, ID, id)
+    
+    
+    
+    
     
     
     
@@ -218,32 +244,32 @@ open class DbHelper(
     
     inline fun <T> getInt(tableName: String, column: String, whereClause: String, whereArg: T) =
         readDB(0, "getInt") {
-            DbGetSet(it).getInt(tableName, column, whereClause, whereArg)
+            it.getInt(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getStr(tableName: String, column: String, whereClause: String, whereArg: T): String =
         readDB("", "getStr") {
-            DbGetSet(it).getStr(tableName, column, whereClause, whereArg)
+            it.getStr(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getBool(tableName: String, column: String, whereClause: String, whereArg: T) =
         readDB(false, "getBool") { 
-            DbGetSet(it).getBool(tableName, column, whereClause, whereArg)
+            it.getBool(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getLong(tableName: String, column: String, whereClause: String, whereArg: T) =
         readDB(0L, "getLong") { 
-            DbGetSet(it).getLong(tableName, column, whereClause, whereArg)
+            it.getLong(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getFloat(tableName: String, column: String, whereClause: String, whereArg: T) =
         readDB(0F, "getFloat") { 
-            DbGetSet(it).getFloat(tableName, column, whereClause, whereArg)
+            it.getFloat(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getBlob(tableName: String, column: String, whereClause: String, whereArg: T) =
         readDB(null, "getBlob") {
-            DbGetSet(it).getBlob(tableName, column, whereClause, whereArg)
+            it.getBlob(tableName, column, whereClause, whereArg)
         }
     
     
@@ -251,32 +277,32 @@ open class DbHelper(
     
     suspend fun <T> getIntAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
         readAsync(0, "getInt") {
-            DbGetSet(it).getInt(tableName, column, whereClause, whereArg)
+            it.getInt(tableName, column, whereClause, whereArg)
         }
     
     suspend fun <T> getStrAsync(tableName: String, column: String, whereClause: String, whereArg: T): String =
         readAsync("", "getStr") {
-            DbGetSet(it).getStr(tableName, column, whereClause, whereArg)
+            it.getStr(tableName, column, whereClause, whereArg)
         }
     
     suspend fun <T> getBoolAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
         readAsync(false, "getBool") { 
-            DbGetSet(it).getBool(tableName, column, whereClause, whereArg)
+            it.getBool(tableName, column, whereClause, whereArg)
         }
     
     suspend fun <T> getLongAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
         readAsync(0L, "getLong") { 
-            DbGetSet(it).getLong(tableName, column, whereClause, whereArg)
+            it.getLong(tableName, column, whereClause, whereArg)
         }
     
     suspend fun <T> getFloatAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
         readAsync(0F, "getFloat") { 
-            DbGetSet(it).getFloat(tableName, column, whereClause, whereArg)
+            it.getFloat(tableName, column, whereClause, whereArg)
         }
     
     suspend fun <T> getBlobAsync(tableName: String, column: String, whereClause: String, whereArg: T): ByteArray? =
         readAsync(null, "getBlob") {
-            DbGetSet(it).getBlob(tableName, column, whereClause, whereArg)
+            it.getBlob(tableName, column, whereClause, whereArg)
         }
     
     // By ID
@@ -304,15 +330,15 @@ open class DbHelper(
     
     // ================  Some useful utility fun  ================
     
-    inline fun tableExists(tableName: String) = readDB(false, "tableExists") { DbGetSet(it).tableExists(tableName) }
-    suspend fun tableExistsAsync(tableName: String) = readAsync(false, "tableExistsAsync") { DbGetSet(it).tableExists(tableName) }
+    inline fun tableExists(tableName: String) = readDB(false, "tableExists") { it.tableExists(tableName) }
+    suspend fun tableExistsAsync(tableName: String) = readAsync(false, "tableExistsAsync") { it.tableExists(tableName) }
     
-    inline fun isTableEmpty(tableName: String) = readDB(true, "isTableEmpty") { DbGetSet(it).isTableEmpty(tableName) }
-    suspend fun isTableEmptyAsync(tableName: String) = readAsync(true, "isTableEmptyAsync") { DbGetSet(it).isTableEmpty(tableName) }
+    inline fun isTableEmpty(tableName: String) = readDB(true, "isTableEmpty") { it.isTableEmpty(tableName) }
+    suspend fun isTableEmptyAsync(tableName: String) = readAsync(true, "isTableEmptyAsync") { it.isTableEmpty(tableName) }
     
     
-    inline fun getLastID(tableName: String) = readDB(0, "getLastID") { DbGetSet(it).getLastID(tableName) }
-    suspend fun getLastIDAsync(tableName: String) = readAsync(0, "getLastIDAsync") { DbGetSet(it).getLastID(tableName) }
+    inline fun getLastID(tableName: String) = readDB(0, "getLastID") { it.getLastID(tableName) }
+    suspend fun getLastIDAsync(tableName: String) = readAsync(0, "getLastIDAsync") { it.getLastID(tableName) }
     
     inline fun deleteFirstRow(tableName: String) = writeDB("deleteFirstRow") { DbMisc().deleteFirstRow(it, tableName) }
     suspend fun deleteFirstRowAsync(tableName: String) = writeAsync("deleteFirstRowAsync") { DbMisc().deleteFirstRow(it, tableName) }

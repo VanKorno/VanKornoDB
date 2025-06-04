@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.core;
 
 public class DbConstants {
     public static final String
-InMemoryDB=":memory:",
+InMemoryDB=":memory:", DbTAG = "VanKornoDB",
 
 select="SELECT ",  from=" FROM ",   selectAllFrom="SELECT * FROM ",
 dbCreateT="CREATE TABLE IF NOT EXISTS ",
