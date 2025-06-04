@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.dbManagement
 **/
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.core.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.DbConstants.comma
 import com.vankorno.vankornodb.core.DbConstants.dbCreateT
 import com.vankorno.vankornodb.dbManagement.data.ColumnDef
@@ -38,7 +39,7 @@ fun newTableQueryCustom(                                            tableName: S
         append(")")
     }
     // region LOG
-        println("DbTableBuilder().newTableQuery() returns: $queryStr")
+        println(DbTAG + ": DbTableBuilder().newTableQuery() returns: $queryStr")
     // endregion
     return queryStr
 }

@@ -7,8 +7,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-
-private const val TAG = "DbMaker"
+import com.vankorno.vankornodb.core.DbConstants.DbTAG
 
 open class DbMaker(              context: Context,
                                   dbName: String,
@@ -23,7 +22,7 @@ open class DbMaker(              context: Context,
     override fun onCreate(                                                      db: SQLiteDatabase
     ) {
         // region LOG
-            Log.d("LibDBHelper", "onCreate runs")
+            Log.d(DbTAG, "onCreate runs")
         // endregion
         synchronized(dbLock) { runOnCreate(db) }
     }
@@ -35,7 +34,7 @@ open class DbMaker(              context: Context,
     ) {
         if (oldVersion >= newVersion)  return  //\/\/\/\/\/\
         // region LOG
-            Log.d(TAG, "onUpgrade() Migrating...")
+            Log.d(DbTAG, "onUpgrade() Migrating...")
         // endregion
         synchronized(dbLock) {
             runOnUpgrade(db, oldVersion)
@@ -44,7 +43,7 @@ open class DbMaker(              context: Context,
     
     fun initializeDbManager() {
         // region LOG
-            Log.d(TAG, "initializeDbManager() runs")
+            Log.d(DbTAG, "initializeDbManager() runs")
         // endregion
         DbManager.init(writableDatabase)
     }
