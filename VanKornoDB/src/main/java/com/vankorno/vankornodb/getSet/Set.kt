@@ -4,12 +4,9 @@ package com.vankorno.vankornodb.getSet
 **/
 
 import android.content.ContentValues
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.*
 import com.vankorno.vankornodb.core.WhereBuilder
-import com.vankorno.vankornodb.getBool
 
 
 fun SQLiteDatabase.setById(value: Any, id: Int, tableName: String, column: String) = set(value, tableName, column, ID, id)
@@ -39,20 +36,49 @@ fun SQLiteDatabase.set(                                                value: An
 }
 
 
-fun SQLiteDatabase.setValues(                                      tableName: String,
-                                                                     updates: Map<String, Any?>,
+fun SQLiteDatabase.setMult(                                        tableName: String,
+                                                                      values: Map<String, Any?>,
                                                                        where: WhereBuilder.()->Unit
 ) {
-    if (updates.isEmpty()) return //\/\/\/\/\/\
+    if (values.isEmpty()) return //\/\/\/\/\/\
     
     val cv = ContentValues().apply {
-        updates.forEach { (col, value) ->
+        values.forEach { (col, value) ->
             putSmart(col, value)
         }
     }
     val builder = WhereBuilder().apply(where)
     update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
 }
+
+
+// TODO wrappers in DbHelper
+
+fun <T> SQLiteDatabase.setInAll(                                                   value: Any,
+                                                                               tableName: String,
+                                                                                  column: String
+) {
+    val cv = ContentValues()
+    cv.putSmart(column, value)
+    update(tableName, cv, null, null)
+}
+
+fun SQLiteDatabase.setMultInAll(                                        tableName: String,
+                                                                           values: Map<String, Any?>
+) {
+    if (values.isEmpty()) return //\/\/\/\/\/\
+    
+    val cv = ContentValues().apply {
+        values.forEach { (col, value) ->
+            putSmart(col, value)
+        }
+    }
+    update(tableName, cv, null, null)
+}
+
+
+
+
 
 
 private fun ContentValues.putSmart(                                              key: String,
