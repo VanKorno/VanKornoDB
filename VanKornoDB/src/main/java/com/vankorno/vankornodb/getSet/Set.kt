@@ -54,6 +54,21 @@ fun SQLiteDatabase.setMult(                                        tableName: St
 
 // TODO wrappers in DbHelper
 
+fun SQLiteDatabase.setMultById(                                                id: Int,
+                                                                        tableName: String,
+                                                                           values: Map<String, Any?>
+) {
+    if (values.isEmpty()) return //\/\/\/\/\/\
+    
+    val cv = ContentValues().apply {
+        values.forEach { (col, value) ->
+            putSmart(col, value)
+        }
+    }
+    update(tableName, cv, ID+"=?", arrayOf(id.toString()))
+}
+
+
 fun <T> SQLiteDatabase.setInAll(                                                   value: Any,
                                                                                tableName: String,
                                                                                   column: String
