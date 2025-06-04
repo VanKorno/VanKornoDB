@@ -15,12 +15,12 @@ fun SQLiteDatabase.setById(value: Any, id: Int, tableName: String, column: Strin
 fun <T> SQLiteDatabase.set(                                                        value: Any,
                                                                                tableName: String,
                                                                                   column: String,
-                                                                             whereClause: String,
-                                                                                whereArg: T
+                                                                                   where: String,
+                                                                                  equals: T
 ) {
     val cv = ContentValues()
     cv.putSmart(column, value)
-    update(tableName, cv, whereClause+"=?", arrayOf(whereArg.toString()))
+    update(tableName, cv, where+"=?", arrayOf(equals.toString()))
 }
 
 

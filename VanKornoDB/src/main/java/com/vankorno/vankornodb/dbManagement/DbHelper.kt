@@ -207,9 +207,9 @@ open class DbHelper(
     inline fun <T> set(                                                            value: Any,
                                                                                tableName: String,
                                                                                   column: String,
-                                                                             whereClause: String,
-                                                                                whereArg: T
-    ) = writeDB("set") { it.set(value, tableName, column, whereClause, whereArg) }
+                                                                                   where: String,
+                                                                                  equals: T
+    ) = writeDB("set") { it.set(value, tableName, column, where, equals) }
     
     inline fun <T> set(                                                value: Any,
                                                                    tableName: String,
@@ -221,10 +221,10 @@ open class DbHelper(
     suspend fun <T> setAsync(                                                      value: Any,
                                                                                tableName: String,
                                                                                   column: String,
-                                                                             whereClause: String,
-                                                                                whereArg: T
+                                                                                   where: String,
+                                                                                  equals: T
     ) = writeAsync("setAsync") {
-        it.set(value, tableName, column, whereClause, whereArg)
+        it.set(value, tableName, column, where, equals)
     }
     
     suspend fun <T> setAsync(                                          value: Any,
