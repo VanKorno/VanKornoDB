@@ -26,22 +26,8 @@ fun SQLiteDatabase.getLastID(                                                  t
 
 fun SQLiteDatabase.getAllIDs(                                               tableName: String,
                                                                               orderBy: String = ""
-): MutableList<Int> {
-    val ids = mutableListOf<Int>()
-    
-    getCursor(tableName, ID, orderBy = orderBy).use { cursor ->
-        if (cursor.moveToFirst()) {
-            do {
-                ids.add(cursor.getInt(0))
-            } while (cursor.moveToNext())
-        } else {
-            // region LOG
-                Log.d(DbTAG, "getAllIDs() didn't find any elements in $tableName")
-            // endregion
-        }
-    }
-    return ids
-}
+) = getList<Int>(tableName, ID, orderBy = orderBy)
+
 
 
 fun SQLiteDatabase.tableExists(                                                tableName: String

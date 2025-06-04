@@ -9,14 +9,19 @@ import android.util.Log
 import androidx.core.database.sqlite.transaction
 import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.getSet.clearTable
 import com.vankorno.vankornodb.getSet.deleteFirstRow
 import com.vankorno.vankornodb.getSet.deleteLastRow
+import com.vankorno.vankornodb.getSet.deleteRow
+import com.vankorno.vankornodb.getSet.deleteRowById
+import com.vankorno.vankornodb.getSet.getAllIDs
 import com.vankorno.vankornodb.getSet.getBlob
 import com.vankorno.vankornodb.getSet.getBool
 import com.vankorno.vankornodb.getSet.getFloat
 import com.vankorno.vankornodb.getSet.getInt
 import com.vankorno.vankornodb.getSet.getLastID
 import com.vankorno.vankornodb.getSet.getLong
+import com.vankorno.vankornodb.getSet.getNewPriority
 import com.vankorno.vankornodb.getSet.getStr
 import com.vankorno.vankornodb.getSet.isTableEmpty
 import com.vankorno.vankornodb.getSet.set
@@ -329,24 +334,72 @@ open class DbHelper(
     
     
     
+    // ================   D E L E T E,  C L E A R   ================
+    
+    inline fun <T> deleteRow(tableName: String, where: String, equals: T) =
+        writeDB("deleteRow") { it.deleteRow(tableName, where, equals) }
+    
+    suspend fun <T> deleteRowAsync(tableName: String, where: String, equals: T) =
+        writeAsync("deleteRowAsync") { it.deleteRow(tableName, where, equals) }
+    
+    
+    inline fun deleteRow(tableName: String, noinline where: WhereBuilder.()->Unit) =
+        writeDB("deleteRow") { it.deleteRow(tableName, where) }
+    
+    suspend fun deleteRowAsync(tableName: String, where: WhereBuilder.()->Unit) =
+        writeAsync("deleteRowAsync") { it.deleteRow(tableName, where) }
+    
+    
+    inline fun deleteRowById(id: Int, tableName: String) =
+        writeDB("deleteRowById") { it.deleteRowById(id, tableName) }
+    
+    suspend fun deleteRowByIdAsync(id: Int, tableName: String) =
+        writeAsync("deleteRowByIdAsync") { it.deleteRowById(id, tableName) }
+    
+    
+    inline fun deleteFirstRow(tableName: String) = writeDB("deleteFirstRow") { it.deleteFirstRow(tableName) }
+    suspend fun deleteFirstRowAsync(tableName: String) = writeAsync("deleteFirstRowAsync") { it.deleteFirstRow(tableName) }
+    
+    
+    inline fun deleteLastRow(tableName: String) = writeDB("deleteLastRow") { it.deleteLastRow(tableName) }
+    suspend fun deleteLastRowAsync(tableName: String) = writeAsync("deleteLastRowAsync") { it.deleteLastRow(tableName) }
+    
+    
+    inline fun clearTable(tableName: String, resetAutoID: Boolean = true) =
+        writeDB("clearTable") { it.clearTable(tableName, resetAutoID) }
+    
+    suspend fun clearTableAsync(tableName: String, resetAutoID: Boolean = true) =
+        writeAsync("clearTableAsync") { it.clearTable(tableName, resetAutoID) }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // ================  Some useful utility fun  ================
+    
+    inline fun getLastID(tableName: String) = readDB(0, "getLastID") { it.getLastID(tableName) }
+    suspend fun getLastIDAsync(tableName: String) = readAsync(0, "getLastIDAsync") { it.getLastID(tableName) }
+    
+    
+    inline fun getAllIDs(tableName: String) = readDB(emptyList(), "getAllIDs") { it.getAllIDs(tableName) }
+    suspend fun getAllIDsAsync(tableName: String) = readAsync(emptyList(), "getAllIDsAsync") { it.getAllIDs(tableName) }
+    
     
     inline fun tableExists(tableName: String) = readDB(false, "tableExists") { it.tableExists(tableName) }
     suspend fun tableExistsAsync(tableName: String) = readAsync(false, "tableExistsAsync") { it.tableExists(tableName) }
+    
     
     inline fun isTableEmpty(tableName: String) = readDB(true, "isTableEmpty") { it.isTableEmpty(tableName) }
     suspend fun isTableEmptyAsync(tableName: String) = readAsync(true, "isTableEmptyAsync") { it.isTableEmpty(tableName) }
     
     
-    inline fun getLastID(tableName: String) = readDB(0, "getLastID") { it.getLastID(tableName) }
-    suspend fun getLastIDAsync(tableName: String) = readAsync(0, "getLastIDAsync") { it.getLastID(tableName) }
-    
-    inline fun deleteFirstRow(tableName: String) = writeDB("deleteFirstRow") { it.deleteFirstRow(tableName) }
-    suspend fun deleteFirstRowAsync(tableName: String) = writeAsync("deleteFirstRowAsync") { it.deleteFirstRow(tableName) }
-    
-    inline fun deleteLastRow(tableName: String) = writeDB("deleteLastRow") { it.deleteLastRow(tableName) }
-    suspend fun deleteLastRowAsync(tableName: String) = writeAsync("deleteLastRowAsync") { it.deleteLastRow(tableName) }
-    
+    inline fun getNewPriority(tableName: String) = readDB(0, "getNewPriority") { it.getNewPriority(tableName) }
+    suspend fun getNewPriorityAsync(tableName: String) = readAsync(0, "getNewPriorityAsync") { it.getNewPriority(tableName) }
     
     
     
