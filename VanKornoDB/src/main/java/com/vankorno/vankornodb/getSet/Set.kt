@@ -37,6 +37,14 @@ fun SQLiteDatabase.set(                                                value: An
 
 
 fun SQLiteDatabase.setMult(                                        tableName: String,
+                                                                          cv: ContentValues,
+                                                                       where: WhereBuilder.()->Unit
+) {
+    val builder = WhereBuilder().apply(where)
+    update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+}
+
+fun SQLiteDatabase.setMult(                                        tableName: String,
                                                                       values: Map<String, Any?>,
                                                                        where: WhereBuilder.()->Unit
 ) {
@@ -53,6 +61,12 @@ fun SQLiteDatabase.setMult(                                        tableName: St
 
 
 // TODO wrappers in DbHelper
+
+fun SQLiteDatabase.setMultById(                                                  id: Int,
+                                                                          tableName: String,
+                                                                                 cv: ContentValues
+) = update(tableName, cv, ID+"=?", arrayOf(id.toString()))
+
 
 fun SQLiteDatabase.setMultById(                                                id: Int,
                                                                         tableName: String,
@@ -77,6 +91,11 @@ fun <T> SQLiteDatabase.setInAll(                                                
     cv.putSmart(column, value)
     update(tableName, cv, null, null)
 }
+
+
+fun SQLiteDatabase.setMultInAll(                                          tableName: String,
+                                                                                 cv: ContentValues
+) = update(tableName, cv, null, null)
 
 fun SQLiteDatabase.setMultInAll(                                        tableName: String,
                                                                            values: Map<String, Any?>
