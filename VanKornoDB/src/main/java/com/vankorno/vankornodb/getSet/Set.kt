@@ -5,7 +5,7 @@ package com.vankorno.vankornodb.getSet
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.WhereBuilder
 
 
@@ -36,6 +36,9 @@ fun SQLiteDatabase.set(                                                value: An
 }
 
 
+
+// ==============================  M U L T I - S E T T E R S  ============================== \\
+
 fun SQLiteDatabase.setMult(                                        tableName: String,
                                                                           cv: ContentValues,
                                                                        where: WhereBuilder.()->Unit
@@ -62,6 +65,7 @@ fun SQLiteDatabase.setMult(                                        tableName: St
 
 // TODO wrappers in DbHelper
 
+
 fun SQLiteDatabase.setMultById(                                                  id: Int,
                                                                           tableName: String,
                                                                                  cv: ContentValues
@@ -83,7 +87,7 @@ fun SQLiteDatabase.setMultById(                                                i
 }
 
 
-fun <T> SQLiteDatabase.setInAll(                                                   value: Any,
+fun SQLiteDatabase.setInAll(                                                       value: Any,
                                                                                tableName: String,
                                                                                   column: String
 ) {

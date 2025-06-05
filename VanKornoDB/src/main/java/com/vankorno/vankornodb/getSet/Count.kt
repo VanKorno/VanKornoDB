@@ -3,20 +3,16 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.RowID
-import com.vankorno.vankornodb.core.DbConstants.groupBy
-import com.vankorno.vankornodb.core.DbConstants.having
-import com.vankorno.vankornodb.core.DbConstants.limit
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.WhereBuilder
 
 /** Returns the number of rows matching the query conditions. */
 
-fun SQLiteDatabase.getRowCount(                                    table: String,
+fun SQLiteDatabase.getRowCount(                                tableName: String,
                                                                    joins: JoinBuilder.()->Unit = {},
                                                                    where: WhereBuilder.()->Unit = {}
 
-): Int = getCursor(table, arrayOf("1"), joins, where).use { it.count }
+): Int = getCursor(tableName, arrayOf("1"), joins, where).use { it.count }
 
 
 
@@ -24,9 +20,9 @@ fun SQLiteDatabase.getRowCount(                                    table: String
 
 /** Returns true if at least one row matches the query conditions. */
 
-fun SQLiteDatabase.hasRows(                                        table: String,
+fun SQLiteDatabase.hasRows(                                    tableName: String,
                                                                    joins: JoinBuilder.()->Unit = {},
                                                                    where: WhereBuilder.()->Unit = {}
 
-): Boolean = getCursor(table, arrayOf("1"), joins, where, limit = 1).use { it.moveToFirst() }
+): Boolean = getCursor(tableName, arrayOf("1"), joins, where, limit = 1).use { it.moveToFirst() }
 
