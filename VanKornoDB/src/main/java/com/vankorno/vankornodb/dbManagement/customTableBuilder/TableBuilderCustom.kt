@@ -1,14 +1,10 @@
-package com.vankorno.vankornodb.dbManagement
+package com.vankorno.vankornodb.dbManagement.customTableBuilder
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.DbTAG
-import com.vankorno.vankornodb.core.DbConstants.comma
-import com.vankorno.vankornodb.core.DbConstants.dbCreateT
-import com.vankorno.vankornodb.dbManagement.data.ColumnDef
-import com.vankorno.vankornodb.dbManagement.data.TableAndStructure
-import kotlin.collections.forEach
+import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.dbManagement.customTableBuilder.TableAndStructure
 
 /**
  * Optional db table creator that gets structure not from a data class, but as ArrayList of ColumnDef

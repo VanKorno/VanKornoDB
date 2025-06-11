@@ -1,10 +1,11 @@
 package com.vankorno.vankornodb.dbManagement
 
 import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.dbManagement.customTableBuilder.newTableQueryCustom
 import com.vankorno.vankornodb.dbManagement.data.AutoId
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
-import com.vankorno.vankornodb.dbManagement.data.ColumnDef
+import com.vankorno.vankornodb.dbManagement.customTableBuilder.ColumnDef
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
