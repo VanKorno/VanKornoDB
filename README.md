@@ -22,6 +22,9 @@ Designed primarily for Android, but with potential to support other platforms in
 
 ## Examples
 
+getCursor(), getList(), getRow(), getRows(), getRowCount(), updateRow(), deleteRow(), etc.
+Multiple convenient functions that use params with the same DSL-functionality:
+
 ```kotlin
 db.getCursor(SomeTable, where = { Name equal userName })
 
@@ -35,18 +38,24 @@ db.getCursor(
         or  { Time less 1L }
     }
 )
-
-// Or just a bit more fun and safe (than the usual queries) manual building with constants:
-selectAllFrom + SmallTable + orderBy + Size
+```
 
 
-// Or more advanced stuff, with nested queries:
+From simple one-liners:
+```kotlin
+db.getRow(SomeTable, where = { Name equal userName })
 
+db.getRowById(id, SomeTable)
+```
+
+...to more complex things, like nested queries:
+
+```kotlin
 db.getCursor(
     table = Users,
     columns = arrayOf(Name, Address, Phone),
     where = {
-        subquery( // subqueries ;)
+        subquery( // subqueries
             table = Posts,
             columns = arrayOf(countAll), // COUNT(*)
             where = {
@@ -68,26 +77,35 @@ db.getCursor(
         }
     }
 )
+```
 
+Other examples:
 
-// OTHER USAGE EXAMPLES
-
-db.getCursor(TableName, where = {TabID equal id}).use {it.count == 0}
-
+```kotlin
 
 db.createTables(
-    tableOf<DataClass>(DbTableName),
+    tableOf<DataClass>(TableName),
     tableOf<SettingsEntity>(SettingsTable),
     tableOf<TabEntity>(TabTable)
 )
 
-db.insertInto<SettingsEntity>(SettingsTable, new) // ORM stuff... Auto-mapping based on a data class
+db.insertRow<SettingsEntity>(SettingsTable, new)
 cursor.mapToEntity(SettingsEntity::class)
 
-db.getList<UserEntity>(TableName, where = { Mood equal good })
-db.getOne<UserEntity>(TableName, where = { Mood equal bad })
+db.getRow<UserEntity>(TableName, where = { Mood equal bad })
+db.getRows<UserEntity>(TableName, where = { Mood equal good })
 
+db.set("new value", TableName, ColumnName, where = { Mood greater normal })
 
+db.setMult(
+    TableName,
+    values = mapOf( // or pass ContentValues
+        Column1 to "someVal",
+        Column2 to 2,
+        Column3 to false
+    ),
+    where = { Mood notEqual bad }
+)
 
 ```
 
