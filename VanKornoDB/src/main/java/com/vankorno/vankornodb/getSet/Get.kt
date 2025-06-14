@@ -5,7 +5,8 @@ package com.vankorno.vankornodb.getSet
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.core.DbConstants.DbTAG
+import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.getBool
 
 inline fun <T, R> SQLiteDatabase.getValue(                                  tableName: String,
@@ -22,7 +23,7 @@ inline fun <T, R> SQLiteDatabase.getValue(                                  tabl
     if (cursor.moveToFirst()) getCursorValue(cursor)
     else {
         // region LOG
-        Log.e(DbTAG, "$typeName() Unable to get value from DB. Returning default. Condition: $whereClause = $whereArg")
+        Log.e(DbTAG, "$typeName() Unable to get value from $tableName (column: $column). Returning default. Condition: $whereClause = $whereArg")
         // endregion
         default
     }
