@@ -3,23 +3,24 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.JoinBuilder
+import com.vankorno.vankornodb.core.WhereBuilder
 import kotlin.reflect.KClass
 
 /** Retrieves a single entity of type [T] by its ID. Throws if no row found.*/
-inline fun <reified T : Any> SQLiteDatabase.getRowById(                            table: String,
-                                                                                      id: Int
-): T = getRow(table, where = {ID equal id})
+
+inline fun <reified T : Any> SQLiteDatabase.getRowById(                               id: Int,
+                                                                                   table: String
+): T = getRow(table, where = { ID equal id })
 
 
 
 /** Retrieves a single entity of type [T] by its ID, or null if not found.*/
 
-inline fun <reified T : Any> SQLiteDatabase.getRowOrNullById(                      table: String,
-                                                                                      id: Int
-): T? = getRowOrNull(table, where = {ID equal id})
+inline fun <reified T : Any> SQLiteDatabase.getRowOrNullById(                         id: Int,
+                                                                                   table: String
+): T? = getRowOrNull(table, where = { ID equal id })
 
 
 

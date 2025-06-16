@@ -14,6 +14,7 @@ import com.vankorno.vankornodb.getSet.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")
 open class DbHelper(
@@ -455,14 +456,139 @@ open class DbHelper(
     suspend fun getBlobByIdAsync(id: Int, tableName: String, column: String): ByteArray? = getBlobAsync(tableName, column, ID, id)
     
     
+    
+    
     // ---------------------------------  G E T   R O W S  --------------------------------- \\
     
+    inline fun <reified T : Any> getRowOrNullById(                                    id: Int,
+                                                                               tableName: String
+    ): T? = readDB(null, "getRowOrNullById") {
+        it.getRowOrNullById<T>(id, tableName)
+    }
+    
+    suspend inline fun <reified T : Any> getRowOrNullByIdAsync(                       id: Int,
+                                                                               tableName: String
+    ): T? = readAsync(null, "getRowOrNullByIdAsync") {
+        it.getRowOrNullById<T>(id, tableName)
+    }
     
     
-    // TODO ============================================================================================================================================
+    inline fun <reified T : Any> getRowOrNull(                    table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = 1,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
+    ): T? = readDB(null, "getRowOrNull") {
+        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
+    
+    
+    suspend inline fun <reified T : Any> getRowOrNullAsync(       table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = 1,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
+    ): T? = readAsync(null, "getRowOrNullAsync") {
+        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
+    
+    
+    fun <T : Any> getRowOrNull(                                   clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = 1,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
+    ): T? = readDB(null, "getRowOrNull") {
+        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
+    
+    
+    suspend fun <T : Any> getRowOrNullAsync(                      clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = 1,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
+    ): T? = readAsync(null, "getRowOrNullAsync") {
+        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
     
     
     
+    inline fun <reified T : Any> getRows(                         table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                      noinline mapAfter: (T) -> T = { it }
+    ): List<T> = readDB(emptyList(), "getRows") {
+        it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    suspend inline fun <reified T : Any> getRowsAsync(            table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                      noinline mapAfter: (T) -> T = { it }
+    ): List<T> = readAsync(emptyList(), "getRowsAsync") {
+        it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    fun <T : Any> getRows(                                        clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                               mapAfter: (T) -> T = { it }
+    ): List<T> = readDB(emptyList(), "getRows") {
+        it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    suspend fun <T : Any> getRowsAsync(                           clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                               mapAfter: (T) -> T = { it }
+    ): List<T> = readAsync(emptyList(), "getRowsAsync") {
+        it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
     
     
     
