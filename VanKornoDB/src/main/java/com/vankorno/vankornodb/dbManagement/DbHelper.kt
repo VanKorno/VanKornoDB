@@ -332,17 +332,17 @@ open class DbHelper(
     
     
     inline fun <reified T : Any> updateRow(                        tableName: String,
-                                                                    entities: List<T>,
+                                                                      entity: T,
                                                               noinline where: WhereBuilder.()->Unit
     ): Int = readWriteDB(0, "updateRow") {
-        it.updateRow(tableName, entities, where)
+        it.updateRow(tableName, entity, where)
     }
     
     suspend inline fun <reified T : Any> updateRowAsync(           tableName: String,
-                                                                    entities: List<T>,
+                                                                      entity: T,
                                                               noinline where: WhereBuilder.()->Unit
     ): Int = readWriteAsync(0, "updateRowAsync") {
-        it.updateRow(tableName, entities, where)
+        it.updateRow(tableName, entity, where)
     }
     
     
