@@ -33,44 +33,35 @@ import kotlin.reflect.full.memberProperties
 
 /**
  * Inserts the given entity into the specified database table.
- * Converts the entity into ContentValues, optionally modifies them via [modify] lambda,
- * then performs the SQLite insert operation.
+ * Converts the entity into ContentValues and performs the SQLite insert operation.
  *
  * @param tableName The name of the table to insert into.
  * @param entity The entity object to insert.
- * @param modify Optional lambda to customize ContentValues before insertion.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertRow(         tableName: String,
-                                                                  entity: T,
-                                                                  modify: (ContentValues)->
-                                                                             ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.insertRow(                         tableName: String,
+                                                                                  entity: T
 ): Long {
-    val baseCV = toContentValues(entity)
-    val finalCV = modify(baseCV)
-    if (finalCV.size() == 0) return -1 //\/\/\/\/\/\
-    return insert(tableName, null, finalCV)
+    val cv = toContentValues(entity)
+    if (cv.size() == 0) return -1 //\/\/\/\/\/\
+    return insert(tableName, null, cv)
 }
 
 
 /**
  * Inserts multiple entities into the specified database table.
- * Converts each entity into ContentValues, optionally modifies them via [modify] lambda,
- * then performs the SQLite insert operation for each.
+ * Converts each entity into ContentValues and performs the SQLite insert operation for each.
  *
  * @param tableName The name of the table to insert into.
  * @param entities The list of entity objects to insert.
- * @param modify Optional lambda to customize ContentValues before each insertion.
  * @return The number of rows successfully inserted.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertRows(        tableName: String,
-                                                                entities: List<T>,
-                                                                  modify: (ContentValues)->
-                                                                             ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.insertRows(                        tableName: String,
+                                                                                entities: List<T>
 ): Int {
     var count = 0
     entities.forEach { entity ->
-        val rowId = insertRow(tableName, entity, modify)
+        val rowId = insertRow(tableName, entity)
         if (rowId != -1L) count++
     }
     return count
@@ -81,35 +72,32 @@ inline fun <reified T : Any> SQLiteDatabase.insertRows(        tableName: String
 
 /**
  * Updates the row with the specified [id] in the given table with the values from [entity].
- * Converts the entity into ContentValues, optionally customizes them via [modify] lambda,
- * then performs the SQLite update operation.
+ * Converts the entity into ContentValues and performs the SQLite update operation.
  *
  * @param tableName The name of the table to update.
  * @param id The primary key ID of the row to update.
  * @param entity The entity object with updated data.
- * @param modify Optional lambda to customize ContentValues before update.
  * @return The number of rows affected.
  */
-inline fun <reified T : Any> SQLiteDatabase.updateRowById(     tableName: String,
-                                                                      id: Int,
-                                                                  entity: T,
-                                                                  modify: (ContentValues)->
-                                                                             ContentValues = { it }
+inline fun <reified T : Any> SQLiteDatabase.updateRowById(                            id: Int,
+                                                                               tableName: String,
+                                                                                  entity: T
 ): Int {
-    val cv = modify(toContentValues(entity))
+    val cv = toContentValues(entity)
     return update(tableName, cv, ID+"=?", arrayOf(id.toString()))
 }
 
 
-inline fun <reified T : Any> SQLiteDatabase.updateRow(        tableName: String,
-                                                                 entity: T,
-                                                                 modify: (ContentValues)->
-                                                                            ContentValues = { it },
-                                                                  where: WhereBuilder.()->Unit
+inline fun <reified T : Any> SQLiteDatabase.updateRow(             tableName: String,
+                                                                      entity: T,
+                                                                       where: WhereBuilder.()->Unit
 ): Int {
-    val cv = modify(toContentValues(entity))
+    val cv = toContentValues(entity)
     val whereBuilder = WhereBuilder().apply(where)
-    val affected = update(tableName, cv, whereBuilder.clauses.joinToString(" "), whereBuilder.args.toTypedArray())
+    val whereClause = whereBuilder.clauses.joinToString(" ")
+    val whereArgs = whereBuilder.args.toTypedArray()
+    
+    val affected = update(tableName, cv, whereClause, whereArgs)
     
     if (affected > 1) {
         // region LOG

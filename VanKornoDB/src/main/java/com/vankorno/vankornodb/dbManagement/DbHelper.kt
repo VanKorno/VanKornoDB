@@ -302,6 +302,68 @@ open class DbHelper(
     
     
     
+    // ---------------------------------  S E T   R O W S  --------------------------------- \\
+    
+    inline fun <reified T : Any> insertRow(                                    tableName: String,
+                                                                                  entity: T
+    ): Long = readWriteDB(-1L, "insertRow") {
+        it.insertRow(tableName, entity)
+    }
+    
+    suspend inline fun <reified T : Any> insertRowAsync(                       tableName: String,
+                                                                                  entity: T
+    ): Long = readWriteAsync(-1L, "insertRowAsync") {
+        it.insertRow(tableName, entity)
+    }
+    
+    
+    inline fun <reified T : Any> insertRows(                                   tableName: String,
+                                                                                entities: List<T>
+    ): Int = readWriteDB(0, "insertRows") {
+        it.insertRows(tableName, entities)
+    }
+    
+    suspend inline fun <reified T : Any> insertRowsAsync(                      tableName: String,
+                                                                                entities: List<T>
+    ): Int = readWriteAsync(0, "insertRowsAsync") {
+        it.insertRows(tableName, entities)
+    }
+    
+    
+    
+    inline fun <reified T : Any> updateRow(                        tableName: String,
+                                                                    entities: List<T>,
+                                                              noinline where: WhereBuilder.()->Unit
+    ): Int = readWriteDB(0, "updateRow") {
+        it.updateRow(tableName, entities, where)
+    }
+    
+    suspend inline fun <reified T : Any> updateRowAsync(           tableName: String,
+                                                                    entities: List<T>,
+                                                              noinline where: WhereBuilder.()->Unit
+    ): Int = readWriteAsync(0, "updateRowAsync") {
+        it.updateRow(tableName, entities, where)
+    }
+    
+    
+    inline fun <reified T : Any> updateRowById(                                       id: Int,
+                                                                               tableName: String,
+                                                                                  entity: T
+    ): Int = readWriteDB(0, "updateRowById") {
+        it.updateRowById(id, tableName, entity)
+    }
+    
+    suspend inline fun <reified T : Any> updateRowByIdAsync(                          id: Int,
+                                                                               tableName: String,
+                                                                                  entity: T
+    ): Int = readWriteAsync(0, "updateRowByIdAsync") {
+        it.updateRowById(id, tableName, entity)
+    }
+    
+    
+    
+    
+    
     
     
     
@@ -391,6 +453,20 @@ open class DbHelper(
     
     inline fun getBlobById(id: Int, tableName: String, column: String): ByteArray? = getBlob(tableName, column, ID, id)
     suspend fun getBlobByIdAsync(id: Int, tableName: String, column: String): ByteArray? = getBlobAsync(tableName, column, ID, id)
+    
+    
+    // ---------------------------------  G E T   R O W S  --------------------------------- \\
+    
+    
+    
+    // TODO ============================================================================================================================================
+    
+    
+    
+    
+    
+    
+    
     
     
     
