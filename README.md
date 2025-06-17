@@ -92,7 +92,7 @@ db.createTables(
 db.insertRow<SettingsEntity>(SettingsTable, new)
 cursor.mapToEntity(SettingsEntity::class)
 
-db.getRow<UserEntity>(TableName, where = { Mood equal bad })
+db.getRowById<UserEntity>(TableName, where = { Mood equal bad })
 db.getRows<UserEntity>(TableName, where = { Mood equal good })
 
 db.set("new value", TableName, ColumnName, where = { Mood greater normal })
@@ -100,9 +100,9 @@ db.set("new value", TableName, ColumnName, where = { Mood greater normal })
 db.setMult(
     TableName,
     values = mapOf( // or pass ContentValues
-        Column1 to "someVal",
+        Column1 to 1,
         Column2 to 2,
-        Column3 to false
+        Column3 to 3
     ),
     where = { Mood notEqual bad }
 )
