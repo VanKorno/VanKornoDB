@@ -8,28 +8,12 @@ import com.vankorno.vankornodb.core.DbConstants.dbCreateT
 import com.vankorno.vankornodb.core.DbConstants.dbDefault
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnDefinition
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnType
-import com.vankorno.vankornodb.dbManagement.data.AutoId
-import com.vankorno.vankornodb.dbManagement.data.AutoIdNullable
-import com.vankorno.vankornodb.dbManagement.data.BlobCol
-import com.vankorno.vankornodb.dbManagement.data.BlobColNullable
-import com.vankorno.vankornodb.dbManagement.data.BoolCol
-import com.vankorno.vankornodb.dbManagement.data.BoolColNullable
-import com.vankorno.vankornodb.dbManagement.data.ColumnType
-import com.vankorno.vankornodb.dbManagement.data.FloatCol
-import com.vankorno.vankornodb.dbManagement.data.FloatColNullable
-import com.vankorno.vankornodb.dbManagement.data.IntCol
-import com.vankorno.vankornodb.dbManagement.data.IntColNullable
-import com.vankorno.vankornodb.dbManagement.data.LongCol
-import com.vankorno.vankornodb.dbManagement.data.LongColNullable
-import com.vankorno.vankornodb.dbManagement.data.StrCol
-import com.vankorno.vankornodb.dbManagement.data.StrColNullable
-import com.vankorno.vankornodb.dbManagement.data.TableInfo
+import com.vankorno.vankornodb.dbManagement.data.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-
 
 /**
  * Creates a single table in db.
@@ -144,7 +128,7 @@ fun newTableQuery(                                                             t
 object TableBuilderUtils {
     /**
     * Maps a Kotlin type to an internal SQL column type, considering nullability and field name.
-    * Special case: if the field is named "id", it's treated as an auto-increment primary key.
+    * Special case: if the field is named "id", it's treated as non auto-incremented primary key.
     * Returns null for unsupported types.
     */
     fun getColumnType(                                                     paramName: String?,
@@ -155,7 +139,7 @@ object TableBuilderUtils {
     
         return when (classifier) {
             Int::class ->       if (paramName == "id") {
-                                    if (isNullable) AutoIdNullable else AutoId
+                                    PrimeId
                                 } else {
                                     if (isNullable) IntColNullable else IntCol
                                 }
@@ -164,7 +148,7 @@ object TableBuilderUtils {
             Long::class ->      if (isNullable) LongColNullable else LongCol
             Float::class ->     if (isNullable) FloatColNullable else FloatCol
             ByteArray::class -> if (isNullable) BlobColNullable else BlobCol
-            else -> null // unsupported types like List, Array, etc.
+            else -> null
         }
     }
     
@@ -181,7 +165,7 @@ object TableBuilderUtils {
             .firstOrNull { it.name == name }?.getter?.call(defaultsInstance)
         
         // SKIP default clause for AutoId/AutoIdNullable or null default
-        val skipDefault = colType == AutoId || colType == AutoIdNullable || defaultValue == null
+        val skipDefault = colType == PrimeId || defaultValue == null
         
         val defaultClause = if (!isNullable  &&  !skipDefault) {
             val defaultSqlValue = when (defaultValue) {

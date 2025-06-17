@@ -10,6 +10,7 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.WhereBuilder
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 
 // TODO Maybe: Upsert-like function — insert or update depending on whether the row exists (SQLite supports INSERT OR REPLACE, INSERT ON CONFLICT, etc.)
 
@@ -42,7 +43,11 @@ import kotlin.reflect.full.memberProperties
 inline fun <reified T : Any> SQLiteDatabase.insertRow(                         tableName: String,
                                                                                   entity: T
 ): Long {
-    val cv = toContentValues(entity)
+    val modifiedEntity = if (entity.hasIdField() && entity.getId() < 1) {
+        entity.withId(getLastID(tableName) + 1)
+    } else entity
+    
+    val cv = toContentValues(modifiedEntity)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableName, null, cv)
 }
@@ -67,6 +72,37 @@ inline fun <reified T : Any> SQLiteDatabase.insertRows(                        t
     return count
 }
 
+
+inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(     tableName: String,
+                                                                        entities: List<T>
+): Int {
+    if (entities.isEmpty()) return 0
+
+    val kClass = T::class
+    val hasId = kClass.memberProperties.any { it.name == ID }
+    val idProp = kClass.memberProperties.firstOrNull { it.name == ID }
+    val ctor = kClass.primaryConstructor!!
+
+    var nextId = getLastID(tableName) + 1
+    var count = 0
+
+    for (entity in entities) {
+        val currentId = idProp?.getter?.call(entity) as? Int ?: -1
+        val modified = if (hasId && currentId < 1) {
+            val args = ctor.parameters.associateWith { param ->
+                if (param.name == ID) nextId++
+                else kClass.memberProperties.first { it.name == param.name }.getter.call(entity)
+            }
+            ctor.callBy(args)
+        } else entity
+
+        val cv = toContentValues(modified)
+        if (cv.size() != 0 && insert(tableName, null, cv) != -1L) {
+            count++
+        }
+    }
+    return count
+}
 
 
 
@@ -111,6 +147,26 @@ inline fun <reified T : Any> SQLiteDatabase.updateRow(             tableName: St
 
 
 
+@PublishedApi
+internal fun Any.hasIdField(): Boolean = this::class.memberProperties.any { it.name == "id" }
+
+@PublishedApi
+internal fun Any.getId(): Int = this::class.memberProperties
+    .firstOrNull { it.name == "id" }
+    ?.getter?.call(this) as? Int ?: -1
+
+@PublishedApi
+internal fun <T : Any> T.withId(newId: Int): T {
+    val kClass = this::class
+    val ctor = kClass.primaryConstructor!!
+    val args = ctor.parameters.associateWith { param ->
+        if (param.name == "id") newId
+        else kClass.memberProperties.first { it.name == param.name }.getter.call(this)
+    }
+    return ctor.callBy(args)
+}
+
+
 
 /**
  * Converts the given entity into ContentValues for SQLite operations.
@@ -129,8 +185,6 @@ fun <T : Any> toContentValues(                                 entity: T,
     
     clazz.memberProperties.forEach { prop ->
         val name = prop.name
-        if (name == ID) return@forEach
-        
         val value = prop.getter.call(entity)
         val returnType = prop.returnType
         val classifier = returnType.classifier
@@ -149,7 +203,7 @@ fun <T : Any> toContentValues(                                 entity: T,
                 is Int        -> cv.put(name, value)
                 is Long       -> cv.put(name, value)
                 is Float      -> cv.put(name, value)
-                is Double     -> cv.put(name, value.toFloat())
+                is Double     -> cv.put(name, value)
                 is Short      -> cv.put(name, value.toInt())
                 is Boolean    -> cv.put(name, if (value) 1 else 0)
                 is ByteArray  -> cv.put(name, value)
@@ -175,7 +229,7 @@ fun <T : Any> toContentValues(                                 entity: T,
             Int::class        -> { colName, v -> cv.put(colName, v as Int) }
             Long::class       -> { colName, v -> cv.put(colName, v as Long) }
             Float::class      -> { colName, v -> cv.put(colName, v as Float) }
-            Double::class     -> { colName, v -> cv.put(colName, (v as Double).toFloat()) }
+            Double::class     -> { colName, v -> cv.put(colName, v as Double) }
             Short::class      -> { colName, v -> cv.put(colName, (v as Short).toInt()) }
             Boolean::class    -> { colName, v -> cv.put(colName, if (v as Boolean) 1 else 0) }
             ByteArray::class  -> { colName, v -> cv.put(colName, v as ByteArray) }

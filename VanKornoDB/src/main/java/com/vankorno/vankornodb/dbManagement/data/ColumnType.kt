@@ -3,8 +3,7 @@ package com.vankorno.vankornodb.dbManagement.data
 
 enum class ColumnType(                                                           val sql: String
 ) {
-    AUTO_ID(" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"),
-    AUTO_ID_NULLABLE(" INTEGER PRIMARY KEY AUTOINCREMENT"),
+    ID(" INTEGER NOT NULL PRIMARY KEY"),
 
     INT(" INT NOT NULL"),
     INT_NULLABLE(" INT"),
@@ -26,7 +25,7 @@ enum class ColumnType(                                                          
 }
 
 
-val AutoId = ColumnType.AUTO_ID
+val PrimeId = ColumnType.ID
 val IntCol = ColumnType.INT
 val StrCol = ColumnType.STR
 val BoolCol = ColumnType.BOOL
@@ -35,7 +34,6 @@ val FloatCol = ColumnType.FLOAT
 val BlobCol = ColumnType.BLOB
 
 
-val AutoIdNullable  = ColumnType.AUTO_ID_NULLABLE
 val IntColNullable  = ColumnType.INT_NULLABLE
 val StrColNullable  = ColumnType.STR_NULLABLE
 val BoolColNullable = ColumnType.BOOL_NULLABLE
