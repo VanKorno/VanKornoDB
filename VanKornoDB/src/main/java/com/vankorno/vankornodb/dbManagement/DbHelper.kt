@@ -696,8 +696,8 @@ open class DbHelper(
     suspend fun isTableEmptyAsync(tableName: String) = readAsync(true, "isTableEmptyAsync") { it.isTableEmpty(tableName) }
     
     
-    inline fun getNewPriority(tableName: String) = readDB(0, "getNewPriority") { it.getNewPriority(tableName) }
-    suspend fun getNewPriorityAsync(tableName: String) = readAsync(0, "getNewPriorityAsync") { it.getNewPriority(tableName) }
+    inline fun getLastPriority(tableName: String) = readDB(0, "getLastPriority") { it.getLastPriority(tableName) }
+    suspend fun getLastPriorityAsync(tableName: String) = readAsync(0, "getLastPriorityAsync") { it.getLastPriority(tableName) }
     
     
     

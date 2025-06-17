@@ -14,6 +14,7 @@ MasterTable="sqlite_master",
 where=" WHERE ",
 and=" AND ",   or=" OR ",
 comma=", ",    dot=".",
+max="MAX",
 
 groupBy=" GROUP BY ",   having=" HAVING ",   count="COUNT",   countAll="COUNT(*)",
 orderBy=" ORDER BY ",   ascending=" ASC",    descending=" DESC",
