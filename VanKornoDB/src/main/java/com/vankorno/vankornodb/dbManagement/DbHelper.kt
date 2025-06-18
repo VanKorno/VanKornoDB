@@ -305,26 +305,26 @@ open class DbHelper(
     
     // ---------------------------------  S E T   R O W S  --------------------------------- \\
     
-    inline fun <reified T : Any> insertRow(                                    tableName: String,
+    inline fun <T : Any> insertRow(                                            tableName: String,
                                                                                   entity: T
     ): Long = readWriteDB(-1L, "insertRow") {
         it.insertRow(tableName, entity)
     }
     
-    suspend inline fun <reified T : Any> insertRowAsync(                       tableName: String,
+    suspend fun <T : Any> insertRowAsync(                                      tableName: String,
                                                                                   entity: T
     ): Long = readWriteAsync(-1L, "insertRowAsync") {
         it.insertRow(tableName, entity)
     }
     
     
-    inline fun <reified T : Any> insertRows(                                   tableName: String,
+    inline fun <T : Any> insertRows(                                           tableName: String,
                                                                                 entities: List<T>
     ): Int = readWriteDB(0, "insertRows") {
         it.insertRows(tableName, entities)
     }
     
-    suspend inline fun <reified T : Any> insertRowsAsync(                      tableName: String,
+    suspend fun <T : Any> insertRowsAsync(                                     tableName: String,
                                                                                 entities: List<T>
     ): Int = readWriteAsync(0, "insertRowsAsync") {
         it.insertRows(tableName, entities)
@@ -332,29 +332,29 @@ open class DbHelper(
     
     
     
-    inline fun <reified T : Any> updateRow(                        tableName: String,
+    fun <T : Any> updateRow(                                       tableName: String,
                                                                       entity: T,
-                                                              noinline where: WhereBuilder.()->Unit
+                                                                       where: WhereBuilder.()->Unit
     ): Int = readWriteDB(0, "updateRow") {
         it.updateRow(tableName, entity, where)
     }
     
-    suspend inline fun <reified T : Any> updateRowAsync(           tableName: String,
+    suspend fun <T : Any> updateRowAsync(                          tableName: String,
                                                                       entity: T,
-                                                              noinline where: WhereBuilder.()->Unit
+                                                                       where: WhereBuilder.()->Unit
     ): Int = readWriteAsync(0, "updateRowAsync") {
         it.updateRow(tableName, entity, where)
     }
     
     
-    inline fun <reified T : Any> updateRowById(                                       id: Int,
+    inline fun <T : Any> updateRowById(                                               id: Int,
                                                                                tableName: String,
                                                                                   entity: T
     ): Int = readWriteDB(0, "updateRowById") {
         it.updateRowById(id, tableName, entity)
     }
     
-    suspend inline fun <reified T : Any> updateRowByIdAsync(                          id: Int,
+    suspend fun <T : Any> updateRowByIdAsync(                                         id: Int,
                                                                                tableName: String,
                                                                                   entity: T
     ): Int = readWriteAsync(0, "updateRowByIdAsync") {

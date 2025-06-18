@@ -123,7 +123,7 @@ inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(             t
  * @param entity The entity object with updated data.
  * @return The number of rows affected.
  */
-inline fun <reified T : Any> SQLiteDatabase.updateRowById(                            id: Int,
+fun <T : Any> SQLiteDatabase.updateRowById(                                           id: Int,
                                                                                tableName: String,
                                                                                   entity: T
 ): Int {
@@ -132,7 +132,7 @@ inline fun <reified T : Any> SQLiteDatabase.updateRowById(                      
 }
 
 
-inline fun <reified T : Any> SQLiteDatabase.updateRow(             tableName: String,
+inline fun <T : Any> SQLiteDatabase.updateRow(                     tableName: String,
                                                                       entity: T,
                                                                        where: WhereBuilder.()->Unit
 ): Int {
@@ -142,7 +142,6 @@ inline fun <reified T : Any> SQLiteDatabase.updateRow(             tableName: St
     val whereArgs = whereBuilder.args.toTypedArray()
     
     val affected = update(tableName, cv, whereClause, whereArgs)
-    
     if (affected > 1) {
         // region LOG
         Log.w(DbTAG, "updateRow: $affected rows updated in '$tableName'. You may want to set more specific conditions if you want to update a single row.")
