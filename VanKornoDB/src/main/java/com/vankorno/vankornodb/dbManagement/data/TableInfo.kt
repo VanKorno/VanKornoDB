@@ -1,6 +1,8 @@
 package com.vankorno.vankornodb.dbManagement.data
 
-interface TableInfo {
-    val name: String
-    fun createQuery(): String
-}
+import kotlin.reflect.KClass
+
+data class TableInfo (
+    val name: String,
+    val entityClass: KClass<*>
+)

@@ -40,18 +40,17 @@ import kotlin.reflect.full.primaryConstructor
  * @param entity The entity object to insert.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertRow(                         tableName: String,
+fun <T : Any> SQLiteDatabase.insertRow(                                        tableName: String,
                                                                                   entity: T
 ): Long {
     val modifiedEntity = if (entity.hasIdField() && entity.getId() < 1) {
         entity.withId(getLastID(tableName) + 1)
     } else entity
-    
+
     val cv = toContentValues(modifiedEntity)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableName, null, cv)
 }
-
 
 /**
  * Inserts multiple entities into the specified database table.
@@ -61,11 +60,11 @@ inline fun <reified T : Any> SQLiteDatabase.insertRow(                         t
  * @param entities The list of entity objects to insert.
  * @return The number of rows successfully inserted.
  */
-inline fun <reified T : Any> SQLiteDatabase.insertRows(                        tableName: String,
+fun <T : Any> SQLiteDatabase.insertRows(                                       tableName: String,
                                                                                 entities: List<T>
 ): Int {
     var count = 0
-    entities.forEach { entity ->
+    for (entity in entities) {
         val rowId = insertRow(tableName, entity)
         if (rowId != -1L) count++
     }
@@ -73,8 +72,8 @@ inline fun <reified T : Any> SQLiteDatabase.insertRows(                        t
 }
 
 
-inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(     tableName: String,
-                                                                        entities: List<T>
+inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(             tableName: String,
+                                                                                entities: List<T>
 ): Int {
     if (entities.isEmpty()) return 0
 
@@ -103,6 +102,15 @@ inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(     tableName
     }
     return count
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -156,14 +164,15 @@ internal fun Any.getId(): Int = this::class.memberProperties
     ?.getter?.call(this) as? Int ?: -1
 
 @PublishedApi
-internal fun <T : Any> T.withId(newId: Int): T {
+internal fun <T : Any> T.withId(                                                   newId: Int
+): T {
     val kClass = this::class
-    val ctor = kClass.primaryConstructor!!
-    val args = ctor.parameters.associateWith { param ->
+    val constructor = kClass.primaryConstructor!!
+    val args = constructor.parameters.associateWith { param ->
         if (param.name == "id") newId
         else kClass.memberProperties.first { it.name == param.name }.getter.call(this)
     }
-    return ctor.callBy(args)
+    return constructor.callBy(args)
 }
 
 
@@ -183,7 +192,7 @@ fun <T : Any> toContentValues(                                 entity: T,
 ): ContentValues {
     val cv = ContentValues()
     
-    clazz.memberProperties.forEach { prop ->
+    for (prop in clazz.memberProperties) {
         val name = prop.name
         val value = prop.getter.call(entity)
         val returnType = prop.returnType
@@ -192,7 +201,7 @@ fun <T : Any> toContentValues(                                 entity: T,
         if (classifier is KClass<*>
             && (classifier.java.isArray || Collection::class.java.isAssignableFrom(classifier.java))
         ) {
-            return@forEach
+            continue //\/\/\
         }
         
         if (value == null) {
@@ -213,13 +222,13 @@ fun <T : Any> toContentValues(                                 entity: T,
     }
     
     // Handle list fields (must be at the end of the constructor)
-    clazz.memberProperties.forEach { prop ->
+    for (prop in clazz.memberProperties) {
         val name = prop.name
-        if (!name.endsWith("List")) return@forEach
+        if (!name.endsWith("List")) continue //\/\/\
         
         val value = prop.getter.call(entity)
-        if (value !is List<*>) return@forEach
-        if (value.isEmpty()) return@forEach
+        if (value !is List<*>) continue //\/\/\
+        if (value.isEmpty()) continue //\/\/\
         
         val elementType = prop.returnType.arguments.first().type?.classifier as? KClass<*>
         requireNotNull(elementType) { "Cannot determine list element type for $name" }
@@ -237,8 +246,9 @@ fun <T : Any> toContentValues(                                 entity: T,
         }
         val baseName = name.removeSuffix("List")
         
-        value.forEachIndexed { index, elem ->
-            val columnName = baseName + (index + 1)
+        for (idx in value.indices) {
+            val elem = value[idx]
+            val columnName = baseName + (idx + 1)
             
             if (elem == null)
                 cv.putNull(columnName)

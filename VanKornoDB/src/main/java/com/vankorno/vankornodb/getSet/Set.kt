@@ -53,7 +53,7 @@ fun SQLiteDatabase.setMult(                                        tableName: St
     if (values.isEmpty()) return //\/\/\/\/\/\
     
     val cv = ContentValues().apply {
-        values.forEach { (col, value) ->
+        for ((col, value) in values) {
             putSmart(col, value)
         }
     }
@@ -78,7 +78,7 @@ fun SQLiteDatabase.setMultById(                                                i
     if (values.isEmpty()) return //\/\/\/\/\/\
     
     val cv = ContentValues().apply {
-        values.forEach { (col, value) ->
+        for ((col, value) in values) {
             putSmart(col, value)
         }
     }
@@ -106,7 +106,7 @@ fun SQLiteDatabase.setMultInAll(                                        tableNam
     if (values.isEmpty()) return //\/\/\/\/\/\
     
     val cv = ContentValues().apply {
-        values.forEach { (col, value) ->
+        for ((col, value) in values) {
             putSmart(col, value)
         }
     }

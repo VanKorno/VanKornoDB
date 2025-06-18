@@ -3,7 +3,6 @@ package com.vankorno.vankornodb.dbManagement
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import com.vankorno.vankornodb.core.DbConstants.dbCreateT
 import com.vankorno.vankornodb.core.DbConstants.dbDefault
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnDefinition
@@ -18,7 +17,7 @@ import kotlin.reflect.full.primaryConstructor
 /**
  * Creates a single table in db.
  */
-fun SQLiteDatabase.createTable(tableName: String, entityClass: KClass<*>) = createTables(tableOf(tableName, entityClass))
+fun SQLiteDatabase.createTable(tableName: String, entityClass: KClass<*>) = createTables(TableInfo(tableName, entityClass))
 
 /**
  * Creates multiple tables in the database given vararg TableInfo.
@@ -28,19 +27,10 @@ fun SQLiteDatabase.createTables(vararg tables: TableInfo) = createTables(tables.
 /**
  * Creates multiple tables in the database from a list of TableInfo.
  */
-fun SQLiteDatabase.createTables(tables: List<TableInfo>) = tables.forEach { execSQL(it.createQuery()) }
-
-
-
-/** 
- * Creates a TableInfo instance for a data class and table name.
- * Used to define table schema for creation.
- */
-fun tableOf(                                                                   tableName: String,
-                                                                             entityClass: KClass<*>
-): TableInfo = object : TableInfo {
-    override val name = tableName
-    override fun createQuery() = newTableQuery(tableName, entityClass)
+fun SQLiteDatabase.createTables(tables: List<TableInfo>) {
+    for (table in tables) {
+        execSQL(newTableQuery(table.name, table.entityClass))
+    }
 }
 
 
@@ -76,18 +66,18 @@ fun newTableQuery(                                                             t
     val defaultsInstance = constructor.callBy(emptyMap())
     val columns = mutableListOf<String>()
     
-    constructor.parameters.forEach { param ->
-        val name = param.name ?: return@forEach
+    for (param in constructor.parameters) {
+        val name = param.name ?: continue //\/\/\
         val classifier = param.type.classifier
         
         // Handle List<T> fields
         if (name.endsWith("List") && classifier == List::class) {
-            val property = entityClass.memberProperties.firstOrNull { it.name == name } ?: return@forEach
+            val property = entityClass.memberProperties.firstOrNull { it.name == name } ?: continue //\/\/\
             
             val value = property.getter.call(defaultsInstance)
             
-            val list = value as? List<*> ?: return@forEach
-            if (list.isEmpty()) return@forEach
+            val list = value as? List<*> ?: continue //\/\/\
+            if (list.isEmpty()) continue //\/\/\
             
             val elementType = param.type.arguments.firstOrNull()?.type?.classifier as? KClass<*>
                 ?: error("Cannot determine element type for $name")
@@ -106,7 +96,7 @@ fun newTableQuery(                                                             t
             
             val defaultClause = defaultSqlValue?.let { dbDefault + it } ?: ""
             
-            list.indices.forEach { idx ->
+            for (idx in list.indices) {
                 val colName = name.removeSuffix("List") + (idx + 1)
                 val colDef = colName + columnType.sql + defaultClause
                 columns += colDef
@@ -118,7 +108,7 @@ fun newTableQuery(                                                             t
     }
     val queryStr = dbCreateT + tableName + " (" + columns.joinToString(", ") + ")"
     // region LOG
-        println("newTableQuery<${T::class.simpleName}>(): $queryStr")
+        println("newTableQuery(): $queryStr")
     // endregion
     return queryStr
 }

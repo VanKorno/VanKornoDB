@@ -7,8 +7,11 @@ import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
+import com.vankorno.vankornodb.dbManagement.createTables
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.getSet.getRows
 import com.vankorno.vankornodb.getSet.insertRow
+import com.vankorno.vankornodb.getSet.insertRows
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -66,7 +69,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     val utils = MigrationUtils()
     val oldUnits = utils.readEntitiesFromVersion(this, tableName, oldVersion, versionedClasses)
     
-    val migratedList = oldUnits.map { original ->
+    val migratedEntities = oldUnits.map { original ->
         utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
     }
     this.execSQL(dbDrop + tableName)
@@ -77,17 +80,17 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() Fresh $tableName is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
-    migratedList.forEach {
-        val result = this.insertRow(tableName, it)
+    for (entity in migratedEntities) {
+        val result = this.insertRow(tableName, entity)
         // region LOG
             if (result == -1L)
-                Log.w(DbTAG, "migrateMultiStep() FAILED to insert row: $it")
+                Log.w(DbTAG, "migrateMultiStep() FAILED to insert row: $entity")
         // endregion
     }
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() Done inserting rows. Starting onNewDbFilled()...")
     // endregion
-    onNewDbFilled(migratedList)
+    onNewDbFilled(migratedEntities)
 }
 
 typealias MigrMilestoneLambda = (Any) -> Any
@@ -308,6 +311,48 @@ open class MigrationUtils {
 }
 
 
+/**
+ * Drops and recreates tables that don't need to be migrated.
+ * Table content gets deleted.
+ * 
+ * @param tables A list of table names and entity data classes
+ */
+fun SQLiteDatabase.dropDroppables(                                         tables: List<TableInfo>
+) {
+    val size = tables.size
+    // region LOG
+        Log.d(DbTAG, "dropDroppables(): Dropping $size table(s)...")
+    // endregion
+    for (table in tables) {
+        execSQL(dbDrop + table.name)
+    }
+    // region LOG
+        Log.d(DbTAG, "dropDroppables(): Creating $size table(s)...")
+    // endregion
+    createTables(tables)
+}
+
+
+/**
+ * Drops and recreates tables and their content without doing any real migrations.
+ * Could be useful for things like switching from auto-incremented IDs to non-auto-incremented IDs, etc.
+ * 
+ * @param tables A list of table names and entity data classes
+ */
+fun SQLiteDatabase.migrateWithoutChange(                                   tables: List<TableInfo>
+) {
+    // region LOG
+        Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
+    // endregion
+    for (table in tables) {
+        val rows = getRows(table.entityClass, table.name)
+        dropDroppables(listOf(table))
+        insertRows(table.name, rows)
+    }
+    // region LOG
+        Log.d(DbTAG, "migrateWithoutChange(): Migration complete.")
+    // endregion
+}
 
 
 
