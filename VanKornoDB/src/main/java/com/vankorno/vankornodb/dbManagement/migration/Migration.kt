@@ -317,7 +317,7 @@ open class MigrationUtils {
  * 
  * @param tables A list of table names and entity data classes
  */
-fun SQLiteDatabase.dropDroppables(                                         tables: List<TableInfo>
+fun SQLiteDatabase.dropAndCreateEmptyTables(                               tables: List<TableInfo>
 ) {
     val size = tables.size
     // region LOG
@@ -332,6 +332,9 @@ fun SQLiteDatabase.dropDroppables(                                         table
     createTables(tables)
 }
 
+fun SQLiteDatabase.dropAndCreateEmptyTables(vararg tables: TableInfo) = dropAndCreateEmptyTables(tables.toList())
+
+
 
 /**
  * Drops and recreates tables and their content without doing any real migrations.
@@ -339,14 +342,14 @@ fun SQLiteDatabase.dropDroppables(                                         table
  * 
  * @param tables A list of table names and entity data classes
  */
-fun SQLiteDatabase.migrateWithoutChange(                                   tables: List<TableInfo>
+fun SQLiteDatabase.migrateWithoutChange(                                  vararg tables: TableInfo
 ) {
     // region LOG
         Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
         val rows = getRows(table.entityClass, table.name)
-        dropDroppables(listOf(table))
+        dropAndCreateEmptyTables(listOf(table))
         insertRows(table.name, rows)
     }
     // region LOG
