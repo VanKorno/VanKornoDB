@@ -9,6 +9,7 @@ import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
 import com.vankorno.vankornodb.dbManagement.createTables
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
+import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.getSet.getRows
 import com.vankorno.vankornodb.getSet.insertRow
 import com.vankorno.vankornodb.getSet.insertRows
@@ -42,7 +43,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
                                                      newVersion: Int,
                                                versionedClasses: Map<Int, KClass<*>>,
                                                   renameHistory: Map<String, List<Pair<Int, String>>>,
-                                                  allMilestones: List<Pair<Int, MigrMilestoneLambda>>,
+                                                  allMilestones: List<Pair<Int, MilestoneLambdas>>,
                                                   onNewDbFilled: (List<Any>)->Unit = {}
 ) {
     if (newVersion <= oldVersion) return //\/\/\/\/\/\
@@ -55,7 +56,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     
     val newVerIsMilestone = relevantMilestones.any { it.first == newVersion }
     if (!newVerIsMilestone)
-        relevantMilestones.add(newVersion to { oldObj, newObj -> newObj })
+        relevantMilestones.add(newVersion to MilestoneLambdas())
     
     val steps = relevantMilestones.map { it.first }
     // region LOG
@@ -93,7 +94,6 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     onNewDbFilled(migratedEntities)
 }
 
-typealias MigrMilestoneLambda = (oldObj: Any, newObj: Any) -> Any
 
 
 
@@ -112,11 +112,14 @@ open class MigrationUtils {
      */
     fun convertEntity(                                   oldObject: Any,
                                                           newClass: KClass<*>,
-                                                    renameSnapshot: Map<String, String> = emptyMap()
+                                                    renameSnapshot: Map<String, String> = emptyMap(),
+                                                    overrideColVal: (MigrationDSL.()->Unit)? = null
     ): Any {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
         val constructor = newClass.primaryConstructor
             ?: error("Target class ${newClass.simpleName} must have a primary constructor")
+        
+        val dsl = MigrationDSL().apply { overrideColVal?.invoke(this) }
         
         val args = constructor.parameters.associateWith { param ->
             val toName = param.name ?: error("Constructor parameter must have a name")
@@ -126,6 +129,9 @@ open class MigrationUtils {
             val rawValue = fromProp?.getter?.call(oldObject)
             val fromType = fromProp?.returnType
             val toType = param.type
+            
+            val overriddenValue = dsl.getOverride(toName)?.apply(rawValue)
+            if (overriddenValue != null) return@associateWith overriddenValue
             
             val areSameTypeLists = fromType != null && isSameListType(fromType, toType)
             
@@ -181,21 +187,20 @@ open class MigrationUtils {
                                                           steps: List<Int>,
                                                   renameHistory: Map<String, List<Pair<Int, String>>>,
                                                versionedClasses: Map<Int, KClass<*>>,
-                                                        lambdas: Map<Int, MigrMilestoneLambda>
+                                                        lambdas: Map<Int, MilestoneLambdas>
     ): Any {
         var currentObj = original
         var currentVer = oldVersion
         
         for (nextVer in steps) {
             val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory)
-            val nextClass = versionedClasses[nextVer]
-                ?: error("Missing entity class for version $nextVer")
+            
+            val nextClass = versionedClasses[nextVer] ?: error("Missing entity class for version $nextVer")
             
             val previousObj = currentObj
-            currentObj = convertEntity(currentObj, nextClass, renameSnapshot)
+            currentObj = convertEntity(currentObj, nextClass, renameSnapshot, lambdas[nextVer]?.overrideColVal)
             
-            currentObj = lambdas[nextVer]?.invoke(previousObj, currentObj)
-                ?: error("Missing migration lambda for version $nextVer")
+            currentObj = lambdas[nextVer]?.processFinalObj?.invoke(previousObj, currentObj) ?: currentObj
             currentVer = nextVer
         }
         return currentObj

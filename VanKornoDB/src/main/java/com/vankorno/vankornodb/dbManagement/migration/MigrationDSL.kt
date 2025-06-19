@@ -2,14 +2,13 @@ package com.vankorno.vankornodb.dbManagement.migration
 
 class MigrationDSL {
     private val overrides = mutableMapOf<String, FieldOverride>()
-
-    // Register override for a field
+    
     fun modify(fieldName: String, block: FieldOverride.() -> Unit) {
         overrides[fieldName] = FieldOverride().apply(block) as FieldOverride
     }
-
+    
     fun getOverride(fieldName: String): FieldOverride? = overrides[fieldName]
-
+    
     class FieldOverride {
         var onMissing: (() -> Any?)? = null // default value when missing
         var onFromInt: ((Int) -> Any)? = null
@@ -19,10 +18,10 @@ class MigrationDSL {
         var onFromBoolean: ((Boolean) -> Any)? = null
         var onFromString: ((String) -> Any)? = null
         var onFromOther: ((Any) -> Any)? = null
-
+        
         // Called last after type conversion
         var finalTransform: ((Any) -> Any)? = null
-
+        
         fun apply(value: Any?): Any? {
             if (value == null) return onMissing?.invoke()
             return when (value) {
