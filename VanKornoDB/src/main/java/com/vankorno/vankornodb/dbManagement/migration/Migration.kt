@@ -55,7 +55,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     
     val newVerIsMilestone = relevantMilestones.any { it.first == newVersion }
     if (!newVerIsMilestone)
-        relevantMilestones.add(newVersion to { old, new -> new })
+        relevantMilestones.add(newVersion to { oldObj, newObj, oldClass, newClass -> newObj })
     
     val steps = relevantMilestones.map { it.first }
     // region LOG
@@ -93,7 +93,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
     onNewDbFilled(migratedEntities)
 }
 
-typealias MigrMilestoneLambda = (old: Any, new: Any) -> Any
+typealias MigrMilestoneLambda = (oldObj: Any, newObj: Any, oldClass: KClass<*>, newClass: KClass<*>) -> Any
 
 
 
@@ -192,9 +192,12 @@ open class MigrationUtils {
                 ?: error("Missing entity class for version $nextVer")
             
             val previousObj = currentObj
+            val previousClass = versionedClasses[currentVer]
+                ?: error("Missing entity class for version $currentVer")
+            
             currentObj = convertEntity(currentObj, nextClass, renameSnapshot)
             
-            currentObj = lambdas[nextVer]?.invoke(previousObj, currentObj)
+            currentObj = lambdas[nextVer]?.invoke(previousObj, currentObj, previousClass, nextClass)
                 ?: error("Missing migration lambda for version $nextVer")
             currentVer = nextVer
         }

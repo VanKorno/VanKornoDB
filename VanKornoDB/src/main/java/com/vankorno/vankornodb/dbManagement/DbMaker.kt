@@ -36,7 +36,18 @@ open class DbMaker(              context: Context,
             Log.d(DbTAG, "onUpgrade() Migrating...")
         // endregion
         synchronized(dbLock) {
-            runOnUpgrade(db, oldVersion)
+            db.beginTransaction()
+            try {
+                runOnUpgrade(db, oldVersion)
+                db.setTransactionSuccessful()
+            } catch (e: Exception) {
+                // region LOG
+                    Log.e(DbTAG, "onUpgrade() failed: ${e.message}", e)
+                // endregion
+                throw e
+            } finally {
+                db.endTransaction()
+            }
         }
     }
     
