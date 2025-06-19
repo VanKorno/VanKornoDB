@@ -9,7 +9,7 @@ class MigrationDSLTest {
     fun `onMissing should return fallback`() {
         val dsl = MigrationDSL().apply {
             modify("someField") {
-                onMissing = { "fallback" }
+                fallback = { "fallback" }
             }
         }
         val result = dsl.getOverride("someField")?.apply(null)
@@ -20,7 +20,7 @@ class MigrationDSLTest {
     fun `onFromInt should override Int`() {
         val dsl = MigrationDSL().apply {
             modify("someField") {
-                onFromInt = { it * 2 }
+                fromInt = { it * 2 }
             }
         }
         val result = dsl.getOverride("someField")?.apply(10)
@@ -31,7 +31,7 @@ class MigrationDSLTest {
     fun `onFromString and finalTransform should work in order`() {
         val dsl = MigrationDSL().apply {
             modify("name") {
-                onFromString = { it.uppercase() }
+                fromString = { it.uppercase() }
                 finalTransform = { (it as String).reversed() }
             }
         }
@@ -43,7 +43,7 @@ class MigrationDSLTest {
     fun `onFromOther should catch unknown type`() {
         val dsl = MigrationDSL().apply {
             modify("weird") {
-                onFromOther = { "handled: $it" }
+                fromOther = { "handled: $it" }
             }
         }
         val result = dsl.getOverride("weird")?.apply(listOf(1, 2, 3))
