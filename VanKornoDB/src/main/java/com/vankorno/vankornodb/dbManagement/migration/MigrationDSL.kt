@@ -3,8 +3,10 @@ package com.vankorno.vankornodb.dbManagement.migration
 class MigrationDSL {
     private val overrides = mutableMapOf<String, FieldOverride>()
     
-    fun modify(fieldName: String, block: FieldOverride.() -> Unit) {
-        overrides[fieldName] = FieldOverride().apply(block) as FieldOverride
+    fun modify(fieldName: String, block: FieldOverride.()->Unit) {
+        val override = FieldOverride()
+        block.invoke(override)
+        overrides[fieldName] = override
     }
     
     fun getOverride(fieldName: String): FieldOverride? = overrides[fieldName]
