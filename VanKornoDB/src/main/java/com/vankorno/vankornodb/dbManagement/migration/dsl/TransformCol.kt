@@ -1,6 +1,6 @@
-package com.vankorno.vankornodb.dbManagement.migration
+package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-class MigrationDSL {
+class TransformCol {
     private val overrides = mutableMapOf<String, FieldOverride>()
     
     fun modify(                                                   fieldName: String,

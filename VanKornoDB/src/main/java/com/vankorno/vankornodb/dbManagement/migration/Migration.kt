@@ -9,7 +9,9 @@ import com.vankorno.vankornodb.core.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
 import com.vankorno.vankornodb.dbManagement.createTables
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
+import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
+import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformCol
 import com.vankorno.vankornodb.getSet.getRows
 import com.vankorno.vankornodb.getSet.insertRow
 import com.vankorno.vankornodb.getSet.insertRows
@@ -31,9 +33,35 @@ import kotlin.reflect.full.starProjectedType
  * @param tableName The name of the table to migrate.
  * @param oldVersion The version of the entity currently stored in the table.
  * @param newVersion The target version of the entity to migrate to.
+ * @param migrationBundle A bundle of versioned classes, rename history and milestone lambdas.
+ * @param onNewDbFilled An optional callback invoked with the list of fully migrated objects after the table has been repopulated.
+ *
+ * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
+ */
+fun SQLiteDatabase.migrateMultiStep(                              tableName: String,
+                                                                 oldVersion: Int,
+                                                                 newVersion: Int,
+                                                            migrationBundle: MigrationBundle,
+                                                              onNewDbFilled: (List<Any>)->Unit = {}
+) {
+    this.migrateMultiStep(tableName, oldVersion, newVersion, migrationBundle.versionedClasses,
+        migrationBundle.renameHistory, migrationBundle.milestones, onNewDbFilled
+    )
+}
+
+/**
+ * Migrates the contents of a table through multiple versioned entity definitions and optional transformation lambdas.
+ *
+ * This function performs step-by-step data migration from [oldVersion] to [newVersion], converting each entity instance
+ * according to the provided versioned classes, rename history, and transformation lambdas. The table is dropped,
+ * recreated using the structure of the final version class, and repopulated with the migrated data.
+ *
+ * @param tableName The name of the table to migrate.
+ * @param oldVersion The version of the entity currently stored in the table.
+ * @param newVersion The target version of the entity to migrate to.
  * @param versionedClasses A map of version numbers to their corresponding entity KClass definitions.
  * @param renameHistory A map of current property names to their list of historical names and versions.
- * @param allMilestones A list of intermediate version numbers paired with transformation lambdas to apply during migration.
+ * @param milestones A list of intermediate version numbers paired with transformation lambdas to apply during migration.
  * @param onNewDbFilled An optional callback invoked with the list of fully migrated objects after the table has been repopulated.
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
@@ -43,14 +71,14 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
                                                      newVersion: Int,
                                                versionedClasses: Map<Int, KClass<*>>,
                                                   renameHistory: Map<String, List<Pair<Int, String>>>,
-                                                  allMilestones: List<Pair<Int, MilestoneLambdas>>,
+                                                     milestones: List<Pair<Int, MilestoneLambdas>>,
                                                   onNewDbFilled: (List<Any>)->Unit = {}
 ) {
     if (newVersion <= oldVersion) return //\/\/\/\/\/\
     // region LOG
-        Log.d(DbTAG, "Starting migrateMultiStep()... Table = $tableName, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${allMilestones.size}")
+        Log.d(DbTAG, "Starting migrateMultiStep()... Table = $tableName, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${milestones.size}")
     // endregion
-    val relevantMilestones = allMilestones
+    val relevantMilestones = milestones
         .filter { (version, _) -> version > oldVersion && version <= newVersion }
         .toMutableList()
     
@@ -113,13 +141,13 @@ open class MigrationUtils {
     fun convertEntity(                                   oldObject: Any,
                                                           newClass: KClass<*>,
                                                     renameSnapshot: Map<String, String> = emptyMap(),
-                                                    overrideColVal: (MigrationDSL.()->Unit)? = null
+                                                    overrideColVal: (TransformCol.()->Unit)? = null
     ): Any {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
         val constructor = newClass.primaryConstructor
             ?: error("Target class ${newClass.simpleName} must have a primary constructor")
         
-        val dsl = MigrationDSL().apply { overrideColVal?.invoke(this) }
+        val dsl = TransformCol().apply { overrideColVal?.invoke(this) }
         
         val args = constructor.parameters.associateWith { param ->
             val toName = param.name ?: error("Constructor parameter must have a name")
@@ -198,7 +226,7 @@ open class MigrationUtils {
             val nextClass = versionedClasses[nextVer] ?: error("Missing entity class for version $nextVer")
             
             val previousObj = currentObj
-            currentObj = convertEntity(currentObj, nextClass, renameSnapshot, lambdas[nextVer]?.overrideColVal)
+            currentObj = convertEntity(currentObj, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
             
             currentObj = lambdas[nextVer]?.processFinalObj?.invoke(previousObj, currentObj) ?: currentObj
             currentVer = nextVer
