@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.dbManagement.createTables
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
+import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformCol
 import com.vankorno.vankornodb.getSet.getRows
 import com.vankorno.vankornodb.getSet.insertRow
@@ -70,7 +71,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
                                                      oldVersion: Int,
                                                      newVersion: Int,
                                                versionedClasses: Map<Int, KClass<*>>,
-                                                  renameHistory: Map<String, List<Pair<Int, String>>>,
+                                                  renameHistory: Map<String, List<RenameRecord>>,
                                                      milestones: List<Pair<Int, MilestoneLambdas>>,
                                                   onNewDbFilled: (List<Any>)->Unit = {}
 ) {
@@ -213,7 +214,7 @@ open class MigrationUtils {
     fun convertThroughSteps(                           original: Any,
                                                      oldVersion: Int,
                                                           steps: List<Int>,
-                                                  renameHistory: Map<String, List<Pair<Int, String>>>,
+                                                  renameHistory: Map<String, List<RenameRecord>>,
                                                versionedClasses: Map<Int, KClass<*>>,
                                                         lambdas: Map<Int, MilestoneLambdas>
     ): Any {
@@ -243,13 +244,13 @@ open class MigrationUtils {
      * @param renameHistory A map of current field names to their rename history.
      * @return A map where each key is the current name and each value is the corresponding old name.
      */
-    fun getRenameSnapshot(                              fromVer: Int,
-                                                          toVer: Int,
-                                                  renameHistory: Map<String, List<Pair<Int, String>>>
+    fun getRenameSnapshot(                                  fromVer: Int,
+                                                              toVer: Int,
+                                                      renameHistory: Map<String, List<RenameRecord>>
     ): Map<String, String> {
         val snapshot = mutableMapOf<String, String>()
         
-        for ((newestName, history) in renameHistory) {
+        for ((latestName, history) in renameHistory) {
             val oldName = getNameAtVersion(history, fromVer)
             val targetName = getNameAtVersion(history, toVer)
             
@@ -263,15 +264,21 @@ open class MigrationUtils {
     /**
      * Finds the field name used at or before a specific version in the rename history.
      *
-     * @param history A list of (version, name) pairs representing rename history.
+     * @param colHistory A list of RenameRecord representing rename history for a single column.
      * @param version The version to query.
      * @return The name valid at the given version, or null if not found.
      */
-    private fun getNameAtVersion(                                   history: List<Pair<Int, String>>,
-                                                                    version: Int
-    ): String? = history
-                    .filter { (ver, _) -> ver <= version }
-                    .maxByOrNull{ it.first }?.second
+    private fun getNameAtVersion(                                    colHistory: List<RenameRecord>,
+                                                                        version: Int
+    ): String? {
+        var current: String? = colHistory.lastOrNull()?.to ?: return null
+        
+        for (record in colHistory.sortedByDescending { it.version }) {
+            if (record.version <= version) break
+            if (record.to == current) current = record.from
+        }
+        return current
+    }
     
     
     fun isPrimitive(                                                                type: KType

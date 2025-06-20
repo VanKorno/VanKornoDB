@@ -4,7 +4,7 @@ import kotlin.reflect.KClass
 
 data class MigrationBundle(
               val versionedClasses: Map<Int, KClass<*>>,
-                 val renameHistory: Map<String, List<Pair<Int, String>>>,
+                 val renameHistory: Map<String, List<RenameRecord>>,
                     val milestones: List<Pair<Int, MilestoneLambdas>>
 ) {
     companion object {

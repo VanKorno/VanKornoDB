@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
+import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.*
 import org.junit.Test
 import kotlin.test.assertFailsWith
@@ -11,6 +12,16 @@ class DefineMigrationsTest {
     
     @Test
     fun `adds versioned classes correctly`() {
+        val bundle = defineMigrations(2, V2::class) {
+            version(1, V1::class)
+            version(2, V2::class)
+        }
+        assertEquals(2, bundle.versionedClasses.size)
+        assertEquals(V1::class, bundle.versionedClasses[1])
+        assertEquals(V2::class, bundle.versionedClasses[2])
+    }
+    @Test
+    fun `adds missing latest version and class`() {
         val bundle = defineMigrations(3, V3::class) {
             version(1, V1::class)
             version(2, V2::class)
@@ -21,19 +32,20 @@ class DefineMigrationsTest {
         assertEquals(V3::class, bundle.versionedClasses[3])
     }
     
+    
     @Test
     fun `stores rename history correctly`() {
         val bundle = defineMigrations(2, V2::class) {
             version(1, V1::class) {
                 rename {
-                    add("latestA" to "renamedToA")
-                    add("latestB" to "renamedToB")
+                    "latestA" from "firstA" to "renamedToA"
+                    "latestB" from "firstB" to "renamedToB"
                 }
             }
         }
         assertEquals(2, bundle.renameHistory.size)
-        assertEquals(listOf(1 to "renamedToA"), bundle.renameHistory["latestA"])
-        assertEquals(listOf(1 to "renamedToB"), bundle.renameHistory["latestB"])
+        assertEquals(listOf(RenameRecord(1, "firstA", "renamedToA")), bundle.renameHistory["latestA"])
+        assertEquals(listOf(RenameRecord(1, "firstB", "renamedToB")), bundle.renameHistory["latestB"])
     }
     
     @Test
@@ -86,14 +98,47 @@ class DefineMigrationsTest {
             defineMigrations(2, V2::class) {
                 version(1, V1::class) {
                     rename {
-                        add("someField" to "oldName1")
-                        add("someField" to "oldName2") // duplicate in same version
+                        "newest" from "putin" to "hujlo"
+                        "newest" from "putin" to "motherfucker" // duplicate in same version
                     }
                 }
             }
         }
         assertTrue("Duplicate rename for field" in (exception.message ?: ""))
     }
+    @Test
+    fun `throws error on duplicate rename for different fields with same FROM in same version`() {
+        val exception = assertFailsWith<IllegalStateException> {
+            defineMigrations(2, V2::class) {
+                version(1, V1::class) {
+                    rename {
+                        "newest" from "putin" to "hujlo"
+                        "differentNewest" from "putin" to "motherfucker"
+                    }
+                }
+            }
+        }
+        assertTrue("Duplicate rename for field" in (exception.message ?: ""))
+    }
+    @Test
+    fun `throws error on duplicate rename for different fields with same TO in same version`() {
+        val exception = assertFailsWith<IllegalStateException> {
+            defineMigrations(2, V2::class) {
+                version(1, V1::class) {
+                    rename {
+                        "newest" from "putin" to "motherfucker"
+                        "differentNewest" from "TuckerCarlson" to "motherfucker"
+                    }
+                }
+            }
+        }
+        assertTrue("Duplicate rename for field" in (exception.message ?: ""))
+    }
+    
+    
+    
+    
+    
     
     @Test
     fun `transform returns original if no function is set`() {
