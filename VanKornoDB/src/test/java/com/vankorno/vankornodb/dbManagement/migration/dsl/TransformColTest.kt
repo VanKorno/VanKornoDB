@@ -1,10 +1,9 @@
-package com.vankorno.vankornodb.dbManagement.migration
+package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformCol
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Test
 
-class MigrationDSLTest {
+class TransformColTest {
 
     @Test
     fun `onMissing should return fallback`() {
@@ -14,7 +13,7 @@ class MigrationDSLTest {
             }
         }
         val result = dsl.getOverride("someField")?.apply(null)
-        assertEquals("fallback", result)
+        Assert.assertEquals("fallback", result)
     }
 
     @Test
@@ -25,7 +24,7 @@ class MigrationDSLTest {
             }
         }
         val result = dsl.getOverride("someField")?.apply(10)
-        assertEquals(20, result)
+        Assert.assertEquals(20, result)
     }
 
     @Test
@@ -37,7 +36,7 @@ class MigrationDSLTest {
             }
         }
         val result = dsl.getOverride("name")?.apply("abc")
-        assertEquals("CBA", result)
+        Assert.assertEquals("CBA", result)
     }
 
     @Test
@@ -48,7 +47,7 @@ class MigrationDSLTest {
             }
         }
         val result = dsl.getOverride("weird")?.apply(listOf(1, 2, 3))
-        assertEquals("handled: [1, 2, 3]", result)
+        Assert.assertEquals("handled: [1, 2, 3]", result)
     }
 
     @Test
@@ -59,6 +58,6 @@ class MigrationDSLTest {
             }
         }
         val result = dsl.getOverride("test")?.apply(123)
-        assertEquals(123, result)
+        Assert.assertEquals(123, result)
     }
 }

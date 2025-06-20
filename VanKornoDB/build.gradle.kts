@@ -42,6 +42,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     
     implementation(libs.kotlin.reflect)
+    testImplementation(kotlin("test"))
 }
 
 

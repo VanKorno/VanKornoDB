@@ -30,32 +30,38 @@ class MigrationDefinitionBuilder() {
     val renameHistory = mutableMapOf<String, MutableList<Pair<Int, String>>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
-    fun version(version: Int, clazz: KClass<*>, block: VersionScope.()->Unit = {}) {
+    fun version(                                                version: Int,
+                                                                  clazz: KClass<*>,
+                                                                  block: VersionScope.()->Unit = {}
+    ) {
         val scope = VersionScope(version)
         scope.block()
         versions[version] = clazz
         scope.renames.forEach { (newName, oldName) ->
-            renameHistory.getOrPut(newName) { mutableListOf() }.add(version to oldName)
+            renameHistory.getOrPut(newName) { mutableListOf() }.also { list ->
+                if (list.any { it.first == version })
+                    error("Duplicate rename for field \"$newName\" in version $version")
+                list.add(version to oldName)
+            }
         }
         scope.milestone?.let {
             milestones.add(version to it)
         }
     }
     
-    inner class VersionScope(val version: Int) {
+    inner class VersionScope(                                                val version: Int
+    ) {
         val renames = mutableListOf<Pair<String, String>>()
         var milestone: MilestoneLambdas? = null
         
-        fun rename(block: MutableList<Pair<String, String>>.()->Unit) {
-            renames.block()
-        }
+        fun rename(block: MutableList<Pair<String, String>>.()->Unit) = renames.block()
         
-        infix fun String.modify(block: TransformCol.FieldOverride.()->Unit): ModifyRow =
-            ModifyRow(this, block)
         
-        fun milestone(
-            vararg modifications: ModifyRow,
-            processFinalObj: ((Any, Any) -> Any)? = null
+        infix fun String.modify(block: TransformCol.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
+        
+        
+        fun milestone(                               vararg modifications: ModifyRow,
+                                                          processFinalObj: ((Any, Any)->Any)? = null
         ) {
             val overrideBlock: TransformCol.()->Unit = {
                 modifications.forEach { modify(it.fieldName, it.block) }
