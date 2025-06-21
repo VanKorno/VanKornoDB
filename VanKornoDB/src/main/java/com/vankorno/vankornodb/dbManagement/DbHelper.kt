@@ -11,7 +11,9 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.getSet.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.reflect.KClass
@@ -30,9 +32,9 @@ open class DbHelper(
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
      */
     @JvmOverloads
-    fun <T> readDB(                                             defaultValue: T,
-                                                                     funName: String = "readDB",
-                                                                         run: (SQLiteDatabase) -> T
+    fun <T> read(                                                 defaultValue: T,
+                                                                       funName: String = "read",
+                                                                           run: (SQLiteDatabase)->T
     ): T = runBlocking {
         withContext(Dispatchers.IO) {
             readBase(defaultValue, funName, run)
@@ -40,29 +42,45 @@ open class DbHelper(
     }
     
     /**
-     * Same as readDB, but does not return anything (for reading db and setting some values from the inside).
+     * Same as read(), but does not return anything. Useful for reading db and setting some values from the inside.
+     * Can launch its own fire-and-forget coroutine if [async] is true.
      */
     @JvmOverloads
-    fun voidReadDB(                                                 funName: String = "voidReadDB",
+    fun voidRead(                                                   funName: String = "voidRead",
+                                                                      async: Boolean = false,
                                                                         run: (SQLiteDatabase)->Unit
     ) {
-        runBlocking {
-            withContext(Dispatchers.IO) {
+        if (async) {
+            CoroutineScope(Dispatchers.IO).launch {
                 readBase(Unit, funName) { run(it) }
+            }
+        } else {
+            runBlocking {
+                withContext(Dispatchers.IO) {
+                    readBase(Unit, funName) { run(it) }
+                }
             }
         }
     }
     
     /**
      * Void (can read or write db, but doesn't return anything), with writing overhead.
+     * Can launch its own fire-and-forget coroutine if [async] is true.
      */
     @JvmOverloads
-    fun writeDB(                                                    funName: String = "writeDB",
+    fun write(                                                      funName: String = "write",
+                                                                      async: Boolean = false,
                                                                         run: (SQLiteDatabase)->Unit
     ) {
-        runBlocking {
-            withContext(Dispatchers.IO) {
-                writeBase(funName) { run(it) }
+        if (async) {
+            CoroutineScope(Dispatchers.IO).launch {
+                writeBase(funName, run)
+            }
+        } else {
+            runBlocking {
+                withContext(Dispatchers.IO) {
+                    writeBase(funName, run)
+                }
             }
         }
     }
@@ -71,8 +89,8 @@ open class DbHelper(
      * All-mighty, but with writing overhead.
      */
     @JvmOverloads
-    fun <T> readWriteDB(                                       defaultValue: T,
-                                                                    funName: String = "readWriteDB",
+    fun <T> readWrite(                                         defaultValue: T,
+                                                                    funName: String = "readWrite",
                                                                         run: (SQLiteDatabase)->T
     ): T = runBlocking {
         withContext(Dispatchers.IO) {
@@ -82,14 +100,17 @@ open class DbHelper(
     
     
     
-    // ====================================  A S Y N C  ==================================== \\
+    
+    
+    
+    // =================================  S U S P E N D E D  ================================= \\
     
     /**
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun <T> readAsync(                                  defaultValue: T,
-                                                                     funName: String = "readAsync",
+    suspend fun <T> readSusp(                                   defaultValue: T,
+                                                                     funName: String = "readSusp",
                                                                          run: (SQLiteDatabase)->T
     ): T = withContext(Dispatchers.IO) {
         readBase(defaultValue, funName, run)
@@ -99,7 +120,7 @@ open class DbHelper(
      * Same as readDB, but does not return anything (for reading db and setting some values from the inside).
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun voidReadAsync(                                    funName: String = "voidReadAsync",
+    suspend fun voidReadSusp(                                     funName: String = "voidReadSusp",
                                                                       run: (SQLiteDatabase)->Unit
     ) = withContext(Dispatchers.IO) {
         readBase(Unit, funName){ run(it) }
@@ -109,7 +130,7 @@ open class DbHelper(
      * Void (can read or write db, but doesn't return anything), with writing overhead.
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun writeAsync(                                         funName: String = "writeAsync",
+    suspend fun writeSusp(                                          funName: String = "writeSusp",
                                                                         run: (SQLiteDatabase)->Unit
     ) = withContext(Dispatchers.IO) {
         writeBase(funName) { run(it) }
@@ -119,8 +140,8 @@ open class DbHelper(
      * All-mighty, but with writing overhead.
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun <T> readWriteAsync(                         defaultValue: T,
-                                                                 funName: String = "readWriteAsync",
+    suspend fun <T> readWriteSusp(                          defaultValue: T,
+                                                                 funName: String = "readWriteSusp",
                                                                      run: (SQLiteDatabase)->T
     ): T = withContext(Dispatchers.IO) {
         readWriteBase(defaultValue, funName, run)
@@ -131,7 +152,7 @@ open class DbHelper(
     // ====================================  B A S E D  ==================================== \\
     
     inline fun <T> readBase(                                      defaultValue: T,
-                                                                       funName: String = "readDB",
+                                                                       funName: String = "read",
                                                                            run: (SQLiteDatabase)->T
     ): T {
         return try {
@@ -146,12 +167,12 @@ open class DbHelper(
         }
     }
     
-    inline fun voidReadBase(                                        funName: String = "voidReadDB",
+    inline fun voidReadBase(                                        funName: String = "voidRead",
                                                                         run: (SQLiteDatabase)->Unit
     ) = readBase(Unit, funName){ run(it) }
     
     
-    inline fun writeBase(                                           funName: String = "writeDB",
+    inline fun writeBase(                                           funName: String = "write",
                                                                         run: (SQLiteDatabase)->Unit
     ) {
         try {
@@ -166,7 +187,7 @@ open class DbHelper(
     }
     
     inline fun <T> readWriteBase(                              defaultValue: T,
-                                                                    funName: String = "readWriteDB",
+                                                                    funName: String = "readWrite",
                                                                         run: (SQLiteDatabase)->T
     ): T {
         return try {
@@ -192,39 +213,54 @@ open class DbHelper(
     
     // ===================================  S E T T E R S  =================================== \\
     
-    inline fun setById(value: Any, id: Int, tableName: String, column: String) = set(value, tableName, column, ID, id)
+    inline fun setById(                                                     value: Any,
+                                                                               id: Int,
+                                                                        tableName: String,
+                                                                           column: String,
+                                                                            async: Boolean = false
+    ) = set(value, tableName, column, ID, id, async)
     
-    suspend fun setByIdAsync(value: Any, id: Int, tableName: String, column: String) = setAsync(value, tableName, column, ID, id)
-    
-    
-    inline fun <T> set(                                                            value: Any,
+    suspend fun setByIdSusp(                                                       value: Any,
+                                                                                      id: Int,
                                                                                tableName: String,
-                                                                                  column: String,
-                                                                                   where: String,
-                                                                                  equals: T
-    ) = writeDB("set") { it.set(value, tableName, column, where, equals) }
+                                                                                  column: String
+    ) = setSusp(value, tableName, column, ID, id)
+    
+    
+    inline fun <T> set(                                                     value: Any,
+                                                                        tableName: String,
+                                                                           column: String,
+                                                                            where: String,
+                                                                           equals: T,
+                                                                            async: Boolean = false
+    ) = write("set", async) {
+        it.set(value, tableName, column, where, equals)
+    }
     
     fun <T> set(                                                       value: Any,
                                                                    tableName: String,
                                                                       column: String,
+                                                                       async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit
-    ) = writeDB("set") { it.set(value, tableName, column, where) }
+    ) = write("set", async) {
+        it.set(value, tableName, column, where)
+    }
     
     
-    suspend fun <T> setAsync(                                                      value: Any,
+    suspend fun <T> setSusp(                                                       value: Any,
                                                                                tableName: String,
                                                                                   column: String,
                                                                                    where: String,
                                                                                   equals: T
-    ) = writeAsync("setAsync") {
+    ) = writeSusp("setSusp") {
         it.set(value, tableName, column, where, equals)
     }
     
-    suspend fun <T> setAsync(                                          value: Any,
+    suspend fun <T> setSusp(                                           value: Any,
                                                                    tableName: String,
                                                                       column: String,
                                                                        where: WhereBuilder.()->Unit
-    ) = writeAsync("setAsync") { it.set(value, tableName, column, where) }
+    ) = writeSusp("setSusp") { it.set(value, tableName, column, where) }
     
     
     
@@ -232,101 +268,109 @@ open class DbHelper(
     
     fun setMult(                                                   tableName: String,
                                                                           cv: ContentValues,
+                                                                       async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit
-    ) = writeDB("setMult") { it.setMult(tableName, cv, where) }
+    ) = write("setMult", async) { it.setMult(tableName, cv, where) }
     
-    suspend fun setMultAsync(                                      tableName: String,
+    suspend fun setMultSusp(                                       tableName: String,
                                                                           cv: ContentValues,
                                                                        where: WhereBuilder.()->Unit
-    ) = writeAsync("setMultAsync") { it.setMult(tableName, cv, where) }
+    ) = writeSusp("setMultSusp") { it.setMult(tableName, cv, where) }
     
     
     fun setMult(                                                   tableName: String,
                                                                       values: Map<String, Any?>,
+                                                                       async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit
-    ) = writeDB("setMult") { it.setMult(tableName, values, where) }
+    ) = write("setMult", async) { it.setMult(tableName, values, where) }
     
-    suspend fun setMultAsync(                                      tableName: String,
+    suspend fun setMultSusp(                                       tableName: String,
                                                                       values: Map<String, Any?>,
                                                                        where: WhereBuilder.()->Unit
-    ) = writeAsync("setMultAsync") { it.setMult(tableName, values, where) }
+    ) = writeSusp("setMultSusp") { it.setMult(tableName, values, where) }
     
     
     // -------------------------------------------------------------------------------------- \\
     
-    inline fun setMultById(                                                      id: Int,
-                                                                          tableName: String,
-                                                                                 cv: ContentValues
-    ) = writeDB("setMultById") { it.setMultById(id, tableName, cv) }
+    inline fun setMultById(                                                    id: Int,
+                                                                        tableName: String,
+                                                                               cv: ContentValues,
+                                                                            async: Boolean = false
+    ) = write("setMultById", async) { it.setMultById(id, tableName, cv) }
     
-    suspend fun setMultByIdAsync(                                                id: Int,
+    suspend fun setMultByIdSusp(                                                 id: Int,
                                                                           tableName: String,
                                                                                  cv: ContentValues
-    ) = writeAsync("setMultByIdAsync") { it.setMultById(id, tableName, cv) }
+    ) = writeSusp("setMultByIdSusp") { it.setMultById(id, tableName, cv) }
     
     
     inline fun setMultById(                                                    id: Int,
                                                                         tableName: String,
-                                                                           values: Map<String, Any?>
-    ) = writeDB("setMultById") {
+                                                                           values: Map<String, Any?>,
+                                                                            async: Boolean = false
+    ) = write("setMultById", async) {
         it.setMultById(id, tableName, values)
     }
     
-    suspend fun setMultByIdAsync(                                              id: Int,
+    suspend fun setMultByIdSusp(                                               id: Int,
                                                                         tableName: String,
                                                                            values: Map<String, Any?>
-    ) = writeAsync("setMultByIdAsync") {
+    ) = writeSusp("setMultByIdSusp") {
         it.setMultById(id, tableName, values)
     }
     
     
     // -------------------------------------------------------------------------------------- \\
     
-    inline fun setInAll(                                                           value: Any,
-                                                                               tableName: String,
-                                                                                  column: String
-    ) = writeDB("setInAll") { it.setInAll(value, tableName, column) }
+    inline fun setInAll(                                                    value: Any,
+                                                                        tableName: String,
+                                                                           column: String,
+                                                                            async: Boolean = false
+    ) = write("setInAll", async) { it.setInAll(value, tableName, column) }
     
-    suspend fun setInAllAsync(                                                     value: Any,
+    suspend fun setInAllSusp(                                                      value: Any,
                                                                                tableName: String,
                                                                                   column: String
-    ) = writeAsync("setInAllAsync") { it.setInAll(value, tableName, column) }
+    ) = writeSusp("setInAllSusp") { it.setInAll(value, tableName, column) }
     
     
     inline fun setMultInAll(                                            tableName: String,
-                                                                           values: Map<String, Any?>
-    ) = writeDB("setMultInAll") { it.setMultInAll(tableName, values) }
+                                                                           values: Map<String, Any?>,
+                                                                            async: Boolean = false
+    ) = write("setMultInAll", async) { it.setMultInAll(tableName, values) }
     
-    suspend fun setMultInAllAsync(                                      tableName: String,
+    suspend fun setMultInAllSusp(                                       tableName: String,
                                                                            values: Map<String, Any?>
-    ) = writeAsync("setMultInAllAsync") { it.setMultInAll(tableName, values) }
+    ) = writeSusp("setMultInAllSusp") { it.setMultInAll(tableName, values) }
     
     
     
     // ---------------------------------  S E T   R O W S  --------------------------------- \\
     
-    inline fun <T : Any> insertRow(                                            tableName: String,
+    inline fun <T : Any> insertRow(                                     tableName: String,
+                                                                           entity: T,
+                                                                            async: Boolean = false
+    ) {
+        write("insertRow", async) { it.insertRow(tableName, entity) }
+    }
+    
+    suspend fun <T : Any> insertRowSusp(                                       tableName: String,
                                                                                   entity: T
-    ): Long = readWriteDB(-1L, "insertRow") {
+    ): Long = readWriteSusp(-1L, "insertRowSusp") {
         it.insertRow(tableName, entity)
     }
     
-    suspend fun <T : Any> insertRowAsync(                                      tableName: String,
-                                                                                  entity: T
-    ): Long = readWriteAsync(-1L, "insertRowAsync") {
-        it.insertRow(tableName, entity)
+    
+    inline fun <T : Any> insertRows(                                    tableName: String,
+                                                                         entities: List<T>,
+                                                                            async: Boolean = false
+    ) {
+        write("insertRows", async) { it.insertRows(tableName, entities) }
     }
     
-    
-    inline fun <T : Any> insertRows(                                           tableName: String,
+    suspend fun <T : Any> insertRowsSusp(                                      tableName: String,
                                                                                 entities: List<T>
-    ): Int = readWriteDB(0, "insertRows") {
-        it.insertRows(tableName, entities)
-    }
-    
-    suspend fun <T : Any> insertRowsAsync(                                     tableName: String,
-                                                                                entities: List<T>
-    ): Int = readWriteAsync(0, "insertRowsAsync") {
+    ): Int = readWriteSusp(0, "insertRowsSusp") {
         it.insertRows(tableName, entities)
     }
     
@@ -334,30 +378,32 @@ open class DbHelper(
     
     fun <T : Any> updateRow(                                       tableName: String,
                                                                       entity: T,
+                                                                       async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit
-    ): Int = readWriteDB(0, "updateRow") {
-        it.updateRow(tableName, entity, where)
+    ) {
+        write("updateRow", async) { it.updateRow(tableName, entity, where) }
     }
     
-    suspend fun <T : Any> updateRowAsync(                          tableName: String,
+    suspend fun <T : Any> updateRowSusp(                           tableName: String,
                                                                       entity: T,
                                                                        where: WhereBuilder.()->Unit
-    ): Int = readWriteAsync(0, "updateRowAsync") {
+    ): Int = readWriteSusp(0, "updateRowSusp") {
         it.updateRow(tableName, entity, where)
     }
     
     
-    inline fun <T : Any> updateRowById(                                               id: Int,
-                                                                               tableName: String,
-                                                                                  entity: T
-    ): Int = readWriteDB(0, "updateRowById") {
-        it.updateRowById(id, tableName, entity)
+    inline fun <T : Any> updateRowById(                                        id: Int,
+                                                                        tableName: String,
+                                                                           entity: T,
+                                                                            async: Boolean = false
+    ) {
+        write("updateRowById", async) { it.updateRowById(id, tableName, entity) }
     }
     
-    suspend fun <T : Any> updateRowByIdAsync(                                         id: Int,
+    suspend fun <T : Any> updateRowByIdSusp(                                          id: Int,
                                                                                tableName: String,
                                                                                   entity: T
-    ): Int = readWriteAsync(0, "updateRowByIdAsync") {
+    ): Int = readWriteSusp(0, "updateRowByIdSusp") {
         it.updateRowById(id, tableName, entity)
     }
     
@@ -373,87 +419,87 @@ open class DbHelper(
     // ==================================   G E T T E R S  ================================== \\
     
     inline fun <T> getInt(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readDB(0, "getInt") {
+        read(0, "getInt") {
             it.getInt(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getStr(tableName: String, column: String, whereClause: String, whereArg: T): String =
-        readDB("", "getStr") {
+        read("", "getStr") {
             it.getStr(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getBool(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readDB(false, "getBool") { 
+        read(false, "getBool") { 
             it.getBool(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getLong(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readDB(0L, "getLong") { 
+        read(0L, "getLong") { 
             it.getLong(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getFloat(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readDB(0F, "getFloat") { 
+        read(0F, "getFloat") { 
             it.getFloat(tableName, column, whereClause, whereArg)
         }
     
     inline fun <T> getBlob(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readDB(null, "getBlob") {
+        read(null, "getBlob") {
             it.getBlob(tableName, column, whereClause, whereArg)
         }
     
     
     // -----------------------------------  SUSPEND FUN  ----------------------------------- \\
     
-    suspend fun <T> getIntAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readAsync(0, "getInt") {
+    suspend fun <T> getIntSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+        readSusp(0, "getIntSusp") {
             it.getInt(tableName, column, whereClause, whereArg)
         }
     
-    suspend fun <T> getStrAsync(tableName: String, column: String, whereClause: String, whereArg: T): String =
-        readAsync("", "getStr") {
+    suspend fun <T> getStrSusp(tableName: String, column: String, whereClause: String, whereArg: T): String =
+        readSusp("", "getStrSusp") {
             it.getStr(tableName, column, whereClause, whereArg)
         }
     
-    suspend fun <T> getBoolAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readAsync(false, "getBool") { 
+    suspend fun <T> getBoolSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+        readSusp(false, "getBoolSusp") { 
             it.getBool(tableName, column, whereClause, whereArg)
         }
     
-    suspend fun <T> getLongAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readAsync(0L, "getLong") { 
+    suspend fun <T> getLongSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+        readSusp(0L, "getLongSusp") { 
             it.getLong(tableName, column, whereClause, whereArg)
         }
     
-    suspend fun <T> getFloatAsync(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readAsync(0F, "getFloat") { 
+    suspend fun <T> getFloatSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+        readSusp(0F, "getFloatSusp") { 
             it.getFloat(tableName, column, whereClause, whereArg)
         }
     
-    suspend fun <T> getBlobAsync(tableName: String, column: String, whereClause: String, whereArg: T): ByteArray? =
-        readAsync(null, "getBlob") {
+    suspend fun <T> getBlobSusp(tableName: String, column: String, whereClause: String, whereArg: T): ByteArray? =
+        readSusp(null, "getBlobSusp") {
             it.getBlob(tableName, column, whereClause, whereArg)
         }
     
     // By ID
     
     inline fun getIntById(id: Int, tableName: String, column: String) = getInt(tableName, column, ID, id)
-    suspend fun getIntByIdAsync(id: Int, tableName: String, column: String) = getIntAsync(tableName, column, ID, id)
+    suspend fun getIntByIdSusp(id: Int, tableName: String, column: String) = getIntSusp(tableName, column, ID, id)
     
     inline fun getStrById(id: Int, tableName: String, column: String) = getStr(tableName, column, ID, id)
-    suspend fun getStrByIdAsync(id: Int, tableName: String, column: String) = getStrAsync(tableName, column, ID, id)
+    suspend fun getStrByIdSusp(id: Int, tableName: String, column: String) = getStrSusp(tableName, column, ID, id)
     
     inline fun getBoolById(id: Int, tableName: String, column: String) = getBool(tableName, column, ID, id)
-    suspend fun getBoolByIdAsync(id: Int, tableName: String, column: String) = getBoolAsync(tableName, column, ID, id)
+    suspend fun getBoolByIdSusp(id: Int, tableName: String, column: String) = getBoolSusp(tableName, column, ID, id)
     
     inline fun getLongById(id: Int, tableName: String, column: String) = getLong(tableName, column, ID, id)
-    suspend fun getLongByIdAsync(id: Int, tableName: String, column: String) = getLongAsync(tableName, column, ID, id)
+    suspend fun getLongByIdSusp(id: Int, tableName: String, column: String) = getLongSusp(tableName, column, ID, id)
     
     inline fun getFloatById(id: Int, tableName: String, column: String) = getFloat(tableName, column, ID, id)
-    suspend fun getFloatByIdAsync(id: Int, tableName: String, column: String) = getFloatAsync(tableName, column, ID, id)
+    suspend fun getFloatByIdSusp(id: Int, tableName: String, column: String) = getFloatSusp(tableName, column, ID, id)
     
     inline fun getBlobById(id: Int, tableName: String, column: String): ByteArray? = getBlob(tableName, column, ID, id)
-    suspend fun getBlobByIdAsync(id: Int, tableName: String, column: String): ByteArray? = getBlobAsync(tableName, column, ID, id)
+    suspend fun getBlobByIdSusp(id: Int, tableName: String, column: String): ByteArray? = getBlobSusp(tableName, column, ID, id)
     
     
     
@@ -462,13 +508,13 @@ open class DbHelper(
     
     inline fun <reified T : Any> getRowOrNullById(                                    id: Int,
                                                                                tableName: String
-    ): T? = readDB(null, "getRowOrNullById") {
+    ): T? = read(null, "getRowOrNullById") {
         it.getRowOrNullById<T>(id, tableName)
     }
     
-    suspend inline fun <reified T : Any> getRowOrNullByIdAsync(                       id: Int,
+    suspend inline fun <reified T : Any> getRowOrNullByIdSusp(                        id: Int,
                                                                                tableName: String
-    ): T? = readAsync(null, "getRowOrNullByIdAsync") {
+    ): T? = readSusp(null, "getRowOrNullByIdSusp") {
         it.getRowOrNullById<T>(id, tableName)
     }
     
@@ -482,12 +528,12 @@ open class DbHelper(
                                                                   limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
-    ): T? = readDB(null, "getRowOrNull") {
+    ): T? = read(null, "getRowOrNull") {
         it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     }
     
     
-    suspend inline fun <reified T : Any> getRowOrNullAsync(       table: String,
+    suspend inline fun <reified T : Any> getRowOrNullSusp(        table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -496,7 +542,7 @@ open class DbHelper(
                                                                   limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
-    ): T? = readAsync(null, "getRowOrNullAsync") {
+    ): T? = readSusp(null, "getRowOrNullSusp") {
         it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     }
     
@@ -511,12 +557,12 @@ open class DbHelper(
                                                                   limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
-    ): T? = readDB(null, "getRowOrNull") {
+    ): T? = read(null, "getRowOrNull") {
         it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     }
     
     
-    suspend fun <T : Any> getRowOrNullAsync(                      clazz: KClass<T>,
+    suspend fun <T : Any> getRowOrNullSusp(                       clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -526,7 +572,7 @@ open class DbHelper(
                                                                   limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
-    ): T? = readAsync(null, "getRowOrNullAsync") {
+    ): T? = readSusp(null, "getRowOrNullSusp") {
         it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     }
     
@@ -542,11 +588,11 @@ open class DbHelper(
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
                                                       noinline mapAfter: (T) -> T = { it }
-    ): List<T> = readDB(emptyList(), "getRows") {
+    ): List<T> = read(emptyList(), "getRows") {
         it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend inline fun <reified T : Any> getRowsAsync(            table: String,
+    suspend inline fun <reified T : Any> getRowsSusp(             table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -556,7 +602,7 @@ open class DbHelper(
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
                                                       noinline mapAfter: (T) -> T = { it }
-    ): List<T> = readAsync(emptyList(), "getRowsAsync") {
+    ): List<T> = readSusp(emptyList(), "getRowsSusp") {
         it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
@@ -571,11 +617,11 @@ open class DbHelper(
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
                                                                mapAfter: (T) -> T = { it }
-    ): List<T> = readDB(emptyList(), "getRows") {
+    ): List<T> = read(emptyList(), "getRows") {
         it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend fun <T : Any> getRowsAsync(                           clazz: KClass<T>,
+    suspend fun <T : Any> getRowsSusp(                            clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -586,7 +632,7 @@ open class DbHelper(
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
                                                                mapAfter: (T) -> T = { it }
-    ): List<T> = readAsync(emptyList(), "getRowsAsync") {
+    ): List<T> = readSusp(emptyList(), "getRowsSusp") {
         it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
@@ -599,40 +645,88 @@ open class DbHelper(
     
     // ============================   D E L E T E,  C L E A R   ============================ \\
     
-    inline fun <T> deleteRow(tableName: String, where: String, equals: T) =
-        writeDB("deleteRow") { it.deleteRow(tableName, where, equals) }
+    inline fun <T> deleteRow(                                           tableName: String,
+                                                                            where: String,
+                                                                           equals: T,
+                                                                            async: Boolean = false
+    ) = write("deleteRow", async) {
+        it.deleteRow(tableName, where, equals)
+    }
     
-    suspend fun <T> deleteRowAsync(tableName: String, where: String, equals: T) =
-        writeAsync("deleteRowAsync") { it.deleteRow(tableName, where, equals) }
-    
-    
-    fun deleteRow(tableName: String, where: WhereBuilder.()->Unit) =
-        writeDB("deleteRow") { it.deleteRow(tableName, where) }
-    
-    suspend fun deleteRowAsync(tableName: String, where: WhereBuilder.()->Unit) =
-        writeAsync("deleteRowAsync") { it.deleteRow(tableName, where) }
-    
-    
-    inline fun deleteRowById(id: Int, tableName: String) =
-        writeDB("deleteRowById") { it.deleteRowById(id, tableName) }
-    
-    suspend fun deleteRowByIdAsync(id: Int, tableName: String) =
-        writeAsync("deleteRowByIdAsync") { it.deleteRowById(id, tableName) }
+    suspend fun <T> deleteRowSusp(                                             tableName: String,
+                                                                                   where: String,
+                                                                                  equals: T
+    ) = writeSusp("deleteRowSusp") {
+        it.deleteRow(tableName, where, equals)
+    }
     
     
-    inline fun deleteFirstRow(tableName: String) = writeDB("deleteFirstRow") { it.deleteFirstRow(tableName) }
-    suspend fun deleteFirstRowAsync(tableName: String) = writeAsync("deleteFirstRowAsync") { it.deleteFirstRow(tableName) }
+    fun deleteRow(                                                 tableName: String,
+                                                                       async: Boolean = false,
+                                                                       where: WhereBuilder.()->Unit
+    ) = write("deleteRow", async) {
+        it.deleteRow(tableName, where)
+    }
     
     
-    inline fun deleteLastRow(tableName: String) = writeDB("deleteLastRow") { it.deleteLastRow(tableName) }
-    suspend fun deleteLastRowAsync(tableName: String) = writeAsync("deleteLastRowAsync") { it.deleteLastRow(tableName) }
+    suspend fun deleteRowSusp(                                     tableName: String,
+                                                                       where: WhereBuilder.()->Unit
+    ) = writeSusp("deleteRowSusp") {
+        it.deleteRow(tableName, where)
+    }
     
     
-    inline fun clearTable(tableName: String, resetAutoID: Boolean = true) =
-        writeDB("clearTable") { it.clearTable(tableName, resetAutoID) }
+    inline fun deleteRowById(                                                  id: Int,
+                                                                        tableName: String,
+                                                                            async: Boolean = false
+    ) = write("deleteRowById", async) {
+        it.deleteRowById(id, tableName)
+    }
     
-    suspend fun clearTableAsync(tableName: String, resetAutoID: Boolean = true) =
-        writeAsync("clearTableAsync") { it.clearTable(tableName, resetAutoID) }
+    suspend fun deleteRowByIdSusp(                                                    id: Int,
+                                                                               tableName: String
+    ) = writeSusp("deleteRowByIdSusp") {
+        it.deleteRowById(id, tableName)
+    }
+    
+    
+    
+    inline fun deleteFirstRow(                                          tableName: String,
+                                                                            async: Boolean = false
+    ) = write("deleteFirstRow", async) {
+        it.deleteFirstRow(tableName)
+    }
+    
+    suspend fun deleteFirstRowSusp(                                            tableName: String
+    ) = writeSusp("deleteFirstRowSusp") {
+        it.deleteFirstRow(tableName)
+    }
+    
+    
+    inline fun deleteLastRow(                                           tableName: String,
+                                                                            async: Boolean = false
+    ) = write("deleteLastRow", async) {
+        it.deleteLastRow(tableName)
+    }
+    
+    suspend fun deleteLastRowSusp(                                             tableName: String
+    ) = writeSusp("deleteLastRowSusp") {
+        it.deleteLastRow(tableName)
+    }
+    
+    
+    inline fun clearTable(                                              tableName: String,
+                                                                      resetAutoID: Boolean = true,
+                                                                            async: Boolean = false
+    ) = write("clearTable", async) {
+        it.clearTable(tableName, resetAutoID)
+    }
+    
+    suspend fun clearTableSusp(                                          tableName: String,
+                                                                       resetAutoID: Boolean = true
+    ) = writeSusp("clearTableSusp") {
+        it.clearTable(tableName, resetAutoID)
+    }
     
     
     
@@ -643,15 +737,15 @@ open class DbHelper(
     fun getRowCount(                                          tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {}
-    ) = readDB(0, "getRowCount") {
+    ) = read(0, "getRowCount") {
         it.getRowCount(tableName, joins, where)
     }
     
     /** Returns the number of rows matching the query conditions. */
-    suspend fun getRowCountAsync(                             tableName: String,
+    suspend fun getRowCountSusp(                              tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {}
-    ) = readAsync(0, "getRowCountAsync") {
+    ) = readSusp(0, "getRowCountSusp") {
         it.getRowCount(tableName, joins, where)
     }
     
@@ -660,15 +754,15 @@ open class DbHelper(
     fun hasRows(                                              tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {}
-    ) = readDB(0, "hasRows") {
+    ) = read(0, "hasRows") {
         it.hasRows(tableName, joins, where)
     }
     
     /** Returns true if at least one row matches the query conditions. */
-    suspend fun hasRowsAsync(                                 tableName: String,
+    suspend fun hasRowsSusp(                                  tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {}
-    ) = readAsync(0, "hasRowsAsync") {
+    ) = readSusp(0, "hasRowsSusp") {
         it.hasRows(tableName, joins, where)
     }
     
@@ -680,24 +774,24 @@ open class DbHelper(
     
     // ====================================  O T H E R  ==================================== \\
     
-    inline fun getLastID(tableName: String) = readDB(0, "getLastID") { it.getLastID(tableName) }
-    suspend fun getLastIDAsync(tableName: String) = readAsync(0, "getLastIDAsync") { it.getLastID(tableName) }
+    inline fun getLastId(tableName: String) = read(0, "getLastId") { it.getLastId(tableName) }
+    suspend fun getLastIdSusp(tableName: String) = readSusp(0, "getLastIdSusp") { it.getLastId(tableName) }
     
     
-    inline fun getAllIDs(tableName: String) = readDB(emptyList(), "getAllIDs") { it.getAllIDs(tableName) }
-    suspend fun getAllIDsAsync(tableName: String) = readAsync(emptyList(), "getAllIDsAsync") { it.getAllIDs(tableName) }
+    inline fun getAllIDs(tableName: String) = read(emptyList(), "getAllIDs") { it.getAllIDs(tableName) }
+    suspend fun getAllIDsSusp(tableName: String) = readSusp(emptyList(), "getAllIDsSusp") { it.getAllIDs(tableName) }
     
     
-    inline fun tableExists(tableName: String) = readDB(false, "tableExists") { it.tableExists(tableName) }
-    suspend fun tableExistsAsync(tableName: String) = readAsync(false, "tableExistsAsync") { it.tableExists(tableName) }
+    inline fun tableExists(tableName: String) = read(false, "tableExists") { it.tableExists(tableName) }
+    suspend fun tableExistsSusp(tableName: String) = readSusp(false, "tableExistsSusp") { it.tableExists(tableName) }
     
     
-    inline fun isTableEmpty(tableName: String) = readDB(true, "isTableEmpty") { it.isTableEmpty(tableName) }
-    suspend fun isTableEmptyAsync(tableName: String) = readAsync(true, "isTableEmptyAsync") { it.isTableEmpty(tableName) }
+    inline fun isTableEmpty(tableName: String) = read(true, "isTableEmpty") { it.isTableEmpty(tableName) }
+    suspend fun isTableEmptySusp(tableName: String) = readSusp(true, "isTableEmptySusp") { it.isTableEmpty(tableName) }
     
     
-    inline fun getLastPriority(tableName: String) = readDB(0, "getLastPriority") { it.getLastPriority(tableName) }
-    suspend fun getLastPriorityAsync(tableName: String) = readAsync(0, "getLastPriorityAsync") { it.getLastPriority(tableName) }
+    inline fun getLastPriority(tableName: String) = read(0, "getLastPriority") { it.getLastPriority(tableName) }
+    suspend fun getLastPrioritySusp(tableName: String) = readSusp(0, "getLastPrioritySusp") { it.getLastPriority(tableName) }
     
     
     

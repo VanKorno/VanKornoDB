@@ -44,7 +44,7 @@ fun <T : Any> SQLiteDatabase.insertRow(                                        t
                                                                                   entity: T
 ): Long {
     val modifiedEntity = if (entity.hasIdField() && entity.getId() < 1) {
-        entity.withId(getLastID(tableName) + 1)
+        entity.withId(getLastId(tableName) + 1)
     } else entity
 
     val cv = toContentValues(modifiedEntity)
@@ -82,7 +82,7 @@ inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(             t
     val idProp = kClass.memberProperties.firstOrNull { it.name == ID }
     val ctor = kClass.primaryConstructor!!
 
-    var nextId = getLastID(tableName) + 1
+    var nextId = getLastId(tableName) + 1
     var count = 0
 
     for (entity in entities) {

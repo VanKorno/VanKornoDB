@@ -7,7 +7,7 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.DbConstants.Priority
 
 
-fun SQLiteDatabase.getLastID(                                                  tableName: String
+fun SQLiteDatabase.getLastId(                                                  tableName: String
 ) = rawQuery("SELECT MAX($ID) FROM $tableName", null).use { cursor ->
     if (cursor.moveToFirst())
         cursor.getInt(0)
