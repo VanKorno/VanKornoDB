@@ -716,17 +716,10 @@ open class DbHelper(
     
     
     inline fun clearTable(                                              tableName: String,
-                                                                      resetAutoID: Boolean = true,
                                                                             async: Boolean = false
-    ) = write("clearTable", async) {
-        it.clearTable(tableName, resetAutoID)
-    }
+    ) = write("clearTable", async) { it.clearTable(tableName) }
     
-    suspend fun clearTableSusp(                                          tableName: String,
-                                                                       resetAutoID: Boolean = true
-    ) = writeSusp("clearTableSusp") {
-        it.clearTable(tableName, resetAutoID)
-    }
+    suspend fun clearTableSusp(tableName: String) = writeSusp("clearTableSusp") { it.clearTable(tableName) }
     
     
     

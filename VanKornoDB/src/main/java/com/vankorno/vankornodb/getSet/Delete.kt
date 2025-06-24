@@ -38,12 +38,12 @@ fun SQLiteDatabase.deleteLastRow(                                             ta
 }
 
 
-fun SQLiteDatabase.clearTable(                                           tableName: String,
-                                                                       resetAutoID: Boolean = true
+fun SQLiteDatabase.clearTable(                                           tableName: String
+                                                                       //resetAutoID: Boolean = true
 ) {
     execSQL(deleteFrom + tableName)
-    if (resetAutoID)
-        execSQL("DELETE FROM sqlite_sequence WHERE name = '$tableName'")
+    //if (resetAutoID)
+    //    execSQL("DELETE FROM sqlite_sequence WHERE name = '$tableName'")
 }
 
 
