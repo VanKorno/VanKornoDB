@@ -638,6 +638,65 @@ open class DbHelper(
     
     
     
+    inline fun <reified T : Any> getRowMap(                       table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                      noinline mapAfter: (T) -> T = { it }
+    ): Map<Int, T> = read(emptyMap(), "getRowMap") {
+        it.getRowMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    suspend inline fun <reified T : Any> getRowMapSusp(           table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                      noinline mapAfter: (T) -> T = { it }
+    ): Map<Int, T> = readSusp(emptyMap(), "getRowMapSusp") {
+        it.getRowMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    fun <T : Any> getRowMap(                                      clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                               mapAfter: (T) -> T = { it }
+    ): Map<Int, T> = read(emptyMap(), "getRowMap") {
+        it.getRowMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    suspend fun <T : Any> getRowMapSusp(                          clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                               mapAfter: (T) -> T = { it }
+    ): Map<Int, T> = readSusp(emptyMap(), "getRowMapSusp") {
+        it.getRowMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    
     
     
     
