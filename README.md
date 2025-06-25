@@ -22,7 +22,7 @@ Designed primarily for Android, but with potential to support other platforms in
 
 ## Examples
 
-getCursor(), getList(), getRow(), getRows(), getRowCount(), updateRow(), deleteRow(), etc.
+getCursor(), getList(), getRow(), getRows(), getRowMap, getRowCount(), updateRow(), deleteRow(), etc.
 Multiple convenient functions that use params with the same DSL-functionality:
 
 ```kotlin
@@ -84,9 +84,9 @@ Other examples:
 ```kotlin
 
 db.createTables(
-    tableOf<DataClass>(TableName),
-    tableOf<SettingsEntity>(SettingsTable),
-    tableOf<TabEntity>(TabTable)
+    TableInfo(TableName,     DataClass::class),
+    TableInfo(SettingsTable, SettingsEntity::class),
+    TableInfo(TabTable,      TabEntity::class)
 )
 
 db.insertRow<SettingsEntity>(SettingsTable, new)
