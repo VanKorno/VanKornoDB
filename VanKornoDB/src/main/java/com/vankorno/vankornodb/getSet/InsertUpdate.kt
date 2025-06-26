@@ -186,8 +186,8 @@ internal fun <T : Any> T.withId(                                                
  * @return ContentValues representing the entity suitable for database insertion/update.
  * @throws IllegalArgumentException if list element types are unsupported.
  */
-fun <T : Any> toContentValues(                                 entity: T,
-                                                                clazz: KClass<out T> = entity::class
+fun <T : Any> toContentValues(                                entity: T,
+                                                               clazz: KClass<out T> = entity::class
 ): ContentValues {
     val cv = ContentValues()
     

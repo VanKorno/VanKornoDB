@@ -79,15 +79,16 @@ fun <T : Any> SQLiteDatabase.getRow(                        clazz: KClass<T>,
 /**
  * Queries [table] for a single result of type [T] using [columns]. Returns null if no result found.
  */
-inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(   table: String,
-                                                   noinline joins: JoinBuilder.()->Unit = {},
-                                                   noinline where: WhereBuilder.()->Unit = {},
-                                                          groupBy: String = "",
-                                                           having: String = "",
-                                                          orderBy: String = "",
-                                                            limit: Int? = 1,
-                                                           offset: Int? = null,
-                                                        customEnd: String = ""
+inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(
+                                                                  table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = 1,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
 ): T? = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->

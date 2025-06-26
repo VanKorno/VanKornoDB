@@ -38,7 +38,7 @@ fun SQLiteDatabase.deleteLastRow(                                             ta
 }
 
 
-fun SQLiteDatabase.clearTable(                                           tableName: String
+fun SQLiteDatabase.clearTable(                                             tableName: String
                                                                        //resetAutoID: Boolean = true
 ) {
     execSQL(deleteFrom + tableName)

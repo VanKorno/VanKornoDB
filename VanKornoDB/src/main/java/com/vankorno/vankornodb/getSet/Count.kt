@@ -8,10 +8,10 @@ import com.vankorno.vankornodb.core.WhereBuilder
 
 /** Returns the number of rows matching the query conditions. */
 
-fun SQLiteDatabase.getRowCount(                                tableName: String,
-                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                   where: WhereBuilder.()->Unit = {}
-
+fun SQLiteDatabase.getRowCount(                               tableName: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {}
+    
 ): Int = getCursor(tableName, arrayOf("1"), joins, where).use { it.count }
 
 
@@ -20,9 +20,9 @@ fun SQLiteDatabase.getRowCount(                                tableName: String
 
 /** Returns true if at least one row matches the query conditions. */
 
-fun SQLiteDatabase.hasRows(                                    tableName: String,
-                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                   where: WhereBuilder.()->Unit = {}
-
+fun SQLiteDatabase.hasRows(                                   tableName: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {}
+    
 ): Boolean = getCursor(tableName, arrayOf("1"), joins, where, limit = 1).use { it.moveToFirst() }
 
