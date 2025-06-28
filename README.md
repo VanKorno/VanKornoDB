@@ -1,8 +1,9 @@
 # VanKorno DB
 
 VanKorno DB is a lightweight, expressive SQLite query builder and database management system written in Kotlin.  
-It gives developers more control over database operations than traditional ORMs, letting you retrieve exactly the data you need — no more, no less.  
-Use the full power of SQLite in a safe and convenient way!  
+It gives developers more control over database operations than traditional ORMs, letting you retrieve exactly the data you need — no more, no less.
+Use the full power of SQLite in a safe and convenient way!
+The main idea is this: If you want more control - you can have it. If you want more automation - you can have it as well. You choose the amount of control/automation you want!
 Designed primarily for Android, but with potential to support other platforms in the future.
 
 ### It's still a work in progress and before the 1.0 release, recommended only for people who don't mind experimenting, don't mind everything changing all the time, without a lot of explanations, etc.
@@ -15,7 +16,7 @@ Designed primarily for Android, but with potential to support other platforms in
 - Structured and intuitive query DSL (supports nested subqueries, joins, etc.)
 - Safe query construction without raw SQL
 - Declarative condition DSL with clean separation of conditions and arguments, and the ability to see them in one place, side-by-side
-- Zero annotation processing, no reflection
+- Zero annotation processing
 - Customizable and framework-agnostic
 - Designed for full control over your database logic
 
