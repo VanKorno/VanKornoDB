@@ -697,6 +697,39 @@ open class DbHelper(
     }
     
     
+    // =====================================   L I S T   ===================================== \\
+    
+    inline fun <reified T> getList(                               table: String,
+                                                                 column: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
+    ): List<T> = read(emptyList(), "getList") {
+        it.getList(table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
+    
+    suspend inline fun <reified T> getListSusp(                   table: String,
+                                                                 column: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = ""
+    ): List<T> = readSusp(emptyList(), "getListSusp") {
+        it.getList(table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
+    
+    
+    
+    
     
     
     
