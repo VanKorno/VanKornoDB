@@ -92,6 +92,9 @@ class DefineMigrationsTest {
         assertTrue(bundle.milestones.isEmpty())
     }
     
+    
+    // TODO Check the following tests
+    
     @Test
     fun `throws error on duplicate rename for same field in same version`() {
         val exception = assertFailsWith<IllegalStateException> {

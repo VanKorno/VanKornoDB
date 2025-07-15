@@ -730,6 +730,84 @@ open class DbHelper(
     
     
     
+    // ===================================   M O D I F Y   =================================== \\
+    
+    inline fun addToInt(                                                   addend: Number,
+                                                                               id: Int,
+                                                                        tableName: String,
+                                                                           column: String,
+                                                                            async: Boolean = false
+    ) = write("addToInt", async) {
+        it.addToInt(addend, id, tableName, column)
+    }
+    
+    suspend fun addToIntSusp(                                                     addend: Number,
+                                                                                      id: Int,
+                                                                               tableName: String,
+                                                                                  column: String
+    ) = writeSusp("addToIntSusp") {
+        it.addToInt(addend, id, tableName, column)
+    }
+    
+    
+    inline fun addToLong(                                                  addend: Number,
+                                                                               id: Int,
+                                                                        tableName: String,
+                                                                           column: String,
+                                                                            async: Boolean = false
+    ) = write("addToLong", async) {
+        it.addToLong(addend, id, tableName, column)
+    }
+    
+    suspend fun addToLongSusp(                                                    addend: Number,
+                                                                                      id: Int,
+                                                                               tableName: String,
+                                                                                  column: String
+    ) = writeSusp("addToLongSusp") {
+        it.addToLong(addend, id, tableName, column)
+    }
+    
+    
+    inline fun addToFloat(                                                 addend: Number,
+                                                                               id: Int,
+                                                                        tableName: String,
+                                                                           column: String,
+                                                                            async: Boolean = false
+    ) = write("addToFloat", async) {
+        it.addToFloat(addend, id, tableName, column)
+    }
+    
+    suspend fun addToFloatSusp(                                                   addend: Number,
+                                                                                      id: Int,
+                                                                               tableName: String,
+                                                                                  column: String
+    ) = writeSusp("addToFloatSusp") {
+        it.addToFloat(addend, id, tableName, column)
+    }
+    
+    
+    
+    inline fun toggleBool(                                                     id: Int,
+                                                                        tableName: String,
+                                                                           column: String,
+                                                                            async: Boolean = false
+    ) = write("toggleBool", async) {
+        it.toggleBool(id, tableName, column)
+    }
+    
+    suspend fun toggleBoolSusp(                                                       id: Int,
+                                                                               tableName: String,
+                                                                                  column: String
+    ) = readWriteSusp(Unit, "toggleBoolSusp") {
+        it.toggleBool(id, tableName, column)
+    }
+
+    
+    
+    
+    
+    
+    
     
     
     
