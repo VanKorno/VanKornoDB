@@ -525,11 +525,10 @@ open class DbHelper(
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                  limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
     ): T? = read(null, "getRowOrNull") {
-        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     
@@ -539,11 +538,10 @@ open class DbHelper(
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                  limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
     ): T? = readSusp(null, "getRowOrNullSusp") {
-        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     
@@ -554,11 +552,10 @@ open class DbHelper(
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                  limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
     ): T? = read(null, "getRowOrNull") {
-        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     
@@ -569,11 +566,10 @@ open class DbHelper(
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                  limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
     ): T? = readSusp(null, "getRowOrNullSusp") {
-        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     

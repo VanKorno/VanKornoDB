@@ -54,6 +54,11 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(android.sourceSets["main"].java.srcDirs)
+}
+
 
 val versionTag = System.getenv("VERSION") ?: "unspecified"
 
@@ -65,8 +70,12 @@ afterEvaluate {
                 groupId = "com.vankorno"
                 artifactId = "vankornodb"
                 version = versionTag
+                
+                artifact(sourcesJar.get())
             }
         }
     }
 }
+
+
 

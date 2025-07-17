@@ -36,10 +36,9 @@ inline fun <reified T : Any> SQLiteDatabase.getRow(         table: String,
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
-                                                            limit: Int? = 1,
                                                            offset: Int? = null
 ): T = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset
+    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
     if (!cursor.moveToFirst()) error("No result for getOne<>()")
     cursor.toEntity(T::class)
@@ -57,10 +56,9 @@ fun <T : Any> SQLiteDatabase.getRow(                        clazz: KClass<T>,
                                                           groupBy: String = "",
                                                            having: String = "",
                                                           orderBy: String = "",
-                                                            limit: Int? = 1,
                                                            offset: Int? = null
 ): T = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset
+    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
     if (!cursor.moveToFirst()) error("No result for getOne($clazz)")
     cursor.toEntity(clazz)
@@ -86,11 +84,10 @@ inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                  limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
 ): T? = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset, customEnd
 ).use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(T::class)
@@ -109,11 +106,10 @@ fun <T : Any> SQLiteDatabase.getRowOrNull(                        clazz: KClass<
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                  limit: Int? = 1,
                                                                  offset: Int? = null,
                                                               customEnd: String = ""
 ): T? = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset, customEnd
 ).use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(clazz)
