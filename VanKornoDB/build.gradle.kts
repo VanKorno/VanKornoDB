@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.vankorno.vankornodb"
-    compileSdk = 35
+    compileSdk = 36
     
     defaultConfig {
         minSdk = 21
@@ -30,7 +30,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    
     publishing {
         singleVariant("release") {}
     }
@@ -51,7 +50,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     
     implementation(libs.kotlin.reflect)
-    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlin.test)
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
