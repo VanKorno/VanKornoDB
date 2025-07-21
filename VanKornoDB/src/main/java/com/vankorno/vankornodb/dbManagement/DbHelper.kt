@@ -913,7 +913,7 @@ open class DbHelper(
     fun hasRows(                                              tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {}
-    ) = read(0, "hasRows") {
+    ) = read(false, "hasRows") {
         it.hasRows(tableName, joins, where)
     }
     
@@ -921,7 +921,7 @@ open class DbHelper(
     suspend fun hasRowsSusp(                                  tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {}
-    ) = readSusp(0, "hasRowsSusp") {
+    ) = readSusp(false, "hasRowsSusp") {
         it.hasRows(tableName, joins, where)
     }
     
