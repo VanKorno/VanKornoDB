@@ -197,10 +197,10 @@ fun <T : Any> toContentValues(                                entity: T,
         val returnType = prop.returnType
         val classifier = returnType.classifier
         
-        if (classifier is KClass<*>
-            && (classifier.java.isArray || Collection::class.java.isAssignableFrom(classifier.java))
-        ) {
-            continue //\/\/\
+        if (classifier is KClass<*>) {
+            val isCollection = Collection::class.java.isAssignableFrom(classifier.java)
+            val isArrButNotByteArr = classifier.java.isArray && classifier != ByteArray::class
+            if (isCollection || isArrButNotByteArr) continue //\/\/\
         }
         
         if (value == null) {
