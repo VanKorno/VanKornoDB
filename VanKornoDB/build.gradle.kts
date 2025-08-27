@@ -70,7 +70,7 @@ afterEvaluate {
                 artifactId = "vankornodb"
                 version = versionTag
                 
-                artifact(sourcesJar.get())
+                artifact(sourcesJar.get()) // Probably doesn't work anyway
             }
         }
     }
