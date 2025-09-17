@@ -279,15 +279,16 @@ open class DbHelper(
     
     
     fun setMult(                                                   tableName: String,
-                                                                      values: Map<String, Any?>,
+                                                                       where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit
-    ) = write("setMult", async) { it.setMult(tableName, values, where) }
+                                                               vararg values: Pair<String, Any?>,
+    ) = write("setMult", async) { it.setMult(tableName, where, *values) }
     
     suspend fun setMultSusp(                                       tableName: String,
-                                                                      values: Map<String, Any?>,
-                                                                       where: WhereBuilder.()->Unit
-    ) = writeSusp("setMultSusp") { it.setMult(tableName, values, where) }
+                                                                       where: WhereBuilder.()->Unit,
+                                                                       async: Boolean = false,
+                                                               vararg values: Pair<String, Any?>,
+    ) = writeSusp("setMultSusp") { it.setMult(tableName, where, *values) }
     
     
     // -------------------------------------------------------------------------------------- \\
@@ -304,19 +305,19 @@ open class DbHelper(
     ) = writeSusp("setMultByIdSusp") { it.setMultById(id, tableName, cv) }
     
     
-    inline fun setMultById(                                                    id: Int,
-                                                                        tableName: String,
-                                                                           values: Map<String, Any?>,
-                                                                            async: Boolean = false
+    inline fun setMultById(                                                  id: Int,
+                                                                      tableName: String,
+                                                                          async: Boolean = false,
+                                                                  vararg values: Pair<String, Any?>,
     ) = write("setMultById", async) {
-        it.setMultById(id, tableName, values)
+        it.setMultById(id, tableName, *values)
     }
     
-    suspend fun setMultByIdSusp(                                               id: Int,
-                                                                        tableName: String,
-                                                                           values: Map<String, Any?>
+    suspend fun setMultByIdSusp(                                             id: Int,
+                                                                      tableName: String,
+                                                                  vararg values: Pair<String, Any?>,
     ) = writeSusp("setMultByIdSusp") {
-        it.setMultById(id, tableName, values)
+        it.setMultById(id, tableName, *values)
     }
     
     
@@ -334,15 +335,14 @@ open class DbHelper(
     ) = writeSusp("setInAllSusp") { it.setInAll(value, tableName, column) }
     
     
-    inline fun setMultInAll(                                            tableName: String,
-                                                                           values: Map<String, Any?>,
-                                                                            async: Boolean = false
-    ) = write("setMultInAll", async) { it.setMultInAll(tableName, values) }
+    inline fun setMultInAll(                                          tableName: String,
+                                                                          async: Boolean = false,
+                                                                  vararg values: Pair<String, Any?>,
+    ) = write("setMultInAll", async) { it.setMultInAll(tableName, *values) }
     
-    suspend fun setMultInAllSusp(                                       tableName: String,
-                                                                           values: Map<String, Any?>
-    ) = writeSusp("setMultInAllSusp") { it.setMultInAll(tableName, values) }
-    
+    suspend fun setMultInAllSusp(                                     tableName: String,
+                                                                  vararg values: Pair<String, Any?>,
+    ) = writeSusp("setMultInAllSusp") { it.setMultInAll(tableName, *values) }
     
     
     // ---------------------------------  S E T   R O W S  --------------------------------- \\

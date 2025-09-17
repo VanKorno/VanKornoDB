@@ -46,12 +46,29 @@ fun SQLiteDatabase.setMult(                                        tableName: St
     update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
 }
 
+/*
 fun SQLiteDatabase.setMult(                                        tableName: String,
                                                                       values: Map<String, Any?>,
                                                                        where: WhereBuilder.()->Unit
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
     
+    val cv = ContentValues().apply {
+        for ((col, value) in values) {
+            putSmart(col, value)
+        }
+    }
+    val builder = WhereBuilder().apply(where)
+    update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+}
+*/
+
+fun SQLiteDatabase.setMult(                                        tableName: String,
+                                                                       where: WhereBuilder.()->Unit,
+                                                               vararg values: Pair<String, Any?>
+) {
+    if (values.isEmpty()) return //\/\/\/\/\/\
+
     val cv = ContentValues().apply {
         for ((col, value) in values) {
             putSmart(col, value)
@@ -71,18 +88,18 @@ fun SQLiteDatabase.setMultById(                                                 
 ) = update(tableName, cv, ID+"=?", arrayOf(id.toString()))
 
 
-fun SQLiteDatabase.setMultById(                                                id: Int,
-                                                                        tableName: String,
-                                                                           values: Map<String, Any?>
+fun SQLiteDatabase.setMultById(                                               id: Int,
+                                                                       tableName: String,
+                                                                   vararg values: Pair<String, Any?>
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
-    
+
     val cv = ContentValues().apply {
         for ((col, value) in values) {
             putSmart(col, value)
         }
     }
-    update(tableName, cv, ID+"=?", arrayOf(id.toString()))
+    update(tableName, cv, ID + "=?", arrayOf(id.toString()))
 }
 
 
@@ -100,11 +117,11 @@ fun SQLiteDatabase.setMultInAll(                                          tableN
                                                                                  cv: ContentValues
 ) = update(tableName, cv, null, null)
 
-fun SQLiteDatabase.setMultInAll(                                        tableName: String,
-                                                                           values: Map<String, Any?>
+fun SQLiteDatabase.setMultInAll(                                       tableName: String,
+                                                                   vararg values: Pair<String, Any?>
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
-    
+
     val cv = ContentValues().apply {
         for ((col, value) in values) {
             putSmart(col, value)
