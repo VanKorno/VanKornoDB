@@ -46,22 +46,6 @@ fun SQLiteDatabase.setMult(                                        tableName: St
     update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
 }
 
-/*
-fun SQLiteDatabase.setMult(                                        tableName: String,
-                                                                      values: Map<String, Any?>,
-                                                                       where: WhereBuilder.()->Unit
-) {
-    if (values.isEmpty()) return //\/\/\/\/\/\
-    
-    val cv = ContentValues().apply {
-        for ((col, value) in values) {
-            putSmart(col, value)
-        }
-    }
-    val builder = WhereBuilder().apply(where)
-    update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
-}
-*/
 
 fun SQLiteDatabase.setMult(                                        tableName: String,
                                                                        where: WhereBuilder.()->Unit,
