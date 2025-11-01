@@ -63,7 +63,6 @@ fun SQLiteDatabase.setMult(                                        tableName: St
 }
 
 
-// TODO wrappers in DbHelper
 
 
 fun SQLiteDatabase.setMultById(                                                  id: Int,
@@ -119,8 +118,8 @@ fun SQLiteDatabase.setMultInAll(                                       tableName
 
 
 
-private fun ContentValues.putSmart(                                              key: String,
-                                                                               value: Any?
+private fun ContentValues.putSmart(                                                  key: String,
+                                                                                   value: Any?
 ) = when (value) {
     null         -> putNull(key)
     is String    -> put(key, value)
