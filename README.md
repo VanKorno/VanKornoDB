@@ -3,8 +3,12 @@
 VanKorno DB is a lightweight, expressive SQLite query builder and database management system written in Kotlin.  
 It gives developers more control over database operations than traditional ORMs, letting you retrieve exactly the data you need — no more, no less.
 Use the full power of SQLite in a safe and convenient way!
-The main idea is this: If you want more control - you can have it. If you want more automation - you can have it as well. You choose the amount of control/automation you want!
+
+### The main idea is this:
+If you want more control - you can have it. If you want more automation - you can have it as well. You choose the amount of control/automation you want!
+
 Designed primarily for Android, but with potential to support other platforms in the future.
+
 
 ### It's still a work in progress and before the 1.0 release, recommended only for people who don't mind experimenting, don't mind everything changing all the time, without a lot of explanations, etc.
 ### Until v1.0 I'll be working on it almost as if I'm the only user (which will probably be true for a long time anyway). So, don't try it at home :)
@@ -12,13 +16,16 @@ Designed primarily for Android, but with potential to support other platforms in
 
 ## Features
 
-- Concise and readable SQL query builder (build queries with constants and DSL exclusively — no hardcoded strings)
+- Concise and readable SQL query builder (build queries with DSL and constants — no hardcoded strings)
 - Structured and intuitive query DSL (supports nested subqueries, joins, etc.)
 - Safe query construction without raw SQL
+- Same familiar param sets with the same DSL shared by most functions. Understand it once - and use it to get, set, create, delete everything. Although there are some alternative functions with even simpler param sets for convenience there as well.
 - Declarative condition DSL with clean separation of conditions and arguments, and the ability to see them in one place, side-by-side
 - Zero annotation processing
-- Customizable and framework-agnostic
-- Designed for full control over your database logic
+- Can be used with more diverse architecture types than the usual Android ORMs.
+- Full db management system, working out of the box.
+- Convenient, efficient and reliable multi-step migration system with its own DSL that minimizes boilerplate code.
+- Designed for full control over your database logic.
 
 
 ## Examples
