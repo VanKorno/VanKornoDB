@@ -118,11 +118,11 @@ And make sure you have a setup that lets you use JitPack libraries:
 Add the JitPack repository to your build file settings.gradle.kts
 ```kotlin
 dependencyResolutionManagement {
-	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-	repositories {
-		mavenCentral()
-		maven { url = uri("https://jitpack.io") }
-	}
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
 }
 ```
 (or just look up their documentation)
