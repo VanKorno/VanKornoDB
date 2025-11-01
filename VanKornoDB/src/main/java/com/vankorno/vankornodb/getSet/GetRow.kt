@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.WhereBuilder
 import kotlin.reflect.KClass
 
-/** Retrieves a single entity of type [T] by its ID. Throws if no row found.*/
+/** Gets one db table row as an object of type [T] by its ID. Throws if no row found.*/
 
 inline fun <reified T : Any> SQLiteDatabase.getRowById(                               id: Int,
                                                                                    table: String
@@ -16,7 +16,7 @@ inline fun <reified T : Any> SQLiteDatabase.getRowById(                         
 
 
 
-/** Retrieves a single entity of type [T] by its ID, or null if not found.*/
+/** Gets one db table row as an object of type [T] by its ID, or null if not found.*/
 
 inline fun <reified T : Any> SQLiteDatabase.getRowOrNullById(                         id: Int,
                                                                                    table: String
@@ -26,17 +26,17 @@ inline fun <reified T : Any> SQLiteDatabase.getRowOrNullById(                   
 
 
 /**
- * Retrieves a single entity of type [T] from the given [table] selecting specified [columns].
+ * Gets one db table row as an object of type [T] from the given [table].
  * Throws if no row is found.
  * Uses reified type parameter and default "*" column selection.
  */
-inline fun <reified T : Any> SQLiteDatabase.getRow(         table: String,
-                                                   noinline joins: JoinBuilder.()->Unit = {},
-                                                   noinline where: WhereBuilder.()->Unit = {},
-                                                          groupBy: String = "",
-                                                           having: String = "",
-                                                          orderBy: String = "",
-                                                           offset: Int? = null
+inline fun <reified T : Any> SQLiteDatabase.getRow(               table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                 offset: Int? = null
 ): T = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
@@ -47,16 +47,16 @@ inline fun <reified T : Any> SQLiteDatabase.getRow(         table: String,
 
 
 /**
- * Gets one [T] from [table] with explicit type. Throws if no result.
+ * Gets one db table row as an object of type [T] from [table] with explicit type. Throws if no result.
  */
-fun <T : Any> SQLiteDatabase.getRow(                        clazz: KClass<T>,
-                                                            table: String,
-                                                            joins: JoinBuilder.()->Unit = {},
-                                                            where: WhereBuilder.()->Unit = {},
-                                                          groupBy: String = "",
-                                                           having: String = "",
-                                                          orderBy: String = "",
-                                                           offset: Int? = null
+fun <T : Any> SQLiteDatabase.getRow(                              clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                 offset: Int? = null
 ): T = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
@@ -75,7 +75,7 @@ fun <T : Any> SQLiteDatabase.getRow(                        clazz: KClass<T>,
 
 
 /**
- * Queries [table] for a single result of type [T] using [columns]. Returns null if no result found.
+ * Gets one db table row as an object of type [T] using the usual VanKorno DSL. Returns null if no result found.
  */
 inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(
                                                                   table: String,
@@ -97,7 +97,7 @@ inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(
 
 
 /**
- * Queries [table] for a single result of [clazz] using [columns]. Returns null if no result found.
+ * Gets one db table row as an object of [clazz] using using the usual VanKorno DSL. Returns null if no result found.
  */
 fun <T : Any> SQLiteDatabase.getRowOrNull(                        clazz: KClass<T>,
                                                                   table: String,

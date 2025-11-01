@@ -86,8 +86,6 @@ class MigrationDefinitionBuilder {
                     pendingRenames[keyName] = colRenames
                 }
             }
-            
-            
         }
         
         
@@ -130,8 +128,6 @@ class MigrationDefinitionBuilder {
                 }
             }
         }
-        
-        
     }
 }
 

@@ -145,6 +145,7 @@ open class MigrationUtils {
                                                     overrideColVal: (TransformCol.()->Unit)? = null
     ): Any {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
+        
         val constructor = newClass.primaryConstructor
             ?: error("Target class ${newClass.simpleName} must have a primary constructor")
         
@@ -180,6 +181,7 @@ open class MigrationUtils {
             }
             result
         }.filterValues { it != null }
+        
         return constructor.callBy(args)
     }
     
