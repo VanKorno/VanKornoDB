@@ -100,14 +100,11 @@ db.set("new value", TableName, ColumnName, where = { Mood greater normal })
 
 db.setMult(
     TableName,
-    values = mapOf( // or pass ContentValues
-        Column1 to 1,
-        Column2 to 2,
-        Column3 to 3
-    ),
-    where = { Mood notEqual bad }
+    where = { Mood notEqual bad },
+    Column1 to 1,
+    Column2 to 2,
+    Column3 to 3
 )
-
 ```
 
 ## Installation
