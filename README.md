@@ -83,7 +83,6 @@ db.getCursor(
 Other examples:
 
 ```kotlin
-
 db.createTables(
     TableInfo(TableName,     DataClass::class),
     TableInfo(SettingsTable, SettingsEntity::class),
@@ -108,7 +107,14 @@ db.setMult(
 ```
 
 ## Installation
-(standard JitPack stuff)
+All you need is one dependency in build.gradle.kts (App):
+```kotlin
+dependencies {
+    implementation("com.github.VanKorno:VanKornoDB:VersionNumber")
+}
+```
+
+And make sure you have a setup that lets you use JitPack libraries:
 Add the JitPack repository to your build file settings.gradle.kts
 ```kotlin
 dependencyResolutionManagement {
@@ -119,13 +125,8 @@ dependencyResolutionManagement {
 	}
 }
 ```
+(or just look up their documentation)
 
-Add the dependency in build.gradle.kts (App):
-```kotlin
-dependencies {
-    implementation("com.github.VanKorno:VanKornoDB:VersionNumber")
-}
-```
 
 
 
