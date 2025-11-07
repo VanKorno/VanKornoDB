@@ -45,10 +45,10 @@ import kotlin.reflect.jvm.jvmErasure
  * @return An instance of [T] constructed from the current row of the Cursor.
  * @throws IllegalArgumentException if required fields are missing or types are unsupported.
  */
-fun <T : Any> Cursor.toEntity(                                                    cls: KClass<T>
+fun <T : Any> Cursor.toEntity(                                                     clazz: KClass<T>
 ): T {
-    val constructor = cls.primaryConstructor
-        ?: error("Class ${cls.simpleName} must have a primary constructor")
+    val constructor = clazz.primaryConstructor
+        ?: error("Class ${clazz.simpleName} must have a primary constructor")
     
     val defaultInstance = constructor.callBy(emptyMap())
     val params = constructor.parameters
@@ -87,7 +87,7 @@ fun <T : Any> Cursor.toEntity(                                                  
     var currentListColumnIndex = firstListColumnIndex
     
     val listArgs = listParams.associateWith { param ->
-        val listSize = getListSizeFromDefault(param, defaultInstance, cls)
+        val listSize = getListSizeFromDefault(param, defaultInstance, clazz)
         val elementType = param.type.arguments.firstOrNull()?.type?.jvmErasure
             ?: error("List param must have a generic type")
         
@@ -132,9 +132,9 @@ internal object EntityMapperUtils {
      */
     fun <T : Any> getListSizeFromDefault(                                        param: KParameter,
                                                                        defaultInstance: T,
-                                                                                   cls: KClass<T>
+                                                                                 clazz: KClass<T>
     ): Int {
-        val defaultValue = cls.memberProperties
+        val defaultValue = clazz.memberProperties
             .firstOrNull { it.name == param.name }
             ?.getter
             ?.call(defaultInstance)
