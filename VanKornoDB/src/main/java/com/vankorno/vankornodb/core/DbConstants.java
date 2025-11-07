@@ -25,6 +25,10 @@ randomVal="random()",
 innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 
 ID="id", RowID="ROWID",
-Name="name", Priority = "priority"
+Name = "name",
+Priority = "priority",
+
+TABLE_EntityVersions = "EntityVersions",
+EntityVersion = "version"
 ;
 }

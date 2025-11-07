@@ -1,6 +1,7 @@
 package com.vankorno.db
 
 import android.app.Application
+import com.vankorno.vankornodb.core.DbConstants.InMemoryDB
 
 class MyApp : Application() {
     companion object {
@@ -28,5 +29,5 @@ class MyApp : Application() {
         false
     }
     
-    fun getDbName() = if (androidTestRun)  ":memory:"  else  DbName
+    fun getDbName() = if (androidTestRun)  InMemoryDB  else  DbName
 }
