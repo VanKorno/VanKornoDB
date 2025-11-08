@@ -15,21 +15,22 @@ import com.vankorno.vankornodb.getSet.getList
 import com.vankorno.vankornodb.getSet.hasRows
 import com.vankorno.vankornodb.getSet.insertRow
 import com.vankorno.vankornodb.getSet.isTableEmpty
+import com.vankorno.vankornodb.getSet.tableExists
 
 
- /* 
- * ==== The lifecycle at runtime:
- * DbMaker() is instantiated → init block runs:
- * DbManager.init(writableDatabase) opens or creates the DB.
- * handleVersionTable(mainDb) runs immediately afterward.
- * If it’s a fresh database:
- * SQLite calls onCreate().
- *    That creates the EntityVersions table.
- *    Then init’s handleVersionTable() runs, sees the empty table, and fills it.
- * On subsequent launches:
- *    onCreate() is skipped (DB already exists).
- *    handleVersionTable() still runs (to ensure consistency).
- */
+/* 
+* THE LIFECYCLE AT RUNTIME:
+* DbMaker() is instantiated → init block runs:
+* DbManager.init(writableDatabase) opens or creates the DB.
+* handleVersionTable(mainDb) runs immediately afterward.
+* If it’s a fresh database:
+* SQLite calls onCreate().
+*    That creates the EntityVersions table.
+*    Then init’s handleVersionTable() runs, sees the empty table, and fills it.
+* On subsequent launches:
+*    onCreate() is skipped (DB already exists).
+*    handleVersionTable() still runs (to ensure consistency).
+*/
 
 /**
  * Creates the db file, initializes DbManager, handles the entity version table, onCreate and onUpdate.
@@ -104,6 +105,8 @@ open class DbMaker(               context: Context,
         // region LOG
             Log.d(DbTAG, "handleVersionTable() runs")
         // endregion
+        ensureEnttVerTableExists(db)
+        
         val empty = db.isTableEmpty(TABLE_EntityVersions)
         
         if (empty) {
@@ -120,6 +123,13 @@ open class DbMaker(               context: Context,
         addMissingEntityMeta(db)
     }
     
+    
+    private fun ensureEnttVerTableExists(                                        db: SQLiteDatabase
+    ) {
+        if (!db.tableExists(TABLE_EntityVersions)) {
+            db.createTable(TABLE_EntityVersions, VersionEntity::class)
+        }
+    }
     
     private fun addAllEntityMeta(                                                db: SQLiteDatabase
     ) {
