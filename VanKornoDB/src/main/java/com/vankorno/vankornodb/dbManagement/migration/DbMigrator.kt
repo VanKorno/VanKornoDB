@@ -29,6 +29,9 @@ open class DbMigrator(                                            val db: SQLite
      * (those with a non-null [BaseEntityMeta.limitedToTable]).
      */
     fun migrateSingleTableEntities() {
+        // region LOG
+            Log.d(DbTAG, "migrateSingleTableEntities() runs")
+        // endregion
         for (entity in allEntityMeta) {
             if (entity.limitedToTable != null)
                 migrateSingleTableEntity(entity)
@@ -66,12 +69,20 @@ open class DbMigrator(                                            val db: SQLite
                                                                      entityMeta: BaseEntityMeta,
                                                                doAfterEachTable: (String)->Unit = {}
     ) {
-        val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, entityMeta.dbRowName)
+        val dbRowName = entityMeta.dbRowName
+        // region LOG
+            Log.d(DbTAG, "migrateTables(): Migrating tables that use the $dbRowName entity...")
+        // endregion
+        val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, dbRowName)
         
         for (tableName in tableNames) {
             migrateTable(tableName, oldVer, entityMeta, doAfterEachTable)
         }
-        db.set(entityMeta.currVersion, TABLE_EntityVersions, EntityVersion, Name, entityMeta.dbRowName)
+        val newVer = entityMeta.currVersion
+        // region LOG
+            Log.d(DbTAG, "migrateTables(): Finished migrating $dbRowName tables. Setting the new entity version ($newVer)...")
+        // endregion
+        db.set(newVer, TABLE_EntityVersions, EntityVersion, Name, dbRowName)
     }
     
     
