@@ -10,32 +10,36 @@ import com.vankorno.vankornodb.getSet.set
 /**
  * High-level entry point for running database migrations.
  *
- * This class handles migration logic for entities defined in your [entityMeta] enum,
+ * This class handles migration logic for entities defined in your [allEntityMeta] enum,
  * which must implement [BaseEntityMeta]. It can be subclassed or extended with custom
  * migration methods for complex or multi-table scenarios.
  *
  * @property db the active [SQLiteDatabase] instance used for all migration operations.
- * @property entityMeta a collection of all entity metadata entries. Typically, this is your project's enum
+ * @property allEntityMeta a collection of all entity metadata entries. Typically, this is your project's enum
  * that lists every entity type and its migration configuration. Example: DbMigrator(db, EntityMeta.entries)
  *
  * Call [migrateSingleTableEntities] to automatically migrate all entities limited to a single table
  * (those with a non-null [BaseEntityMeta.limitedToTable]).
  */
 open class DbMigrator(                                            val db: SQLiteDatabase,
-                                                  private val entityMeta: Collection<BaseEntityMeta>
+                                               private val allEntityMeta: Collection<BaseEntityMeta>
 ) {
     /**
      * Automatically migrate all entities limited to a single table
      * (those with a non-null [BaseEntityMeta.limitedToTable]).
      */
     fun migrateSingleTableEntities() {
-        for (entity in entityMeta) {
+        for (entity in allEntityMeta) {
             if (entity.limitedToTable != null)
                 migrateSingleTableEntity(entity)
         }
     }
     
     
+    /**
+     * Migrate one entity limited to a single table.
+     * (with a non-null [BaseEntityMeta.limitedToTable]).
+     */
     fun migrateSingleTableEntity(                                            entity: BaseEntityMeta
     ) {
         val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
@@ -52,6 +56,38 @@ open class DbMigrator(                                            val db: SQLite
         )
         db.set(newVer, TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
     }
+    
+    
+    
+    /**
+     * Migrate multiple tables that use the same entity.
+     */
+    fun migrateTables(                                               tableNames: List<String>,
+                                                                     entityMeta: BaseEntityMeta,
+                                                               doAfterEachTable: (String)->Unit = {}
+    ) {
+        val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, entityMeta.dbRowName)
+        
+        for (tableName in tableNames) {
+            migrateTable(tableName, oldVer, entityMeta, doAfterEachTable)
+        }
+        db.set(entityMeta.currVersion, TABLE_EntityVersions, EntityVersion, Name, entityMeta.dbRowName)
+    }
+    
+    
+    fun migrateTable(                                                 tableName: String,
+                                                                         oldVer: Int,
+                                                                     entityMeta: BaseEntityMeta,
+                                                               doAfterEachTable: (String)->Unit = {}
+    ) {
+        val newVer = entityMeta.currVersion
+        
+        db.migrateMultiStep(tableName, oldVer, newVer, entityMeta.migrationBundle.value)
+        
+        doAfterEachTable(tableName)
+    }
+    
+    
     
     
     
