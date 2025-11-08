@@ -15,10 +15,9 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         androidTestRun = isInstrumentedTestRun()
-        val dbName = getDbName()
+        val dbName = if (androidTestRun)  InMemoryDB  else  DbName
         
         dbh = LocalDbHelper(this, dbName)
-        dbh.initializeDbManager()
     }
     
     
@@ -28,6 +27,4 @@ class MyApp : Application() {
     } catch (e: ClassNotFoundException) {
         false
     }
-    
-    fun getDbName() = if (androidTestRun)  InMemoryDB  else  DbName
 }

@@ -1,4 +1,4 @@
-package com.vankorno.db.entities.versions
+package com.vankorno.vankornodb.dbManagement.migration.data
 
 
 data class VersionEntity(

@@ -10,6 +10,7 @@ import androidx.core.database.sqlite.transaction
 import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.getSet.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,14 +20,14 @@ import kotlinx.coroutines.withContext
 import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")
-open class DbHelper(
-                                context: Context,
-                                 dbName: String,
-                              dbVersion: Int,
-                               onCreate: (SQLiteDatabase)->Unit = {},
-                              onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
+open class DbHelper(              context: Context,
+                                   dbName: String,
+                                dbVersion: Int,
+                               entityMeta: Collection<BaseEntityMeta>,
+                                 onCreate: (SQLiteDatabase)->Unit = {},
+                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
     
-) : DbMaker(context, dbName, dbVersion, onCreate, onUpgrade) {
+) : DbMaker(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
     
     /**
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
