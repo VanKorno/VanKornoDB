@@ -7,13 +7,7 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.DbConstants.Priority
 
 
-fun SQLiteDatabase.getLastId(                                                  tableName: String
-) = rawQuery("SELECT MAX($ID) FROM $tableName", null).use { cursor ->
-    if (cursor.moveToFirst())
-        cursor.getInt(0)
-    else
-        0
-}
+fun SQLiteDatabase.getLastId(tableName: String) = getLargestInt(tableName, ID, null, null)
 
 
 fun SQLiteDatabase.getAllIDs(                                               tableName: String,
@@ -32,30 +26,35 @@ fun SQLiteDatabase.tableExists(                                                t
 fun SQLiteDatabase.isTableEmpty(tableName: String) = !hasRows(tableName)
 
 
-fun SQLiteDatabase.getLastPriority(                                             tableName: String
-) = rawQuery("SELECT MAX($Priority) FROM $tableName", null).use { cursor ->
-    if (cursor.moveToFirst())
-        cursor.getInt(0)
-    else
-        0
-}
+fun SQLiteDatabase.getLastPriority(tableName: String) = getLargestInt(tableName, Priority, null, null)
 
 
 fun <T> SQLiteDatabase.getLastPriorityBy(                                      tableName: String,
-                                                                           checkedColumn: String,
+                                                                             whereColumn: String,
                                                                                   equals: T
-) = rawQuery(
-    "SELECT MAX($Priority) FROM $tableName WHERE $checkedColumn=?",
-    arrayOf(equals.toString())
-).use { cursor ->
-    if (cursor.moveToFirst())
-        cursor.getInt(0)
-    else
-        0
+) = getLargestInt(tableName, Priority, whereColumn, equals)
+
+
+
+fun <T> SQLiteDatabase.getLargestInt(                                    tableName: String,
+                                                                      targetColumn: String,
+                                                                       whereColumn: String? = null,
+                                                                            equals: T? = null
+): Int {
+    val hasConditions = whereColumn != null && equals != null
+    
+    val queryEnd = if (hasConditions) " WHERE $whereColumn=?" else ""
+    val selectionArgs = if (hasConditions) arrayOf(equals.toString()) else null
+    
+    return rawQuery(
+        "SELECT MAX($targetColumn) FROM $tableName" + queryEnd, selectionArgs
+    ).use { cursor ->
+        if (cursor.moveToFirst())
+            cursor.getInt(0)
+        else
+            0
+    }
 }
-
-
-
 
 
 

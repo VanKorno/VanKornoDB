@@ -955,19 +955,38 @@ open class DbHelper(              context: Context,
     
     
     inline fun <T> getLastPriorityBy(                                          tableName: String,
-                                                                           checkedColumn: String,
+                                                                             whereColumn: String,
                                                                                   equals: T
     ) = read(0, "getLastPriorityBy") {
-        it.getLastPriorityBy(tableName, checkedColumn, equals)
+        it.getLastPriorityBy(tableName, whereColumn, equals)
     }
     
-    suspend fun <T> getLastPrioritySuspBy(                                     tableName: String,
-                                                                           checkedColumn: String,
+    suspend fun <T> getLastPriorityBySusp(                                     tableName: String,
+                                                                             whereColumn: String,
                                                                                   equals: T
     ) = readSusp(0, "getLastPriorityBySusp") {
-        it.getLastPriorityBy(tableName, checkedColumn, equals)
+        it.getLastPriorityBy(tableName, whereColumn, equals)
     }
     
+    
+    
+    
+    
+    inline fun <T> getLargestInt(                                        tableName: String,
+                                                                      targetColumn: String,
+                                                                       whereColumn: String? = null,
+                                                                            equals: T? = null
+    ) = read(0, "getLargestInt") {
+        it.getLargestInt(tableName, targetColumn, whereColumn, equals)
+    }
+    
+    suspend fun <T> getLargestIntSusp(                                   tableName: String,
+                                                                      targetColumn: String,
+                                                                       whereColumn: String? = null,
+                                                                            equals: T? = null
+    ) = readSusp(0, "getLargestIntSusp") {
+        it.getLargestInt(tableName, targetColumn, whereColumn, equals)
+    }
     
     
     
