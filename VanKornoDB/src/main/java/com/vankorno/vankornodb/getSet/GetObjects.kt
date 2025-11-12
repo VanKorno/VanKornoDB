@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  * Retrieves a list of entities of type [T] mapped from the specified columns. 
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
-inline fun <reified T : Any> SQLiteDatabase.getRows(              table: String,
+inline fun <reified T : Any> SQLiteDatabase.getObjects(           table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -39,10 +39,10 @@ inline fun <reified T : Any> SQLiteDatabase.getRows(              table: String,
 
 
 /** 
- * Retrieves a list of entities of the specified [clazz] mapped from the given columns. 
+ * Retrieves a list of objects of the specified [clazz] mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : Any> SQLiteDatabase.getRows(                             clazz: KClass<T>,
+fun <T : Any> SQLiteDatabase.getObjects(                          clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -67,11 +67,11 @@ fun <T : Any> SQLiteDatabase.getRows(                             clazz: KClass<
 
 
 /** 
- * Retrieves a map of entities of type [T] from the specified table, 
+ * Retrieves a map of objects of type [T] from the specified table, 
  * using the `id` column (Int) as the key. 
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
-inline fun <reified T : Any> SQLiteDatabase.getRowMap(            table: String,
+inline fun <reified T : Any> SQLiteDatabase.getObjMap(            table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -97,11 +97,11 @@ inline fun <reified T : Any> SQLiteDatabase.getRowMap(            table: String,
 
 
 /** 
- * Retrieves a map of entities of the specified [clazz] from the given table, 
+ * Retrieves a map of objects of the specified [clazz] from the given table, 
  * using the `id` column (Int) as the key. 
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : Any> SQLiteDatabase.getRowMap(                           clazz: KClass<T>,
+fun <T : Any> SQLiteDatabase.getObjMap(                           clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},

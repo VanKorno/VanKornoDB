@@ -33,19 +33,19 @@ import kotlin.reflect.full.primaryConstructor
 
 
 /**
- * Inserts the given entity into the specified database table.
+ * Inserts the given object into the specified database table.
  * Converts the entity into ContentValues and performs the SQLite insert operation.
  *
  * @param tableName The name of the table to insert into.
- * @param entity The entity object to insert.
+ * @param obj The entity object to insert.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-fun <T : Any> SQLiteDatabase.insertRow(                                        tableName: String,
-                                                                                  entity: T
+fun <T : Any> SQLiteDatabase.insertObj(                                        tableName: String,
+                                                                                     obj: T
 ): Long {
-    val modifiedEntity = if (entity.hasIdField() && entity.getId() < 1) {
-        entity.withId(getLastId(tableName) + 1)
-    } else entity
+    val modifiedEntity = if (obj.hasIdField() && obj.getId() < 1) {
+        obj.withId(getLastId(tableName) + 1)
+    } else obj
 
     val cv = toContentValues(modifiedEntity)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
@@ -53,29 +53,31 @@ fun <T : Any> SQLiteDatabase.insertRow(                                        t
 }
 
 /**
- * Inserts multiple entities into the specified database table.
+ * Inserts multiple objects into the specified database table.
  * Converts each entity into ContentValues and performs the SQLite insert operation for each.
  *
  * @param tableName The name of the table to insert into.
- * @param entities The list of entity objects to insert.
+ * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
  */
-fun <T : Any> SQLiteDatabase.insertRows(                                       tableName: String,
-                                                                                entities: List<T>
+fun <T : Any> SQLiteDatabase.insertObjects(                                    tableName: String,
+                                                                                 objects: List<T>
 ): Int {
     var count = 0
-    for (entity in entities) {
-        val rowId = insertRow(tableName, entity)
+    for (obj in objects) {
+        val rowId = insertObj(tableName, obj)
         if (rowId != -1L) count++
     }
     return count
 }
 
 
-inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(             tableName: String,
-                                                                                entities: List<T>
+// TODO Check if needed
+
+inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(          tableName: String,
+                                                                                 objects: List<T>
 ): Int {
-    if (entities.isEmpty()) return 0
+    if (objects.isEmpty()) return 0
 
     val kClass = T::class
     val hasId = kClass.memberProperties.any { it.name == ID }
@@ -85,15 +87,15 @@ inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(             t
     var nextId = getLastId(tableName) + 1
     var count = 0
 
-    for (entity in entities) {
-        val currentId = idProp?.getter?.call(entity) as? Int ?: -1
+    for (obj in objects) {
+        val currentId = idProp?.getter?.call(obj) as? Int ?: -1
         val modified = if (hasId && currentId < 1) {
             val args = ctor.parameters.associateWith { param ->
                 if (param.name == ID) nextId++
-                else kClass.memberProperties.first { it.name == param.name }.getter.call(entity)
+                else kClass.memberProperties.first { it.name == param.name }.getter.call(obj)
             }
             ctor.callBy(args)
-        } else entity
+        } else obj
 
         val cv = toContentValues(modified)
         if (cv.size() != 0 && insert(tableName, null, cv) != -1L) {
@@ -115,28 +117,28 @@ inline fun <reified T : Any> SQLiteDatabase.insertRowsWithAutoIds(             t
 
 
 /**
- * Updates the row with the specified [id] in the given table with the values from [entity].
+ * Updates the row with the specified [id] in the given table with the values from [obj].
  * Converts the entity into ContentValues and performs the SQLite update operation.
  *
  * @param tableName The name of the table to update.
  * @param id The primary key ID of the row to update.
- * @param entity The entity object with updated data.
+ * @param obj The entity object with updated data.
  * @return The number of rows affected.
  */
-fun <T : Any> SQLiteDatabase.updateRowById(                                           id: Int,
+fun <T : Any> SQLiteDatabase.updateObjById(                                           id: Int,
                                                                                tableName: String,
-                                                                                  entity: T
+                                                                                     obj: T
 ): Int {
-    val cv = toContentValues(entity)
+    val cv = toContentValues(obj)
     return update(tableName, cv, ID+"=?", arrayOf(id.toString()))
 }
 
 
-inline fun <T : Any> SQLiteDatabase.updateRow(                     tableName: String,
-                                                                      entity: T,
-                                                                       where: WhereBuilder.()->Unit
+inline fun <T : Any> SQLiteDatabase.updateObj(                      tableName: String,
+                                                                          obj: T,
+                                                                        where: WhereBuilder.()->Unit
 ): Int {
-    val cv = toContentValues(entity)
+    val cv = toContentValues(obj)
     val whereBuilder = WhereBuilder().apply(where)
     val whereClause = whereBuilder.clauses.joinToString(" ")
     val whereArgs = whereBuilder.args.toTypedArray()
@@ -181,19 +183,19 @@ internal fun <T : Any> T.withId(                                                
  * Handles primitive fields first, then processes list properties ending with "List"
  * by mapping each list element to sequentially numbered columns (e.g. day1, day2, ...).
  *
- * @param entity The data object to convert.
+ * @param obj The data object to convert.
  * @param clazz The KClass of the entity, defaults to the runtime class of the entity.
  * @return ContentValues representing the entity suitable for database insertion/update.
  * @throws IllegalArgumentException if list element types are unsupported.
  */
-fun <T : Any> toContentValues(                                entity: T,
-                                                               clazz: KClass<out T> = entity::class
+fun <T : Any> toContentValues(                                   obj: T,
+                                                               clazz: KClass<out T> = obj::class
 ): ContentValues {
     val cv = ContentValues()
     
     for (prop in clazz.memberProperties) {
         val name = prop.name
-        val value = prop.getter.call(entity)
+        val value = prop.getter.call(obj)
         val returnType = prop.returnType
         val classifier = returnType.classifier
         
@@ -225,7 +227,7 @@ fun <T : Any> toContentValues(                                entity: T,
         val name = prop.name
         if (!name.endsWith("List")) continue //\/\/\
         
-        val value = prop.getter.call(entity)
+        val value = prop.getter.call(obj)
         if (value !is List<*>) continue //\/\/\
         if (value.isEmpty()) continue //\/\/\
         

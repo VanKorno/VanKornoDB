@@ -10,17 +10,17 @@ import kotlin.reflect.KClass
 
 /** Gets one db table row as an object of type [T] by its ID. Throws if no row found.*/
 
-inline fun <reified T : Any> SQLiteDatabase.getRowById(                               id: Int,
+inline fun <reified T : Any> SQLiteDatabase.getObjById(                               id: Int,
                                                                                    table: String
-): T = getRow(table, where = { ID equal id })
+): T = getObj(table, where = { ID equal id })
 
 
 
 /** Gets one db table row as an object of type [T] by its ID, or null if not found.*/
 
-inline fun <reified T : Any> SQLiteDatabase.getRowOrNullById(                         id: Int,
+inline fun <reified T : Any> SQLiteDatabase.getObjOrNullById(                         id: Int,
                                                                                    table: String
-): T? = getRowOrNull(table, where = { ID equal id })
+): T? = getObjOrNull(table, where = { ID equal id })
 
 
 
@@ -30,7 +30,7 @@ inline fun <reified T : Any> SQLiteDatabase.getRowOrNullById(                   
  * Throws if no row is found.
  * Uses reified type parameter and default "*" column selection.
  */
-inline fun <reified T : Any> SQLiteDatabase.getRow(               table: String,
+inline fun <reified T : Any> SQLiteDatabase.getObj(               table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -49,7 +49,7 @@ inline fun <reified T : Any> SQLiteDatabase.getRow(               table: String,
 /**
  * Gets one db table row as an object of type [T] from [table] with explicit type. Throws if no result.
  */
-fun <T : Any> SQLiteDatabase.getRow(                              clazz: KClass<T>,
+fun <T : Any> SQLiteDatabase.getObj(                              clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -77,7 +77,7 @@ fun <T : Any> SQLiteDatabase.getRow(                              clazz: KClass<
 /**
  * Gets one db table row as an object of type [T] using the usual VanKorno DSL. Returns null if no result found.
  */
-inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(
+inline fun <reified T : Any> SQLiteDatabase.getObjOrNull(
                                                                   table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
@@ -99,7 +99,7 @@ inline fun <reified T : Any> SQLiteDatabase.getRowOrNull(
 /**
  * Gets one db table row as an object of [clazz] using using the usual VanKorno DSL. Returns null if no result found.
  */
-fun <T : Any> SQLiteDatabase.getRowOrNull(                        clazz: KClass<T>,
+fun <T : Any> SQLiteDatabase.getObjOrNull(                        clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},

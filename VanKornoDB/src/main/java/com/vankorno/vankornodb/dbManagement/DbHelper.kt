@@ -25,7 +25,7 @@ open class DbHelper(              context: Context,
                                 dbVersion: Int,
                                entityMeta: Collection<BaseEntityMeta>,
                                  onCreate: (SQLiteDatabase)->Unit = {},
-                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
+                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
     
 ) : DbMaker(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
     
@@ -35,7 +35,7 @@ open class DbHelper(              context: Context,
     @JvmOverloads
     fun <T> read(                                                 defaultValue: T,
                                                                        funName: String = "read",
-                                                                           run: (SQLiteDatabase)->T
+                                                                           run: (SQLiteDatabase)->T,
     ): T = runBlocking {
         withContext(Dispatchers.IO) {
             readBase(defaultValue, funName, run)
@@ -49,7 +49,7 @@ open class DbHelper(              context: Context,
     @JvmOverloads
     fun voidRead(                                                   funName: String = "voidRead",
                                                                       async: Boolean = false,
-                                                                        run: (SQLiteDatabase)->Unit
+                                                                        run: (SQLiteDatabase)->Unit,
     ) {
         if (async) {
             CoroutineScope(Dispatchers.IO).launch {
@@ -71,7 +71,7 @@ open class DbHelper(              context: Context,
     @JvmOverloads
     fun write(                                                      funName: String = "write",
                                                                       async: Boolean = false,
-                                                                        run: (SQLiteDatabase)->Unit
+                                                                        run: (SQLiteDatabase)->Unit,
     ) {
         if (async) {
             CoroutineScope(Dispatchers.IO).launch {
@@ -92,7 +92,7 @@ open class DbHelper(              context: Context,
     @JvmOverloads
     fun <T> readWrite(                                         defaultValue: T,
                                                                     funName: String = "readWrite",
-                                                                        run: (SQLiteDatabase)->T
+                                                                        run: (SQLiteDatabase)->T,
     ): T = runBlocking {
         withContext(Dispatchers.IO) {
             readWriteBase(defaultValue, funName, run)
@@ -112,7 +112,7 @@ open class DbHelper(              context: Context,
      */
     suspend fun <T> readSusp(                                   defaultValue: T,
                                                                      funName: String = "readSusp",
-                                                                         run: (SQLiteDatabase)->T
+                                                                         run: (SQLiteDatabase)->T,
     ): T = withContext(Dispatchers.IO) {
         readBase(defaultValue, funName, run)
     }
@@ -122,7 +122,7 @@ open class DbHelper(              context: Context,
      * Suspending non-blocking version (to be used inside coroutines)
      */
     suspend fun voidReadSusp(                                     funName: String = "voidReadSusp",
-                                                                      run: (SQLiteDatabase)->Unit
+                                                                      run: (SQLiteDatabase)->Unit,
     ) = withContext(Dispatchers.IO) {
         readBase(Unit, funName){ run(it) }
     }
@@ -132,7 +132,7 @@ open class DbHelper(              context: Context,
      * Suspending non-blocking version (to be used inside coroutines)
      */
     suspend fun writeSusp(                                          funName: String = "writeSusp",
-                                                                        run: (SQLiteDatabase)->Unit
+                                                                        run: (SQLiteDatabase)->Unit,
     ) = withContext(Dispatchers.IO) {
         writeBase(funName) { run(it) }
     }
@@ -143,7 +143,7 @@ open class DbHelper(              context: Context,
      */
     suspend fun <T> readWriteSusp(                          defaultValue: T,
                                                                  funName: String = "readWriteSusp",
-                                                                     run: (SQLiteDatabase)->T
+                                                                     run: (SQLiteDatabase)->T,
     ): T = withContext(Dispatchers.IO) {
         readWriteBase(defaultValue, funName, run)
     }
@@ -154,7 +154,7 @@ open class DbHelper(              context: Context,
     
     inline fun <T> readBase(                                      defaultValue: T,
                                                                        funName: String = "read",
-                                                                           run: (SQLiteDatabase)->T
+                                                                           run: (SQLiteDatabase)->T,
     ): T {
         return try {
             synchronized(dbLock) {
@@ -169,12 +169,12 @@ open class DbHelper(              context: Context,
     }
     
     inline fun voidReadBase(                                        funName: String = "voidRead",
-                                                                        run: (SQLiteDatabase)->Unit
+                                                                        run: (SQLiteDatabase)->Unit,
     ) = readBase(Unit, funName){ run(it) }
     
     
     inline fun writeBase(                                           funName: String = "write",
-                                                                        run: (SQLiteDatabase)->Unit
+                                                                        run: (SQLiteDatabase)->Unit,
     ) {
         try {
             synchronized(dbLock) {
@@ -189,7 +189,7 @@ open class DbHelper(              context: Context,
     
     inline fun <T> readWriteBase(                              defaultValue: T,
                                                                     funName: String = "readWrite",
-                                                                        run: (SQLiteDatabase)->T
+                                                                        run: (SQLiteDatabase)->T,
     ): T {
         return try {
             synchronized(dbLock) {
@@ -218,13 +218,13 @@ open class DbHelper(              context: Context,
                                                                                id: Int,
                                                                         tableName: String,
                                                                            column: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = set(value, tableName, column, ID, id, async)
     
     suspend fun setByIdSusp(                                                       value: Any,
                                                                                       id: Int,
                                                                                tableName: String,
-                                                                                  column: String
+                                                                                  column: String,
     ) = setSusp(value, tableName, column, ID, id)
     
     
@@ -233,7 +233,7 @@ open class DbHelper(              context: Context,
                                                                            column: String,
                                                                             where: String,
                                                                            equals: T,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("set", async) {
         it.set(value, tableName, column, where, equals)
     }
@@ -242,7 +242,7 @@ open class DbHelper(              context: Context,
                                                                    tableName: String,
                                                                       column: String,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit
+                                                                       where: WhereBuilder.()->Unit,
     ) = write("set", async) {
         it.set(value, tableName, column, where)
     }
@@ -252,7 +252,7 @@ open class DbHelper(              context: Context,
                                                                                tableName: String,
                                                                                   column: String,
                                                                                    where: String,
-                                                                                  equals: T
+                                                                                  equals: T,
     ) = writeSusp("setSusp") {
         it.set(value, tableName, column, where, equals)
     }
@@ -260,152 +260,174 @@ open class DbHelper(              context: Context,
     suspend fun <T> setSusp(                                           value: Any,
                                                                    tableName: String,
                                                                       column: String,
-                                                                       where: WhereBuilder.()->Unit
-    ) = writeSusp("setSusp") { it.set(value, tableName, column, where) }
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setSusp") {
+        it.set(value, tableName, column, where)
+    }
     
     
     
     // =============================  M U L T I - S E T T E R S  ============================= \\
     
-    fun setMult(                                                   tableName: String,
+    fun setRowVals(                                                tableName: String,
                                                                           cv: ContentValues,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit
-    ) = write("setMult", async) { it.setMult(tableName, cv, where) }
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setRowVals", async) {
+        it.setRowVals(tableName, cv, where)
+    }
     
-    suspend fun setMultSusp(                                       tableName: String,
+    suspend fun setRowValsSusp(                                    tableName: String,
                                                                           cv: ContentValues,
-                                                                       where: WhereBuilder.()->Unit
-    ) = writeSusp("setMultSusp") { it.setMult(tableName, cv, where) }
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setRowValsSusp") {
+        it.setRowVals(tableName, cv, where)
+    }
     
     
-    fun setMult(                                                   tableName: String,
+    fun setRowVals(                                                tableName: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
                                                                vararg values: Pair<String, Any?>,
-    ) = write("setMult", async) { it.setMult(tableName, where, *values) }
+    ) = write("setRowVals", async) {
+        it.setRowVals(tableName, where, *values)
+    }
     
-    suspend fun setMultSusp(                                       tableName: String,
+    suspend fun setRowValsSusp(                                    tableName: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
                                                                vararg values: Pair<String, Any?>,
-    ) = writeSusp("setMultSusp") { it.setMult(tableName, where, *values) }
+    ) = writeSusp("setRowValsSusp") { it.setRowVals(tableName, where, *values) }
     
     
     // -------------------------------------------------------------------------------------- \\
     
-    inline fun setMultById(                                                    id: Int,
+    inline fun setRowValsById(                                                 id: Int,
                                                                         tableName: String,
                                                                                cv: ContentValues,
-                                                                            async: Boolean = false
-    ) = write("setMultById", async) { it.setMultById(id, tableName, cv) }
+                                                                            async: Boolean = false,
+    ) = write("setRowValsById", async) {
+        it.setRowValsById(id, tableName, cv)
+    }
     
-    suspend fun setMultByIdSusp(                                                 id: Int,
+    suspend fun setRowValsByIdSusp(                                              id: Int,
                                                                           tableName: String,
-                                                                                 cv: ContentValues
-    ) = writeSusp("setMultByIdSusp") { it.setMultById(id, tableName, cv) }
+                                                                                 cv: ContentValues,
+    ) = writeSusp("setRowValsByIdSusp") {
+        it.setRowValsById(id, tableName, cv)
+    }
     
     
-    inline fun setMultById(                                                  id: Int,
+    inline fun setRowValsById(                                               id: Int,
                                                                       tableName: String,
                                                                           async: Boolean = false,
                                                                   vararg values: Pair<String, Any?>,
-    ) = write("setMultById", async) {
-        it.setMultById(id, tableName, *values)
+    ) = write("setRowValsById", async) {
+        it.setRowValsById(id, tableName, *values)
     }
     
-    suspend fun setMultByIdSusp(                                             id: Int,
+    suspend fun setRowValsByIdSusp(                                          id: Int,
                                                                       tableName: String,
                                                                   vararg values: Pair<String, Any?>,
-    ) = writeSusp("setMultByIdSusp") {
-        it.setMultById(id, tableName, *values)
+    ) = writeSusp("setRowValsByIdSusp") {
+        it.setRowValsById(id, tableName, *values)
     }
     
     
     // -------------------------------------------------------------------------------------- \\
     
-    inline fun setInAll(                                                    value: Any,
+    inline fun setInAllRows(                                                value: Any,
                                                                         tableName: String,
                                                                            column: String,
-                                                                            async: Boolean = false
-    ) = write("setInAll", async) { it.setInAll(value, tableName, column) }
-    
-    suspend fun setInAllSusp(                                                      value: Any,
+                                                                            async: Boolean = false,
+    ) = write("setInAllRows", async) {
+        it.setInAllRows(value, tableName, column)
+    }
+    suspend fun setInAllRowsSusp(                                                  value: Any,
                                                                                tableName: String,
-                                                                                  column: String
-    ) = writeSusp("setInAllSusp") { it.setInAll(value, tableName, column) }
+                                                                                  column: String,
+    ) = writeSusp("setInAllRowsSusp") {
+        it.setInAllRows(value, tableName, column)
+    }
     
     
-    inline fun setMultInAll(                                          tableName: String,
+    inline fun setRowValsInAllRows(                                   tableName: String,
                                                                           async: Boolean = false,
                                                                   vararg values: Pair<String, Any?>,
-    ) = write("setMultInAll", async) { it.setMultInAll(tableName, *values) }
-    
-    suspend fun setMultInAllSusp(                                     tableName: String,
+    ) = write("setRowValsInAllRows", async) {
+        it.setRowValsInAllRows(tableName, *values)
+    }
+    suspend fun setRowValsInAllRowsSusp(                              tableName: String,
                                                                   vararg values: Pair<String, Any?>,
-    ) = writeSusp("setMultInAllSusp") { it.setMultInAll(tableName, *values) }
+    ) = writeSusp("setRowValsInAllRowsSusp") {
+        it.setRowValsInAllRows(tableName, *values)
+    }
     
     
     // ---------------------------------  S E T   R O W S  --------------------------------- \\
     
-    inline fun <T : Any> insertRow(                                     tableName: String,
-                                                                           entity: T,
-                                                                            async: Boolean = false
-    ) {
-        write("insertRow", async) { it.insertRow(tableName, entity) }
-    }
-    
-    suspend fun <T : Any> insertRowSusp(                                       tableName: String,
-                                                                                  entity: T
-    ): Long = readWriteSusp(-1L, "insertRowSusp") {
-        it.insertRow(tableName, entity)
+    inline fun <T : Any> insertObj(                                     tableName: String,
+                                                                              obj: T,
+                                                                            async: Boolean = false,
+    ) = write("insertObj", async) {
+        it.insertObj(tableName, obj)
     }
     
     
-    inline fun <T : Any> insertRows(                                    tableName: String,
-                                                                         entities: List<T>,
-                                                                            async: Boolean = false
-    ) {
-        write("insertRows", async) { it.insertRows(tableName, entities) }
-    }
-    
-    suspend fun <T : Any> insertRowsSusp(                                      tableName: String,
-                                                                                entities: List<T>
-    ): Int = readWriteSusp(0, "insertRowsSusp") {
-        it.insertRows(tableName, entities)
+    suspend fun <T : Any> insertObjSusp(                                       tableName: String,
+                                                                                     obj: T,
+    ): Long = readWriteSusp(-1L, "insertObjSusp") {
+        it.insertObj(tableName, obj)
     }
     
     
+    inline fun <T : Any> insertObjects(                                 tableName: String,
+                                                                          objects: List<T>,
+                                                                            async: Boolean = false,
+    ) = write("insertObjects", async) {
+        it.insertObjects(tableName, objects)
+    }
     
-    fun <T : Any> updateRow(                                       tableName: String,
-                                                                      entity: T,
+    
+    suspend fun <T : Any> insertObjectsSusp(                                   tableName: String,
+                                                                                 objects: List<T>,
+    ): Int = readWriteSusp(0, "insertObjectsSusp") {
+        it.insertObjects(tableName, objects)
+    }
+    
+    
+    
+    fun <T : Any> updateObj(                                       tableName: String,
+                                                                         obj: T,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit
-    ) {
-        write("updateRow", async) { it.updateRow(tableName, entity, where) }
-    }
-    
-    suspend fun <T : Any> updateRowSusp(                           tableName: String,
-                                                                      entity: T,
-                                                                       where: WhereBuilder.()->Unit
-    ): Int = readWriteSusp(0, "updateRowSusp") {
-        it.updateRow(tableName, entity, where)
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("updateObj", async) {
+        it.updateObj(tableName, obj, where)
     }
     
     
-    inline fun <T : Any> updateRowById(                                        id: Int,
+    suspend fun <T : Any> updateObjSusp(                           tableName: String,
+                                                                         obj: T,
+                                                                       where: WhereBuilder.()->Unit,
+    ): Int = readWriteSusp(0, "updateObjSusp") {
+        it.updateObj(tableName, obj, where)
+    }
+    
+    
+    inline fun <T : Any> updateObjById(                                        id: Int,
                                                                         tableName: String,
-                                                                           entity: T,
-                                                                            async: Boolean = false
-    ) {
-        write("updateRowById", async) { it.updateRowById(id, tableName, entity) }
+                                                                              obj: T,
+                                                                            async: Boolean = false,
+    ) = write("updateObjById", async) {
+        it.updateObjById(id, tableName, obj)
     }
     
-    suspend fun <T : Any> updateRowByIdSusp(                                          id: Int,
+    
+    suspend fun <T : Any> updateObjByIdSusp(                                          id: Int,
                                                                                tableName: String,
-                                                                                  entity: T
-    ): Int = readWriteSusp(0, "updateRowByIdSusp") {
-        it.updateRowById(id, tableName, entity)
+                                                                                     obj: T,
+    ): Int = readWriteSusp(0, "updateObjByIdSusp") {
+        it.updateObjById(id, tableName, obj)
     }
     
     
@@ -569,46 +591,46 @@ open class DbHelper(              context: Context,
     
     // ---------------------------------  G E T   R O W S  --------------------------------- \\
     
-    inline fun <reified T : Any> getRowOrNullById(                                    id: Int,
-                                                                               tableName: String
-    ): T? = read(null, "getRowOrNullById") {
-        it.getRowOrNullById<T>(id, tableName)
+    inline fun <reified T : Any> getObjOrNullById(                                    id: Int,
+                                                                               tableName: String,
+    ): T? = read(null, "getObjOrNullById") {
+        it.getObjOrNullById<T>(id, tableName)
     }
     
-    suspend inline fun <reified T : Any> getRowOrNullByIdSusp(                        id: Int,
-                                                                               tableName: String
-    ): T? = readSusp(null, "getRowOrNullByIdSusp") {
-        it.getRowOrNullById<T>(id, tableName)
+    suspend inline fun <reified T : Any> getObjOrNullByIdSusp(                        id: Int,
+                                                                               tableName: String,
+    ): T? = readSusp(null, "getObjOrNullByIdSusp") {
+        it.getObjOrNullById<T>(id, tableName)
     }
     
     
-    inline fun <reified T : Any> getRowOrNull(                    table: String,
+    inline fun <reified T : Any> getObjOrNull(                    table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
-    ): T? = read(null, "getRowOrNull") {
-        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
+                                                              customEnd: String = "",
+    ): T? = read(null, "getObjOrNull") {
+        it.getObjOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     
-    suspend inline fun <reified T : Any> getRowOrNullSusp(        table: String,
+    suspend inline fun <reified T : Any> getObjOrNullSusp(        table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
-    ): T? = readSusp(null, "getRowOrNullSusp") {
-        it.getRowOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
+                                                              customEnd: String = "",
+    ): T? = readSusp(null, "getObjOrNullSusp") {
+        it.getObjOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     
-    fun <T : Any> getRowOrNull(                                   clazz: KClass<T>,
+    fun <T : Any> getObjOrNull(                                   clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -616,13 +638,13 @@ open class DbHelper(              context: Context,
                                                                  having: String = "",
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
-    ): T? = read(null, "getRowOrNull") {
-        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
+                                                              customEnd: String = "",
+    ): T? = read(null, "getObjOrNull") {
+        it.getObjOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     
-    suspend fun <T : Any> getRowOrNullSusp(                       clazz: KClass<T>,
+    suspend fun <T : Any> getObjOrNullSusp(                       clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -630,14 +652,14 @@ open class DbHelper(              context: Context,
                                                                  having: String = "",
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
-    ): T? = readSusp(null, "getRowOrNullSusp") {
-        it.getRowOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
+                                                              customEnd: String = "",
+    ): T? = readSusp(null, "getObjOrNullSusp") {
+        it.getObjOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
     }
     
     
     
-    inline fun <reified T : Any> getRows(                         table: String,
+    inline fun <reified T : Any> getObjects(                      table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -646,12 +668,12 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it }
-    ): List<T> = read(emptyList(), "getRows") {
-        it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+                                                      noinline mapAfter: (T)->T = { it },
+    ): List<T> = read(emptyList(), "getObjects") {
+        it.getObjects(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend inline fun <reified T : Any> getRowsSusp(             table: String,
+    suspend inline fun <reified T : Any> getObjectsSusp(          table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -660,27 +682,12 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it }
-    ): List<T> = readSusp(emptyList(), "getRowsSusp") {
-        it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+                                                      noinline mapAfter: (T)->T = { it },
+    ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
+        it.getObjects(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    fun <T : Any> getRows(                                        clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                               mapAfter: (T)->T = { it }
-    ): List<T> = read(emptyList(), "getRows") {
-        it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
-    }
-    
-    suspend fun <T : Any> getRowsSusp(                            clazz: KClass<T>,
+    fun <T : Any> getObjects(                                     clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -690,42 +697,12 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T)->T = { it }
-    ): List<T> = readSusp(emptyList(), "getRowsSusp") {
-        it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+                                                               mapAfter: (T)->T = { it },
+    ): List<T> = read(emptyList(), "getObjects") {
+        it.getObjects(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    
-    
-    inline fun <reified T : Any> getRowMap(                       table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it }
-    ): Map<Int, T> = read(emptyMap(), "getRowMap") {
-        it.getRowMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
-    }
-    
-    suspend inline fun <reified T : Any> getRowMapSusp(           table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it }
-    ): Map<Int, T> = readSusp(emptyMap(), "getRowMapSusp") {
-        it.getRowMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
-    }
-    
-    fun <T : Any> getRowMap(                                      clazz: KClass<T>,
+    suspend fun <T : Any> getObjectsSusp(                         clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -735,12 +712,42 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T)->T = { it }
-    ): Map<Int, T> = read(emptyMap(), "getRowMap") {
-        it.getRowMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+                                                               mapAfter: (T)->T = { it },
+    ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
+        it.getObjects(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend fun <T : Any> getRowMapSusp(                          clazz: KClass<T>,
+    
+    
+    inline fun <reified T : Any> getObjMap(                       table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                      noinline mapAfter: (T)->T = { it },
+    ): Map<Int, T> = read(emptyMap(), "getObjMap") {
+        it.getObjMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    suspend inline fun <reified T : Any> getObjMapSusp(           table: String,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                      noinline mapAfter: (T)->T = { it },
+    ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
+        it.getObjMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    fun <T : Any> getObjMap(                                      clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -750,9 +757,24 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T)->T = { it }
-    ): Map<Int, T> = readSusp(emptyMap(), "getRowMapSusp") {
-        it.getRowMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+                                                               mapAfter: (T)->T = { it },
+    ): Map<Int, T> = read(emptyMap(), "getObjMap") {
+        it.getObjMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+    }
+    
+    suspend fun <T : Any> getObjMapSusp(                          clazz: KClass<T>,
+                                                                  table: String,
+                                                                  joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+                                                               mapAfter: (T)->T = { it },
+    ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
+        it.getObjMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
     
@@ -767,7 +789,7 @@ open class DbHelper(              context: Context,
                                                                 orderBy: String = "",
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
+                                                              customEnd: String = "",
     ): List<T> = read(emptyList(), "getList") {
         it.getList(table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     }
@@ -781,7 +803,7 @@ open class DbHelper(              context: Context,
                                                                 orderBy: String = "",
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
+                                                              customEnd: String = "",
     ): List<T> = readSusp(emptyList(), "getListSusp") {
         it.getList(table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     }
@@ -795,7 +817,7 @@ open class DbHelper(              context: Context,
                                                                                id: Int,
                                                                         tableName: String,
                                                                            column: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("addToInt", async) {
         it.addToInt(addend, id, tableName, column)
     }
@@ -803,7 +825,7 @@ open class DbHelper(              context: Context,
     suspend fun addToIntSusp(                                                     addend: Number,
                                                                                       id: Int,
                                                                                tableName: String,
-                                                                                  column: String
+                                                                                  column: String,
     ) = writeSusp("addToIntSusp") {
         it.addToInt(addend, id, tableName, column)
     }
@@ -813,7 +835,7 @@ open class DbHelper(              context: Context,
                                                                                id: Int,
                                                                         tableName: String,
                                                                            column: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("addToLong", async) {
         it.addToLong(addend, id, tableName, column)
     }
@@ -821,7 +843,7 @@ open class DbHelper(              context: Context,
     suspend fun addToLongSusp(                                                    addend: Number,
                                                                                       id: Int,
                                                                                tableName: String,
-                                                                                  column: String
+                                                                                  column: String,
     ) = writeSusp("addToLongSusp") {
         it.addToLong(addend, id, tableName, column)
     }
@@ -831,7 +853,7 @@ open class DbHelper(              context: Context,
                                                                                id: Int,
                                                                         tableName: String,
                                                                            column: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("addToFloat", async) {
         it.addToFloat(addend, id, tableName, column)
     }
@@ -839,7 +861,7 @@ open class DbHelper(              context: Context,
     suspend fun addToFloatSusp(                                                   addend: Number,
                                                                                       id: Int,
                                                                                tableName: String,
-                                                                                  column: String
+                                                                                  column: String,
     ) = writeSusp("addToFloatSusp") {
         it.addToFloat(addend, id, tableName, column)
     }
@@ -849,14 +871,14 @@ open class DbHelper(              context: Context,
     inline fun toggleBool(                                                     id: Int,
                                                                         tableName: String,
                                                                            column: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("toggleBool", async) {
         it.toggleBool(id, tableName, column)
     }
     
     suspend fun toggleBoolSusp(                                                       id: Int,
                                                                                tableName: String,
-                                                                                  column: String
+                                                                                  column: String,
     ) = readWriteSusp(Unit, "toggleBoolSusp") {
         it.toggleBool(id, tableName, column)
     }
@@ -877,14 +899,14 @@ open class DbHelper(              context: Context,
     inline fun <T> deleteRow(                                           tableName: String,
                                                                             where: String,
                                                                            equals: T,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("deleteRow", async) {
         it.deleteRow(tableName, where, equals)
     }
     
     suspend fun <T> deleteRowSusp(                                             tableName: String,
                                                                                    where: String,
-                                                                                  equals: T
+                                                                                  equals: T,
     ) = writeSusp("deleteRowSusp") {
         it.deleteRow(tableName, where, equals)
     }
@@ -892,14 +914,14 @@ open class DbHelper(              context: Context,
     
     fun deleteRow(                                                 tableName: String,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit
+                                                                       where: WhereBuilder.()->Unit,
     ) = write("deleteRow", async) {
         it.deleteRow(tableName, where)
     }
     
     
     suspend fun deleteRowSusp(                                     tableName: String,
-                                                                       where: WhereBuilder.()->Unit
+                                                                       where: WhereBuilder.()->Unit,
     ) = writeSusp("deleteRowSusp") {
         it.deleteRow(tableName, where)
     }
@@ -907,13 +929,13 @@ open class DbHelper(              context: Context,
     
     inline fun deleteRowById(                                                  id: Int,
                                                                         tableName: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("deleteRowById", async) {
         it.deleteRowById(id, tableName)
     }
     
     suspend fun deleteRowByIdSusp(                                                    id: Int,
-                                                                               tableName: String
+                                                                               tableName: String,
     ) = writeSusp("deleteRowByIdSusp") {
         it.deleteRowById(id, tableName)
     }
@@ -921,31 +943,31 @@ open class DbHelper(              context: Context,
     
     
     inline fun deleteFirstRow(                                          tableName: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("deleteFirstRow", async) {
         it.deleteFirstRow(tableName)
     }
     
-    suspend fun deleteFirstRowSusp(                                            tableName: String
+    suspend fun deleteFirstRowSusp(                                            tableName: String,
     ) = writeSusp("deleteFirstRowSusp") {
         it.deleteFirstRow(tableName)
     }
     
     
     inline fun deleteLastRow(                                           tableName: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("deleteLastRow", async) {
         it.deleteLastRow(tableName)
     }
     
-    suspend fun deleteLastRowSusp(                                             tableName: String
+    suspend fun deleteLastRowSusp(                                             tableName: String,
     ) = writeSusp("deleteLastRowSusp") {
         it.deleteLastRow(tableName)
     }
     
     
     inline fun clearTable(                                              tableName: String,
-                                                                            async: Boolean = false
+                                                                            async: Boolean = false,
     ) = write("clearTable", async) { it.clearTable(tableName) }
     
     suspend fun clearTableSusp(tableName: String) = writeSusp("clearTableSusp") { it.clearTable(tableName) }
@@ -958,7 +980,7 @@ open class DbHelper(              context: Context,
     /** Returns the number of rows matching the query conditions. */
     fun getRowCount(                                          tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {}
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = read(0, "getRowCount") {
         it.getRowCount(tableName, joins, where)
     }
@@ -966,7 +988,7 @@ open class DbHelper(              context: Context,
     /** Returns the number of rows matching the query conditions. */
     suspend fun getRowCountSusp(                              tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {}
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = readSusp(0, "getRowCountSusp") {
         it.getRowCount(tableName, joins, where)
     }
@@ -975,7 +997,7 @@ open class DbHelper(              context: Context,
     /** Returns true if at least one row matches the query conditions. */
     fun hasRows(                                              tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {}
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = read(false, "hasRows") {
         it.hasRows(tableName, joins, where)
     }
@@ -983,7 +1005,7 @@ open class DbHelper(              context: Context,
     /** Returns true if at least one row matches the query conditions. */
     suspend fun hasRowsSusp(                                  tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {}
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = readSusp(false, "hasRowsSusp") {
         it.hasRows(tableName, joins, where)
     }
@@ -1018,14 +1040,14 @@ open class DbHelper(              context: Context,
     
     inline fun <T> getLastPriorityBy(                                          tableName: String,
                                                                              whereColumn: String,
-                                                                                  equals: T
+                                                                                  equals: T,
     ) = read(0, "getLastPriorityBy") {
         it.getLastPriorityBy(tableName, whereColumn, equals)
     }
     
     suspend fun <T> getLastPriorityBySusp(                                     tableName: String,
                                                                              whereColumn: String,
-                                                                                  equals: T
+                                                                                  equals: T,
     ) = readSusp(0, "getLastPriorityBySusp") {
         it.getLastPriorityBy(tableName, whereColumn, equals)
     }
@@ -1037,7 +1059,7 @@ open class DbHelper(              context: Context,
     inline fun <T> getLargestInt(                                        tableName: String,
                                                                       targetColumn: String,
                                                                        whereColumn: String? = null,
-                                                                            equals: T? = null
+                                                                            equals: T? = null,
     ) = read(0, "getLargestInt") {
         it.getLargestInt(tableName, targetColumn, whereColumn, equals)
     }
@@ -1045,7 +1067,7 @@ open class DbHelper(              context: Context,
     suspend fun <T> getLargestIntSusp(                                   tableName: String,
                                                                       targetColumn: String,
                                                                        whereColumn: String? = null,
-                                                                            equals: T? = null
+                                                                            equals: T? = null,
     ) = readSusp(0, "getLargestIntSusp") {
         it.getLargestInt(tableName, targetColumn, whereColumn, equals)
     }

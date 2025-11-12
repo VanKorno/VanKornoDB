@@ -15,7 +15,7 @@ fun <T> SQLiteDatabase.set(                                                     
                                                                                tableName: String,
                                                                                   column: String,
                                                                                    where: String,
-                                                                                  equals: T
+                                                                                  equals: T,
 ) {
     val cv = ContentValues()
     cv.putSmart(column, value)
@@ -26,7 +26,7 @@ fun <T> SQLiteDatabase.set(                                                     
 fun SQLiteDatabase.set(                                                value: Any,
                                                                    tableName: String,
                                                                       column: String,
-                                                                       where: WhereBuilder.()->Unit
+                                                                       where: WhereBuilder.()->Unit,
 ) {
     val cv = ContentValues()
     cv.putSmart(column, value)
@@ -38,18 +38,18 @@ fun SQLiteDatabase.set(                                                value: An
 
 // ==============================  M U L T I - S E T T E R S  ============================== \\
 
-fun SQLiteDatabase.setMult(                                        tableName: String,
+fun SQLiteDatabase.setRowVals(                                     tableName: String,
                                                                           cv: ContentValues,
-                                                                       where: WhereBuilder.()->Unit
+                                                                       where: WhereBuilder.()->Unit,
 ) {
     val builder = WhereBuilder().apply(where)
     update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
 }
 
 
-fun SQLiteDatabase.setMult(                                        tableName: String,
+fun SQLiteDatabase.setRowVals(                                     tableName: String,
                                                                        where: WhereBuilder.()->Unit,
-                                                               vararg values: Pair<String, Any?>
+                                                               vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
 
@@ -65,15 +65,15 @@ fun SQLiteDatabase.setMult(                                        tableName: St
 
 
 
-fun SQLiteDatabase.setMultById(                                                  id: Int,
+fun SQLiteDatabase.setRowValsById(                                               id: Int,
                                                                           tableName: String,
-                                                                                 cv: ContentValues
+                                                                                 cv: ContentValues,
 ) = update(tableName, cv, ID+"=?", arrayOf(id.toString()))
 
 
-fun SQLiteDatabase.setMultById(                                               id: Int,
-                                                                       tableName: String,
-                                                                   vararg values: Pair<String, Any?>
+fun SQLiteDatabase.setRowValsById(                                           id: Int,
+                                                                      tableName: String,
+                                                                  vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
 
@@ -86,9 +86,9 @@ fun SQLiteDatabase.setMultById(                                               id
 }
 
 
-fun SQLiteDatabase.setInAll(                                                       value: Any,
+fun SQLiteDatabase.setInAllRows(                                                   value: Any,
                                                                                tableName: String,
-                                                                                  column: String
+                                                                                  column: String,
 ) {
     val cv = ContentValues()
     cv.putSmart(column, value)
@@ -96,12 +96,13 @@ fun SQLiteDatabase.setInAll(                                                    
 }
 
 
-fun SQLiteDatabase.setMultInAll(                                          tableName: String,
-                                                                                 cv: ContentValues
+fun SQLiteDatabase.setRowValsInAllRows(                                   tableName: String,
+                                                                                 cv: ContentValues,
 ) = update(tableName, cv, null, null)
 
-fun SQLiteDatabase.setMultInAll(                                       tableName: String,
-                                                                   vararg values: Pair<String, Any?>
+
+fun SQLiteDatabase.setRowValsInAllRows(                               tableName: String,
+                                                                  vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
 
@@ -119,7 +120,7 @@ fun SQLiteDatabase.setMultInAll(                                       tableName
 
 
 private fun ContentValues.putSmart(                                                  key: String,
-                                                                                   value: Any?
+                                                                                   value: Any?,
 ) = when (value) {
     null         -> putNull(key)
     is String    -> put(key, value)

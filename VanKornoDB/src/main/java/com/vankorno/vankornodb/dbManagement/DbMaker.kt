@@ -13,7 +13,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
 import com.vankorno.vankornodb.getSet.deleteRow
 import com.vankorno.vankornodb.getSet.getList
 import com.vankorno.vankornodb.getSet.hasRows
-import com.vankorno.vankornodb.getSet.insertRow
+import com.vankorno.vankornodb.getSet.insertObj
 import com.vankorno.vankornodb.getSet.isTableEmpty
 import com.vankorno.vankornodb.getSet.tableExists
 
@@ -134,7 +134,7 @@ open class DbMaker(               context: Context,
     private fun addAllEntityMeta(                                                db: SQLiteDatabase
     ) {
         for (meta in entityMeta) {
-            db.insertRow(
+            db.insertObj(
                 TABLE_EntityVersions,
                 VersionEntity(meta.dbRowName, meta.currVersion)
             )
@@ -162,7 +162,7 @@ open class DbMaker(               context: Context,
             if (rowExists)
                 continue //\/\/\
             
-            db.insertRow(
+            db.insertObj(
                 TABLE_EntityVersions,
                 VersionEntity(dbName, meta.currVersion)
             )

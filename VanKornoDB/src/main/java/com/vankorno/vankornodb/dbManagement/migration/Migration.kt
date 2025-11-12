@@ -13,9 +13,9 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformCol
-import com.vankorno.vankornodb.getSet.getRows
-import com.vankorno.vankornodb.getSet.insertRow
-import com.vankorno.vankornodb.getSet.insertRows
+import com.vankorno.vankornodb.getSet.getObjects
+import com.vankorno.vankornodb.getSet.insertObj
+import com.vankorno.vankornodb.getSet.insertObjects
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -111,7 +111,7 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
         Log.d(DbTAG, "migrateMultiStep() Fresh $tableName is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
     for (entity in migratedEntities) {
-        val result = this.insertRow(tableName, entity)
+        val result = this.insertObj(tableName, entity)
         // region LOG
             if (result == -1L)
                 Log.w(DbTAG, "migrateMultiStep() FAILED to insert row: $entity")
@@ -201,7 +201,7 @@ open class MigrationUtils {
         val fromClass = versionedClasses[version]
             ?: error("Missing entity class for version $version")
         
-        val elements = db.getRows(fromClass, tableName)
+        val elements = db.getObjects(fromClass, tableName)
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -391,9 +391,9 @@ fun SQLiteDatabase.migrateWithoutChange(                                  vararg
         Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = getRows(table.entityClass, table.name)
+        val rows = getObjects(table.entityClass, table.name)
         dropAndCreateEmptyTables(listOf(table))
-        insertRows(table.name, rows)
+        insertObjects(table.name, rows)
     }
     // region LOG
         Log.d(DbTAG, "migrateWithoutChange(): Migration complete.")
