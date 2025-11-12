@@ -30,7 +30,7 @@ Designed primarily for Android, but with potential to support other platforms in
 
 ## Examples
 
-getCursor(), getList(), getRow(), getRows(), getRowMap, getRowCount(), updateRow(), deleteRow(), etc.
+getCursor(), getList(), getObj(), getObjects(), getObjMap, getRowCount(), updateObj(), deleteRow(), etc.
 Multiple convenient functions that use params with the same DSL-functionality:
 
 ```kotlin
@@ -51,9 +51,9 @@ db.getCursor(
 
 From simple one-liners:
 ```kotlin
-db.getRow(SomeTable, where = { Name equal userName })
+db.getObj(SomeTable, where = { Name equal userName })
 
-db.getRowById(id, SomeTable)
+db.getObjById(id, SomeTable)
 ```
 
 ...to more complex things, like nested queries:
@@ -104,7 +104,7 @@ db.getRows<UserEntity>(TableName, where = { Mood equal good })
 
 db.set("new value", TableName, ColumnName, where = { Mood greater normal })
 
-db.setMult(
+db.setRowVals(
     TableName,
     where = { Mood notEqual bad },
     Column1 to 1,
