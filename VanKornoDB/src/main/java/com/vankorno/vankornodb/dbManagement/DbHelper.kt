@@ -419,68 +419,130 @@ open class DbHelper(              context: Context,
     
     // ==================================   G E T T E R S  ================================== \\
     
+    // Simplified conditions
+    
     inline fun <T> getInt(tableName: String, column: String, whereClause: String, whereArg: T) =
         read(0, "getInt") {
             it.getInt(tableName, column, whereClause, whereArg)
         }
-    
-    inline fun <T> getStr(tableName: String, column: String, whereClause: String, whereArg: T): String =
-        read("", "getStr") {
-            it.getStr(tableName, column, whereClause, whereArg)
-        }
-    
-    inline fun <T> getBool(tableName: String, column: String, whereClause: String, whereArg: T) =
-        read(false, "getBool") { 
-            it.getBool(tableName, column, whereClause, whereArg)
-        }
-    
-    inline fun <T> getLong(tableName: String, column: String, whereClause: String, whereArg: T) =
-        read(0L, "getLong") { 
-            it.getLong(tableName, column, whereClause, whereArg)
-        }
-    
-    inline fun <T> getFloat(tableName: String, column: String, whereClause: String, whereArg: T) =
-        read(0F, "getFloat") { 
-            it.getFloat(tableName, column, whereClause, whereArg)
-        }
-    
-    inline fun <T> getBlob(tableName: String, column: String, whereClause: String, whereArg: T) =
-        read(null, "getBlob") {
-            it.getBlob(tableName, column, whereClause, whereArg)
-        }
-    
-    
-    // -----------------------------------  SUSPEND FUN  ----------------------------------- \\
-    
     suspend fun <T> getIntSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
         readSusp(0, "getIntSusp") {
             it.getInt(tableName, column, whereClause, whereArg)
         }
     
+    
+    inline fun <T> getStr(tableName: String, column: String, whereClause: String, whereArg: T): String =
+        read("", "getStr") {
+            it.getStr(tableName, column, whereClause, whereArg)
+        }
     suspend fun <T> getStrSusp(tableName: String, column: String, whereClause: String, whereArg: T): String =
         readSusp("", "getStrSusp") {
             it.getStr(tableName, column, whereClause, whereArg)
         }
     
+    
+    inline fun <T> getBool(tableName: String, column: String, whereClause: String, whereArg: T) =
+        read(false, "getBool") { 
+            it.getBool(tableName, column, whereClause, whereArg)
+        }
     suspend fun <T> getBoolSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readSusp(false, "getBoolSusp") { 
+        readSusp(false, "getBoolSusp") {
             it.getBool(tableName, column, whereClause, whereArg)
         }
     
+    
+    inline fun <T> getLong(tableName: String, column: String, whereClause: String, whereArg: T) =
+        read(0L, "getLong") { 
+            it.getLong(tableName, column, whereClause, whereArg)
+        }
     suspend fun <T> getLongSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readSusp(0L, "getLongSusp") { 
+        readSusp(0L, "getLongSusp") {
             it.getLong(tableName, column, whereClause, whereArg)
         }
     
+    
+    inline fun <T> getFloat(tableName: String, column: String, whereClause: String, whereArg: T) =
+        read(0F, "getFloat") { 
+            it.getFloat(tableName, column, whereClause, whereArg)
+        }
     suspend fun <T> getFloatSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
-        readSusp(0F, "getFloatSusp") { 
+        readSusp(0F, "getFloatSusp") {
             it.getFloat(tableName, column, whereClause, whereArg)
         }
     
+    
+    inline fun <T> getBlob(tableName: String, column: String, whereClause: String, whereArg: T) =
+        read(null, "getBlob") {
+            it.getBlob(tableName, column, whereClause, whereArg)
+        }
     suspend fun <T> getBlobSusp(tableName: String, column: String, whereClause: String, whereArg: T): ByteArray? =
         readSusp(null, "getBlobSusp") {
             it.getBlob(tableName, column, whereClause, whereArg)
         }
+    
+    
+    // DSL
+    
+    fun getInt(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        read(0, "getInt") {
+            it.getInt(tableName, column, where)
+        }
+    suspend fun getIntSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        readSusp(0, "getIntSusp") {
+            it.getInt(tableName, column, where)
+        }
+    
+    
+    fun getStr(tableName: String, column: String, where: WhereBuilder.()->Unit): String =
+        read("", "getStr") {
+            it.getStr(tableName, column, where)
+        }
+    suspend fun getStrSusp(tableName: String, column: String, where: WhereBuilder.()->Unit): String =
+        readSusp("", "getStrSusp") {
+            it.getStr(tableName, column, where)
+        }
+    
+    
+    fun getBool(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        read(false, "getBool") {
+            it.getBool(tableName, column, where)
+        }
+    suspend fun getBoolSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        readSusp(false, "getBoolSusp") {
+            it.getBool(tableName, column, where)
+        }
+    
+    
+    fun getLong(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        read(0L, "getLong") {
+            it.getLong(tableName, column, where)
+        }
+    suspend fun getLongSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        readSusp(0L, "getLongSusp") {
+            it.getLong(tableName, column, where)
+        }
+    
+    
+    fun getFloat(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        read(0F, "getFloat") {
+            it.getFloat(tableName, column, where)
+        }
+    suspend fun getFloatSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        readSusp(0F, "getFloatSusp") {
+            it.getFloat(tableName, column, where)
+        }
+    
+    
+    fun getBlob(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+        read(null, "getBlob") {
+            it.getBlob(tableName, column, where)
+        }
+    suspend fun getBlobSusp(tableName: String, column: String, where: WhereBuilder.()->Unit): ByteArray? =
+        readSusp(null, "getBlobSusp") {
+            it.getBlob(tableName, column, where)
+        }
+    
+    
     
     // By ID
     
@@ -584,7 +646,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T) -> T = { it }
+                                                      noinline mapAfter: (T)->T = { it }
     ): List<T> = read(emptyList(), "getRows") {
         it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
@@ -598,7 +660,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T) -> T = { it }
+                                                      noinline mapAfter: (T)->T = { it }
     ): List<T> = readSusp(emptyList(), "getRowsSusp") {
         it.getRows(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
@@ -613,7 +675,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T) -> T = { it }
+                                                               mapAfter: (T)->T = { it }
     ): List<T> = read(emptyList(), "getRows") {
         it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
@@ -628,7 +690,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T) -> T = { it }
+                                                               mapAfter: (T)->T = { it }
     ): List<T> = readSusp(emptyList(), "getRowsSusp") {
         it.getRows(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
@@ -644,7 +706,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T) -> T = { it }
+                                                      noinline mapAfter: (T)->T = { it }
     ): Map<Int, T> = read(emptyMap(), "getRowMap") {
         it.getRowMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
@@ -658,7 +720,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T) -> T = { it }
+                                                      noinline mapAfter: (T)->T = { it }
     ): Map<Int, T> = readSusp(emptyMap(), "getRowMapSusp") {
         it.getRowMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
@@ -673,7 +735,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T) -> T = { it }
+                                                               mapAfter: (T)->T = { it }
     ): Map<Int, T> = read(emptyMap(), "getRowMap") {
         it.getRowMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
@@ -688,7 +750,7 @@ open class DbHelper(              context: Context,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T) -> T = { it }
+                                                               mapAfter: (T)->T = { it }
     ): Map<Int, T> = readSusp(emptyMap(), "getRowMapSusp") {
         it.getRowMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }

@@ -7,7 +7,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.DbConstants.ID
+import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.getBool
+
+// =======================   S I M P L I F I E D   C O N D I T I O N S   ======================= \\
 
 inline fun <T, R> SQLiteDatabase.getValue(                                  tableName: String,
                                                                                column: String,
@@ -67,3 +70,77 @@ fun SQLiteDatabase.getFloatById(id: Int, tableName: String, column: String) =
 
 fun SQLiteDatabase.getBlobById(id: Int, tableName: String, column: String): ByteArray =
     getValue(tableName, column, ID, id, ByteArray(0), "getBlobById") { it.getBlob(0) }
+
+
+
+
+
+
+// =============================   D S L   C O N D I T I O N S   ============================= \\
+
+inline fun <R> SQLiteDatabase.getValue(                            tableName: String,
+                                                                      column: String,
+                                                                     default: R,
+                                                                    typeName: String,
+                                                                       where: WhereBuilder.()->Unit,
+                                                  crossinline getCursorValue: (Cursor)->R
+): R {
+    val builder = WhereBuilder().apply(where)
+    val whereClause = builder.clauses.joinToString(" ")
+    val whereArgs = builder.args.toTypedArray()
+
+    return rawQuery(
+        "SELECT $column FROM $tableName WHERE $whereClause LIMIT 1",
+        whereArgs
+    ).use { cursor ->
+        if (cursor.moveToFirst()) getCursorValue(cursor)
+        else {
+            // region LOG
+            Log.e(DbTAG, "$typeName() Unable to get value from $tableName (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
+            // endregion
+            default
+        }
+    }
+}
+
+
+fun SQLiteDatabase.getInt(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(tableName, column, -1, "getInt", where) { it.getInt(0) }
+
+fun SQLiteDatabase.getStr(tableName: String, column: String, where: WhereBuilder.()->Unit): String =
+    getValue(tableName, column, "", "getStr", where) { it.getString(0) }
+
+fun SQLiteDatabase.getBool(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(tableName, column, false, "getBool", where) { it.getBool(0) }
+
+fun SQLiteDatabase.getLong(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(tableName, column, -1L, "getLong", where) { it.getLong(0) }
+
+fun SQLiteDatabase.getFloat(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(tableName, column, -1F, "getFloat", where) { it.getFloat(0) }
+
+fun SQLiteDatabase.getBlob(tableName: String, column: String, where: WhereBuilder.()->Unit): ByteArray =
+    getValue(tableName, column, ByteArray(0), "getBlob", where) { it.getBlob(0) }
+
+
+
+
+
+
+
+// =============================   M U L T I P L E   V A L U E S   ============================= \\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
