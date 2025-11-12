@@ -41,6 +41,19 @@ fun SQLiteDatabase.getLastPriority(                                             
 }
 
 
+fun <T> SQLiteDatabase.getLastPriorityBy(                                      tableName: String,
+                                                                           checkedColumn: String,
+                                                                                  equals: T
+) = rawQuery(
+    "SELECT MAX($Priority) FROM $tableName WHERE $checkedColumn=?",
+    arrayOf(equals.toString())
+).use { cursor ->
+    if (cursor.moveToFirst())
+        cursor.getInt(0)
+    else
+        0
+}
+
 
 
 

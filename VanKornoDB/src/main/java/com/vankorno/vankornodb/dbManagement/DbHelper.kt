@@ -954,6 +954,20 @@ open class DbHelper(              context: Context,
     suspend fun getLastPrioritySusp(tableName: String) = readSusp(0, "getLastPrioritySusp") { it.getLastPriority(tableName) }
     
     
+    inline fun <T> getLastPriorityBy(                                          tableName: String,
+                                                                           checkedColumn: String,
+                                                                                  equals: T
+    ) = read(0, "getLastPriorityBy") {
+        it.getLastPriorityBy(tableName, checkedColumn, equals)
+    }
+    
+    suspend fun <T> getLastPrioritySuspBy(                                     tableName: String,
+                                                                           checkedColumn: String,
+                                                                                  equals: T
+    ) = readSusp(0, "getLastPriorityBySusp") {
+        it.getLastPriorityBy(tableName, checkedColumn, equals)
+    }
+    
     
     
     
