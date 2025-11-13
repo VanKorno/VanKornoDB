@@ -8,15 +8,15 @@ import com.vankorno.vankornodb.core.WhereBuilder
 /**
  * Retrieves values of one type from multiple columns of a single row of the specified table.
  *
- * @param tableName Name of the table to query.
+ * @param table Name of the table to query.
  * @param where Lambda that defines the WHERE clause conditions.
  * @param columns One or more column names to retrieve.
  * @return A list of column values (nullable) for the first matching row, or an empty list if no rows match.
  */
-inline fun <reified T> SQLiteDatabase.getRowVals(                  tableName: String,
+inline fun <reified T> SQLiteDatabase.getRowVals(                      table: String,
                                                               noinline where: WhereBuilder.()->Unit,
                                                               vararg columns: String,
-): List<T?> = getMultiRowVals<T>(tableName, columns, where = where, limit = 1).firstOrNull() ?: emptyList()
+): List<T?> = getMultiRowVals<T>(table, columns, where = where, limit = 1).firstOrNull() ?: emptyList()
 
 
 
@@ -25,7 +25,7 @@ inline fun <reified T> SQLiteDatabase.getRowVals(                  tableName: St
 /**
  * Retrieves values from multiple rows and multiple columns of the specified table, using the standard VanKornoDB DSL.
  *
- * @param tableName Name of the table to query.
+ * @param table Name of the table to query.
  * @param columns Array of column names to retrieve.
  * @param joins Optional lambda that defines JOIN clauses.
  * @param where Optional lambda that defines WHERE conditions.
@@ -37,7 +37,7 @@ inline fun <reified T> SQLiteDatabase.getRowVals(                  tableName: St
  * @param customEnd Optional raw SQL appended to the end of the query.
  * @return A list of rows, where each row is a list of column values (nullable).
  */
-inline fun <reified T> SQLiteDatabase.getMultiRowVals(        tableName: String,
+inline fun <reified T> SQLiteDatabase.getMultiRowVals(            table: String,
                                                                 columns: Array<out String>,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
@@ -48,7 +48,7 @@ inline fun <reified T> SQLiteDatabase.getMultiRowVals(        tableName: String,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
 ): List<List<T?>> = getCursor(
-    tableName, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {

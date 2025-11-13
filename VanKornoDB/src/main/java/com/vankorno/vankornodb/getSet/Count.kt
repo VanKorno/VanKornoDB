@@ -10,9 +10,10 @@ import com.vankorno.vankornodb.core.WhereBuilder
 
 fun SQLiteDatabase.getRowCount(                               tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {}
-    
-): Int = getCursor(tableName, arrayOf("1"), joins, where).use { it.count }
+                                                                  where: WhereBuilder.()->Unit = {},
+): Int = getCursor(
+    tableName, arrayOf("1"), joins, where
+).use { it.count }
 
 
 
@@ -22,7 +23,8 @@ fun SQLiteDatabase.getRowCount(                               tableName: String,
 
 fun SQLiteDatabase.hasRows(                                   tableName: String,
                                                                   joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {}
-    
-): Boolean = getCursor(tableName, arrayOf("1"), joins, where, limit = 1).use { it.moveToFirst() }
+                                                                  where: WhereBuilder.()->Unit = {},
+): Boolean = getCursor(
+    tableName, arrayOf("1"), joins, where, limit = 1
+).use { it.moveToFirst() }
 

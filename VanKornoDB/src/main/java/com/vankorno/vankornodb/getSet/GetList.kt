@@ -20,7 +20,7 @@ inline fun <reified V> SQLiteDatabase.getList(                    table: String,
                                                                 orderBy: String = "",
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
+                                                              customEnd: String = "",
 ): List<V> = getCursor(
     table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->

@@ -17,7 +17,7 @@ import kotlin.reflect.full.primaryConstructor
 /**
  * Creates a single table in db.
  */
-fun SQLiteDatabase.createTable(tableName: String, entityClass: KClass<*>) = createTables(TableInfo(tableName, entityClass))
+fun SQLiteDatabase.createTable(table: String, clazz: KClass<*>) = createTables(TableInfo(table, clazz))
 
 /**
  * Creates multiple tables in the database given vararg TableInfo.
@@ -37,7 +37,7 @@ fun SQLiteDatabase.createTables(tables: List<TableInfo>) {
 
 
 /**
- * Generates a SQL `CREATE TABLE` statement for the specified [tableName], based on the structure of
+ * Generates a SQL `CREATE TABLE` statement for the specified [table], based on the structure of
  * the given data class [entityClass].
  *
  * Requirements:
@@ -52,13 +52,13 @@ fun SQLiteDatabase.createTables(tables: List<TableInfo>) {
  * - Only non-nullable, supported types are included. Empty lists, arrays, and unsupported types are skipped.
  * - When possible, default values are added to the SQL definition using the `DEFAULT` clause.
  *
- * @param tableName The name of the SQLite table to create.
+ * @param table The name of the SQLite table to create.
  * @param entityClass The data class used to derive the table schema.
  * @return A complete `CREATE TABLE` SQL string based on [entityClass].
  */
 
-fun newTableQuery(                                                             tableName: String,
-                                                                             entityClass: KClass<*>
+fun newTableQuery(                                                                 table: String,
+                                                                             entityClass: KClass<*>,
 ): String {
     val constructor = entityClass.primaryConstructor
         ?: error("Class ${entityClass.simpleName} must have a primary constructor")
@@ -106,7 +106,7 @@ fun newTableQuery(                                                             t
             if (col != null) columns += col
         }
     }
-    val queryStr = dbCreateT + tableName + " (" + columns.joinToString(", ") + ")"
+    val queryStr = dbCreateT + table + " (" + columns.joinToString(", ") + ")"
     // region LOG
         println("newTableQuery(): $queryStr")
     // endregion
@@ -123,7 +123,7 @@ object TableBuilderUtils {
     */
     fun getColumnType(                                                     paramName: String?,
                                                                           classifier: KClassifier?,
-                                                                          isNullable: Boolean
+                                                                          isNullable: Boolean,
     ): ColumnType? {
         if (paramName == null) return null
     
@@ -143,7 +143,7 @@ object TableBuilderUtils {
     }
     
     inline fun <reified T : Any> getColumnDefinition(                            param: KParameter,
-                                                                      defaultsInstance: T
+                                                                      defaultsInstance: T,
     ): String? {
         val name = param.name ?: return null
         val classifier = param.type.classifier

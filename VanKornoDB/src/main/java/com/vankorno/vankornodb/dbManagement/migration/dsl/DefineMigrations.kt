@@ -11,7 +11,7 @@ class ModifyRow(val fieldName: String, val block: TransformCol.FieldOverride.()-
 
 fun defineMigrations(                            latestVersion: Int,
                                                    latestClass: KClass<*>,
-                                                         block: MigrationDefinitionBuilder.()->Unit
+                                                         block: MigrationDefinitionBuilder.()->Unit,
 ): MigrationBundle {
     val defBuilder = MigrationDefinitionBuilder()
     defBuilder.block()
@@ -35,7 +35,7 @@ class MigrationDefinitionBuilder {
     
     fun version(                                              version: Int,
                                                                 clazz: KClass<*>,
-                                                                block: VersionBuilder.()->Unit = {}
+                                                                block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
         verBuilder.block()
@@ -92,8 +92,8 @@ class MigrationDefinitionBuilder {
         infix fun String.modify(block: TransformCol.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
         
         
-        fun milestone(                               vararg modifications: ModifyRow,
-                                                          processFinalObj: ((Any, Any)->Any)? = null
+        fun milestone(                              vararg modifications: ModifyRow,
+                                                         processFinalObj: ((Any, Any)->Any)? = null,
         ) {
             val overrideBlock: TransformCol.() -> Unit = {
                 modifications.forEach { modify(it.fieldName, it.block) }
@@ -115,7 +115,7 @@ class MigrationDefinitionBuilder {
             
             
             inner class PartialRename(                                       val keyName: String,
-                                                                          val renameFrom: String
+                                                                          val renameFrom: String,
             ) {
                 infix fun to(                                                   renameTo: String
                 ) {

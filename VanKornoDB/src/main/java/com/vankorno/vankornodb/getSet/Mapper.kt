@@ -117,7 +117,7 @@ internal object EntityMapperUtils {
      * Returns the value of a constructor parameter [param] from a default [instance] of [T].
      */
     fun <T : Any> defaultInstanceValueOf(                                        param: KParameter,
-                                                                              instance: T
+                                                                              instance: T,
     ): Any? {
         val prop = instance::class.memberProperties
             .find { it.name == param.name }
@@ -132,7 +132,7 @@ internal object EntityMapperUtils {
      */
     fun <T : Any> getListSizeFromDefault(                                        param: KParameter,
                                                                        defaultInstance: T,
-                                                                                 clazz: KClass<T>
+                                                                                 clazz: KClass<T>,
     ): Int {
         val defaultValue = clazz.memberProperties
             .firstOrNull { it.name == param.name }
@@ -151,7 +151,7 @@ internal object EntityMapperUtils {
      */
     fun Cursor.getListFromCursor(                                   firstListColumnIndex: Int,
                                                                                     size: Int,
-                                                                             elementType: KClass<*>
+                                                                             elementType: KClass<*>,
     ): List<Any> {
         require(firstListColumnIndex + size <= columnCount) {
             "List param overruns Cursor column count"
@@ -178,7 +178,7 @@ internal object EntityMapperUtils {
      * Returns the value at [index] using [getter], or null if the Cursor value is null.
      */
     inline fun <T> Cursor.getNullable(                                             index: Int,
-                                                                                  getter: (Int)->T
+                                                                                  getter: (Int)->T,
     ): T? = if (isNull(index))
                 null
             else

@@ -6,5 +6,5 @@ data class VersionEntity(
                                val version: Int = 0,
                                  val notes: String = "",
 
-                                    val id: Int = -1
+                                    val id: Int = -1,
 )

@@ -7,19 +7,19 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.DbConstants.Priority
 
 
-fun SQLiteDatabase.getLastId(tableName: String) = getLargestInt(tableName, ID, null, null)
+fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, ID, null, null)
 
 
-fun SQLiteDatabase.getAllIDs(                                               tableName: String,
-                                                                              orderBy: String = ""
-) = getList<Int>(tableName, ID, orderBy = orderBy)
+fun SQLiteDatabase.getAllIDs(                                                   table: String,
+                                                                              orderBy: String = "",
+) = getList<Int>(table, ID, orderBy = orderBy)
 
 
 
-fun SQLiteDatabase.tableExists(                                                tableName: String
+fun SQLiteDatabase.tableExists(                                                    table: String,
 ) = rawQuery(
     "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
-    arrayOf(tableName)
+    arrayOf(table)
 ).use { it.moveToFirst() }
 
 
@@ -29,17 +29,17 @@ fun SQLiteDatabase.isTableEmpty(tableName: String) = !hasRows(tableName)
 fun SQLiteDatabase.getLastPriority(tableName: String) = getLargestInt(tableName, Priority, null, null)
 
 
-fun <T> SQLiteDatabase.getLastPriorityBy(                                      tableName: String,
+fun <T> SQLiteDatabase.getLastPriorityBy(                                          table: String,
                                                                              whereColumn: String,
-                                                                                  equals: T
-) = getLargestInt(tableName, Priority, whereColumn, equals)
+                                                                                  equals: T,
+) = getLargestInt(table, Priority, whereColumn, equals)
 
 
 
-fun <T> SQLiteDatabase.getLargestInt(                                    tableName: String,
+fun <T> SQLiteDatabase.getLargestInt(                                        table: String,
                                                                       targetColumn: String,
                                                                        whereColumn: String? = null,
-                                                                            equals: T? = null
+                                                                            equals: T? = null,
 ): Int {
     val hasConditions = whereColumn != null && equals != null
     
@@ -47,7 +47,7 @@ fun <T> SQLiteDatabase.getLargestInt(                                    tableNa
     val selectionArgs = if (hasConditions) arrayOf(equals.toString()) else null
     
     return rawQuery(
-        "SELECT MAX($targetColumn) FROM $tableName" + queryEnd, selectionArgs
+        "SELECT MAX($targetColumn) FROM $table" + queryEnd, selectionArgs
     ).use { cursor ->
         if (cursor.moveToFirst())
             cursor.getInt(0)

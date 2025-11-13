@@ -216,218 +216,218 @@ open class DbHelper(              context: Context,
     
     inline fun setById(                                                     value: Any,
                                                                                id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
-    ) = set(value, tableName, column, ID, id, async)
+    ) = set(value, table, column, ID, id, async)
     
     suspend fun setByIdSusp(                                                       value: Any,
                                                                                       id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
-    ) = setSusp(value, tableName, column, ID, id)
+    ) = setSusp(value, table, column, ID, id)
     
     
     inline fun <T> set(                                                     value: Any,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                            column: String,
                                                                             where: String,
                                                                            equals: T,
                                                                             async: Boolean = false,
     ) = write("set", async) {
-        it.set(value, tableName, column, where, equals)
+        it.set(value, table, column, where, equals)
     }
     
     fun <T> set(                                                       value: Any,
-                                                                   tableName: String,
+                                                                       table: String,
                                                                       column: String,
                                                                        async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
     ) = write("set", async) {
-        it.set(value, tableName, column, where)
+        it.set(value, table, column, where)
     }
     
     
     suspend fun <T> setSusp(                                                       value: Any,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
                                                                                    where: String,
                                                                                   equals: T,
     ) = writeSusp("setSusp") {
-        it.set(value, tableName, column, where, equals)
+        it.set(value, table, column, where, equals)
     }
     
     suspend fun <T> setSusp(                                           value: Any,
-                                                                   tableName: String,
+                                                                       table: String,
                                                                       column: String,
                                                                        where: WhereBuilder.()->Unit,
     ) = writeSusp("setSusp") {
-        it.set(value, tableName, column, where)
+        it.set(value, table, column, where)
     }
     
     
     
     // =============================  M U L T I - S E T T E R S  ============================= \\
     
-    fun setRowVals(                                                tableName: String,
+    fun setRowVals(                                                    table: String,
                                                                           cv: ContentValues,
                                                                        async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
     ) = write("setRowVals", async) {
-        it.setRowVals(tableName, cv, where)
+        it.setRowVals(table, cv, where)
     }
     
-    suspend fun setRowValsSusp(                                    tableName: String,
+    suspend fun setRowValsSusp(                                        table: String,
                                                                           cv: ContentValues,
                                                                        where: WhereBuilder.()->Unit,
     ) = writeSusp("setRowValsSusp") {
-        it.setRowVals(tableName, cv, where)
+        it.setRowVals(table, cv, where)
     }
     
     
-    fun setRowVals(                                                tableName: String,
+    fun setRowVals(                                                    table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
                                                                vararg values: Pair<String, Any?>,
     ) = write("setRowVals", async) {
-        it.setRowVals(tableName, where, *values)
+        it.setRowVals(table, where, *values)
     }
     
-    suspend fun setRowValsSusp(                                    tableName: String,
+    suspend fun setRowValsSusp(                                        table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
                                                                vararg values: Pair<String, Any?>,
-    ) = writeSusp("setRowValsSusp") { it.setRowVals(tableName, where, *values) }
+    ) = writeSusp("setRowValsSusp") { it.setRowVals(table, where, *values) }
     
     
     // -------------------------------------------------------------------------------------- \\
     
     inline fun setRowValsById(                                                 id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                                cv: ContentValues,
                                                                             async: Boolean = false,
     ) = write("setRowValsById", async) {
-        it.setRowValsById(id, tableName, cv)
+        it.setRowValsById(id, table, cv)
     }
     
     suspend fun setRowValsByIdSusp(                                              id: Int,
-                                                                          tableName: String,
+                                                                              table: String,
                                                                                  cv: ContentValues,
     ) = writeSusp("setRowValsByIdSusp") {
-        it.setRowValsById(id, tableName, cv)
+        it.setRowValsById(id, table, cv)
     }
     
     
     inline fun setRowValsById(                                               id: Int,
-                                                                      tableName: String,
+                                                                          table: String,
                                                                           async: Boolean = false,
                                                                   vararg values: Pair<String, Any?>,
     ) = write("setRowValsById", async) {
-        it.setRowValsById(id, tableName, *values)
+        it.setRowValsById(id, table, *values)
     }
     
     suspend fun setRowValsByIdSusp(                                          id: Int,
-                                                                      tableName: String,
+                                                                          table: String,
                                                                   vararg values: Pair<String, Any?>,
     ) = writeSusp("setRowValsByIdSusp") {
-        it.setRowValsById(id, tableName, *values)
+        it.setRowValsById(id, table, *values)
     }
     
     
     // -------------------------------------------------------------------------------------- \\
     
     inline fun setInAllRows(                                                value: Any,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
     ) = write("setInAllRows", async) {
-        it.setInAllRows(value, tableName, column)
+        it.setInAllRows(value, table, column)
     }
     suspend fun setInAllRowsSusp(                                                  value: Any,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
     ) = writeSusp("setInAllRowsSusp") {
-        it.setInAllRows(value, tableName, column)
+        it.setInAllRows(value, table, column)
     }
     
     
-    inline fun setRowValsInAllRows(                                   tableName: String,
+    inline fun setRowValsInAllRows(                                       table: String,
                                                                           async: Boolean = false,
                                                                   vararg values: Pair<String, Any?>,
     ) = write("setRowValsInAllRows", async) {
-        it.setRowValsInAllRows(tableName, *values)
+        it.setRowValsInAllRows(table, *values)
     }
-    suspend fun setRowValsInAllRowsSusp(                              tableName: String,
+    suspend fun setRowValsInAllRowsSusp(                                  table: String,
                                                                   vararg values: Pair<String, Any?>,
     ) = writeSusp("setRowValsInAllRowsSusp") {
-        it.setRowValsInAllRows(tableName, *values)
+        it.setRowValsInAllRows(table, *values)
     }
     
     
     // ---------------------------------  S E T   R O W S  --------------------------------- \\
     
-    inline fun <T : Any> insertObj(                                     tableName: String,
+    inline fun <T : Any> insertObj(                                         table: String,
                                                                               obj: T,
                                                                             async: Boolean = false,
     ) = write("insertObj", async) {
-        it.insertObj(tableName, obj)
+        it.insertObj(table, obj)
     }
     
     
-    suspend fun <T : Any> insertObjSusp(                                       tableName: String,
+    suspend fun <T : Any> insertObjSusp(                                           table: String,
                                                                                      obj: T,
     ): Long = readWriteSusp(-1L, "insertObjSusp") {
-        it.insertObj(tableName, obj)
+        it.insertObj(table, obj)
     }
     
     
-    inline fun <T : Any> insertObjects(                                 tableName: String,
+    inline fun <T : Any> insertObjects(                                     table: String,
                                                                           objects: List<T>,
                                                                             async: Boolean = false,
     ) = write("insertObjects", async) {
-        it.insertObjects(tableName, objects)
+        it.insertObjects(table, objects)
     }
     
     
-    suspend fun <T : Any> insertObjectsSusp(                                   tableName: String,
+    suspend fun <T : Any> insertObjectsSusp(                                       table: String,
                                                                                  objects: List<T>,
     ): Int = readWriteSusp(0, "insertObjectsSusp") {
-        it.insertObjects(tableName, objects)
+        it.insertObjects(table, objects)
     }
     
     
     
-    fun <T : Any> updateObj(                                       tableName: String,
+    fun <T : Any> updateObj(                                           table: String,
                                                                          obj: T,
                                                                        async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
     ) = write("updateObj", async) {
-        it.updateObj(tableName, obj, where)
+        it.updateObj(table, obj, where)
     }
     
     
-    suspend fun <T : Any> updateObjSusp(                           tableName: String,
+    suspend fun <T : Any> updateObjSusp(                               table: String,
                                                                          obj: T,
                                                                        where: WhereBuilder.()->Unit,
     ): Int = readWriteSusp(0, "updateObjSusp") {
-        it.updateObj(tableName, obj, where)
+        it.updateObj(table, obj, where)
     }
     
     
     inline fun <T : Any> updateObjById(                                        id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                               obj: T,
                                                                             async: Boolean = false,
     ) = write("updateObjById", async) {
-        it.updateObjById(id, tableName, obj)
+        it.updateObjById(id, table, obj)
     }
     
     
     suspend fun <T : Any> updateObjByIdSusp(                                          id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                      obj: T,
     ): Int = readWriteSusp(0, "updateObjByIdSusp") {
-        it.updateObjById(id, tableName, obj)
+        it.updateObjById(id, table, obj)
     }
     
     
@@ -443,164 +443,213 @@ open class DbHelper(              context: Context,
     
     // Simplified conditions
     
-    inline fun <T> getInt(tableName: String, column: String, whereClause: String, whereArg: T) =
+    inline fun <T> getInt(table: String, column: String, whereClause: String, whereArg: T) =
         read(0, "getInt") {
-            it.getInt(tableName, column, whereClause, whereArg)
+            it.getInt(table, column, whereClause, whereArg)
         }
-    suspend fun <T> getIntSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+    suspend fun <T> getIntSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(0, "getIntSusp") {
-            it.getInt(tableName, column, whereClause, whereArg)
+            it.getInt(table, column, whereClause, whereArg)
         }
     
     
-    inline fun <T> getStr(tableName: String, column: String, whereClause: String, whereArg: T): String =
+    inline fun <T> getStr(table: String, column: String, whereClause: String, whereArg: T): String =
         read("", "getStr") {
-            it.getStr(tableName, column, whereClause, whereArg)
+            it.getStr(table, column, whereClause, whereArg)
         }
-    suspend fun <T> getStrSusp(tableName: String, column: String, whereClause: String, whereArg: T): String =
+    suspend fun <T> getStrSusp(table: String, column: String, whereClause: String, whereArg: T): String =
         readSusp("", "getStrSusp") {
-            it.getStr(tableName, column, whereClause, whereArg)
+            it.getStr(table, column, whereClause, whereArg)
         }
     
     
-    inline fun <T> getBool(tableName: String, column: String, whereClause: String, whereArg: T) =
+    inline fun <T> getBool(table: String, column: String, whereClause: String, whereArg: T) =
         read(false, "getBool") { 
-            it.getBool(tableName, column, whereClause, whereArg)
+            it.getBool(table, column, whereClause, whereArg)
         }
-    suspend fun <T> getBoolSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+    suspend fun <T> getBoolSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(false, "getBoolSusp") {
-            it.getBool(tableName, column, whereClause, whereArg)
+            it.getBool(table, column, whereClause, whereArg)
         }
     
     
-    inline fun <T> getLong(tableName: String, column: String, whereClause: String, whereArg: T) =
+    inline fun <T> getLong(table: String, column: String, whereClause: String, whereArg: T) =
         read(0L, "getLong") { 
-            it.getLong(tableName, column, whereClause, whereArg)
+            it.getLong(table, column, whereClause, whereArg)
         }
-    suspend fun <T> getLongSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+    suspend fun <T> getLongSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(0L, "getLongSusp") {
-            it.getLong(tableName, column, whereClause, whereArg)
+            it.getLong(table, column, whereClause, whereArg)
         }
     
     
-    inline fun <T> getFloat(tableName: String, column: String, whereClause: String, whereArg: T) =
+    inline fun <T> getFloat(table: String, column: String, whereClause: String, whereArg: T) =
         read(0F, "getFloat") { 
-            it.getFloat(tableName, column, whereClause, whereArg)
+            it.getFloat(table, column, whereClause, whereArg)
         }
-    suspend fun <T> getFloatSusp(tableName: String, column: String, whereClause: String, whereArg: T) =
+    suspend fun <T> getFloatSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(0F, "getFloatSusp") {
-            it.getFloat(tableName, column, whereClause, whereArg)
+            it.getFloat(table, column, whereClause, whereArg)
         }
     
     
-    inline fun <T> getBlob(tableName: String, column: String, whereClause: String, whereArg: T) =
+    inline fun <T> getBlob(table: String, column: String, whereClause: String, whereArg: T) =
         read(null, "getBlob") {
-            it.getBlob(tableName, column, whereClause, whereArg)
+            it.getBlob(table, column, whereClause, whereArg)
         }
-    suspend fun <T> getBlobSusp(tableName: String, column: String, whereClause: String, whereArg: T): ByteArray? =
+    suspend fun <T> getBlobSusp(table: String, column: String, whereClause: String, whereArg: T): ByteArray? =
         readSusp(null, "getBlobSusp") {
-            it.getBlob(tableName, column, whereClause, whereArg)
+            it.getBlob(table, column, whereClause, whereArg)
         }
     
     
     // DSL
     
-    fun getInt(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    fun getInt(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(0, "getInt") {
-            it.getInt(tableName, column, where)
+            it.getInt(table, column, where)
         }
-    suspend fun getIntSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    suspend fun getIntSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(0, "getIntSusp") {
-            it.getInt(tableName, column, where)
+            it.getInt(table, column, where)
         }
     
     
-    fun getStr(tableName: String, column: String, where: WhereBuilder.()->Unit): String =
+    fun getStr(table: String, column: String, where: WhereBuilder.()->Unit): String =
         read("", "getStr") {
-            it.getStr(tableName, column, where)
+            it.getStr(table, column, where)
         }
-    suspend fun getStrSusp(tableName: String, column: String, where: WhereBuilder.()->Unit): String =
+    suspend fun getStrSusp(table: String, column: String, where: WhereBuilder.()->Unit): String =
         readSusp("", "getStrSusp") {
-            it.getStr(tableName, column, where)
+            it.getStr(table, column, where)
         }
     
     
-    fun getBool(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    fun getBool(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(false, "getBool") {
-            it.getBool(tableName, column, where)
+            it.getBool(table, column, where)
         }
-    suspend fun getBoolSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    suspend fun getBoolSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(false, "getBoolSusp") {
-            it.getBool(tableName, column, where)
+            it.getBool(table, column, where)
         }
     
     
-    fun getLong(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    fun getLong(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(0L, "getLong") {
-            it.getLong(tableName, column, where)
+            it.getLong(table, column, where)
         }
-    suspend fun getLongSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    suspend fun getLongSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(0L, "getLongSusp") {
-            it.getLong(tableName, column, where)
+            it.getLong(table, column, where)
         }
     
     
-    fun getFloat(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    fun getFloat(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(0F, "getFloat") {
-            it.getFloat(tableName, column, where)
+            it.getFloat(table, column, where)
         }
-    suspend fun getFloatSusp(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    suspend fun getFloatSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(0F, "getFloatSusp") {
-            it.getFloat(tableName, column, where)
+            it.getFloat(table, column, where)
         }
     
     
-    fun getBlob(tableName: String, column: String, where: WhereBuilder.()->Unit) =
+    fun getBlob(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(null, "getBlob") {
-            it.getBlob(tableName, column, where)
+            it.getBlob(table, column, where)
         }
-    suspend fun getBlobSusp(tableName: String, column: String, where: WhereBuilder.()->Unit): ByteArray? =
+    suspend fun getBlobSusp(table: String, column: String, where: WhereBuilder.()->Unit): ByteArray? =
         readSusp(null, "getBlobSusp") {
-            it.getBlob(tableName, column, where)
+            it.getBlob(table, column, where)
         }
     
     
     
     // By ID
     
-    inline fun getIntById(id: Int, tableName: String, column: String) = getInt(tableName, column, ID, id)
-    suspend fun getIntByIdSusp(id: Int, tableName: String, column: String) = getIntSusp(tableName, column, ID, id)
+    inline fun getIntById(id: Int, table: String, column: String) = getInt(table, column, ID, id)
+    suspend fun getIntByIdSusp(id: Int, table: String, column: String) = getIntSusp(table, column, ID, id)
     
-    inline fun getStrById(id: Int, tableName: String, column: String) = getStr(tableName, column, ID, id)
-    suspend fun getStrByIdSusp(id: Int, tableName: String, column: String) = getStrSusp(tableName, column, ID, id)
+    inline fun getStrById(id: Int, table: String, column: String) = getStr(table, column, ID, id)
+    suspend fun getStrByIdSusp(id: Int, table: String, column: String) = getStrSusp(table, column, ID, id)
     
-    inline fun getBoolById(id: Int, tableName: String, column: String) = getBool(tableName, column, ID, id)
-    suspend fun getBoolByIdSusp(id: Int, tableName: String, column: String) = getBoolSusp(tableName, column, ID, id)
+    inline fun getBoolById(id: Int, table: String, column: String) = getBool(table, column, ID, id)
+    suspend fun getBoolByIdSusp(id: Int, table: String, column: String) = getBoolSusp(table, column, ID, id)
     
-    inline fun getLongById(id: Int, tableName: String, column: String) = getLong(tableName, column, ID, id)
-    suspend fun getLongByIdSusp(id: Int, tableName: String, column: String) = getLongSusp(tableName, column, ID, id)
+    inline fun getLongById(id: Int, table: String, column: String) = getLong(table, column, ID, id)
+    suspend fun getLongByIdSusp(id: Int, table: String, column: String) = getLongSusp(table, column, ID, id)
     
-    inline fun getFloatById(id: Int, tableName: String, column: String) = getFloat(tableName, column, ID, id)
-    suspend fun getFloatByIdSusp(id: Int, tableName: String, column: String) = getFloatSusp(tableName, column, ID, id)
+    inline fun getFloatById(id: Int, table: String, column: String) = getFloat(table, column, ID, id)
+    suspend fun getFloatByIdSusp(id: Int, table: String, column: String) = getFloatSusp(table, column, ID, id)
     
-    inline fun getBlobById(id: Int, tableName: String, column: String): ByteArray? = getBlob(tableName, column, ID, id)
-    suspend fun getBlobByIdSusp(id: Int, tableName: String, column: String): ByteArray? = getBlobSusp(tableName, column, ID, id)
-    
-    
+    inline fun getBlobById(id: Int, table: String, column: String): ByteArray? = getBlob(table, column, ID, id)
+    suspend fun getBlobByIdSusp(id: Int, table: String, column: String): ByteArray? = getBlobSusp(table, column, ID, id)
     
     
-    // ---------------------------------  G E T   R O W S  --------------------------------- \\
+    // Multiple values
+    
+    inline fun <reified T : Any> getMultiRowVals(                 table: String,
+                                                                columns: Array<out String>,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+    ): List<List<T?>> = read(emptyList(), "getMultiRowVals") {
+        it.getMultiRowVals(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
+    
+    suspend inline fun <reified T : Any> getMultiRowValsSusp(     table: String,
+                                                                columns: Array<out String>,
+                                                         noinline joins: JoinBuilder.()->Unit = {},
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+    ): List<List<T?>> = readSusp(emptyList(), "getMultiRowValsSusp") {
+        it.getMultiRowVals(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+    }
+    
+    
+    
+    inline fun <reified T : Any> getRowVals(                           table: String,
+                                                              noinline where: WhereBuilder.()->Unit,
+                                                              vararg columns: String,
+    ): List<T?> = read(emptyList(), "getRowVals") {
+        it.getRowVals(table, where, *columns)
+    }
+    
+    suspend inline fun <reified T : Any> getRowValsSusp(               table: String,
+                                                              noinline where: WhereBuilder.()->Unit,
+                                                              vararg columns: String,
+    ): List<T?> = readSusp(emptyList(), "getRowValsSusp") {
+        it.getRowVals(table, where, *columns)
+    }
+    
+    
+    
+    
+    
+    
+    // -------------------------------  G E T   O B J E C T S  ------------------------------- \\
     
     inline fun <reified T : Any> getObjOrNullById(                                    id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
     ): T? = read(null, "getObjOrNullById") {
-        it.getObjOrNullById<T>(id, tableName)
+        it.getObjOrNullById<T>(id, table)
     }
     
     suspend inline fun <reified T : Any> getObjOrNullByIdSusp(                        id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
     ): T? = readSusp(null, "getObjOrNullByIdSusp") {
-        it.getObjOrNullById<T>(id, tableName)
+        it.getObjOrNullById<T>(id, table)
     }
     
     
@@ -815,72 +864,72 @@ open class DbHelper(              context: Context,
     
     inline fun addToInt(                                                   addend: Number,
                                                                                id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
     ) = write("addToInt", async) {
-        it.addToInt(addend, id, tableName, column)
+        it.addToInt(addend, id, table, column)
     }
     
     suspend fun addToIntSusp(                                                     addend: Number,
                                                                                       id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
     ) = writeSusp("addToIntSusp") {
-        it.addToInt(addend, id, tableName, column)
+        it.addToInt(addend, id, table, column)
     }
     
     
     inline fun addToLong(                                                  addend: Number,
                                                                                id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
     ) = write("addToLong", async) {
-        it.addToLong(addend, id, tableName, column)
+        it.addToLong(addend, id, table, column)
     }
     
     suspend fun addToLongSusp(                                                    addend: Number,
                                                                                       id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
     ) = writeSusp("addToLongSusp") {
-        it.addToLong(addend, id, tableName, column)
+        it.addToLong(addend, id, table, column)
     }
     
     
     inline fun addToFloat(                                                 addend: Number,
                                                                                id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
     ) = write("addToFloat", async) {
-        it.addToFloat(addend, id, tableName, column)
+        it.addToFloat(addend, id, table, column)
     }
     
     suspend fun addToFloatSusp(                                                   addend: Number,
                                                                                       id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
     ) = writeSusp("addToFloatSusp") {
-        it.addToFloat(addend, id, tableName, column)
+        it.addToFloat(addend, id, table, column)
     }
     
     
     
     inline fun toggleBool(                                                     id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
     ) = write("toggleBool", async) {
-        it.toggleBool(id, tableName, column)
+        it.toggleBool(id, table, column)
     }
     
     suspend fun toggleBoolSusp(                                                       id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
     ) = readWriteSusp(Unit, "toggleBoolSusp") {
-        it.toggleBool(id, tableName, column)
+        it.toggleBool(id, table, column)
     }
 
     
@@ -896,81 +945,81 @@ open class DbHelper(              context: Context,
     
     // ============================   D E L E T E,  C L E A R   ============================ \\
     
-    inline fun <T> deleteRow(                                           tableName: String,
+    inline fun <T> deleteRow(                                               table: String,
                                                                             where: String,
                                                                            equals: T,
                                                                             async: Boolean = false,
     ) = write("deleteRow", async) {
-        it.deleteRow(tableName, where, equals)
+        it.deleteRow(table, where, equals)
     }
     
-    suspend fun <T> deleteRowSusp(                                             tableName: String,
+    suspend fun <T> deleteRowSusp(                                                 table: String,
                                                                                    where: String,
                                                                                   equals: T,
     ) = writeSusp("deleteRowSusp") {
-        it.deleteRow(tableName, where, equals)
+        it.deleteRow(table, where, equals)
     }
     
     
-    fun deleteRow(                                                 tableName: String,
+    fun deleteRow(                                                     table: String,
                                                                        async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
     ) = write("deleteRow", async) {
-        it.deleteRow(tableName, where)
+        it.deleteRow(table, where)
     }
     
     
-    suspend fun deleteRowSusp(                                     tableName: String,
+    suspend fun deleteRowSusp(                                         table: String,
                                                                        where: WhereBuilder.()->Unit,
     ) = writeSusp("deleteRowSusp") {
-        it.deleteRow(tableName, where)
+        it.deleteRow(table, where)
     }
     
     
     inline fun deleteRowById(                                                  id: Int,
-                                                                        tableName: String,
+                                                                            table: String,
                                                                             async: Boolean = false,
     ) = write("deleteRowById", async) {
-        it.deleteRowById(id, tableName)
+        it.deleteRowById(id, table)
     }
     
     suspend fun deleteRowByIdSusp(                                                    id: Int,
-                                                                               tableName: String,
+                                                                                   table: String,
     ) = writeSusp("deleteRowByIdSusp") {
-        it.deleteRowById(id, tableName)
+        it.deleteRowById(id, table)
     }
     
     
     
-    inline fun deleteFirstRow(                                          tableName: String,
+    inline fun deleteFirstRow(                                              table: String,
                                                                             async: Boolean = false,
     ) = write("deleteFirstRow", async) {
-        it.deleteFirstRow(tableName)
+        it.deleteFirstRow(table)
     }
     
-    suspend fun deleteFirstRowSusp(                                            tableName: String,
+    suspend fun deleteFirstRowSusp(                                                table: String,
     ) = writeSusp("deleteFirstRowSusp") {
-        it.deleteFirstRow(tableName)
+        it.deleteFirstRow(table)
     }
     
     
-    inline fun deleteLastRow(                                           tableName: String,
+    inline fun deleteLastRow(                                               table: String,
                                                                             async: Boolean = false,
     ) = write("deleteLastRow", async) {
-        it.deleteLastRow(tableName)
+        it.deleteLastRow(table)
     }
     
-    suspend fun deleteLastRowSusp(                                             tableName: String,
+    suspend fun deleteLastRowSusp(                                                 table: String,
     ) = writeSusp("deleteLastRowSusp") {
-        it.deleteLastRow(tableName)
+        it.deleteLastRow(table)
     }
     
     
-    inline fun clearTable(                                              tableName: String,
+    inline fun clearTable(                                                  table: String,
                                                                             async: Boolean = false,
-    ) = write("clearTable", async) { it.clearTable(tableName) }
+    ) = write("clearTable", async) { it.clearTable(table) }
     
-    suspend fun clearTableSusp(tableName: String) = writeSusp("clearTableSusp") { it.clearTable(tableName) }
+    suspend fun clearTableSusp(table: String) = writeSusp("clearTableSusp") { it.clearTable(table) }
     
     
     
@@ -978,36 +1027,36 @@ open class DbHelper(              context: Context,
     // ====================================  C O U N T  ==================================== \\
     
     /** Returns the number of rows matching the query conditions. */
-    fun getRowCount(                                          tableName: String,
+    fun getRowCount(                                              table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = read(0, "getRowCount") {
-        it.getRowCount(tableName, joins, where)
+        it.getRowCount(table, joins, where)
     }
     
     /** Returns the number of rows matching the query conditions. */
-    suspend fun getRowCountSusp(                              tableName: String,
+    suspend fun getRowCountSusp(                                  table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = readSusp(0, "getRowCountSusp") {
-        it.getRowCount(tableName, joins, where)
+        it.getRowCount(table, joins, where)
     }
     
     
     /** Returns true if at least one row matches the query conditions. */
-    fun hasRows(                                              tableName: String,
+    fun hasRows(                                                  table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = read(false, "hasRows") {
-        it.hasRows(tableName, joins, where)
+        it.hasRows(table, joins, where)
     }
     
     /** Returns true if at least one row matches the query conditions. */
-    suspend fun hasRowsSusp(                                  tableName: String,
+    suspend fun hasRowsSusp(                                      table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = readSusp(false, "hasRowsSusp") {
-        it.hasRows(tableName, joins, where)
+        it.hasRows(table, joins, where)
     }
     
     
@@ -1018,58 +1067,58 @@ open class DbHelper(              context: Context,
     
     // ====================================  O T H E R  ==================================== \\
     
-    inline fun getLastId(tableName: String) = read(0, "getLastId") { it.getLastId(tableName) }
-    suspend fun getLastIdSusp(tableName: String) = readSusp(0, "getLastIdSusp") { it.getLastId(tableName) }
+    inline fun getLastId(table: String) = read(0, "getLastId") { it.getLastId(table) }
+    suspend fun getLastIdSusp(table: String) = readSusp(0, "getLastIdSusp") { it.getLastId(table) }
     
     
-    inline fun getAllIDs(tableName: String) = read(emptyList(), "getAllIDs") { it.getAllIDs(tableName) }
-    suspend fun getAllIDsSusp(tableName: String) = readSusp(emptyList(), "getAllIDsSusp") { it.getAllIDs(tableName) }
+    inline fun getAllIDs(table: String) = read(emptyList(), "getAllIDs") { it.getAllIDs(table) }
+    suspend fun getAllIDsSusp(table: String) = readSusp(emptyList(), "getAllIDsSusp") { it.getAllIDs(table) }
     
     
-    inline fun tableExists(tableName: String) = read(false, "tableExists") { it.tableExists(tableName) }
-    suspend fun tableExistsSusp(tableName: String) = readSusp(false, "tableExistsSusp") { it.tableExists(tableName) }
+    inline fun tableExists(table: String) = read(false, "tableExists") { it.tableExists(table) }
+    suspend fun tableExistsSusp(table: String) = readSusp(false, "tableExistsSusp") { it.tableExists(table) }
     
     
-    inline fun isTableEmpty(tableName: String) = read(true, "isTableEmpty") { it.isTableEmpty(tableName) }
-    suspend fun isTableEmptySusp(tableName: String) = readSusp(true, "isTableEmptySusp") { it.isTableEmpty(tableName) }
+    inline fun isTableEmpty(table: String) = read(true, "isTableEmpty") { it.isTableEmpty(table) }
+    suspend fun isTableEmptySusp(table: String) = readSusp(true, "isTableEmptySusp") { it.isTableEmpty(table) }
     
     
-    inline fun getLastPriority(tableName: String) = read(0, "getLastPriority") { it.getLastPriority(tableName) }
-    suspend fun getLastPrioritySusp(tableName: String) = readSusp(0, "getLastPrioritySusp") { it.getLastPriority(tableName) }
+    inline fun getLastPriority(table: String) = read(0, "getLastPriority") { it.getLastPriority(table) }
+    suspend fun getLastPrioritySusp(table: String) = readSusp(0, "getLastPrioritySusp") { it.getLastPriority(table) }
     
     
-    inline fun <T> getLastPriorityBy(                                          tableName: String,
+    inline fun <T> getLastPriorityBy(                                              table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
     ) = read(0, "getLastPriorityBy") {
-        it.getLastPriorityBy(tableName, whereColumn, equals)
+        it.getLastPriorityBy(table, whereColumn, equals)
     }
     
-    suspend fun <T> getLastPriorityBySusp(                                     tableName: String,
+    suspend fun <T> getLastPriorityBySusp(                                         table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
     ) = readSusp(0, "getLastPriorityBySusp") {
-        it.getLastPriorityBy(tableName, whereColumn, equals)
+        it.getLastPriorityBy(table, whereColumn, equals)
     }
     
     
     
     
     
-    inline fun <T> getLargestInt(                                        tableName: String,
+    inline fun <T> getLargestInt(                                            table: String,
                                                                       targetColumn: String,
                                                                        whereColumn: String? = null,
                                                                             equals: T? = null,
     ) = read(0, "getLargestInt") {
-        it.getLargestInt(tableName, targetColumn, whereColumn, equals)
+        it.getLargestInt(table, targetColumn, whereColumn, equals)
     }
     
-    suspend fun <T> getLargestIntSusp(                                   tableName: String,
+    suspend fun <T> getLargestIntSusp(                                       table: String,
                                                                       targetColumn: String,
                                                                        whereColumn: String? = null,
                                                                             equals: T? = null,
     ) = readSusp(0, "getLargestIntSusp") {
-        it.getLargestInt(tableName, targetColumn, whereColumn, equals)
+        it.getLargestInt(table, targetColumn, whereColumn, equals)
     }
     
     

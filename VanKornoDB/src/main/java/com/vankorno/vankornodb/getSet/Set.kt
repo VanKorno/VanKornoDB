@@ -8,46 +8,46 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.WhereBuilder
 
 
-fun SQLiteDatabase.setById(value: Any, id: Int, tableName: String, column: String) = set(value, tableName, column, ID, id)
+fun SQLiteDatabase.setById(value: Any, id: Int, table: String, column: String) = set(value, table, column, ID, id)
 
 
 fun <T> SQLiteDatabase.set(                                                        value: Any,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
                                                                                    where: String,
                                                                                   equals: T,
 ) {
     val cv = ContentValues()
     cv.putSmart(column, value)
-    update(tableName, cv, where+"=?", arrayOf(equals.toString()))
+    update(table, cv, where+"=?", arrayOf(equals.toString()))
 }
 
 
 fun SQLiteDatabase.set(                                                value: Any,
-                                                                   tableName: String,
+                                                                       table: String,
                                                                       column: String,
                                                                        where: WhereBuilder.()->Unit,
 ) {
     val cv = ContentValues()
     cv.putSmart(column, value)
     val builder = WhereBuilder().apply(where)
-    update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+    update(table, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
 }
 
 
 
 // ==============================  M U L T I - S E T T E R S  ============================== \\
 
-fun SQLiteDatabase.setRowVals(                                     tableName: String,
+fun SQLiteDatabase.setRowVals(                                         table: String,
                                                                           cv: ContentValues,
                                                                        where: WhereBuilder.()->Unit,
 ) {
     val builder = WhereBuilder().apply(where)
-    update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+    update(table, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
 }
 
 
-fun SQLiteDatabase.setRowVals(                                     tableName: String,
+fun SQLiteDatabase.setRowVals(                                         table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                vararg values: Pair<String, Any?>,
 ) {
@@ -59,20 +59,20 @@ fun SQLiteDatabase.setRowVals(                                     tableName: St
         }
     }
     val builder = WhereBuilder().apply(where)
-    update(tableName, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+    update(table, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
 }
 
 
 
 
 fun SQLiteDatabase.setRowValsById(                                               id: Int,
-                                                                          tableName: String,
+                                                                              table: String,
                                                                                  cv: ContentValues,
-) = update(tableName, cv, ID+"=?", arrayOf(id.toString()))
+) = update(table, cv, ID+"=?", arrayOf(id.toString()))
 
 
 fun SQLiteDatabase.setRowValsById(                                           id: Int,
-                                                                      tableName: String,
+                                                                          table: String,
                                                                   vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
@@ -82,26 +82,26 @@ fun SQLiteDatabase.setRowValsById(                                           id:
             putSmart(col, value)
         }
     }
-    update(tableName, cv, ID + "=?", arrayOf(id.toString()))
+    update(table, cv, ID + "=?", arrayOf(id.toString()))
 }
 
 
 fun SQLiteDatabase.setInAllRows(                                                   value: Any,
-                                                                               tableName: String,
+                                                                                   table: String,
                                                                                   column: String,
 ) {
     val cv = ContentValues()
     cv.putSmart(column, value)
-    update(tableName, cv, null, null)
+    update(table, cv, null, null)
 }
 
 
-fun SQLiteDatabase.setRowValsInAllRows(                                   tableName: String,
+fun SQLiteDatabase.setRowValsInAllRows(                                       table: String,
                                                                                  cv: ContentValues,
-) = update(tableName, cv, null, null)
+) = update(table, cv, null, null)
 
 
-fun SQLiteDatabase.setRowValsInAllRows(                               tableName: String,
+fun SQLiteDatabase.setRowValsInAllRows(                                   table: String,
                                                                   vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
@@ -111,7 +111,7 @@ fun SQLiteDatabase.setRowValsInAllRows(                               tableName:
             putSmart(col, value)
         }
     }
-    update(tableName, cv, null, null)
+    update(table, cv, null, null)
 }
 
 

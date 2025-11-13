@@ -12,7 +12,7 @@ import com.vankorno.vankornodb.getBool
 
 // =======================   S I M P L I F I E D   C O N D I T I O N S   ======================= \\
 
-inline fun <T, R> SQLiteDatabase.getValue(                                  tableName: String,
+inline fun <T, R> SQLiteDatabase.getValue(                                      table: String,
                                                                                column: String,
                                                                           whereClause: String,
                                                                              whereArg: T,
@@ -20,56 +20,56 @@ inline fun <T, R> SQLiteDatabase.getValue(                                  tabl
                                                                              typeName: String,
                                                            crossinline getCursorValue: (Cursor)->R
 ): R = rawQuery(
-    "SELECT $column FROM $tableName WHERE $whereClause=? LIMIT 1",
+    "SELECT $column FROM $table WHERE $whereClause=? LIMIT 1",
     arrayOf(whereArg.toString())
 ).use { cursor ->
     if (cursor.moveToFirst()) getCursorValue(cursor)
     else {
         // region LOG
-        Log.e(DbTAG, "$typeName() Unable to get value from $tableName (column: $column). Returning default. Condition: $whereClause = $whereArg")
+        Log.e(DbTAG, "$typeName() Unable to get value from $table (column: $column). Returning default. Condition: $whereClause = $whereArg")
         // endregion
         default
     }
 }
 
 
-fun <T> SQLiteDatabase.getInt(tableName: String, column: String, whereClause: String, whereArg: T) =
-    getValue(tableName, column, whereClause, whereArg, -1, "getInt") { it.getInt(0) }
+fun <T> SQLiteDatabase.getInt(table: String, column: String, whereClause: String, whereArg: T) =
+    getValue(table, column, whereClause, whereArg, -1, "getInt") { it.getInt(0) }
 
-fun <T> SQLiteDatabase.getStr(tableName: String, column: String, whereClause: String, whereArg: T): String =
-    getValue(tableName, column, whereClause, whereArg, "", "getStr") { it.getString(0) }
+fun <T> SQLiteDatabase.getStr(table: String, column: String, whereClause: String, whereArg: T): String =
+    getValue(table, column, whereClause, whereArg, "", "getStr") { it.getString(0) }
 
-fun <T> SQLiteDatabase.getBool(tableName: String, column: String, whereClause: String, whereArg: T) =
-    getValue(tableName, column, whereClause, whereArg, false, "getBool") { it.getBool(0) }
+fun <T> SQLiteDatabase.getBool(table: String, column: String, whereClause: String, whereArg: T) =
+    getValue(table, column, whereClause, whereArg, false, "getBool") { it.getBool(0) }
 
-fun <T> SQLiteDatabase.getLong(tableName: String, column: String, whereClause: String, whereArg: T) =
-    getValue(tableName, column, whereClause, whereArg, -1L, "getLong") { it.getLong(0) }
+fun <T> SQLiteDatabase.getLong(table: String, column: String, whereClause: String, whereArg: T) =
+    getValue(table, column, whereClause, whereArg, -1L, "getLong") { it.getLong(0) }
 
-fun <T> SQLiteDatabase.getFloat(tableName: String, column: String, whereClause: String, whereArg: T) =
-    getValue(tableName, column, whereClause, whereArg, -1F, "getFloat") { it.getFloat(0) }
+fun <T> SQLiteDatabase.getFloat(table: String, column: String, whereClause: String, whereArg: T) =
+    getValue(table, column, whereClause, whereArg, -1F, "getFloat") { it.getFloat(0) }
 
-fun <T> SQLiteDatabase.getBlob(tableName: String, column: String, whereClause: String, whereArg: T): ByteArray =
-    getValue(tableName, column, whereClause, whereArg, ByteArray(0), "getBlob") { it.getBlob(0) }
+fun <T> SQLiteDatabase.getBlob(table: String, column: String, whereClause: String, whereArg: T): ByteArray =
+    getValue(table, column, whereClause, whereArg, ByteArray(0), "getBlob") { it.getBlob(0) }
 
 
 // By ID
-fun SQLiteDatabase.getIntById(id: Int, tableName: String, column: String) =
-    getValue(tableName, column, ID, id, -1, "getIntById") { it.getInt(0) }
+fun SQLiteDatabase.getIntById(id: Int, table: String, column: String) =
+    getValue(table, column, ID, id, -1, "getIntById") { it.getInt(0) }
 
-fun SQLiteDatabase.getStrById(id: Int, tableName: String, column: String): String =
-    getValue(tableName, column, ID, id, "", "getStrById") { it.getString(0) }
+fun SQLiteDatabase.getStrById(id: Int, table: String, column: String): String =
+    getValue(table, column, ID, id, "", "getStrById") { it.getString(0) }
 
-fun SQLiteDatabase.getBoolById(id: Int, tableName: String, column: String) =
-    getValue(tableName, column, ID, id, false, "getBoolById") { it.getBool(0) }
+fun SQLiteDatabase.getBoolById(id: Int, table: String, column: String) =
+    getValue(table, column, ID, id, false, "getBoolById") { it.getBool(0) }
 
-fun SQLiteDatabase.getLongById(id: Int, tableName: String, column: String) =
-    getValue(tableName, column, ID, id, -1L, "getLongById") { it.getLong(0) }
+fun SQLiteDatabase.getLongById(id: Int, table: String, column: String) =
+    getValue(table, column, ID, id, -1L, "getLongById") { it.getLong(0) }
 
-fun SQLiteDatabase.getFloatById(id: Int, tableName: String, column: String) =
-    getValue(tableName, column, ID, id, -1F, "getFloatById") { it.getFloat(0) }
+fun SQLiteDatabase.getFloatById(id: Int, table: String, column: String) =
+    getValue(table, column, ID, id, -1F, "getFloatById") { it.getFloat(0) }
 
-fun SQLiteDatabase.getBlobById(id: Int, tableName: String, column: String): ByteArray =
-    getValue(tableName, column, ID, id, ByteArray(0), "getBlobById") { it.getBlob(0) }
+fun SQLiteDatabase.getBlobById(id: Int, table: String, column: String): ByteArray =
+    getValue(table, column, ID, id, ByteArray(0), "getBlobById") { it.getBlob(0) }
 
 
 
@@ -78,7 +78,7 @@ fun SQLiteDatabase.getBlobById(id: Int, tableName: String, column: String): Byte
 
 // =============================   D S L   C O N D I T I O N S   ============================= \\
 
-inline fun <R> SQLiteDatabase.getValue(                            tableName: String,
+inline fun <R> SQLiteDatabase.getValue(                                table: String,
                                                                       column: String,
                                                                      default: R,
                                                                     typeName: String,
@@ -90,13 +90,13 @@ inline fun <R> SQLiteDatabase.getValue(                            tableName: St
     val whereArgs = builder.args.toTypedArray()
 
     return rawQuery(
-        "SELECT $column FROM $tableName WHERE $whereClause LIMIT 1",
+        "SELECT $column FROM $table WHERE $whereClause LIMIT 1",
         whereArgs
     ).use { cursor ->
         if (cursor.moveToFirst()) getCursorValue(cursor)
         else {
             // region LOG
-            Log.e(DbTAG, "$typeName() Unable to get value from $tableName (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
+            Log.e(DbTAG, "$typeName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
             // endregion
             default
         }
@@ -104,32 +104,23 @@ inline fun <R> SQLiteDatabase.getValue(                            tableName: St
 }
 
 
-fun SQLiteDatabase.getInt(tableName: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(tableName, column, -1, "getInt", where) { it.getInt(0) }
+fun SQLiteDatabase.getInt(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(table, column, -1, "getInt", where) { it.getInt(0) }
 
-fun SQLiteDatabase.getStr(tableName: String, column: String, where: WhereBuilder.()->Unit): String =
-    getValue(tableName, column, "", "getStr", where) { it.getString(0) }
+fun SQLiteDatabase.getStr(table: String, column: String, where: WhereBuilder.()->Unit): String =
+    getValue(table, column, "", "getStr", where) { it.getString(0) }
 
-fun SQLiteDatabase.getBool(tableName: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(tableName, column, false, "getBool", where) { it.getBool(0) }
+fun SQLiteDatabase.getBool(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(table, column, false, "getBool", where) { it.getBool(0) }
 
-fun SQLiteDatabase.getLong(tableName: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(tableName, column, -1L, "getLong", where) { it.getLong(0) }
+fun SQLiteDatabase.getLong(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(table, column, -1L, "getLong", where) { it.getLong(0) }
 
-fun SQLiteDatabase.getFloat(tableName: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(tableName, column, -1F, "getFloat", where) { it.getFloat(0) }
+fun SQLiteDatabase.getFloat(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValue(table, column, -1F, "getFloat", where) { it.getFloat(0) }
 
-fun SQLiteDatabase.getBlob(tableName: String, column: String, where: WhereBuilder.()->Unit): ByteArray =
-    getValue(tableName, column, ByteArray(0), "getBlob", where) { it.getBlob(0) }
-
-
-
-
-
-
-
-// =============================   M U L T I P L E   V A L U E S   ============================= \\
-
+fun SQLiteDatabase.getBlob(table: String, column: String, where: WhereBuilder.()->Unit): ByteArray =
+    getValue(table, column, ByteArray(0), "getBlob", where) { it.getBlob(0) }
 
 
 

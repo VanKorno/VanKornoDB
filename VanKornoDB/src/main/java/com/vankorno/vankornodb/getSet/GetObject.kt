@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 /** Gets one db table row as an object of type [T] by its ID. Throws if no row found.*/
 
 inline fun <reified T : Any> SQLiteDatabase.getObjById(                               id: Int,
-                                                                                   table: String
+                                                                                   table: String,
 ): T = getObj(table, where = { ID equal id })
 
 
@@ -19,7 +19,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObjById(                         
 /** Gets one db table row as an object of type [T] by its ID, or null if not found.*/
 
 inline fun <reified T : Any> SQLiteDatabase.getObjOrNullById(                         id: Int,
-                                                                                   table: String
+                                                                                   table: String,
 ): T? = getObjOrNull(table, where = { ID equal id })
 
 
@@ -36,7 +36,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObj(               table: String,
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                 offset: Int? = null
+                                                                 offset: Int? = null,
 ): T = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
@@ -56,7 +56,7 @@ fun <T : Any> SQLiteDatabase.getObj(                              clazz: KClass<
                                                                 groupBy: String = "",
                                                                  having: String = "",
                                                                 orderBy: String = "",
-                                                                 offset: Int? = null
+                                                                 offset: Int? = null,
 ): T = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
@@ -85,7 +85,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObjOrNull(
                                                                  having: String = "",
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
+                                                              customEnd: String = "",
 ): T? = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset, customEnd
 ).use { cursor ->
@@ -107,7 +107,7 @@ fun <T : Any> SQLiteDatabase.getObjOrNull(                        clazz: KClass<
                                                                  having: String = "",
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
+                                                              customEnd: String = "",
 ): T? = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset, customEnd
 ).use { cursor ->

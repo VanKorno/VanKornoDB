@@ -36,36 +36,36 @@ import kotlin.reflect.full.primaryConstructor
  * Inserts the given object into the specified database table.
  * Converts the entity into ContentValues and performs the SQLite insert operation.
  *
- * @param tableName The name of the table to insert into.
+ * @param table The name of the table to insert into.
  * @param obj The entity object to insert.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-fun <T : Any> SQLiteDatabase.insertObj(                                        tableName: String,
-                                                                                     obj: T
+fun <T : Any> SQLiteDatabase.insertObj(                                            table: String,
+                                                                                     obj: T,
 ): Long {
     val modifiedEntity = if (obj.hasIdField() && obj.getId() < 1) {
-        obj.withId(getLastId(tableName) + 1)
+        obj.withId(getLastId(table) + 1)
     } else obj
 
     val cv = toContentValues(modifiedEntity)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
-    return insert(tableName, null, cv)
+    return insert(table, null, cv)
 }
 
 /**
  * Inserts multiple objects into the specified database table.
  * Converts each entity into ContentValues and performs the SQLite insert operation for each.
  *
- * @param tableName The name of the table to insert into.
+ * @param table The name of the table to insert into.
  * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
  */
-fun <T : Any> SQLiteDatabase.insertObjects(                                    tableName: String,
-                                                                                 objects: List<T>
+fun <T : Any> SQLiteDatabase.insertObjects(                                        table: String,
+                                                                                 objects: List<T>,
 ): Int {
     var count = 0
     for (obj in objects) {
-        val rowId = insertObj(tableName, obj)
+        val rowId = insertObj(table, obj)
         if (rowId != -1L) count++
     }
     return count
@@ -74,8 +74,8 @@ fun <T : Any> SQLiteDatabase.insertObjects(                                    t
 
 // TODO Check if needed
 
-inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(          tableName: String,
-                                                                                 objects: List<T>
+inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(              table: String,
+                                                                                 objects: List<T>,
 ): Int {
     if (objects.isEmpty()) return 0
 
@@ -84,7 +84,7 @@ inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(          t
     val idProp = kClass.memberProperties.firstOrNull { it.name == ID }
     val ctor = kClass.primaryConstructor!!
 
-    var nextId = getLastId(tableName) + 1
+    var nextId = getLastId(table) + 1
     var count = 0
 
     for (obj in objects) {
@@ -98,7 +98,7 @@ inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(          t
         } else obj
 
         val cv = toContentValues(modified)
-        if (cv.size() != 0 && insert(tableName, null, cv) != -1L) {
+        if (cv.size() != 0 && insert(table, null, cv) != -1L) {
             count++
         }
     }
@@ -120,33 +120,33 @@ inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(          t
  * Updates the row with the specified [id] in the given table with the values from [obj].
  * Converts the entity into ContentValues and performs the SQLite update operation.
  *
- * @param tableName The name of the table to update.
+ * @param table The name of the table to update.
  * @param id The primary key ID of the row to update.
  * @param obj The entity object with updated data.
  * @return The number of rows affected.
  */
 fun <T : Any> SQLiteDatabase.updateObjById(                                           id: Int,
-                                                                               tableName: String,
-                                                                                     obj: T
+                                                                                   table: String,
+                                                                                     obj: T,
 ): Int {
     val cv = toContentValues(obj)
-    return update(tableName, cv, ID+"=?", arrayOf(id.toString()))
+    return update(table, cv, ID+"=?", arrayOf(id.toString()))
 }
 
 
-inline fun <T : Any> SQLiteDatabase.updateObj(                      tableName: String,
-                                                                          obj: T,
-                                                                        where: WhereBuilder.()->Unit
+inline fun <T : Any> SQLiteDatabase.updateObj(                         table: String,
+                                                                         obj: T,
+                                                                       where: WhereBuilder.()->Unit,
 ): Int {
     val cv = toContentValues(obj)
     val whereBuilder = WhereBuilder().apply(where)
     val whereClause = whereBuilder.clauses.joinToString(" ")
     val whereArgs = whereBuilder.args.toTypedArray()
     
-    val affected = update(tableName, cv, whereClause, whereArgs)
+    val affected = update(table, cv, whereClause, whereArgs)
     if (affected > 1) {
         // region LOG
-        Log.w(DbTAG, "updateRow: $affected rows updated in '$tableName'. You may want to set more specific conditions if you want to update a single row.")
+        Log.w(DbTAG, "updateRow: $affected rows updated in '$table'. You may want to set more specific conditions if you want to update a single row.")
         // endregion
     }
     return affected
@@ -189,7 +189,7 @@ internal fun <T : Any> T.withId(                                                
  * @throws IllegalArgumentException if list element types are unsupported.
  */
 fun <T : Any> toContentValues(                                   obj: T,
-                                                               clazz: KClass<out T> = obj::class
+                                                               clazz: KClass<out T> = obj::class,
 ): ContentValues {
     val cv = ContentValues()
     

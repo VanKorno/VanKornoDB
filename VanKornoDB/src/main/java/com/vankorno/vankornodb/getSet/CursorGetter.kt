@@ -17,7 +17,7 @@ fun SQLiteDatabase.getCursor(                                     table: String,
                                                                 orderBy: String = "",
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
+                                                              customEnd: String = "",
 ): Cursor {
     val (query, args) = getQuery(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     return rawQuery(query, args)
@@ -33,7 +33,7 @@ fun SQLiteDatabase.getCursor(                                     table: String,
                                                                 orderBy: String = "",
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
-                                                              customEnd: String = ""
+                                                              customEnd: String = "",
 ): Cursor {
     val (query, args) = getQuery(table, arrayOf(column), joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     return rawQuery(query, args)

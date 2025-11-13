@@ -31,7 +31,7 @@ import kotlin.reflect.full.starProjectedType
  * according to the provided versioned classes, rename history, and transformation lambdas. The table is dropped,
  * recreated using the structure of the final version class, and repopulated with the migrated data.
  *
- * @param tableName The name of the table to migrate.
+ * @param table The name of the table to migrate.
  * @param oldVersion The version of the entity currently stored in the table.
  * @param newVersion The target version of the entity to migrate to.
  * @param migrationBundle A bundle of versioned classes, rename history and milestone lambdas.
@@ -39,13 +39,13 @@ import kotlin.reflect.full.starProjectedType
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
  */
-fun SQLiteDatabase.migrateMultiStep(                              tableName: String,
+fun SQLiteDatabase.migrateMultiStep(                                  table: String,
                                                                  oldVersion: Int,
                                                                  newVersion: Int,
                                                             migrationBundle: MigrationBundle,
-                                                              onNewDbFilled: (List<Any>)->Unit = {}
+                                                              onNewDbFilled: (List<Any>)->Unit = {},
 ) {
-    this.migrateMultiStep(tableName, oldVersion, newVersion, migrationBundle.versionedClasses,
+    this.migrateMultiStep(table, oldVersion, newVersion, migrationBundle.versionedClasses,
         migrationBundle.renameHistory, migrationBundle.milestones, onNewDbFilled
     )
 }
@@ -57,7 +57,7 @@ fun SQLiteDatabase.migrateMultiStep(                              tableName: Str
  * according to the provided versioned classes, rename history, and transformation lambdas. The table is dropped,
  * recreated using the structure of the final version class, and repopulated with the migrated data.
  *
- * @param tableName The name of the table to migrate.
+ * @param table The name of the table to migrate.
  * @param oldVersion The version of the entity currently stored in the table.
  * @param newVersion The target version of the entity to migrate to.
  * @param versionedClasses A map of version numbers to their corresponding entity KClass definitions.
@@ -67,17 +67,17 @@ fun SQLiteDatabase.migrateMultiStep(                              tableName: Str
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
  */
-fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
-                                                     oldVersion: Int,
-                                                     newVersion: Int,
-                                               versionedClasses: Map<Int, KClass<*>>,
-                                                  renameHistory: Map<String, List<RenameRecord>>,
-                                                     milestones: List<Pair<Int, MilestoneLambdas>>,
-                                                  onNewDbFilled: (List<Any>)->Unit = {}
+fun SQLiteDatabase.migrateMultiStep(                       table: String,
+                                                      oldVersion: Int,
+                                                      newVersion: Int,
+                                                versionedClasses: Map<Int, KClass<*>>,
+                                                   renameHistory: Map<String, List<RenameRecord>>,
+                                                      milestones: List<Pair<Int, MilestoneLambdas>>,
+                                                   onNewDbFilled: (List<Any>)->Unit = {},
 ) {
     if (newVersion <= oldVersion) return //\/\/\/\/\/\
     // region LOG
-        Log.d(DbTAG, "Starting migrateMultiStep()... Table = $tableName, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${milestones.size}")
+        Log.d(DbTAG, "Starting migrateMultiStep()... Table = $table, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${milestones.size}")
     // endregion
     val relevantMilestones = milestones
         .filter { (version, _) -> version > oldVersion && version <= newVersion }
@@ -97,21 +97,21 @@ fun SQLiteDatabase.migrateMultiStep(                  tableName: String,
         ?: error("Missing entity class for version $newVersion")
     
     val utils = MigrationUtils()
-    val oldUnits = utils.readEntitiesFromVersion(this, tableName, oldVersion, versionedClasses)
+    val oldUnits = utils.readEntitiesFromVersion(this, table, oldVersion, versionedClasses)
     
     val migratedEntities = oldUnits.map { original ->
         utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
     }
-    this.execSQL(dbDrop + tableName)
+    this.execSQL(dbDrop + table)
     // region LOG
-        Log.d(DbTAG, "migrateMultiStep() $tableName table is dropped. Recreating...")
+        Log.d(DbTAG, "migrateMultiStep() $table table is dropped. Recreating...")
     // endregion
-    this.createTable(tableName, finalClass)
+    this.createTable(table, finalClass)
     // region LOG
-        Log.d(DbTAG, "migrateMultiStep() Fresh $tableName is supposed to be recreated at this point. Starting to insert rows...")
+        Log.d(DbTAG, "migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
     for (entity in migratedEntities) {
-        val result = this.insertObj(tableName, entity)
+        val result = this.insertObj(table, entity)
         // region LOG
             if (result == -1L)
                 Log.w(DbTAG, "migrateMultiStep() FAILED to insert row: $entity")
@@ -139,10 +139,10 @@ open class MigrationUtils {
      * @param renameSnapshot Maps new properties to their old names.
      * @return A new instance of [newClass] with mapped or defaulted values.
      */
-    fun convertEntity(                                   oldObject: Any,
-                                                          newClass: KClass<*>,
-                                                    renameSnapshot: Map<String, String> = emptyMap(),
-                                                    overrideColVal: (TransformCol.()->Unit)? = null
+    fun convertEntity(                                  oldObject: Any,
+                                                         newClass: KClass<*>,
+                                                   renameSnapshot: Map<String, String> = emptyMap(),
+                                                   overrideColVal: (TransformCol.()->Unit)? = null,
     ): Any {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
         
@@ -190,18 +190,18 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    fun readEntitiesFromVersion(                                             db: SQLiteDatabase,
-                                                                      tableName: String,
-                                                                        version: Int,
-                                                               versionedClasses: Map<Int, KClass<*>>
+    fun readEntitiesFromVersion(                                            db: SQLiteDatabase,
+                                                                         table: String,
+                                                                       version: Int,
+                                                              versionedClasses: Map<Int, KClass<*>>,
     ): List<Any> {
         // region LOG
-            Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $tableName, version = $version")
+            Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
         // endregion
         val fromClass = versionedClasses[version]
             ?: error("Missing entity class for version $version")
         
-        val elements = db.getObjects(fromClass, tableName)
+        val elements = db.getObjects(fromClass, table)
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -218,7 +218,7 @@ open class MigrationUtils {
                                                           steps: List<Int>,
                                                   renameHistory: Map<String, List<RenameRecord>>,
                                                versionedClasses: Map<Int, KClass<*>>,
-                                                        lambdas: Map<Int, MilestoneLambdas>
+                                                        lambdas: Map<Int, MilestoneLambdas>,
     ): Any {
         var currentObj = original
         var currentVer = oldVersion
@@ -246,9 +246,9 @@ open class MigrationUtils {
      * @param renameHistory A map of current field names to their rename history.
      * @return A map where each key is the current name and each value is the corresponding old name.
      */
-    fun getRenameSnapshot(                                  fromVer: Int,
-                                                              toVer: Int,
-                                                      renameHistory: Map<String, List<RenameRecord>>
+    fun getRenameSnapshot(                                 fromVer: Int,
+                                                             toVer: Int,
+                                                     renameHistory: Map<String, List<RenameRecord>>,
     ): Map<String, String> {
         val snapshot = mutableMapOf<String, String>()
         
@@ -271,7 +271,7 @@ open class MigrationUtils {
      * @return The name valid at the given version, or null if not found.
      */
     private fun getNameAtVersion(                                    colHistory: List<RenameRecord>,
-                                                                        version: Int
+                                                                        version: Int,
     ): String? {
         var current: String? = colHistory.lastOrNull()?.to ?: return null
         
@@ -289,7 +289,7 @@ open class MigrationUtils {
     )
     
     fun isSameListType(                                                                a: KType,
-                                                                                       b: KType
+                                                                                       b: KType,
     ): Boolean {
         if (!a.isSubtypeOf(List::class.starProjectedType) || !b.isSubtypeOf(List::class.starProjectedType)) return false
         val aArg = a.arguments.firstOrNull()?.type
@@ -298,7 +298,7 @@ open class MigrationUtils {
     }
     
     fun tryAutoConvertValue(                                                       value: Any?,
-                                                                              targetType: KType
+                                                                              targetType: KType,
     ): Any? {
         if (value == null) return null
     

@@ -21,8 +21,8 @@ import com.vankorno.vankornodb.getSet.set
  * Call [migrateSingleTableEntities] to automatically migrate all entities limited to a single table
  * (those with a non-null [BaseEntityMeta.limitedToTable]).
  */
-open class DbMigrator(                                            val db: SQLiteDatabase,
-                                               private val allEntityMeta: Collection<BaseEntityMeta>
+open class DbMigrator(                                           val db: SQLiteDatabase,
+                                              private val allEntityMeta: Collection<BaseEntityMeta>,
 ) {
     /**
      * Automatically migrate all entities limited to a single table
@@ -43,7 +43,7 @@ open class DbMigrator(                                            val db: SQLite
      * Migrate one entity limited to a single table.
      * (with a non-null [BaseEntityMeta.limitedToTable]).
      */
-    fun migrateSingleTableEntity(                                            entity: BaseEntityMeta
+    fun migrateSingleTableEntity(                                            entity: BaseEntityMeta,
     ) {
         val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
         val newVer = entity.currVersion
@@ -52,7 +52,7 @@ open class DbMigrator(                                            val db: SQLite
             Log.d(DbTAG, "migrateSingleTableEntity() table = $tableName, oldVer = $oldVer, newVer = $newVer")
         // endregion
         db.migrateMultiStep(
-            tableName = tableName,
+            table = tableName,
             oldVersion = oldVer,
             newVersion = newVer,
             migrationBundle = entity.migrationBundle.value
@@ -65,9 +65,9 @@ open class DbMigrator(                                            val db: SQLite
     /**
      * Migrate multiple tables that use the same entity.
      */
-    fun migrateTables(                                               tableNames: List<String>,
-                                                                     entityMeta: BaseEntityMeta,
-                                                               doAfterEachTable: (String)->Unit = {}
+    fun migrateTables(                                                  tables: List<String>,
+                                                                    entityMeta: BaseEntityMeta,
+                                                              doAfterEachTable: (String)->Unit = {},
     ) {
         val dbRowName = entityMeta.dbRowName
         // region LOG
@@ -75,7 +75,7 @@ open class DbMigrator(                                            val db: SQLite
         // endregion
         val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, dbRowName)
         
-        for (tableName in tableNames) {
+        for (tableName in tables) {
             migrateTable(tableName, oldVer, entityMeta, doAfterEachTable)
         }
         val newVer = entityMeta.currVersion
@@ -86,16 +86,16 @@ open class DbMigrator(                                            val db: SQLite
     }
     
     
-    fun migrateTable(                                                 tableName: String,
-                                                                         oldVer: Int,
-                                                                     entityMeta: BaseEntityMeta,
-                                                               doAfterEachTable: (String)->Unit = {}
+    fun migrateTable(                                                    table: String,
+                                                                        oldVer: Int,
+                                                                    entityMeta: BaseEntityMeta,
+                                                              doAfterEachTable: (String)->Unit = {},
     ) {
         val newVer = entityMeta.currVersion
         
-        db.migrateMultiStep(tableName, oldVer, newVer, entityMeta.migrationBundle.value)
+        db.migrateMultiStep(table, oldVer, newVer, entityMeta.migrationBundle.value)
         
-        doAfterEachTable(tableName)
+        doAfterEachTable(table)
     }
     
     

@@ -14,7 +14,7 @@ fun getQuery(                                               table: String,
                                                           orderBy: String = "",
                                                             limit: Int? = null,
                                                            offset: Int? = null,
-                                                        customEnd: String = "" /* To pass your own string. */
+                                                        customEnd: String = "", /* To pass your own string. */
 ): Pair<String, Array<String>> {
     val conditions = WhereBuilder().apply(where)
     val joinBuilder = JoinBuilder().apply(joins)
@@ -66,14 +66,14 @@ class WhereBuilder {
     
     fun condition(                                                                column: String,
                                                                                 operator: String,
-                                                                                   value: String
+                                                                                   value: String,
     ) {
         clauses.add(column + operator + "?")
         args.add(value)
     }
     fun conditionRaw(                                                             column: String,
                                                                                 operator: String,
-                                                                             otherColumn: String
+                                                                             otherColumn: String,
     ) = clauses.add(column + operator + otherColumn)
     
     
@@ -145,7 +145,7 @@ class WhereBuilder {
                                                           orderBy: String = "",
                                                             limit: Int? = null,
                                                            offset: Int? = null,
-                                                        customEnd: String = ""
+                                                        customEnd: String = "",
     ): String {
         val innerBuilder = getQuery(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
         

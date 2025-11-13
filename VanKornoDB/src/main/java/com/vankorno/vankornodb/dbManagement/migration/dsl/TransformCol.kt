@@ -4,7 +4,7 @@ class TransformCol {
     private val overrides = mutableMapOf<String, FieldOverride>()
     
     fun modify(                                                   fieldName: String,
-                                                                      block: FieldOverride.()->Unit
+                                                                      block: FieldOverride.()->Unit,
     ) {
         val override = FieldOverride()
         block.invoke(override)

@@ -21,7 +21,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObjects(           table: String,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = {it}
+                                                      noinline mapAfter: (T)->T = {it},
 ): List<T> = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
@@ -52,7 +52,7 @@ fun <T : Any> SQLiteDatabase.getObjects(                          clazz: KClass<
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T)->T = {it}
+                                                               mapAfter: (T)->T = {it},
 ): List<T> = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
@@ -80,7 +80,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObjMap(            table: String,
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = {it}
+                                                      noinline mapAfter: (T)->T = {it},
 ): Map<Int, T> = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
@@ -111,7 +111,7 @@ fun <T : Any> SQLiteDatabase.getObjMap(                           clazz: KClass<
                                                                   limit: Int? = null,
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
-                                                               mapAfter: (T)->T = {it}
+                                                               mapAfter: (T)->T = {it},
 ): Map<Int, T> = getCursor(
     table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
