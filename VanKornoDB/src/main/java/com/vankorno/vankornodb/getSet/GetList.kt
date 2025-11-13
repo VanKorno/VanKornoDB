@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.getBool
 
 /**
- * Retrieves a list of values from a single column, cast to the specified type [V]. 
+ * Retrieves a list of values from a single column, cast to the specified type [V].
  * Supports filtering, sorting, grouping, and pagination.
  */
 inline fun <reified V> SQLiteDatabase.getList(                    table: String,
