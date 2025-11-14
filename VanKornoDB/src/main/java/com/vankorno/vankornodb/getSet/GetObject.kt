@@ -38,9 +38,9 @@ inline fun <reified T : Any> SQLiteDatabase.getObj(               table: String,
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
 ): T = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
+    table, "*", joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
-    if (!cursor.moveToFirst()) error("No result for getOne<>()")
+    if (!cursor.moveToFirst()) error("No result for getObj<>()")
     cursor.toEntity(T::class)
 }
 
@@ -58,9 +58,9 @@ fun <T : Any> SQLiteDatabase.getObj(                              clazz: KClass<
                                                                 orderBy: String = "",
                                                                  offset: Int? = null,
 ): T = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset
+    table, "*", joins, where, groupBy, having, orderBy, 1, offset
 ).use { cursor ->
-    if (!cursor.moveToFirst()) error("No result for getOne($clazz)")
+    if (!cursor.moveToFirst()) error("No result for getObj($clazz)")
     cursor.toEntity(clazz)
 }
 
@@ -87,7 +87,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObjOrNull(
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
 ): T? = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset, customEnd
+    table, "*", joins, where, groupBy, having, orderBy, 1, offset, customEnd
 ).use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(T::class)
@@ -109,7 +109,7 @@ fun <T : Any> SQLiteDatabase.getObjOrNull(                        clazz: KClass<
                                                                  offset: Int? = null,
                                                               customEnd: String = "",
 ): T? = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, 1, offset, customEnd
+    table, "*", joins, where, groupBy, having, orderBy, 1, offset, customEnd
 ).use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(clazz)

@@ -1123,4 +1123,51 @@ open class DbHelper(              context: Context,
     
     
     
+    
+    inline fun <reified T> getRandomVal(                          table: String,
+                                                                 column: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T? = read(null, "getRandomVal") { db ->
+        db.getRandomVal<T>(table, column, where)
+    }
+    
+    suspend inline fun <reified T> getRandomValSusp(              table: String,
+                                                                 column: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T? = readSusp(null, "getRandomValSusp") { db ->
+        db.getRandomVal<T>(table, column, where)
+    }
+    
+    
+    fun getRandomId(                                              table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): Int = read(-1, "getRandomId") { db ->
+        db.getRandomId(table, where)
+    }
+    
+    suspend fun getRandomIdSusp(                                  table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): Int = readSusp(-1, "getRandomIdSusp") { db ->
+        db.getRandomId(table, where)
+    }
+    
+    
+    inline fun <reified T : Any> getRandomObj(                    table: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T? = read(null, "getRandomObj") { db ->
+        db.getRandomObj<T>(table, where)
+    }
+    
+    suspend inline fun <reified T : Any> getRandomObjSusp(        table: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T? = readSusp(null, "getRandomObjSusp") { db ->
+        db.getRandomObj<T>(table, where)
+    }
+    
+    
+    
+    
+    
+    
+    
 }

@@ -53,7 +53,7 @@ inline fun <reified T> SQLiteDatabase.getMultiRowVals(            table: String,
     buildList {
         if (cursor.moveToFirst()) {
             do {
-                add(List(columns.size) { idx -> cursor.getTypedValueForMultiRowVals<T>(idx) })
+                add(List(columns.size) { idx -> cursor.getTypedVal<T>(idx) })
             } while (cursor.moveToNext())
         }
     }
@@ -70,7 +70,7 @@ inline fun <reified T> SQLiteDatabase.getMultiRowVals(            table: String,
  * @return The value at the given index cast to type [T], or `null` if the value is SQL NULL.
  * @throws IllegalStateException if the type [T] is not supported.
  */
-inline fun <reified T> Cursor.getTypedValueForMultiRowVals(                          idx: Int
+inline fun <reified T> Cursor.getTypedVal(                                           idx: Int
 ): T? {
     val value: Any? = when (getType(idx)) {
         Cursor.FIELD_TYPE_INTEGER -> getLong(idx)

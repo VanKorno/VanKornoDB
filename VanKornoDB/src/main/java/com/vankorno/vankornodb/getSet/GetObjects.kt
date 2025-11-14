@@ -23,7 +23,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObjects(           table: String,
                                                               customEnd: String = "",
                                                       noinline mapAfter: (T)->T = {it},
 ): List<T> = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -54,7 +54,7 @@ fun <T : Any> SQLiteDatabase.getObjects(                          clazz: KClass<
                                                               customEnd: String = "",
                                                                mapAfter: (T)->T = {it},
 ): List<T> = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -82,7 +82,7 @@ inline fun <reified T : Any> SQLiteDatabase.getObjMap(            table: String,
                                                               customEnd: String = "",
                                                       noinline mapAfter: (T)->T = {it},
 ): Map<Int, T> = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
@@ -113,7 +113,7 @@ fun <T : Any> SQLiteDatabase.getObjMap(                           clazz: KClass<
                                                               customEnd: String = "",
                                                                mapAfter: (T)->T = {it},
 ): Map<Int, T> = getCursor(
-    table, arrayOf("*"), joins, where, groupBy, having, orderBy, limit, offset, customEnd
+    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
 ).use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {

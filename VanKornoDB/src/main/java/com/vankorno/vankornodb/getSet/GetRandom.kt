@@ -1,0 +1,75 @@
+package com.vankorno.vankornodb.getSet
+
+import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.core.DbConstants.ID
+import com.vankorno.vankornodb.core.DbConstants.randomVal
+import com.vankorno.vankornodb.core.WhereBuilder
+
+/**
+ * Retrieves a single random value from the specified column in a table.
+ *
+ * @param T The type of the value to retrieve.
+ * @param table The name of the table to query.
+ * @param column The name of the column to retrieve the value from.
+ * @param where Optional lambda to specify additional WHERE conditions.
+ * @return A random value of type [T] from the column, or null if no rows match.
+ */
+inline fun <reified T> SQLiteDatabase.getRandomVal(               table: String,
+                                                                 column: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+): T? {
+    return getCursor(
+        table,
+        column = column,
+        where = where,
+        orderBy = randomVal,
+        limit = 1
+    ).use { cursor ->
+        if (cursor.moveToFirst())
+            cursor.getTypedVal<T>(0)
+        else
+            null
+    }
+}
+
+
+
+/**
+ * Retrieves a single random ID from the specified table.
+ *
+ * @param table The name of the table to query.
+ * @param where Optional lambda to specify additional WHERE conditions.
+ * @return A random ID from the table, or -1 if no rows match.
+ */
+fun SQLiteDatabase.getRandomId(                                   table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+): Int = getRandomVal<Int>(table, ID, where) ?: -1
+
+
+
+
+/**
+ * Retrieves a single random object (row) from the specified table and maps it to a Kotlin class.
+ *
+ * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
+ * @param table The name of the table to query.
+ * @param where Optional lambda to specify additional WHERE conditions.
+ * @return A random object of type [T] from the table, or null if no rows match.
+ */
+inline fun <reified T : Any> SQLiteDatabase.getRandomObj(         table: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+): T? = getCursor(
+    table, "*", where = where, orderBy = randomVal, limit = 1
+).use { cursor ->
+    if (!cursor.moveToFirst()) return null
+    cursor.toEntity(T::class)
+}
+
+
+
+
+
+
+
+
+
