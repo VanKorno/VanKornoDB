@@ -2,29 +2,25 @@ package com.vankorno.db
 
 import android.app.Application
 import com.vankorno.vankornodb.core.DbConstants.InMemoryDB
+import com.vankorno.vankornohelpers.LibMisc
 
 class MyApp : Application() {
     companion object {
         const val DbName = "DbFile"
-        
         var androidTestRun = false
         
+        /** Your globally-available db-helper */
         lateinit var dbh: LocalDbHelper
     }
     
     override fun onCreate() {
         super.onCreate()
-        androidTestRun = isInstrumentedTestRun()
-        val dbName = if (androidTestRun)  InMemoryDB  else  DbName
         
-        dbh = LocalDbHelper(this, dbName)
+        androidTestRun = LibMisc().isInstrumentedTestRun()
+        val dbName = if (androidTestRun)  InMemoryDB  else  DbName // Or whatever your db filename logic is...
+        
+        dbh = LocalDbHelper(this, dbName) // Create the DB for the whole app to use if you want
     }
     
     
-    fun isInstrumentedTestRun(): Boolean = try {
-        Class.forName("androidx.test.platform.app.InstrumentationRegistry")
-        true
-    } catch (e: ClassNotFoundException) {
-        false
-    }
 }
