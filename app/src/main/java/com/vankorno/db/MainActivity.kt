@@ -15,7 +15,7 @@ class MainActivity : LibMainActivity() {
     override fun beforeStartup() {
         
     }
-    override fun onFirstLaunch() {
+    override fun startupFirstLaunch() {
         dbh.launchApp()
     }
     
