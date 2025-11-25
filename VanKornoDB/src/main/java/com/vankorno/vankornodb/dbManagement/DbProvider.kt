@@ -5,7 +5,7 @@ package com.vankorno.vankornodb.dbManagement
 import android.database.sqlite.SQLiteDatabase
 
 
-object DbManager {
+object DbProvider {
     private var _mainDb: SQLiteDatabase? = null
     
     val mainDb: SQLiteDatabase

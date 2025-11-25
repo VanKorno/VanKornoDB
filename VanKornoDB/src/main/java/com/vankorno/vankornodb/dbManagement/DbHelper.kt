@@ -158,7 +158,7 @@ open class DbHelper(              context: Context,
     ): T {
         return try {
             synchronized(dbLock) {
-                run(DbManager.mainDb)
+                run(DbProvider.mainDb)
             }
         } catch (e: Exception) {
             // region LOG
@@ -178,7 +178,7 @@ open class DbHelper(              context: Context,
     ) {
         try {
             synchronized(dbLock) {
-                DbManager.mainDb.transaction { run(this) }
+                DbProvider.mainDb.transaction { run(this) }
             }
         } catch (e: Exception) {
             // region LOG
@@ -193,7 +193,7 @@ open class DbHelper(              context: Context,
     ): T {
         return try {
             synchronized(dbLock) {
-                DbManager.mainDb.transaction { run(this) }
+                DbProvider.mainDb.transaction { run(this) }
             }
         } catch (e: Exception) {
             // region LOG

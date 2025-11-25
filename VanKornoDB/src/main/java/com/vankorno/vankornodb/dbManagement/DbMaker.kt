@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.vankorno.vankornodb.core.DbConstants.*
-import com.vankorno.vankornodb.dbManagement.DbManager.mainDb
+import com.vankorno.vankornodb.dbManagement.DbProvider.mainDb
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
 import com.vankorno.vankornodb.getSet.deleteRow
@@ -21,7 +21,7 @@ import com.vankorno.vankornodb.getSet.tableExists
 /* 
 * THE LIFECYCLE AT RUNTIME:
 * DbMaker() is instantiated → init block runs:
-* DbManager.init(writableDatabase) opens or creates the DB.
+* DbProvider.init(writableDatabase) opens or creates the DB.
 * handleVersionTable(mainDb) runs immediately afterward.
 * If it’s a fresh database:
 * SQLite calls onCreate().
@@ -33,7 +33,7 @@ import com.vankorno.vankornodb.getSet.tableExists
 */
 
 /**
- * Creates the db file, initializes DbManager, handles the entity version table, onCreate and onUpdate.
+ * Creates the db file, initializes DbProvider, handles the entity version table, onCreate and onUpdate.
  */
 open class DbMaker(               context: Context,
                                    dbName: String,
@@ -47,7 +47,7 @@ open class DbMaker(               context: Context,
     val dbLock = Any()
     
     init {
-        initializeDbManager()
+        initDbProvider()
         synchronized(dbLock) {
             handleVersionTable(mainDb)
         }
@@ -69,7 +69,7 @@ open class DbMaker(               context: Context,
     
     override fun onUpgrade(                                                     db: SQLiteDatabase,
                                                                         oldVersion: Int,
-                                                                        newVersion: Int
+                                                                        newVersion: Int,
     ) {
         if (oldVersion >= newVersion)  return  //\/\/\/\/\/\
         // region LOG
@@ -92,11 +92,11 @@ open class DbMaker(               context: Context,
     }
     
     
-    private fun initializeDbManager() {
+    private fun initDbProvider() {
         // region LOG
-            Log.d(DbTAG, "initializeDbManager() runs")
+            Log.d(DbTAG, "initDbProvider() runs")
         // endregion
-        DbManager.init(writableDatabase)
+        DbProvider.init(writableDatabase)
     }
     
     
