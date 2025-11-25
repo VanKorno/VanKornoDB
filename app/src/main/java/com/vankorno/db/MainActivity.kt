@@ -12,13 +12,11 @@ class MainActivity : LibMainActivity() {
         ConstraintLayer()
     }
     
-    override fun appLogic() {
-        decideFirstLaunch(
-            isDataMissing = false,
-            onFirstLaunch = {
-                dbh.launchApp()
-            }
-        )
+    override fun beforeStartup() {
+        
+    }
+    override fun onFirstLaunch() {
+        dbh.launchApp()
     }
     
     
