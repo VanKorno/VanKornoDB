@@ -5,6 +5,13 @@ import androidx.compose.ui.Modifier
 
 
 @Composable
-fun BodyMain(modifier: Modifier) {
+fun BodyHome(                                                                   modifier: Modifier
+) {
+    
+    
+    
+    
+    
+    
     
 }

@@ -20,24 +20,24 @@ fun LayoutsHome(                                                            modi
                         .verticalScroll(scrollState)
     
     SharedBody(modifBody) {
-        BodyMain(modifBody)
+        BodyHome(modifBody)
     }
     
     TopBarShadow(modifiers.topShadow)
     
-    TopMain(modifiers.top)
+    TopHome(modifiers.top)
     
     SharedBarBot(modifiers.bottom) {
-        BottomMain()
+        BottomHome()
     }
 }
 
 @Composable
-fun BottomMain() {
-    TODO("Not yet implemented")
+fun BottomHome() {
+    
 }
 
 @Composable
-fun TopMain(x0: Modifier) {
-    TODO("Not yet implemented")
+fun TopHome(x0: Modifier) {
+    
 }
