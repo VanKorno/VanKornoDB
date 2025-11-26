@@ -6,9 +6,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.vankorno.db.ui.ScrModifiers
-import com.vankorno.db.ui.shared.SharedBarBot
-import com.vankorno.db.ui.shared.SharedBody
-import com.vankorno.db.ui.shared.TopBarShadow
+import com.vankorno.vankornocompose.composables.barBot.LibBotBar
+import com.vankorno.vankornocompose.composables.barTop.LibTopBarShadow
+import com.vankorno.vankornocompose.composables.body.LibBody
 
 @Composable
 fun LayoutsHome(                                                            modifiers: ScrModifiers
@@ -19,15 +19,15 @@ fun LayoutsHome(                                                            modi
                         .fillMaxWidth()
                         .verticalScroll(scrollState)
     
-    SharedBody(modifBody) {
+    LibBody(modifBody) {
         BodyHome(modifBody)
     }
     
-    TopBarShadow(modifiers.topShadow)
+    LibTopBarShadow(modifiers.topShadow)
     
     TopHome(modifiers.top)
     
-    SharedBarBot(modifiers.bottom) {
+    LibBotBar(modifiers.bottom) {
         BottomHome()
     }
 }
