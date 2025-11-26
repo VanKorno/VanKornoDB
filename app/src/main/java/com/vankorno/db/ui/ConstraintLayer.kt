@@ -2,6 +2,9 @@ package com.vankorno.db.ui
 
 import androidx.compose.runtime.Composable
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.vankorno.db.ui.scr_home.LayoutsHome
+import com.vankorno.vankornocompose.navig.ScrHome
+import com.vankorno.vankornocompose.values.LocalScreen
 import com.vankorno.vankornocompose.values.MOD_MaxH
 import com.vankorno.vankornocompose.values.MOD_MaxSize
 import com.vankorno.vankornocompose.values.MOD_MaxW
@@ -50,5 +53,18 @@ fun ConstraintLayer() {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
+        
+        ScrNavig(ScrModifiers(modifTop, modifTopShadow, modifBody, modifBot))
     }
 }
+
+
+@Composable
+fun ScrNavig(                                                               bodyModif: ScrModifiers
+) {
+    when (LocalScreen.current) {
+        ScrHome -> LayoutsHome(bodyModif)
+        else -> {}
+    }
+}
+
