@@ -1,10 +1,13 @@
 package com.vankorno.sandbox.navig
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornocompose.values.LibGlobals2.currScr
 import com.vankorno.vankornocompose.values.LibGlobals2.previousScr
+import com.vankorno.vankornodb.getSet.getAppTableNames
+import com.vankorno.vankornodb.getSet.getInternalTableNames
 import com.vankorno.vankornohelpers.dLog
 import com.vankorno.vankornohelpers.values.hideKeyboard
 
@@ -47,7 +50,10 @@ open class Navig(val db: SQLiteDatabase) {
             else -> {}
         }
         when (targetScr) {
-            
+            ScrDbBrowser -> {
+                vm.internalTables = db.getInternalTableNames()
+                vm.appTables = db.getAppTableNames()
+            }
             else -> {}
         }
     }
