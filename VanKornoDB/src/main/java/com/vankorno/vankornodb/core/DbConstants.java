@@ -5,11 +5,11 @@ public class DbConstants {
 InMemoryDB=":memory:", DbTAG = "VanKornoDB",
 
 select="SELECT ",  from=" FROM ",   selectAllFrom="SELECT * FROM ",
-dbCreateT="CREATE TABLE IF NOT EXISTS ",
-dbDefault=" DEFAULT ",
-dbDrop="DROP TABLE IF EXISTS ",
-deleteFrom="DELETE FROM ",
-MasterTable="sqlite_master",
+dbCreateT = "CREATE TABLE IF NOT EXISTS ",
+dbDefault = " DEFAULT ",
+dbDrop = "DROP TABLE IF EXISTS ",
+deleteFrom = "DELETE FROM ",
+TABLE_Master = "sqlite_master",
 
 where=" WHERE ",
 and=" AND ",   or=" OR ",
@@ -26,7 +26,7 @@ innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 
 ID="id", RowID="ROWID",
 Name = "name",
-Priority = "priority",
+Order = "order",
 
 TABLE_EntityVersions = "EntityVersions",
 EntityVersion = "version"

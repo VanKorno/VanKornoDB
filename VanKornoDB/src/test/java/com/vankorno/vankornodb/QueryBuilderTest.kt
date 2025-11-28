@@ -77,14 +77,14 @@ class QueryBuilderTest {
             selectAllFrom + DirtyTable +
                 where + ID+">=?" +
                 and + Name+"=?" +
-                and + Priority+"=?" +
+                and + Order+"=?" +
                 and + ID+"=?",
             getQuery(
                 table = DirtyTable,
                 where = {
                     ID greaterEqual 10
                     and { Name equal BestName }
-                    and { Priority equal 1.1F }
+                    and { Order equal 1.1F }
                     and { ID equal "1" }
                 }
             ).first
@@ -94,14 +94,14 @@ class QueryBuilderTest {
             selectAllFrom + DirtyTable +
                 where + ID+">=?" +
                 and + Name+"=?" +
-                or + Priority+"=?" +
+                or + Order+"=?" +
                 or + ID+"=?",
             getQuery(
                 table = DirtyTable,
                 where = {
                     ID greaterEqual 10
                     and { Name equal BestName }
-                    or { Priority equal 1.1F }
+                    or { Order equal 1.1F }
                     or { ID equal 1 }
                 }
             ).first
@@ -132,7 +132,7 @@ class QueryBuilderTest {
             selectAllFrom + DirtyTable +
                 where + ID+">=?" +
                 and + Name+"=?" +
-                or + "("+Priority+"=?" + or + ID+"=?)",
+                or + "("+Order+"=?" + or + ID+"=?)",
             
             getQuery(
                 DirtyTable,
@@ -140,7 +140,7 @@ class QueryBuilderTest {
                     ID greaterEqual 10
                     and { Name equal BestName }
                     orGroup {
-                        Priority equal 1.1F
+                        Order equal 1.1F
                         or { ID equal 1 }
                     }
                 }
@@ -153,7 +153,7 @@ class QueryBuilderTest {
         assertEquals(
             selectAllFrom + DirtyTable +
                 where + "("+ID+">=?" + and + Name+"=?)" +
-                and + Priority+"=?" + 
+                and + Order+"=?" + 
                 or + ID+"=?"
             ,
             getQuery(
@@ -163,7 +163,7 @@ class QueryBuilderTest {
                         ID greaterEqual 10
                         and { Name equal BestName }
                     }
-                    and { Priority equal 1.1F }
+                    and { Order equal 1.1F }
                     or { ID equal 1 }
                 }
             ).first
@@ -175,21 +175,21 @@ class QueryBuilderTest {
         assertEquals(
             selectAllFrom + DirtyTable +
                 where + 
-                Priority+"=?" +
+                Order+"=?" +
                 and +
                     "("+ID+">=?" + and + Name+"=?)" +
-                and + Priority+"=?" + 
+                and + Order+"=?" + 
                 or + ID+"=?"
             ,
             getQuery(
                 DirtyTable,
                 where = {
-                    Priority equal 1.1F
+                    Order equal 1.1F
                     andGroup {
                         ID greaterEqual 10
                         and { Name equal BestName }
                     }
-                    and { Priority equal 1.1F }
+                    and { Order equal 1.1F }
                     or { ID equal 1 }
                 }
             ).first
@@ -202,7 +202,7 @@ class QueryBuilderTest {
         val result = getQuery(
             DirtyTable,
             where = {
-                Priority equal 1
+                Order equal 1
                 andGroup {
                     ID greaterEqual 2
                     orGroup {
@@ -211,12 +211,12 @@ class QueryBuilderTest {
                             Name equal BestName
                             orGroup {
                                 Name equal BestName
-                                or { Priority less 5 }
+                                or { Order less 5 }
                             }
                         }
                     }
                 }
-                and { Priority equal 1.1F }
+                and { Order equal 1.1F }
                 or { ID equal 1 }
             }
         )
@@ -224,7 +224,7 @@ class QueryBuilderTest {
         assertEquals(
             selectAllFrom + DirtyTable +
                 where + 
-                Priority+"=?" +
+                Order+"=?" +
                 and + "("+
                     ID+">=?" +
                     or + "("+
@@ -233,12 +233,12 @@ class QueryBuilderTest {
                             Name+"=?"+
                             or + "("+
                                 Name+"=?"+
-                                or + Priority+"<?" +
+                                or + Order+"<?" +
                             ")" +
                         ")" +
                     ")" +
                 ")" +
-                and + Priority+"=?" + 
+                and + Order+"=?" + 
                 or + ID+"=?"
             ,
             result.first
@@ -248,7 +248,7 @@ class QueryBuilderTest {
             result.second.joinToString(", ")
         )
         assertEquals(
-            "SELECT * FROM $DirtyTable WHERE $Priority=? AND ($ID>=? OR ($Name=? AND ($Name=? OR ($Name=? OR $Priority<?)))) AND $Priority=? OR $ID=?",
+            "SELECT * FROM $DirtyTable WHERE $Order=? AND ($ID>=? OR ($Name=? AND ($Name=? OR ($Name=? OR $Order<?)))) AND $Order=? OR $ID=?",
             result.first
         )
     }

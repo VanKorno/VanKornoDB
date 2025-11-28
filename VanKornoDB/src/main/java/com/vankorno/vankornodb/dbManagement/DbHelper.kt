@@ -1083,22 +1083,22 @@ open class DbHelper(              context: Context,
     suspend fun isTableEmptySusp(table: String) = readSusp(true, "isTableEmptySusp") { it.isTableEmpty(table) }
     
     
-    inline fun getLastPriority(table: String) = read(0, "getLastPriority") { it.getLastPriority(table) }
-    suspend fun getLastPrioritySusp(table: String) = readSusp(0, "getLastPrioritySusp") { it.getLastPriority(table) }
+    inline fun getLastOrder(table: String) = read(0, "getLastOrder") { it.getLastOrder(table) }
+    suspend fun getLastOrderSusp(table: String) = readSusp(0, "getLastOrderSusp") { it.getLastOrder(table) }
     
     
-    inline fun <T> getLastPriorityBy(                                              table: String,
+    inline fun <T> getLastOrderBy(                                                 table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
-    ) = read(0, "getLastPriorityBy") {
-        it.getLastPriorityBy(table, whereColumn, equals)
+    ) = read(0, "getLastOrderBy") {
+        it.getLastOrderBy(table, whereColumn, equals)
     }
     
-    suspend fun <T> getLastPriorityBySusp(                                         table: String,
+    suspend fun <T> getLastOrderBySusp(                                            table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
-    ) = readSusp(0, "getLastPriorityBySusp") {
-        it.getLastPriorityBy(table, whereColumn, equals)
+    ) = readSusp(0, "getLastOrderBySusp") {
+        it.getLastOrderBy(table, whereColumn, equals)
     }
     
     

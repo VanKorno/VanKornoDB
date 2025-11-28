@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.getSet
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.DbConstants.ID
-import com.vankorno.vankornodb.core.DbConstants.Priority
+import com.vankorno.vankornodb.core.DbConstants.Order
 
 
 fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, ID, null, null)
@@ -23,16 +23,16 @@ fun SQLiteDatabase.tableExists(                                                 
 ).use { it.moveToFirst() }
 
 
-fun SQLiteDatabase.isTableEmpty(tableName: String) = !hasRows(tableName)
+fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
 
-fun SQLiteDatabase.getLastPriority(tableName: String) = getLargestInt(tableName, Priority, null, null)
+fun SQLiteDatabase.getLastOrder(table: String) = getLargestInt(table, Order, null, null)
 
 
-fun <T> SQLiteDatabase.getLastPriorityBy(                                          table: String,
+fun <T> SQLiteDatabase.getLastOrderBy(                                             table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
-) = getLargestInt(table, Priority, whereColumn, equals)
+) = getLargestInt(table, Order, whereColumn, equals)
 
 
 
