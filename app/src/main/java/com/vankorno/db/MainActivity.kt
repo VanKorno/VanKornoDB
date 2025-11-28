@@ -2,26 +2,27 @@ package com.vankorno.db
 
 import androidx.compose.runtime.Composable
 import com.vankorno.db.MyApp.Companion.dbh
-import com.vankorno.db.ui.ConstraintLayer
+import com.vankorno.db.ui.DemoAppUI
 import com.vankorno.vankornocompose.LibMainActivity
-import com.vankorno.vankornohelpers.values.LibColors.PlainBlack
 
-class MainActivity : LibMainActivity(
-    underAppColor = PlainBlack
-) {
+class MainActivity : LibMainActivity() {
     
     @Composable
-    override fun AppUI() {
-        ConstraintLayer()
-    }
+    override fun AppUI() { DemoAppUI() }
     
     override fun beforeStartup() {
-        
+        initLambdas()
     }
     
-    override fun startupFirstLaunch() {
-        dbh.launchApp()
+    override fun startupFirstLaunch() { dbh.launchApp() }
+    
+    override fun goingHome() {  }
+    override fun goingBack() {  }
+    
+    fun initLambdas() {
     }
+    
+    
     
     
     

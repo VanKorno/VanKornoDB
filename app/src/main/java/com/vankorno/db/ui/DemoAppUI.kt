@@ -11,7 +11,7 @@ import com.vankorno.vankornocompose.values.MOD_MaxW
 
 
 @Composable
-fun ConstraintLayer() {
+fun DemoAppUI() {
     ConstraintLayout {
         val (barTop, topShadow, body, barBottom, popup) = createRefs()
         
