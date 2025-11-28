@@ -9,7 +9,10 @@ dbCreateT = "CREATE TABLE IF NOT EXISTS ",
 dbDefault = " DEFAULT ",
 dbDrop = "DROP TABLE IF EXISTS ",
 deleteFrom = "DELETE FROM ",
+    
 TABLE_Master = "sqlite_master",
+SQL = "sql", TBL_Name = "tbl_name", Rootpage = "rootpage", // columns in the master table (in addition to Name and Type)
+
 
 where=" WHERE ",
 and=" AND ",   or=" OR ",
@@ -27,6 +30,8 @@ innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 ID="id", RowID="ROWID",
 Name = "name",
 Order = "order",
+Type = "type", DbTypeTable = "table",
+
 
 TABLE_EntityVersions = "EntityVersions",
 EntityVersion = "version"
