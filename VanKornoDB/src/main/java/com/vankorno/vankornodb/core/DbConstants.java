@@ -24,7 +24,7 @@ groupBy=" GROUP BY ",   having=" HAVING ",   count="COUNT",   countAll="COUNT(*)
 orderBy=" ORDER BY ",   ascending=" ASC",    descending=" DESC",
 
 like=" LIKE ",   notLike=" NOT LIKE ",
-IN=" IN ",       notIN=" IN ",
+IN=" IN ",       notIN=" NOT IN ",
 limit = " LIMIT ",
 offset = " OFFSET ",
 randomVal = "random()",
