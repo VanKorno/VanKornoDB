@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.vankorno.db"
+    namespace = "com.vankorno.sandbox"
     compileSdk = 36
     
     defaultConfig {
-        applicationId = "com.vankorno.db"
+        applicationId = "com.vankorno.sandbox"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

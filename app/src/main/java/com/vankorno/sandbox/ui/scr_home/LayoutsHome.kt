@@ -1,11 +1,11 @@
-package com.vankorno.db.ui.scr_home
+package com.vankorno.sandbox.ui.scr_home
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.vankorno.db.ui.ScrModifiers
+import com.vankorno.sandbox.ui.ScrModifiers
 import com.vankorno.vankornocompose.composables.barBot.LibBotBar
 import com.vankorno.vankornocompose.composables.barTop.LibTopBarShadow
 import com.vankorno.vankornocompose.composables.body.LibBody

@@ -1,4 +1,4 @@
-package com.vankorno.db
+package com.vankorno.sandbox
 
 import android.app.Application
 import com.vankorno.vankornodb.core.DbConstants.InMemoryDB

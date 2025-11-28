@@ -1,8 +1,8 @@
-package com.vankorno.db.ui
+package com.vankorno.sandbox.ui
 
 import androidx.compose.runtime.Composable
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.vankorno.db.ui.scr_home.LayoutsHome
+import com.vankorno.sandbox.ui.scr_home.LayoutsHome
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.values.LocalScreen
 import com.vankorno.vankornocompose.values.MOD_MaxH

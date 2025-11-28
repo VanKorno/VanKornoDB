@@ -1,8 +1,8 @@
-package com.vankorno.db
+package com.vankorno.sandbox
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.vankorno.db.MyApp.Companion.androidTestRun
+import com.vankorno.sandbox.MyApp.Companion.androidTestRun
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith

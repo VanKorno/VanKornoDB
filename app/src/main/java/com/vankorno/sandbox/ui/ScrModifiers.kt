@@ -1,4 +1,4 @@
-package com.vankorno.db.ui
+package com.vankorno.sandbox.ui
 
 import androidx.compose.ui.Modifier
 

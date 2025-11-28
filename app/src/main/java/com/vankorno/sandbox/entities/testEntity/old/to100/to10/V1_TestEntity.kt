@@ -1,4 +1,4 @@
-package com.vankorno.db.entities.testEntity.old.to100.to10
+package com.vankorno.sandbox.entities.testEntity.old.to100.to10
 
 data class V1_TestEntity(
                                   val name: String = "",

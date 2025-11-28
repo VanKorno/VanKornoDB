@@ -1,8 +1,8 @@
-package com.vankorno.db
+package com.vankorno.sandbox
 
 import androidx.compose.runtime.Composable
-import com.vankorno.db.MyApp.Companion.dbh
-import com.vankorno.db.ui.DemoAppUI
+import com.vankorno.sandbox.MyApp.Companion.dbh
+import com.vankorno.sandbox.ui.DemoAppUI
 import com.vankorno.vankornocompose.LibMainActivity
 
 class MainActivity : LibMainActivity() {
