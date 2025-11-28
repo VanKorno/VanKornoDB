@@ -28,6 +28,8 @@ class BackClick(db1: SQLiteDatabase) : Navig(db1) {
         // endregion
         when (currScr) {
             ScrHome -> minimizeApp()
+            ScrPlayground -> { goTo(ScrHome) }
+            ScrDbBrowser -> { goTo(ScrHome) }
             else -> goToPrevScr()
         }
     }

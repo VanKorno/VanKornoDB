@@ -17,12 +17,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vankorno.sandbox.MainActivity.Companion.vm
+import com.vankorno.sandbox.MyApp.Companion.dbh
+import com.vankorno.sandbox.navig.ScrTable
+import com.vankorno.sandbox.navig.goTo
 import com.vankorno.vankornocompose.composables.Spa_______________cer
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.sp1
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
-import com.vankorno.vankornocompose.values.MOD_MaxW
+import com.vankorno.vankornocompose.values.MOD_W90
 
 
 @Composable
@@ -66,11 +69,11 @@ private fun TableBtn(                                                           
                                                                                    color: Color,
 ) {
     Row(
-        MOD_MaxW
+        MOD_W90
             .padding(vertical = 3.dp)
             .background(color, RoundedCornerShape(10.dp))
             .clickable(
-                onClick = {}
+                onClick = { dbh.goTo(ScrTable) }
             )
             .padding(vertical = 15.dp, horizontal = 10.dp)
         ,
