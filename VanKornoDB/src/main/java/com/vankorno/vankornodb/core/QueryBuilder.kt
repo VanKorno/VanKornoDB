@@ -101,6 +101,12 @@ class WhereBuilder {
     infix fun String.dot(str2: String = "") = this + "." + str2
     
     
+    
+    // TODO Complex nested LIKE and IN:
+    // IN (SELECT id FROM Users WHERE banned = 1)
+    // LIKE (SELECT default_name FROM Defaults WHERE id = 1)
+    // as well as passing raw strings, like with conditionRaw...
+    
     infix fun <T> String.like(value: T) = condition(this, " LIKE ", value.toString())
     infix fun <T> String.notLike(value: T) = condition(this, " NOT LIKE ", value.toString())
     
@@ -132,6 +138,7 @@ class WhereBuilder {
             args.add(value.toString())
         }
     }
+    
     
     
     fun group(                                                   whereBuilder: WhereBuilder.()->Unit

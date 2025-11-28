@@ -3,8 +3,7 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.ID
-import com.vankorno.vankornodb.core.DbConstants.Order
+import com.vankorno.vankornodb.core.DbConstants.*
 
 
 fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, ID, null, null)
@@ -21,6 +20,34 @@ fun SQLiteDatabase.tableExists(                                                 
     "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
     arrayOf(table)
 ).use { it.moveToFirst() }
+
+
+
+fun SQLiteDatabase.getAppTableNames(): List<String> = getList<String>(
+    table = TABLE_Master,
+    column = Name,
+    where = {
+        Type equal DbTypeTable
+        and { Name notLike "sqlite_%" }
+        and { Name.equalNone(TABLE_Master, TABLE_EntityVersions) }
+    }
+)
+
+
+fun SQLiteDatabase.getInternalTableNames(): List<String> = getList<String>(
+    table = TABLE_Master,
+    column = Name,
+    where = {
+        Type equal DbTypeTable
+        andGroup {
+            Name like "sqlite_%"
+            or { Name.equalAny(TABLE_Master, TABLE_EntityVersions)}
+        }
+    }
+)
+
+// TODO get tables with data, not just names
+
 
 
 fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
