@@ -31,7 +31,7 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getList<String>(
     where = {
         Type equal DbTypeTable
         and { Name notLike "sqlite_%" }
-        and { Name.equalNone(TABLE_Master, TABLE_EntityVersions) }
+        and { Name.equalNone(TABLE_AndroidMetadata, TABLE_EntityVersions) }
     },
     orderBy = Name
 )
@@ -47,7 +47,7 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getList<String>(
         Type equal DbTypeTable
         andGroup {
             Name like "sqlite_%"
-            or { Name.equalAny(TABLE_Master, TABLE_EntityVersions)}
+            or { Name.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
         }
     },
     orderBy = Name

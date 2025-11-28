@@ -11,6 +11,7 @@ dbDefault = " DEFAULT ",
 dbDrop = "DROP TABLE IF EXISTS ",
 deleteFrom = "DELETE FROM ",
 
+TABLE_AndroidMetadata = "android_metadata",
 TABLE_Master = "sqlite_master",
 SQL = "sql", TBL_Name = "tbl_name", Rootpage = "rootpage", // columns in the master table (in addition to Name and Type)
 
