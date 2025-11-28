@@ -20,7 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AppVanKornoDB"
+rootProject.name = "VanKornoDB"
 include(":app")
 include(":VanKornoDB")
  
