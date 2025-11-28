@@ -33,7 +33,7 @@ innerJoin=" INNER JOIN ",   leftJoin=" LEFT JOIN ",   crossJoin=" CROSS JOIN ",
 
 ID="id", RowID="ROWID",
 Name = "name",
-Order = "order",
+Position = "position",
 Type = "type", DbTypeTable = "table",
 
 

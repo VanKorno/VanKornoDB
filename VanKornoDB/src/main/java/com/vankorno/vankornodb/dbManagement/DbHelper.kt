@@ -1090,22 +1090,22 @@ open class DbHelper(              context: Context,
     suspend fun getInternalTableNamesSusp() = readSusp(false, "getInternalTableNamesSusp") { it.getInternalTableNames() }
     
     
-    inline fun getLastOrder(table: String) = read(0, "getLastOrder") { it.getLastOrder(table) }
-    suspend fun getLastOrderSusp(table: String) = readSusp(0, "getLastOrderSusp") { it.getLastOrder(table) }
+    inline fun getLastPosition(table: String) = read(0, "getLastPosition") { it.getLastPosition(table) }
+    suspend fun getLastPositionSusp(table: String) = readSusp(0, "getLastPositionSusp") { it.getLastPosition(table) }
     
     
-    inline fun <T> getLastOrderBy(                                                 table: String,
+    inline fun <T> getLastPositionBy(                                              table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
-    ) = read(0, "getLastOrderBy") {
-        it.getLastOrderBy(table, whereColumn, equals)
+    ) = read(0, "getLastPositionBy") {
+        it.getLastPositionBy(table, whereColumn, equals)
     }
     
-    suspend fun <T> getLastOrderBySusp(                                            table: String,
+    suspend fun <T> getLastPositionBySusp(                                         table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
-    ) = readSusp(0, "getLastOrderBySusp") {
-        it.getLastOrderBy(table, whereColumn, equals)
+    ) = readSusp(0, "getLastPositionBySusp") {
+        it.getLastPositionBy(table, whereColumn, equals)
     }
     
     

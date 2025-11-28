@@ -1,8 +1,13 @@
 package com.vankorno.vankornodb.queryBuilder
 
-import com.vankorno.vankornodb.TestConstants
+import com.vankorno.vankornodb.TestConstants.BestName
+import com.vankorno.vankornodb.TestConstants.Bool1
+import com.vankorno.vankornodb.TestConstants.DirtyTable
+import com.vankorno.vankornodb.TestConstants.Posts
+import com.vankorno.vankornodb.TestConstants.UserID
+import com.vankorno.vankornodb.TestConstants.Users
 import com.vankorno.vankornodb.c
-import com.vankorno.vankornodb.core.DbConstants
+import com.vankorno.vankornodb.core.DbConstants.*
 import com.vankorno.vankornodb.core.getQuery
 import junit.framework.TestCase
 import org.junit.Test
@@ -12,56 +17,56 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Simple checks`() {
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable,
-            getQuery(TestConstants.DirtyTable).first
+            selectAllFrom + DirtyTable,
+            getQuery(DirtyTable).first
         )
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable + DbConstants.orderBy + DbConstants.ID,
-            getQuery(TestConstants.DirtyTable, orderBy = DbConstants.ID).first
+            selectAllFrom + DirtyTable + orderBy + ID,
+            getQuery(DirtyTable, orderBy = ID).first
         )
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable + DbConstants.where + DbConstants.ID + "=?" + DbConstants.orderBy + DbConstants.ID c DbConstants.Name,
+            selectAllFrom + DirtyTable + where + ID + "=?" + orderBy + ID c Name,
             getQuery(
-                TestConstants.DirtyTable,
-                where = { DbConstants.ID equal 1 },
-                orderBy = DbConstants.ID c DbConstants.Name
+                DirtyTable,
+                where = { ID equal 1 },
+                orderBy = ID c Name
             ).first
         )
         
         TestCase.assertEquals(
-            DbConstants.select + DbConstants.ID c DbConstants.Name + DbConstants.from + TestConstants.DirtyTable + DbConstants.where + DbConstants.ID + ">=?",
+            select + ID c Name + from + DirtyTable + where + ID + ">=?",
             getQuery(
-                table = TestConstants.DirtyTable,
-                columns = arrayOf(DbConstants.ID, DbConstants.Name),
-                where = { DbConstants.ID greaterEqual 10 }
+                table = DirtyTable,
+                columns = arrayOf(ID, Name),
+                where = { ID greaterEqual 10 }
             ).first
         )
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable + DbConstants.where + DbConstants.ID + ">?",
+            selectAllFrom + DirtyTable + where + ID + ">?",
             getQuery(
-                table = TestConstants.DirtyTable,
-                where = { DbConstants.ID greater 1 }
+                table = DirtyTable,
+                where = { ID greater 1 }
             ).first
         )
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable + DbConstants.where + DbConstants.ID + "<?",
+            selectAllFrom + DirtyTable + where + ID + "<?",
             getQuery(
-                table = TestConstants.DirtyTable,
-                where = { DbConstants.ID less 1 }
+                table = DirtyTable,
+                where = { ID less 1 }
             ).first
         )
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable + DbConstants.where + DbConstants.ID + "<=?",
+            selectAllFrom + DirtyTable + where + ID + "<=?",
             getQuery(
-                table = TestConstants.DirtyTable,
-                where = { DbConstants.ID lessEqual 1 }
+                table = DirtyTable,
+                where = { ID lessEqual 1 }
             ).first
         )
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable + DbConstants.where + TestConstants.Bool1 + "=?",
+            selectAllFrom + DirtyTable + where + Bool1 + "=?",
             getQuery(
-                table = TestConstants.DirtyTable,
-                where = { TestConstants.Bool1 equal true }
+                table = DirtyTable,
+                where = { Bool1 equal true }
             ).first
         )
     }
@@ -69,46 +74,46 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Simple AND OR conditions`() {
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable + DbConstants.where + DbConstants.ID + ">=?" + DbConstants.and + DbConstants.Name + "=?",
+            selectAllFrom + DirtyTable + where + ID + ">=?" + and + Name + "=?",
             getQuery(
-                table = TestConstants.DirtyTable,
+                table = DirtyTable,
                 where = {
-                    DbConstants.ID greaterEqual 10
-                    and { DbConstants.Name equal TestConstants.BestName }
+                    ID greaterEqual 10
+                    and { Name equal BestName }
                 }
             ).first
         )
         
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable +
-                DbConstants.where + DbConstants.ID + ">=?" +
-                DbConstants.and + DbConstants.Name + "=?" +
-                DbConstants.and + DbConstants.Order + "=?" +
-                DbConstants.and + DbConstants.ID + "=?",
+            selectAllFrom + DirtyTable +
+                where + ID + ">=?" +
+                and + Name + "=?" +
+                and + Position + "=?" +
+                and + ID + "=?",
             getQuery(
-                table = TestConstants.DirtyTable,
+                table = DirtyTable,
                 where = {
-                    DbConstants.ID greaterEqual 10
-                    and { DbConstants.Name equal TestConstants.BestName }
-                    and { DbConstants.Order equal 1.1F }
-                    and { DbConstants.ID equal "1" }
+                    ID greaterEqual 10
+                    and { Name equal BestName }
+                    and { Position equal 1.1F }
+                    and { ID equal "1" }
                 }
             ).first
         )
         
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable +
-                DbConstants.where + DbConstants.ID + ">=?" +
-                DbConstants.and + DbConstants.Name + "=?" +
-                DbConstants.or + DbConstants.Order + "=?" +
-                DbConstants.or + DbConstants.ID + "=?",
+            selectAllFrom + DirtyTable +
+                where + ID + ">=?" +
+                and + Name + "=?" +
+                or + Position + "=?" +
+                or + ID + "=?",
             getQuery(
-                table = TestConstants.DirtyTable,
+                table = DirtyTable,
                 where = {
-                    DbConstants.ID greaterEqual 10
-                    and { DbConstants.Name equal TestConstants.BestName }
-                    or { DbConstants.Order equal 1.1F }
-                    or { DbConstants.ID equal 1 }
+                    ID greaterEqual 10
+                    and { Name equal BestName }
+                    or { Position equal 1.1F }
+                    or { ID equal 1 }
                 }
             ).first
         )
@@ -117,16 +122,16 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `condition values`() {
         TestCase.assertEquals(
-            arrayOf("1", "1", "1.1", "1").joinToString(DbConstants.comma),
+            arrayOf("1", "1", "1.1", "1").joinToString(comma),
             getQuery(
-                table = TestConstants.DirtyTable,
+                table = DirtyTable,
                 where = {
-                    DbConstants.ID greaterEqual 1
-                    and { DbConstants.ID equal 1 }
-                    and { DbConstants.ID greaterEqual 1.1F }
-                    and { DbConstants.ID greaterEqual 1L }
+                    ID greaterEqual 1
+                    and { ID equal 1 }
+                    and { ID greaterEqual 1.1F }
+                    and { ID greaterEqual 1L }
                 }
-            ).second.joinToString(DbConstants.comma)
+            ).second.joinToString(comma)
         )
     }
     
@@ -135,19 +140,19 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Two lvl conditions orGroup is last`() {
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable +
-                DbConstants.where + DbConstants.ID + ">=?" +
-                DbConstants.and + DbConstants.Name + "=?" +
-                DbConstants.or + "(" + DbConstants.Order + "=?" + DbConstants.or + DbConstants.ID + "=?)",
+            selectAllFrom + DirtyTable +
+                where + ID + ">=?" +
+                and + Name + "=?" +
+                or + "(" + Position + "=?" + or + ID + "=?)",
             
             getQuery(
-                TestConstants.DirtyTable,
+                DirtyTable,
                 where = {
-                    DbConstants.ID greaterEqual 10
-                    and { DbConstants.Name equal TestConstants.BestName }
+                    ID greaterEqual 10
+                    and { Name equal BestName }
                     orGroup {
-                        DbConstants.Order equal 1.1F
-                        or { DbConstants.ID equal 1 }
+                        Position equal 1.1F
+                        or { ID equal 1 }
                     }
                 }
             ).first
@@ -157,19 +162,19 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Two lvl conditions group{} is first`() {
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable +
-                DbConstants.where + "(" + DbConstants.ID + ">=?" + DbConstants.and + DbConstants.Name + "=?)" +
-                DbConstants.and + DbConstants.Order + "=?" +
-                DbConstants.or + DbConstants.ID + "=?",
+            selectAllFrom + DirtyTable +
+                where + "(" + ID + ">=?" + and + Name + "=?)" +
+                and + Position + "=?" +
+                or + ID + "=?",
             getQuery(
-                TestConstants.DirtyTable,
+                DirtyTable,
                 where = {
                     group {
-                        DbConstants.ID greaterEqual 10
-                        and { DbConstants.Name equal TestConstants.BestName }
+                        ID greaterEqual 10
+                        and { Name equal BestName }
                     }
-                    and { DbConstants.Order equal 1.1F }
-                    or { DbConstants.ID equal 1 }
+                    and { Position equal 1.1F }
+                    or { ID equal 1 }
                 }
             ).first
         )
@@ -178,23 +183,23 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Two lvl conditions andGroup is mid`() {
         TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable +
-                DbConstants.where +
-                DbConstants.Order + "=?" +
-                DbConstants.and +
-                "(" + DbConstants.ID + ">=?" + DbConstants.and + DbConstants.Name + "=?)" +
-                DbConstants.and + DbConstants.Order + "=?" +
-                DbConstants.or + DbConstants.ID + "=?",
+            selectAllFrom + DirtyTable +
+                where +
+                Position + "=?" +
+                and +
+                "(" + ID + ">=?" + and + Name + "=?)" +
+                and + Position + "=?" +
+                or + ID + "=?",
             getQuery(
-                TestConstants.DirtyTable,
+                DirtyTable,
                 where = {
-                    DbConstants.Order equal 1.1F
+                    Position equal 1.1F
                     andGroup {
-                        DbConstants.ID greaterEqual 10
-                        and { DbConstants.Name equal TestConstants.BestName }
+                        ID greaterEqual 10
+                        and { Name equal BestName }
                     }
-                    and { DbConstants.Order equal 1.1F }
-                    or { DbConstants.ID equal 1 }
+                    and { Position equal 1.1F }
+                    or { ID equal 1 }
                 }
             ).first
         )
@@ -204,55 +209,53 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Five lvl conditions`() {
         val result = getQuery(
-            TestConstants.DirtyTable,
+            DirtyTable,
             where = {
-                DbConstants.Order equal 1
+                Position equal 1
                 andGroup {
-                    DbConstants.ID greaterEqual 2
+                    ID greaterEqual 2
                     orGroup {
-                        DbConstants.Name equal TestConstants.BestName
+                        Name equal BestName
                         andGroup {
-                            DbConstants.Name equal TestConstants.BestName
+                            Name equal BestName
                             orGroup {
-                                DbConstants.Name equal TestConstants.BestName
-                                or { DbConstants.Order less 5 }
+                                Name equal BestName
+                                or { Position less 5 }
                             }
                         }
                     }
                 }
-                and { DbConstants.Order equal 1.1F }
-                or { DbConstants.ID equal 1 }
+                and { Position equal 1.1F }
+                or { ID equal 1 }
             }
         )
         
-        TestCase.assertEquals(
-            DbConstants.selectAllFrom + TestConstants.DirtyTable +
-                DbConstants.where +
-                DbConstants.Order + "=?" +
-                DbConstants.and + "(" +
-                DbConstants.ID + ">=?" +
-                DbConstants.or + "(" +
-                DbConstants.Name + "=?" +
-                DbConstants.and + "(" +
-                DbConstants.Name + "=?" +
-                DbConstants.or + "(" +
-                DbConstants.Name + "=?" +
-                DbConstants.or + DbConstants.Order + "<?" +
+        TestCase.assertEquals( // TODO FIX
+            selectAllFrom + DirtyTable + where + Position + "=?" +
+                and + "(" +
+                ID + ">=?" +
+                or + "(" +
+                Name + "=?" +
+                and + "(" +
+                Name + "=?" +
+                or + "(" +
+                Name + "=?" +
+                or + Position + "<?" +
                 ")" +
                 ")" +
                 ")" +
                 ")" +
-                DbConstants.and + DbConstants.Order + "=?" +
-                DbConstants.or + DbConstants.ID + "=?",
+                and + Position + "=?" +
+                or + ID + "=?",
             result.first
         )
         TestCase.assertEquals(
             arrayOf(
                 "1",
                 "2",
-                TestConstants.BestName,
-                TestConstants.BestName,
-                TestConstants.BestName,
+                BestName,
+                BestName,
+                BestName,
                 "5",
                 "1.1",
                 "1"
@@ -260,7 +263,7 @@ class QueryBuilderTest { // TODO split tests/files
             result.second.joinToString(", ")
         )
         TestCase.assertEquals(
-            "SELECT * FROM ${TestConstants.DirtyTable} WHERE ${DbConstants.Order}=? AND (${DbConstants.ID}>=? OR (${DbConstants.Name}=? AND (${DbConstants.Name}=? OR (${DbConstants.Name}=? OR ${DbConstants.Order}<?)))) AND ${DbConstants.Order}=? OR ${DbConstants.ID}=?",
+            "SELECT * FROM ${DirtyTable} WHERE ${Position}=? AND (${ID}>=? OR (${Name}=? AND (${Name}=? OR (${Name}=? OR ${Position}<?)))) AND ${Position}=? OR ${ID}=?",
             result.first
         )
     }
@@ -269,29 +272,29 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Query in query`() {
         val result = getQuery(
-            table = TestConstants.Users,
-            columns = arrayOf(DbConstants.Name),
+            table = Users,
+            columns = arrayOf(Name),
             where = {
                 subquery(
-                    table = TestConstants.Posts,
-                    columns = arrayOf(DbConstants.countAll),
+                    table = Posts,
+                    columns = arrayOf(countAll),
                     where = {
-                        (TestConstants.Posts dot TestConstants.UserID) equal (TestConstants.Users dot DbConstants.ID)
+                        (Posts dot UserID) equal (Users dot ID)
                     }
                 ) greater 10
             }
         )
         
         TestCase.assertEquals(
-            "SELECT ${DbConstants.Name} FROM ${TestConstants.Users} WHERE (SELECT COUNT(*) FROM ${TestConstants.Posts} WHERE ${TestConstants.Posts}.user_id=?)>?",
+            "SELECT ${Name} FROM ${Users} WHERE (SELECT COUNT(*) FROM ${Posts} WHERE ${Posts}.user_id=?)>?",
             result.first
         )
         TestCase.assertEquals(
             arrayOf(
-                "${TestConstants.Users}.${DbConstants.ID}",
+                "${Users}.${ID}",
                 "10"
-            ).joinToString(DbConstants.comma),
-            result.second.joinToString(DbConstants.comma)
+            ).joinToString(comma),
+            result.second.joinToString(comma)
         )
     }
     

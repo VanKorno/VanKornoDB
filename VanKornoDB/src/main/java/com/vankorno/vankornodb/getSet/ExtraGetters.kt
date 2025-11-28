@@ -60,13 +60,13 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getList<String>(
 fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
 
-fun SQLiteDatabase.getLastOrder(table: String) = getLargestInt(table, Order, null, null)
+fun SQLiteDatabase.getLastPosition(table: String) = getLargestInt(table, Position, null, null)
 
 
-fun <T> SQLiteDatabase.getLastOrderBy(                                             table: String,
+fun <T> SQLiteDatabase.getLastPositionBy(                                          table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
-) = getLargestInt(table, Order, whereColumn, equals)
+) = getLargestInt(table, Position, whereColumn, equals)
 
 
 
