@@ -1,9 +1,16 @@
 package com.vankorno.sandbox.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.vankorno.sandbox.ui.scr_home.LayoutsHome
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.vankorno.sandbox.popup.PopupMaker
+import com.vankorno.sandbox.scr__Home.LayoutsHome
+import com.vankorno.vankornocompose.LibMainActivity.Companion.libVm
+import com.vankorno.vankornocompose.navig.PopStateOFF
 import com.vankorno.vankornocompose.navig.ScrHome
+import com.vankorno.vankornocompose.values.LibLayoutModifiers
 import com.vankorno.vankornocompose.values.LocalScreen
 import com.vankorno.vankornocompose.values.MOD_MaxH
 import com.vankorno.vankornocompose.values.MOD_MaxSize
@@ -12,11 +19,12 @@ import com.vankorno.vankornocompose.values.MOD_MaxW
 
 @Composable
 fun DemoAppUI() {
-    ConstraintLayout {
+    ConstraintLayout(MOD_MaxSize) {
         val (barTop, topShadow, body, barBottom, popup) = createRefs()
         
+        val popState by libVm.popStateFlow.collectAsStateWithLifecycle()
+        
         val modifTop = MOD_MaxW
-            //.testTag(TTag_TopBar)
             .constrainAs(barTop) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
@@ -38,7 +46,6 @@ fun DemoAppUI() {
             }
         
         val modifBot = MOD_MaxW
-            //.testTag(TTag_BotBar)
             .constrainAs(barBottom) {
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
@@ -54,13 +61,19 @@ fun DemoAppUI() {
                 end.linkTo(parent.end)
             }
         
-        ScrNavig(ScrModifiers(modifTop, modifTopShadow, modifBody, modifBot))
+        val modifiers = LibLayoutModifiers(modifBody, modifTop, modifTopShadow, modifBot, modifPopup)
+        
+        ScrNavig(modifiers)
+        
+        AnimatedVisibility(popState != PopStateOFF) {
+            PopupMaker(popState, modifPopup)
+        }
     }
 }
 
 
 @Composable
-fun ScrNavig(                                                               bodyModif: ScrModifiers
+fun ScrNavig(                                                          bodyModif: LibLayoutModifiers
 ) {
     when (LocalScreen.current) {
         ScrHome -> LayoutsHome(bodyModif)

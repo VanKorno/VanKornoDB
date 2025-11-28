@@ -1,4 +1,4 @@
-package com.vankorno.sandbox.ui.scr_home
+package com.vankorno.sandbox.scr__Home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
