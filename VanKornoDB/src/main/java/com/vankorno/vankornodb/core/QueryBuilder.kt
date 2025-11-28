@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.core
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
-import com.vankorno.vankornodb.core.DbConstants.comma
+import com.vankorno.vankornodb.core.DbConstants.*
 
 
 fun getQuery(                                               table: String,
@@ -100,6 +100,38 @@ class WhereBuilder {
     
     infix fun String.dot(str2: String = "") = this + "." + str2
     
+    
+    infix fun <T> String.like(value: T) = condition(this, " LIKE ", value.toString())
+    infix fun <T> String.notLike(value: T) = condition(this, " NOT LIKE ", value.toString())
+    
+    fun <T> String.likeAny(vararg values: T) = multCompare(this, " LIKE ", values)
+    fun <T> String.likeNone(vararg values: T) = multCompare(this, " NOT LIKE ", values)
+    
+    fun <T> String.equalAny(vararg values: T) = multCompare(this, IN, values)
+    fun <T> String.equalNone(vararg values: T) = multCompare(this, notIN, values)
+    
+    
+    private fun <T> multCompare(                                                  column: String,
+                                                                                operator: String,
+                                                                                  values: Array<T>,
+    ) {
+        clauses.add(
+            buildString {
+                append(column)
+                append(operator)
+                append("(")
+                for (idx in values.indices) {
+                    append("?")
+                    if (idx != values.lastIndex)
+                        append(comma)
+                }
+                append(")")
+            }
+        )
+        for (value in values) {
+            args.add(value.toString())
+        }
+    }
     
     
     fun group(                                                   whereBuilder: WhereBuilder.()->Unit

@@ -2,6 +2,7 @@ package com.vankorno.vankornodb.core;
 
 public class DbConstants {
     public static final String
+
 InMemoryDB=":memory:", DbTAG = "VanKornoDB",
 
 select="SELECT ",  from=" FROM ",   selectAllFrom="SELECT * FROM ",
@@ -9,7 +10,7 @@ dbCreateT = "CREATE TABLE IF NOT EXISTS ",
 dbDefault = " DEFAULT ",
 dbDrop = "DROP TABLE IF EXISTS ",
 deleteFrom = "DELETE FROM ",
-    
+
 TABLE_Master = "sqlite_master",
 SQL = "sql", TBL_Name = "tbl_name", Rootpage = "rootpage", // columns in the master table (in addition to Name and Type)
 
@@ -23,7 +24,7 @@ groupBy=" GROUP BY ",   having=" HAVING ",   count="COUNT",   countAll="COUNT(*)
 orderBy=" ORDER BY ",   ascending=" ASC",    descending=" DESC",
 
 like=" LIKE ",   notLike=" NOT LIKE ",
-in=" IN ",       notIn=" IN ",
+IN=" IN ",       notIN=" IN ",
 limit = " LIMIT ",
 offset = " OFFSET ",
 randomVal = "random()",
@@ -38,5 +39,6 @@ Type = "type", DbTypeTable = "table",
 
 TABLE_EntityVersions = "EntityVersions",
 EntityVersion = "version"
+
 ;
 }
