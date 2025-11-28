@@ -37,7 +37,7 @@ fun BodyHome(                                                                   
 private fun NavBtns() {
     NavBtn(ScrPlayground, "Playground", LibAccentColor.Pink)
     
-    NavBtn(ScrDbBrowser, "DbBrowser", LibAccentColor.Green)
+    NavBtn(ScrDbBrowser, "DB Browser", LibAccentColor.Green)
 }
 
 
