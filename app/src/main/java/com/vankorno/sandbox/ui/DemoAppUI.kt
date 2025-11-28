@@ -5,7 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.vankorno.sandbox.navig.ScrDbBrowser
+import com.vankorno.sandbox.navig.ScrPlayground
 import com.vankorno.sandbox.popup.PopupMaker
+import com.vankorno.sandbox.scr_DbBrowser.LayoutsDbBrowser
+import com.vankorno.sandbox.scr_Playground.LayoutsPlayground
 import com.vankorno.sandbox.scr__Home.LayoutsHome
 import com.vankorno.vankornocompose.LibMainActivity.Companion.libVm
 import com.vankorno.vankornocompose.navig.PopStateOFF
@@ -77,6 +81,9 @@ fun ScrNavig(                                                          bodyModif
 ) {
     when (LocalScreen.current) {
         ScrHome -> LayoutsHome(bodyModif)
+        ScrPlayground -> LayoutsPlayground(bodyModif)
+        ScrDbBrowser -> LayoutsDbBrowser(bodyModif)
+        
         else -> {}
     }
 }

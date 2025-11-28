@@ -2,8 +2,12 @@ package com.vankorno.sandbox
 
 import androidx.compose.runtime.Composable
 import com.vankorno.sandbox.MyApp.Companion.dbh
+import com.vankorno.sandbox.navig.goBack
+import com.vankorno.sandbox.navig.goTo
+import com.vankorno.sandbox.navig.updateEveryMinute
 import com.vankorno.sandbox.ui.DemoAppUI
 import com.vankorno.vankornocompose.LibMainActivity
+import com.vankorno.vankornocompose.navig.ScrHome
 
 class MainActivity : LibMainActivity() {
     
@@ -11,16 +15,16 @@ class MainActivity : LibMainActivity() {
     override fun AppUI() { DemoAppUI() }
     
     override fun beforeStartup() {
-        initLambdas()
+        
     }
     
     override fun startupFirstLaunch() { dbh.launchApp() }
     
-    override fun goingHome() {  }
-    override fun goingBack() {  }
+    override fun doEveryMinute() { dbh.updateEveryMinute() }
     
-    fun initLambdas() {
-    }
+    override fun goingHome() { dbh.goTo(ScrHome) }
+    override fun goingBack() { dbh.goBack() }
+    
     
     
     
