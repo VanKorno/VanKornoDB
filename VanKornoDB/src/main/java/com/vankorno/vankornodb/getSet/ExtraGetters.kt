@@ -22,7 +22,9 @@ fun SQLiteDatabase.tableExists(                                                 
 ).use { it.moveToFirst() }
 
 
-
+/**
+ * Gets the names of all tables in the database that are not "internal"
+ */
 fun SQLiteDatabase.getAppTableNames(): List<String> = getList<String>(
     table = TABLE_Master,
     column = Name,
@@ -33,7 +35,10 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getList<String>(
     }
 )
 
-
+/**
+ * Gets the names of all internal, system tables in the database, including the entity version table,
+ * that is managed by VanKornoDB
+ */
 fun SQLiteDatabase.getInternalTableNames(): List<String> = getList<String>(
     table = TABLE_Master,
     column = Name,

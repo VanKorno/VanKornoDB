@@ -1083,6 +1083,13 @@ open class DbHelper(              context: Context,
     suspend fun isTableEmptySusp(table: String) = readSusp(true, "isTableEmptySusp") { it.isTableEmpty(table) }
     
     
+    inline fun getAppTableNames() = read(false, "getAppTableNames") { it.getAppTableNames() }
+    suspend fun getAppTableNamesSusp() = readSusp(false, "getAppTableNamesSusp") { it.getAppTableNames() }
+    
+    inline fun getInternalTableNames() = read(false, "getInternalTableNames") { it.getInternalTableNames() }
+    suspend fun getInternalTableNamesSusp() = readSusp(false, "getInternalTableNamesSusp") { it.getInternalTableNames() }
+    
+    
     inline fun getLastOrder(table: String) = read(0, "getLastOrder") { it.getLastOrder(table) }
     suspend fun getLastOrderSusp(table: String) = readSusp(0, "getLastOrderSusp") { it.getLastOrder(table) }
     
