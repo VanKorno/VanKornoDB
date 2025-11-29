@@ -43,6 +43,7 @@ fun BodyTable(                                                          columns:
     
     val pageCount = ceil(columns.size / 3f).toInt()
     val pagerState = rememberPagerState(pageCount = { pageCount })
+    val scrollState = rememberScrollState()
     
     HorizontalPager(
         state = pagerState,
@@ -66,7 +67,8 @@ fun BodyTable(                                                          columns:
                             .border(1.dp, LibColor.Background.color)
                         ,
                         color = Color.White,
-                        fontSize = 10.sp,
+                        fontSize = 9.sp,
+                        fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -84,15 +86,13 @@ fun BodyTable(                                                          columns:
                             .padding(4.dp)
                         ,
                         color = Color.White,
-                        fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                     )
                 }
             }
             
-            
-            val scrollState = rememberScrollState()
             
             Column(
                 modifier = MOD_MaxSize

@@ -11,6 +11,11 @@ import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.delete.clearTable
+import com.vankorno.vankornodb.delete.deleteFirstRow
+import com.vankorno.vankornodb.delete.deleteLastRow
+import com.vankorno.vankornodb.delete.deleteRow
+import com.vankorno.vankornodb.delete.deleteRowById
 import com.vankorno.vankornodb.getSet.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

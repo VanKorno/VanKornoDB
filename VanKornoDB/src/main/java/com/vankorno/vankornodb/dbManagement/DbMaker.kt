@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.core.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.DbProvider.mainDb
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
-import com.vankorno.vankornodb.getSet.deleteRow
+import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.getSet.getList
 import com.vankorno.vankornodb.getSet.hasRows
 import com.vankorno.vankornodb.getSet.insertObj
