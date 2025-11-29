@@ -17,7 +17,6 @@ import com.vankorno.vankornodb.getSet.insertObj
 import com.vankorno.vankornodb.getSet.isTableEmpty
 import com.vankorno.vankornodb.getSet.tableExists
 
-
 /* 
 * THE LIFECYCLE AT RUNTIME:
 * DbMaker() is instantiated → init block runs:
