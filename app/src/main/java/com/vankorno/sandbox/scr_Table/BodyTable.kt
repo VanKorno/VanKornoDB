@@ -105,7 +105,7 @@ fun BodyTable(                                                          columns:
                                 cell,
                                 modifier = Modifier
                                     .weight(1f)
-                                    .border(1.dp, Color.LightGray)
+                                    .border(1.dp, Color.Gray)
                                     .padding(4.dp),
                                 color = Color.White,
                                 textAlign = TextAlign.Center,
