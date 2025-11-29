@@ -62,7 +62,10 @@ open class Navig(val db: SQLiteDatabase) {
     private fun runAfterGoing(                                                 targetScr: Screen
     ) {
         when (previousScr) {
-            
+            ScrDbBrowser -> {
+                vm.internalTables = emptyList()
+                vm.appTables = emptyList()
+            }
             else -> {}
         }
         

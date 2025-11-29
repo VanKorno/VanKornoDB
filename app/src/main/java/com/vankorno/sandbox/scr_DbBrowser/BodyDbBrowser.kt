@@ -35,11 +35,6 @@ fun BodyDbBrowser(                                                             m
     val appTables by vm.appTablesFlow.collectAsStateWithLifecycle()
     
     
-    TableListTitle("Sorry, the buttons don't lead anywhere yet")
-    Spa_______________cer(100)
-    
-    
-    
     TableListTitle("Internal Tables")
     Spa_______________cer(20)
     
@@ -73,7 +68,10 @@ private fun TableBtn(                                                           
             .padding(vertical = 3.dp)
             .background(color, RoundedCornerShape(10.dp))
             .clickable(
-                onClick = { dbh.goTo(ScrTable) }
+                onClick = {
+                    vm.currTable = table
+                    dbh.goTo(ScrTable)
+                }
             )
             .padding(vertical = 15.dp, horizontal = 10.dp)
         ,
