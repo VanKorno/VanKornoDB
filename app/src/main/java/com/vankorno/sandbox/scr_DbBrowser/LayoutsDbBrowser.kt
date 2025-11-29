@@ -25,7 +25,7 @@ fun LayoutsDbBrowser(                                                 modifiers:
                         .padding(vertical = 50.dp, horizontal = 10.dp)
     
     LibBody(modifBody) {
-        BodyDbBrowser(modifBody)
+        BodyDbBrowser()
     }
     
     LibTopBarShadow(modifiers.topShadow)

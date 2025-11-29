@@ -8,6 +8,7 @@ import com.vankorno.vankornocompose.values.LibGlobals2.currScr
 import com.vankorno.vankornocompose.values.LibGlobals2.previousScr
 import com.vankorno.vankornodb.getSet.getAppTableNames
 import com.vankorno.vankornodb.getSet.getInternalTableNames
+import com.vankorno.vankornodb.getSet.raw.getRawTableStr
 import com.vankorno.vankornohelpers.dLog
 import com.vankorno.vankornohelpers.values.hideKeyboard
 
@@ -54,6 +55,10 @@ open class Navig(val db: SQLiteDatabase) {
                 vm.internalTables = db.getInternalTableNames()
                 vm.appTables = db.getAppTableNames()
             }
+            ScrTable -> {
+                vm.setRawTableData(db.getRawTableStr(vm.currTable))
+            }
+            
             else -> {}
         }
     }
@@ -66,6 +71,7 @@ open class Navig(val db: SQLiteDatabase) {
                 vm.internalTables = emptyList()
                 vm.appTables = emptyList()
             }
+            ScrTable -> { vm.clearRawTableData() }
             else -> {}
         }
         

@@ -25,7 +25,7 @@ fun LayoutsPlayground(                                                 modifiers
                         .padding(vertical = 50.dp, horizontal = 10.dp)
     
     LibBody(modifBody) {
-        BodyPlayground(modifBody)
+        BodyPlayground()
     }
     
     LibTopBarShadow(modifiers.topShadow)

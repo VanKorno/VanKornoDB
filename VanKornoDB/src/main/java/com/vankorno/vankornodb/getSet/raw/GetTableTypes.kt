@@ -1,0 +1,36 @@
+package com.vankorno.vankornodb.getSet.raw
+
+import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.getSet.getStr
+
+fun SQLiteDatabase.getTableTypesFromInitQuery(                                     table: String
+): List<String> {
+    val queryStr = getStr(TABLE_Master, SQL,
+        where = {
+            Type equal DbTypeTable
+            and { Name equal table }
+        }
+    )
+    if (queryStr.isBlank()) {
+        return emptyList() //\/\/\/\/\/\
+    }
+    
+    val colsDef = "\\((.*)\\)".toRegex().find(queryStr)?.groups?.get(1)?.value ?: ""
+
+    return colsDef.split(",").map { colDef ->
+        val tokens = colDef.trim().split("\\s+".toRegex())
+        if (tokens.size < 2) return@map "TEXT"
+
+        // type can be NUMERIC(10,2) or REAL, etc.
+        val typeTokens = mutableListOf<String>()
+        var parenCount = 0
+        
+        for (token in tokens.drop(1)) {
+            typeTokens += token
+            parenCount += token.count { it == '(' } - token.count { it == ')' }
+            if (parenCount <= 0) break
+        }
+        typeTokens.joinToString(" ")
+    }
+}

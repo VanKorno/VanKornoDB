@@ -32,7 +32,7 @@ fun LayoutsTable(                                                      modifiers
                         .padding(vertical = 50.dp, horizontal = 10.dp)
     
     LibBody(modifBody) {
-        BodyTable(modifBody, columns, rows)
+        BodyTable(columns, rows)
     }
     LibTopBarShadow(modifiers.topShadow)
     
