@@ -20,7 +20,7 @@ class MiscQueryBuilderTest {
                 and { Name.equalNone(TABLE_AndroidMetadata, TABLE_EntityVersions) }
             },
             orderBy = Name
-        ).first
+        ).query
         
         assertEquals(queryStr, builtQuery)
     }

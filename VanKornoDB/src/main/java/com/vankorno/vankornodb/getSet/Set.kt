@@ -4,8 +4,8 @@ package com.vankorno.vankornodb.getSet
 **/
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.ID
 import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.core.data.DbConstants.ID
 
 
 fun SQLiteDatabase.setById(value: Any, id: Int, table: String, column: String) = set(value, table, column, ID, id)

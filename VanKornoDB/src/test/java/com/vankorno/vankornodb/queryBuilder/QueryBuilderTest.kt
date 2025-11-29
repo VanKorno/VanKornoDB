@@ -12,15 +12,15 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Simple checks`() {
         assertEquals(
             selectAllFrom + DirtyTable,
-            getQuery(DirtyTable).first
+            getQuery(DirtyTable).query
         )
         assertEquals(
             selectAllFrom + DirtyTable + orderBy + ID,
-            getQuery(DirtyTable, orderBy = ID).first
+            getQuery(DirtyTable, orderBy = ID).query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+"=?" + orderBy + ID c Name,
-            getQuery(DirtyTable, where={ ID equal 1 }, orderBy=ID c Name).first
+            getQuery(DirtyTable, where={ ID equal 1 }, orderBy=ID c Name).query
         )
         
         assertEquals(
@@ -29,35 +29,35 @@ class QueryBuilderTest { // TODO split tests/files
                 table = DirtyTable,
                 columns = arrayOf(ID, Name),
                 where = { ID greaterEqual 10 }
-            ).first
+            ).query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+">?",
             getQuery(
                 table = DirtyTable,
                 where = { ID greater 1 }
-            ).first
+            ).query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+"<?",
             getQuery(
                 table = DirtyTable,
                 where = { ID less 1 }
-            ).first
+            ).query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+"<=?",
             getQuery(
                 table = DirtyTable,
                 where = { ID lessEqual 1 }
-            ).first
+            ).query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + Bool1+"=?",
             getQuery(
                 table = DirtyTable,
                 where = { Bool1 equal true }
-            ).first
+            ).query
         )
     }
     
@@ -71,7 +71,7 @@ class QueryBuilderTest { // TODO split tests/files
                     ID greaterEqual 10
                     and { Name equal BestName }
                 }
-            ).first
+            ).query
         )
         
         assertEquals(
@@ -88,7 +88,7 @@ class QueryBuilderTest { // TODO split tests/files
                     and { Position equal 1.1F }
                     and { ID equal "1" }
                 }
-            ).first
+            ).query
         )
         
         assertEquals(
@@ -105,7 +105,7 @@ class QueryBuilderTest { // TODO split tests/files
                     or { Position equal 1.1F }
                     or { ID equal 1 }
                 }
-            ).first
+            ).query
         )
     }
     
@@ -121,7 +121,7 @@ class QueryBuilderTest { // TODO split tests/files
                     and { ID greaterEqual 1.1F }
                     and { ID greaterEqual 1L }
                 }
-            ).second.joinToString(comma)
+            ).args.joinToString(comma)
         )
     }
     
@@ -145,7 +145,7 @@ class QueryBuilderTest { // TODO split tests/files
                         or { ID equal 1 }
                     }
                 }
-            ).first
+            ).query
         )
     }
     
@@ -167,7 +167,7 @@ class QueryBuilderTest { // TODO split tests/files
                     and { Position equal 1.1F }
                     or { ID equal 1 }
                 }
-            ).first
+            ).query
         )
     }
     
@@ -193,7 +193,7 @@ class QueryBuilderTest { // TODO split tests/files
                     and { Position equal 1.1F }
                     or { ID equal 1 }
                 }
-            ).first
+            ).query
         )
     }
     
@@ -242,15 +242,15 @@ class QueryBuilderTest { // TODO split tests/files
                 and + Position+"=?" + 
                 or + ID+"=?"
             ,
-            result.first
+            result.query
         )
         assertEquals(
             arrayOf("1", "2", BestName, BestName, BestName, "5", "1.1", "1").joinToString(", "),
-            result.second.joinToString(", ")
+            result.args.joinToString(", ")
         )
         assertEquals(
             "SELECT * FROM $DirtyTable WHERE $Position=? AND ($ID>=? OR ($Name=? AND ($Name=? OR ($Name=? OR $Position<?)))) AND $Position=? OR $ID=?",
-            result.first
+            result.query
         )
     }
     
@@ -273,11 +273,11 @@ class QueryBuilderTest { // TODO split tests/files
         
         assertEquals(
             "SELECT $Name FROM $Users WHERE (SELECT COUNT(*) FROM $Posts WHERE $Posts.user_id=?)>?",
-            result.first
+            result.query
         )
         assertEquals(
             arrayOf("$Users.$ID", "10").joinToString(comma),
-            result.second.joinToString(comma)
+            result.args.joinToString(comma)
         )
     }
     

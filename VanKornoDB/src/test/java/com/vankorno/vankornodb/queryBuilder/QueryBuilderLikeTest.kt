@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.DirtyTable
-import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.core.getQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -15,7 +15,7 @@ class QueryBuilderLikeTest {
             getQuery(
                 DirtyTable,
                 where = { Name like "%abc%" }
-            ).first
+            ).query
         )
     }
     
@@ -26,7 +26,7 @@ class QueryBuilderLikeTest {
             getQuery(
                 DirtyTable,
                 where = { Name notLike "%xyz%" }
-            ).first
+            ).query
         )
     }
     
@@ -40,7 +40,7 @@ class QueryBuilderLikeTest {
                     Name like "%abc%"
                     and { Name notLike "%xyz%" }
                 }
-            ).second.joinToString(comma)
+            ).args.joinToString(comma)
         )
     }
     
@@ -55,7 +55,7 @@ class QueryBuilderLikeTest {
             getQuery(
                 DirtyTable,
                 where = { Name.likeAny("%a%", "%b%", "%c%") }
-            ).first
+            ).query
         )
     }
     
@@ -66,7 +66,7 @@ class QueryBuilderLikeTest {
             getQuery(
                 DirtyTable,
                 where = { Name.likeNone("%a%", "%b%", "%c%") }
-            ).first
+            ).query
         )
     }
     
@@ -77,9 +77,11 @@ class QueryBuilderLikeTest {
             getQuery(
                 DirtyTable,
                 where = { Name.likeAny("%a%", "%b%", "%c%") }
-            ).second.joinToString(comma)
+            ).args.joinToString(comma)
         )
     }
+    
+    
     
     
 }

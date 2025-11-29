@@ -1,7 +1,7 @@
 package com.vankorno.sandbox
 
 import android.app.Application
-import com.vankorno.vankornodb.core.DbConstants.InMemoryDB
+import com.vankorno.vankornodb.core.data.DbConstants.InMemoryDB
 import com.vankorno.vankornohelpers.LibMisc
 
 class MyApp : Application() {

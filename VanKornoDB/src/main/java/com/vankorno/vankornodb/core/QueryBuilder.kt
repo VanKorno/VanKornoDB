@@ -2,7 +2,8 @@ package com.vankorno.vankornodb.core
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
-import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.QueryWithArgs
 
 
 fun getQuery(                                               table: String,
@@ -15,7 +16,7 @@ fun getQuery(                                               table: String,
                                                             limit: Int? = null,
                                                            offset: Int? = null,
                                                         customEnd: String = "", /* To pass your own string. */
-): Pair<String, Array<String>> {
+): QueryWithArgs {
     val conditions = WhereBuilder().apply(where)
     val joinBuilder = JoinBuilder().apply(joins)
     
@@ -56,7 +57,7 @@ fun getQuery(                                               table: String,
             append(customEnd)
         }
     }
-    return query to conditions.args.toTypedArray()
+    return QueryWithArgs(query, conditions.args.toTypedArray())
 }
 
 
@@ -188,9 +189,9 @@ class WhereBuilder {
     ): String {
         val innerBuilder = getQuery(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
         
-        val clause = "(${innerBuilder.first})"
+        val clause = "(${innerBuilder.query})"
         
-        args.addAll(innerBuilder.second)
+        args.addAll(innerBuilder.args)
         return clause
     }
     

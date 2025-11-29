@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core;
+package com.vankorno.vankornodb.core.data;
 
 public class DbConstants {
     public static final String

@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.DirtyTable
-import com.vankorno.vankornodb.core.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.core.getQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -15,7 +15,7 @@ class QueryBuilderInTest {
             getQuery(
                 DirtyTable,
                 where = { ID.equalAny(1, 2, 3) }
-            ).first
+            ).query
         )
     }
     
@@ -26,7 +26,7 @@ class QueryBuilderInTest {
             getQuery(
                 DirtyTable,
                 where = { ID.equalNone(1, 2, 3) }
-            ).first
+            ).query
         )
     }
     
@@ -37,7 +37,7 @@ class QueryBuilderInTest {
             getQuery(
                 DirtyTable,
                 where = { ID.equalAny(1, 2, 3) }
-            ).second.joinToString(comma)
+            ).args.joinToString(comma)
         )
     }
     

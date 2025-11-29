@@ -3,8 +3,8 @@ package com.vankorno.vankornodb.delete
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.*
 import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.core.data.DbConstants.*
 
 fun SQLiteDatabase.deleteRowById(                                                     id: Int,
                                                                                    table: String,

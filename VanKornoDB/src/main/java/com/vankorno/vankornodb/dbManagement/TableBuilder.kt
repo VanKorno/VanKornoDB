@@ -3,8 +3,8 @@ package com.vankorno.vankornodb.dbManagement
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.dbCreateT
-import com.vankorno.vankornodb.core.DbConstants.dbDefault
+import com.vankorno.vankornodb.core.data.DbConstants.dbCreateT
+import com.vankorno.vankornodb.core.data.DbConstants.dbDefault
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnDefinition
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnType
 import com.vankorno.vankornodb.dbManagement.data.*

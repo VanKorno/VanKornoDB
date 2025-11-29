@@ -1,9 +1,9 @@
 package com.vankorno.vankornodb.getSet
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.DbConstants.ID
-import com.vankorno.vankornodb.core.DbConstants.randomVal
 import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.core.data.DbConstants.ID
+import com.vankorno.vankornodb.core.data.DbConstants.randomVal
 
 /**
  * Retrieves a single random value from the specified column in a table.

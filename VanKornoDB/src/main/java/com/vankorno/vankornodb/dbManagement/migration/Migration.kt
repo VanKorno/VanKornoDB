@@ -4,8 +4,8 @@ package com.vankorno.vankornodb.dbManagement.migration
 **/
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.core.DbConstants.DbTAG
-import com.vankorno.vankornodb.core.DbConstants.dbDrop
+import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
+import com.vankorno.vankornodb.core.data.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.createTable
 import com.vankorno.vankornodb.dbManagement.createTables
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
