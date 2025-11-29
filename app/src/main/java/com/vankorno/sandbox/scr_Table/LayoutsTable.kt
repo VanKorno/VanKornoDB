@@ -25,6 +25,7 @@ fun LayoutsTable(                                                      modifiers
     val columns by vm.rawColumnsFlow.collectAsStateWithLifecycle()
     val rows by vm.rawRowsFlow.collectAsStateWithLifecycle()
     
+    
     val modifBody = modifiers.body
                         .fillMaxWidth()
                         .verticalScroll(scrollState)

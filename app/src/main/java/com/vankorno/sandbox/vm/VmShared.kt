@@ -1,6 +1,7 @@
 package com.vankorno.sandbox.vm
 
 import androidx.lifecycle.ViewModel
+import com.vankorno.vankornodb.getSet.RawTableStr
 import com.vankorno.vankornohelpers.dLog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,20 +31,22 @@ class VmShared : ViewModel() {
         set(new) { _currTable.value = new }
     
     
+    
     private val _rawColumns = MutableStateFlow<List<String>>(emptyList())
     val rawColumnsFlow: StateFlow<List<String>> = _rawColumns
-    var rawColumns: List<String>
-        get() = _rawColumns.value
-        set(new) { _rawColumns.value = new }
     
+    private val _rawTypes = MutableStateFlow<List<Int>>(emptyList())
+    val rawTypesFlow: StateFlow<List<Int>> = _rawTypes
     
     private val _rawRows = MutableStateFlow<List<List<String>>>(emptyList())
     val rawRowsFlow: StateFlow<List<List<String>>> = _rawRows
-    var rawRows: List<List<String>>
-        get() = _rawRows.value
-        set(new) { _rawRows.value = new }
     
-    
+    fun setRawTableData(                                                         table: RawTableStr
+    ) {
+        _rawColumns.value = table.columns
+        _rawTypes.value = table.types
+        _rawRows.value = table.rows
+    }
     
     
     
