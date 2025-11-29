@@ -21,9 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vankorno.sandbox.MainActivity.Companion.vm
+import com.vankorno.vankornocompose.ScrType
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
+import com.vankorno.vankornocompose.values.LocalScrType
 import com.vankorno.vankornocompose.values.MOD_MaxSize
 import com.vankorno.vankornocompose.values.MOD_MaxW
 import kotlin.math.ceil
@@ -41,7 +43,23 @@ fun BodyTable(                                                          columns:
         return
     }
     
-    val pageCount = ceil(columns.size / 3f).toInt()
+    val scrType = LocalScrType.current
+    val colOnPage = when(scrType) {
+        ScrType.PortraitMicro,
+        ScrType.PortraitSmall -> 2
+        
+        ScrType.PortraitMedium,
+        ScrType.LandscapeMicro -> 3
+        
+        ScrType.PortraitLarge,
+        ScrType.LandscapeSmall -> 4
+        
+        ScrType.LandscapeMedium -> 5
+        
+        ScrType.LandscapeLarge -> 6
+    }
+    
+    val pageCount = ceil(columns.size / colOnPage.toFloat()).toInt()
     val pagerState = rememberPagerState(pageCount = { pageCount })
     val scrollState = rememberScrollState()
     
@@ -49,8 +67,8 @@ fun BodyTable(                                                          columns:
         state = pagerState,
         modifier = Modifier.fillMaxSize()
     ) { page ->
-        val colStart = page * 3
-        val colEnd = minOf(colStart + 3, columns.size)
+        val colStart = page * colOnPage
+        val colEnd = minOf(colStart + colOnPage, columns.size)
         val pageColumns = columns.subList(colStart, colEnd)
         val pageTypes = columnTypes.subList(colStart, colEnd)
         
@@ -106,7 +124,8 @@ fun BodyTable(                                                          columns:
                                 modifier = Modifier
                                     .weight(1f)
                                     .border(1.dp, Color.Gray)
-                                    .padding(4.dp),
+                                    .padding(4.dp)
+                                ,
                                 color = Color.White,
                                 textAlign = TextAlign.Center,
                             )
