@@ -1,8 +1,10 @@
 package com.vankorno.sandbox.navig
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.values.LibGlobals2.currScr
+import com.vankorno.vankornodb.getSet.getAppTableNames
 import com.vankorno.vankornohelpers.dLog
 
 private const val TAG = "UpdateScr"
@@ -20,7 +22,7 @@ class UpdateScr(val db: SQLiteDatabase) {
         when (currScr) {
             ScrHome -> { updateScrMain() }
             ScrPlayground -> { updateReorder() }
-            ScrDbBrowser -> { updateSettings() }
+            ScrDbBrowser -> { updateDbBrowser() }
             
             else -> {}
         }
@@ -39,8 +41,8 @@ class UpdateScr(val db: SQLiteDatabase) {
         
     }
     
-    private fun updateSettings() {
-        
+    private fun updateDbBrowser() {
+        vm.appTables = db.getAppTableNames()
     }
     
     

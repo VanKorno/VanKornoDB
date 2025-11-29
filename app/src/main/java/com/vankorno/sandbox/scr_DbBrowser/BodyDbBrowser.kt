@@ -19,11 +19,14 @@ import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox.MyApp.Companion.dbh
 import com.vankorno.sandbox.navig.ScrTable
 import com.vankorno.sandbox.navig.goTo
+import com.vankorno.sandbox.navig.updateScreen
 import com.vankorno.vankornocompose.composables.Spa_______________cer
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
+import com.vankorno.vankornocompose.composables.barTop.LibTopBarIconBtn
 import com.vankorno.vankornocompose.sp1
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
+import com.vankorno.vankornocompose.values.LibIcon
 import com.vankorno.vankornocompose.values.MOD_W90
 
 
@@ -37,7 +40,7 @@ fun BodyDbBrowser() {
     Spa_______________cer(20)
     
     internalTables.forEach { table ->
-        TableBtn(table, LibAccentColor.LightGreen.color)
+        TableBtn(table, LibAccentColor.LightGreen.color, true)
     }
     Spa_______________cer(70)
     
@@ -58,8 +61,9 @@ fun BodyDbBrowser() {
 
 
 @Composable
-private fun TableBtn(                                                              table: String,
-                                                                                   color: Color,
+private fun TableBtn(                                                       table: String,
+                                                                            color: Color,
+                                                                       isInternal: Boolean = false,
 ) {
     Row(
         MOD_W90
@@ -74,14 +78,32 @@ private fun TableBtn(                                                           
             .padding(vertical = 15.dp, horizontal = 10.dp)
         ,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+        
+        horizontalArrangement = if (!isInternal)
+                                    Arrangement.SpaceBetween
+                                else
+                                    Arrangement.Center,
     ) {
+        if (!isInternal)
+            Spa_______________cer(10)
+        
         Text(
             text = table,
             color = LibColor.WhiteText.color,
             fontSize = 16.sp1(),
             maxLines = 3,
         )
+        if (!isInternal)
+            DeleteBtn(table)
+    }
+}
+
+@Composable
+fun DeleteBtn(                                                                     table: String
+) {
+    LibTopBarIconBtn(true, LibIcon.Delete) {
+        dbh.deleteTable(table)
+        dbh.updateScreen()
     }
 }
 

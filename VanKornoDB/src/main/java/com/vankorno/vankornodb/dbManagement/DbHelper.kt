@@ -16,6 +16,7 @@ import com.vankorno.vankornodb.delete.deleteFirstRow
 import com.vankorno.vankornodb.delete.deleteLastRow
 import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteRowById
+import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.getSet.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -1025,6 +1026,15 @@ open class DbHelper(              context: Context,
     ) = write("clearTable", async) { it.clearTable(table) }
     
     suspend fun clearTableSusp(table: String) = writeSusp("clearTableSusp") { it.clearTable(table) }
+    
+    
+    inline fun deleteTable(                                                 table: String,
+                                                                            async: Boolean = false,
+    ) = write("deleteTable", async) { it.deleteTable(table) }
+    
+    suspend fun deleteTableSusp(table: String) = writeSusp("deleteTableSusp") { it.deleteTable(table) }
+    
+    
     
     
     
