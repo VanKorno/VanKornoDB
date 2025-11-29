@@ -4,9 +4,12 @@ package com.vankorno.vankornodb
 **/
 import android.database.Cursor
 
-
+/**
+ * The missing getter for Booleans
+ */
 fun Cursor.getBool(col: Int) = this.getInt(col) == 1
 
-infix fun String.c(str2: String = "") = this + ", " + str2 // TODO check if needed
+
+internal infix fun String.c(str2: String = "") = this + ", " + str2 // for pre-DSL syntax
 
 
