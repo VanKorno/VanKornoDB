@@ -6,7 +6,6 @@ import com.vankorno.vankornohelpers.LibMisc
 
 class MyApp : Application() {
     companion object {
-        const val DbName = "DbFile.dp"
         var androidTestRun = false
         
         /** Your globally-available db-helper */

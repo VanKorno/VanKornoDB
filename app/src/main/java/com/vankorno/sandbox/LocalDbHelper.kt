@@ -1,7 +1,6 @@
 package com.vankorno.sandbox
 
 import android.content.Context
-import com.vankorno.sandbox.MyApp.Companion.DbName
 import com.vankorno.sandbox.entities.EntityMeta
 import com.vankorno.sandbox.entities.TestTable
 import com.vankorno.sandbox.entities.testEntity.TestEntity
@@ -9,6 +8,12 @@ import com.vankorno.vankornodb.dbManagement.DbHelper
 import com.vankorno.vankornodb.dbManagement.createTables
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigrator
+
+const val DbName = "DbFile.dp"
+const val DbVersion = 1
+
+var dbFileNameFromDb = "" // useless shit for the demo
+
 
 /**
  * Your db-helper that can be extended with ext.functions in separate repo files,
@@ -20,7 +25,7 @@ import com.vankorno.vankornodb.dbManagement.migration.DbMigrator
  */
 class LocalDbHelper(                                                      context: Context,
                                                                            dbName: String = DbName,
-                                                                        dbVersion: Int = 1,
+                                                                        dbVersion: Int = DbVersion,
 ): DbHelper(context, dbName, dbVersion, EntityMeta.entries,
     onCreate = { db ->
         db.createTables(

@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.getSet
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.DbConstants.*
+import java.io.File
 
 
 fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, ID, null, null)
@@ -91,6 +92,7 @@ fun <T> SQLiteDatabase.getLargestInt(                                        tab
 }
 
 
+fun SQLiteDatabase.getDbFileName(): String = File(path).name
 
 
 

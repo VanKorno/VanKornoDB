@@ -23,7 +23,7 @@ fun LayoutsHome(                                                       modifiers
                         .padding(vertical = 50.dp, horizontal = 10.dp)
     
     LibBody(modifBody) {
-        BodyHome(modifBody)
+        BodyHome()
     }
     
     LibTopBarShadow(modifiers.topShadow)

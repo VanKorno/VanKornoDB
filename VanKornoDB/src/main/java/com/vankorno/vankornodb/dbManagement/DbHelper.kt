@@ -1144,6 +1144,11 @@ open class DbHelper(              context: Context,
     }
     
     
+    inline fun getDbFileName() = read("", "getDbFileName") { it.getDbFileName() }
+    suspend fun getDbFileNameSusp() = readSusp("", "getDbFileNameSusp") { it.getDbFileName() }
+    
+    
+    
     
     
     inline fun <reified T> getRandomVal(                          table: String,

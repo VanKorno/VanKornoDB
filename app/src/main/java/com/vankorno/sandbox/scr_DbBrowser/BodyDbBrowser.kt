@@ -35,29 +35,34 @@ fun BodyDbBrowser() {
     val internalTables by vm.internalTablesFlow.collectAsStateWithLifecycle()
     val appTables by vm.appTablesFlow.collectAsStateWithLifecycle()
     
+    val lessSpace = 20.dp
+    val moreSpace = 70.dp
     
     TableListTitle("Internal Tables")
-    Spa_______________cer(20)
+    Spa_______________cer(lessSpace)
     
     internalTables.forEach { table ->
         TableBtn(table, LibAccentColor.LightGreen.color, true)
     }
-    Spa_______________cer(70)
+    Spa_______________cer(moreSpace)
     
     
     
     TableListTitle("App Tables")
-    Spa_______________cer(20)
+    Spa_______________cer(lessSpace)
     
     appTables.forEach { table ->
         TableBtn(table, LibAccentColor.LightBlue.color)
     }
     
     
+    Spa_______________cer(moreSpace)
+    
+    DbInfoSection()
+    
     
     Spa_______________cerEndScr()
 }
-
 
 
 @Composable
@@ -121,5 +126,19 @@ private fun TableListTitle(                                                     
     )
     
 }
+
+
+
+@Composable
+private fun DbInfoSection() {
+    
+}
+
+
+
+
+
+
+
 
 
