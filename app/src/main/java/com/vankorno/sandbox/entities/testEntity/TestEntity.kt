@@ -1,5 +1,7 @@
 package com.vankorno.sandbox.entities.testEntity
 
+import com.vankorno.vankornodb.getSet.DbEntity
+
 data class TestEntity(
                                   val name: String = "",
                                    val boo: Boolean = false,
@@ -8,4 +10,4 @@ data class TestEntity(
                                  val long1: Long = 0L,
                                 val float1: Float = 0F,
                                     val id: Int = -1,
-)
+) : DbEntity

@@ -13,6 +13,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformCol
+import com.vankorno.vankornodb.getSet.DbEntity
 import com.vankorno.vankornodb.getSet.getObjects
 import com.vankorno.vankornodb.getSet.insertObj
 import com.vankorno.vankornodb.getSet.insertObjects
@@ -39,11 +40,11 @@ import kotlin.reflect.full.starProjectedType
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
  */
-fun SQLiteDatabase.migrateMultiStep(                                  table: String,
-                                                                 oldVersion: Int,
-                                                                 newVersion: Int,
-                                                            migrationBundle: MigrationBundle,
-                                                              onNewDbFilled: (List<Any>)->Unit = {},
+fun SQLiteDatabase.migrateMultiStep(                             table: String,
+                                                            oldVersion: Int,
+                                                            newVersion: Int,
+                                                       migrationBundle: MigrationBundle,
+                                                         onNewDbFilled: (List<DbEntity>)->Unit = {},
 ) {
     this.migrateMultiStep(table, oldVersion, newVersion, migrationBundle.versionedClasses,
         migrationBundle.renameHistory, migrationBundle.milestones, onNewDbFilled
@@ -70,10 +71,10 @@ fun SQLiteDatabase.migrateMultiStep(                                  table: Str
 fun SQLiteDatabase.migrateMultiStep(                       table: String,
                                                       oldVersion: Int,
                                                       newVersion: Int,
-                                                versionedClasses: Map<Int, KClass<*>>,
+                                                versionedClasses: Map<Int, KClass<out DbEntity>>,
                                                    renameHistory: Map<String, List<RenameRecord>>,
                                                       milestones: List<Pair<Int, MilestoneLambdas>>,
-                                                   onNewDbFilled: (List<Any>)->Unit = {},
+                                                   onNewDbFilled: (List<DbEntity>)->Unit = {},
 ) {
     if (newVersion <= oldVersion) return //\/\/\/\/\/\
     // region LOG
@@ -139,11 +140,11 @@ open class MigrationUtils {
      * @param renameSnapshot Maps new properties to their old names.
      * @return A new instance of [newClass] with mapped or defaulted values.
      */
-    fun convertEntity(                                  oldObject: Any,
-                                                         newClass: KClass<*>,
+    fun convertEntity(                                  oldObject: DbEntity,
+                                                         newClass: KClass<out DbEntity>,
                                                    renameSnapshot: Map<String, String> = emptyMap(),
                                                    overrideColVal: (TransformCol.()->Unit)? = null,
-    ): Any {
+    ): DbEntity {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
         
         val constructor = newClass.primaryConstructor
@@ -190,11 +191,11 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    fun readEntitiesFromVersion(                                            db: SQLiteDatabase,
-                                                                         table: String,
-                                                                       version: Int,
-                                                              versionedClasses: Map<Int, KClass<*>>,
-    ): List<Any> {
+    fun readEntitiesFromVersion(                                 db: SQLiteDatabase,
+                                                              table: String,
+                                                            version: Int,
+                                                   versionedClasses: Map<Int, KClass<out DbEntity>>,
+    ): List<DbEntity> {
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
         // endregion
@@ -213,13 +214,13 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    fun convertThroughSteps(                           original: Any,
+    fun convertThroughSteps(                           original: DbEntity,
                                                      oldVersion: Int,
                                                           steps: List<Int>,
                                                   renameHistory: Map<String, List<RenameRecord>>,
-                                               versionedClasses: Map<Int, KClass<*>>,
+                                               versionedClasses: Map<Int, KClass<out DbEntity>>,
                                                         lambdas: Map<Int, MilestoneLambdas>,
-    ): Any {
+    ): DbEntity {
         var currentObj = original
         var currentVer = oldVersion
         

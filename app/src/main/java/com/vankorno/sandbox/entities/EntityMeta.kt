@@ -4,6 +4,7 @@ import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.sandbox.entities.testEntity.migrationsTestEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
+import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 /**
@@ -30,7 +31,7 @@ import kotlin.reflect.KClass
  */
 enum class EntityMeta(                              override val currVersion: Int,
                                                       override val dbRowName: String,
-                                                      override val currClass: KClass<*>,
+                                                      override val currClass: KClass<out DbEntity>,
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null
 ): BaseEntityMeta {

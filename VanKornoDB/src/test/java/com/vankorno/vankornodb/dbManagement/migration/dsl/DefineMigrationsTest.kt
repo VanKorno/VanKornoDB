@@ -1,13 +1,14 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
+import com.vankorno.vankornodb.getSet.DbEntity
 import org.junit.Assert.*
 import org.junit.Test
 
 class DefineMigrationsTest {
-    class V1
-    class V2
-    class V3
+    class V1 : DbEntity
+    class V2 : DbEntity
+    class V3 : DbEntity
     
     @Test
     fun `adds versioned classes correctly`() {
@@ -68,17 +69,24 @@ class DefineMigrationsTest {
         assertEquals("123", override?.fromInt?.invoke(123))
     }
     
+    data class Dummy(val value: String) : DbEntity
+    
     @Test
     fun `stores milestone with processFinalObj`() {
-        val migrationFunc: (Any, Any) -> Any = { old, _ -> old }
+        val migrationFunc: (oldObj: DbEntity, newObj: DbEntity) -> DbEntity = { old, _ -> old }
         
         val bundle = defineMigrations(2, V2::class) {
             version(1, V1::class) {
                 milestone(processFinalObj = migrationFunc)
             }
         }
+        
         val (_, milestone) = bundle.milestones.first()
-        assertEquals("OLD", milestone.processFinalObj?.invoke("OLD", "NEW"))
+        
+        val old = Dummy("OLD")
+        val new = Dummy("NEW")
+        
+        assertEquals(old, milestone.processFinalObj?.invoke(old, new))
     }
     
     

@@ -133,6 +133,89 @@ dependencyResolutionManagement {
 }
 ```
 
+## R8
+If you're using the R8 optimization, put this into your app's proguard-rules.pro:
+```
+# Keep all classes implementing DbEntity and their primary constructors
+-keep class * implements com.vankorno.vankornodb.getSet.DbEntity {
+    <init>(...);
+}
+
+# Keep all fields and methods (needed for defaultInstanceValueOf and reflection)
+-keepclassmembers class * implements com.vankorno.vankornodb.getSet.DbEntity {
+    <fields>;
+    <methods>;
+}
+
+# Keep constructor parameter names (needed for reflection-based mapping)
+-keepattributes RuntimeVisibleParameterAnnotations,ParameterNames
+
+```
+It is needed because VanKornoDB maps db column name directly to a class param name and we don't want
+R8 to shrink those names and break the mapping.
+
+
+
+## Migrations
+You keep in your files and provide the migration system with the current entity class and the previous classes.
+It automatically chooses from which to which class to migrate. , and which intermediate steps to do (milestones).
+It automatically removes deleted rows and adds new ones. You don't have to state that anywhere.
+For things like renaming you'll have to keep the a convenient DSL-record, like this example from a real project:
+
+```kotlin
+fun migrationsTaskoid() = defineMigrations(
+    EntityMeta.Taskoid.currVersion, // EntityMeta is an enum with all your app entities, their versions, etc.
+    EntityMeta.Taskoid.currClass
+) {
+    version(1, V1_Taskoid::class) // Basic minimal data: keeps, which class was used at that version
+    version(2, V2_Taskoid::class) // Probably some columns were removed or added here automatically, based on the class differences
+    version(3, V3_Taskoid::class) { rename { HideForMins from "hideForMints" to "hideForMins" }} // for renaming you need to keep a record like this
+    version(4, V4_Taskoid::class) { rename { TimesCompletedGame from "timesCompleted" to "timesCompletedGame" }}
+    version(5, V5_Taskoid::class)
+    version(6, V6_Taskoid::class) {
+        milestone( // Milestones (migration steps, unskippable migrations, see more info below the code)
+            Afterclick modify {
+                fromInt = { AfterclickEnum.entries[it].code } // DSL to modify data, not just db itself
+            },
+            AfterclickOpt modify {
+                fromInt = { AfterclickOptEnum.entries[it].code } // Switching from keeping the enum's ordinal to keeping its String code
+            },
+            Bonus modify {
+                finalTransform = { 0 } // Set all Bonuses to 0
+            }
+        )
+    }
+    version(7, V7_Taskoid::class) {
+        rename { PicDb from "fullPic" to "pic" }
+        rename { CountUpIntervalSec from "countUpInterval" to "countUpIntervalSec" }
+        rename { CountUpUnpaidSec from "countUpUnpaid" to "countUpUnpaidSec" }
+    }
+    version(8, V8_Taskoid::class) { rename { Position from "priority" to "position" } }
+}
+```
+Normal migrations get skipped, their differences are handled automatically. There's no need to migrate through each of them. The system is more smart: calculates the differences based on the data you keep, then migrates to the latest class it can.
+You define milestones when you want to make the migration non-skippable, it'll became a step in the migration chain, at which you can run more advanced data transformations using the DSL for popular actions or provide your own lambda to modify data the way you want.
+
+
+## Lists
+Another unique feature of VanKornoDB is how it handles lists of the entity data class - it expands the elements to individual columns which makes look-up, sorting/filtering operations extremely efficient.
+Now you don't have to write every entity column manually, you can just define sets of columns as lists and easily have +500 columns with just one line of code ;)
+But there are some rules for lists:
+```
+1. Lists must always be declared at the END of the constructor parameter list.
+
+2. List parameters must be named with the "List" suffix (e.g., `dayList`).
+   Corresponding DB column names must match the base name (e.g., `day`)
+   followed by a 1-based index suffix: `day1`, `day2`, ..., etc.
+
+3. Lists must be non-nullable and must have default values with a fixed number of elements
+   (used to infer the column count for each list).
+
+4. All list elements must be of the same type, limited to a supported primitive type
+   (Boolean, Int, Long, Float, or String).
+
+5. Nested lists or complex types (e.g., data classes) inside lists are NOT SUPPORTED.
+```
 
 
 

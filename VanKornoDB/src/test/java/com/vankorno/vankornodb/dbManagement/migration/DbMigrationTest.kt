@@ -1,13 +1,12 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
+import com.vankorno.vankornodb.getSet.DbEntity
+import org.junit.Assert.*
 import org.junit.Test
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 
 class DbMigrationTest : MigrationUtils() {
-    data class OldV1(val id: Int = 0, val title: String = "", val note: String = "")
-    data class NewV2(val id: Int = 0, val name: String = "", val note: String = "")
+    data class OldV1(val id: Int = 0, val title: String = "", val note: String = "") : DbEntity
+    data class NewV2(val id: Int = 0, val name: String = "", val note: String = "") : DbEntity
     
     @Test
     fun `basic field rename with version map`() {
@@ -21,8 +20,8 @@ class DbMigrationTest : MigrationUtils() {
         assertEquals(old.note, new.note)
     }
     
-    data class OldV2(val id: Int = 0, val title: String = "", val extra: String = "")
-    data class NewV3(val id: Int = 0, val name: String = "", val description: String = "default")
+    data class OldV2(val id: Int = 0, val title: String = "", val extra: String = "") : DbEntity
+    data class NewV3(val id: Int = 0, val name: String = "", val description: String = "default") : DbEntity
     
     @Test
     fun `missing fields fallback to default`() {
@@ -36,8 +35,8 @@ class DbMigrationTest : MigrationUtils() {
         assertEquals("default", new.description)
     }
     
-    data class OldV3(val id: Int = 0, val text: String = "abc")
-    data class NewV4(val id: Int = 0, val text: String = "", val extra: Boolean = true)
+    data class OldV3(val id: Int = 0, val text: String = "abc") : DbEntity
+    data class NewV4(val id: Int = 0, val text: String = "", val extra: Boolean = true) : DbEntity
     
     @Test
     fun `unmapped field fallback with primitive default`() {
@@ -51,8 +50,8 @@ class DbMigrationTest : MigrationUtils() {
     
     
     
-    data class OldNumV1(val id: Int = 0, val active: Boolean = true, val score: Int = 42)
-    data class NewNumV2(val id: Long = 0, val active: Int = 0, val score: Double = 0.0)
+    data class OldNumV1(val id: Int = 0, val active: Boolean = true, val score: Int = 42) : DbEntity
+    data class NewNumV2(val id: Long = 0, val active: Int = 0, val score: Double = 0.0) : DbEntity
     
     @Test
     fun `type auto-conversion for basic numeric types`() {
@@ -64,8 +63,8 @@ class DbMigrationTest : MigrationUtils() {
         assertEquals(99.0, new.score, 0.0001)
     }
     
-    data class OldNumV2(val id: Long = 0L, val value: Double = 1.0)
-    data class NewNumV3(val id: Int = 0, val value: Boolean = false)
+    data class OldNumV2(val id: Long = 0L, val value: Double = 1.0) : DbEntity
+    data class NewNumV3(val id: Int = 0, val value: Boolean = false) : DbEntity
     
     @Test
     fun `type auto-conversion from Long and Double to Int and Boolean`() {
@@ -76,8 +75,8 @@ class DbMigrationTest : MigrationUtils() {
         assertFalse(new.value)
     }
     
-    data class OldPartial(val data: Float = 1.1f)
-    data class NewPartial(val data: String = "not convertible")
+    data class OldPartial(val data: Float = 1.1f) : DbEntity
+    data class NewPartial(val data: String = "not convertible") : DbEntity
     
     @Test
     fun `unsupported type conversion fallback to default`() {

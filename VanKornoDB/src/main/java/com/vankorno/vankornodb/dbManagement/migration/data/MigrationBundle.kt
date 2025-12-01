@@ -1,9 +1,10 @@
 package com.vankorno.vankornodb.dbManagement.migration.data
 
+import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 data class MigrationBundle(
-              val versionedClasses: Map<Int, KClass<*>>,
+              val versionedClasses: Map<Int, KClass<out DbEntity>>,
                  val renameHistory: Map<String, List<RenameRecord>>,
                     val milestones: List<Pair<Int, MilestoneLambdas>>,
 ) {

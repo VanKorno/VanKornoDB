@@ -56,7 +56,7 @@ fun SQLiteDatabase.getRandomId(                                   table: String,
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or null if no rows match.
  */
-inline fun <reified T : Any> SQLiteDatabase.getRandomObj(         table: String,
+inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
 ): T? = getCursor(
     table, "*", where = where, orderBy = randomVal, limit = 1

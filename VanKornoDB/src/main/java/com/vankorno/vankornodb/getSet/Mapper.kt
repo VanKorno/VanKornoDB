@@ -15,7 +15,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.jvmErasure
 
-/**
+/*
  * ## Rules for List Parameters:
  *  1. Lists must always be declared at the END of the constructor parameter list.
  * 
@@ -34,6 +34,15 @@ import kotlin.reflect.jvm.jvmErasure
 
 
 /**
+ * Marker interface for all VanKornoDB entities.
+ * 
+ * Entities must be data classes and implement this interface
+ * to be mappable by VanKornoDB.
+ */
+interface DbEntity
+
+
+/**
  * Maps the current row of the Cursor to an instance of the specified data class [T].
  *
  * This function assumes that column names in the Cursor match the constructor parameter names
@@ -45,8 +54,10 @@ import kotlin.reflect.jvm.jvmErasure
  * @return An instance of [T] constructed from the current row of the Cursor.
  * @throws IllegalArgumentException if required fields are missing or types are unsupported.
  */
-fun <T : Any> Cursor.toEntity(                                                     clazz: KClass<T>
+fun <T : DbEntity> Cursor.toEntity(                                                clazz: KClass<T>
 ): T {
+    require(clazz.isData) { "Entity must be a data class" }
+    
     val constructor = clazz.primaryConstructor
         ?: error("Class ${clazz.simpleName} must have a primary constructor")
     

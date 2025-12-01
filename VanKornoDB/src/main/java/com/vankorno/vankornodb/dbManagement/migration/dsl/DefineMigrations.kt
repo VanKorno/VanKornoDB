@@ -3,14 +3,15 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
+import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 
 class ModifyRow(val fieldName: String, val block: TransformCol.FieldOverride.()->Unit)
 
 
-fun defineMigrations(                            latestVersion: Int,
-                                                   latestClass: KClass<*>,
+fun <T: DbEntity> defineMigrations(              latestVersion: Int,
+                                                   latestClass: KClass<T>,
                                                          block: MigrationDefinitionBuilder.()->Unit,
 ): MigrationBundle {
     val defBuilder = MigrationDefinitionBuilder()
@@ -29,12 +30,12 @@ fun defineMigrations(                            latestVersion: Int,
 
 
 class MigrationDefinitionBuilder {
-    val versionedClasses = mutableMapOf<Int, KClass<*>>()
+    val versionedClasses = mutableMapOf<Int, KClass<out DbEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
-    fun version(                                              version: Int,
-                                                                clazz: KClass<*>,
+    fun <T : DbEntity> version(                               version: Int,
+                                                                clazz: KClass<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
@@ -65,7 +66,7 @@ class MigrationDefinitionBuilder {
     
     
     
-    inner class VersionBuilder(                                              val version: Int
+    class VersionBuilder(                                                    val version: Int
     ) {
         var milestone: MilestoneLambdas? = null
         val pendingRenames = mutableMapOf<String, MutableList<RenameRecord>>()
@@ -92,8 +93,9 @@ class MigrationDefinitionBuilder {
         infix fun String.modify(block: TransformCol.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
         
         
-        fun milestone(                              vararg modifications: ModifyRow,
-                                                         processFinalObj: ((Any, Any)->Any)? = null,
+        fun milestone(
+                     vararg modifications: ModifyRow,
+                          processFinalObj: ((oldObj: DbEntity, newObj: DbEntity)->DbEntity)? = null,
         ) {
             val overrideBlock: TransformCol.() -> Unit = {
                 modifications.forEach { modify(it.fieldName, it.block) }
@@ -106,7 +108,7 @@ class MigrationDefinitionBuilder {
         
         
         
-        inner class RenameBuilder(                                           val version: Int
+        class RenameBuilder(                                                 val version: Int
         ) {
             val records = mutableMapOf<String, MutableList<RenameRecord>>()
             

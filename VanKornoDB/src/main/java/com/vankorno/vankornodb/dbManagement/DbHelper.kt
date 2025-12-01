@@ -372,7 +372,7 @@ open class DbHelper(              context: Context,
     
     // ---------------------------------  S E T   R O W S  --------------------------------- \\
     
-    inline fun <T : Any> insertObj(                                         table: String,
+    inline fun <T : DbEntity> insertObj(                                    table: String,
                                                                               obj: T,
                                                                             async: Boolean = false,
     ) = write("insertObj", async) {
@@ -380,14 +380,14 @@ open class DbHelper(              context: Context,
     }
     
     
-    suspend fun <T : Any> insertObjSusp(                                           table: String,
+    suspend fun <T : DbEntity> insertObjSusp(                                      table: String,
                                                                                      obj: T,
     ): Long = readWriteSusp(-1L, "insertObjSusp") {
         it.insertObj(table, obj)
     }
     
     
-    inline fun <T : Any> insertObjects(                                     table: String,
+    inline fun <T : DbEntity> insertObjects(                                table: String,
                                                                           objects: List<T>,
                                                                             async: Boolean = false,
     ) = write("insertObjects", async) {
@@ -395,7 +395,7 @@ open class DbHelper(              context: Context,
     }
     
     
-    suspend fun <T : Any> insertObjectsSusp(                                       table: String,
+    suspend fun <T : DbEntity> insertObjectsSusp(                                  table: String,
                                                                                  objects: List<T>,
     ): Int = readWriteSusp(0, "insertObjectsSusp") {
         it.insertObjects(table, objects)
@@ -403,7 +403,7 @@ open class DbHelper(              context: Context,
     
     
     
-    fun <T : Any> updateObj(                                           table: String,
+    fun <T : DbEntity> updateObj(                                      table: String,
                                                                          obj: T,
                                                                        async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
@@ -412,7 +412,7 @@ open class DbHelper(              context: Context,
     }
     
     
-    suspend fun <T : Any> updateObjSusp(                               table: String,
+    suspend fun <T : DbEntity> updateObjSusp(                          table: String,
                                                                          obj: T,
                                                                        where: WhereBuilder.()->Unit,
     ): Int = readWriteSusp(0, "updateObjSusp") {
@@ -420,7 +420,7 @@ open class DbHelper(              context: Context,
     }
     
     
-    inline fun <T : Any> updateObjById(                                        id: Int,
+    inline fun <T : DbEntity> updateObjById(                                   id: Int,
                                                                             table: String,
                                                                               obj: T,
                                                                             async: Boolean = false,
@@ -429,7 +429,7 @@ open class DbHelper(              context: Context,
     }
     
     
-    suspend fun <T : Any> updateObjByIdSusp(                                          id: Int,
+    suspend fun <T : DbEntity> updateObjByIdSusp(                                     id: Int,
                                                                                    table: String,
                                                                                      obj: T,
     ): Int = readWriteSusp(0, "updateObjByIdSusp") {
@@ -646,20 +646,20 @@ open class DbHelper(              context: Context,
     
     // -------------------------------  G E T   O B J E C T S  ------------------------------- \\
     
-    inline fun <reified T : Any> getObjOrNullById(                                    id: Int,
+    inline fun <reified T : DbEntity> getObjOrNullById(                               id: Int,
                                                                                    table: String,
     ): T? = read(null, "getObjOrNullById") {
         it.getObjOrNullById<T>(id, table)
     }
     
-    suspend inline fun <reified T : Any> getObjOrNullByIdSusp(                        id: Int,
+    suspend inline fun <reified T : DbEntity> getObjOrNullByIdSusp(                   id: Int,
                                                                                    table: String,
     ): T? = readSusp(null, "getObjOrNullByIdSusp") {
         it.getObjOrNullById<T>(id, table)
     }
     
     
-    inline fun <reified T : Any> getObjOrNull(                    table: String,
+    inline fun <reified T : DbEntity> getObjOrNull(               table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -672,7 +672,8 @@ open class DbHelper(              context: Context,
     }
     
     
-    suspend inline fun <reified T : Any> getObjOrNullSusp(        table: String,
+    suspend inline fun <reified T : DbEntity> getObjOrNullSusp(
+                                                                  table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -685,7 +686,7 @@ open class DbHelper(              context: Context,
     }
     
     
-    fun <T : Any> getObjOrNull(                                   clazz: KClass<T>,
+    fun <T : DbEntity> getObjOrNull(                              clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -699,7 +700,7 @@ open class DbHelper(              context: Context,
     }
     
     
-    suspend fun <T : Any> getObjOrNullSusp(                       clazz: KClass<T>,
+    suspend fun <T : DbEntity> getObjOrNullSusp(                  clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -714,7 +715,7 @@ open class DbHelper(              context: Context,
     
     
     
-    inline fun <reified T : Any> getObjects(                      table: String,
+    inline fun <reified T : DbEntity> getObjects(                 table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -728,7 +729,7 @@ open class DbHelper(              context: Context,
         it.getObjects(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend inline fun <reified T : Any> getObjectsSusp(          table: String,
+    suspend inline fun <reified T : DbEntity> getObjectsSusp(     table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -742,7 +743,7 @@ open class DbHelper(              context: Context,
         it.getObjects(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    fun <T : Any> getObjects(                                     clazz: KClass<T>,
+    fun <T : DbEntity> getObjects(                                clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -757,7 +758,7 @@ open class DbHelper(              context: Context,
         it.getObjects(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend fun <T : Any> getObjectsSusp(                         clazz: KClass<T>,
+    suspend fun <T : DbEntity> getObjectsSusp(                    clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -774,7 +775,7 @@ open class DbHelper(              context: Context,
     
     
     
-    inline fun <reified T : Any> getObjMap(                       table: String,
+    inline fun <reified T : DbEntity> getObjMap(                  table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -788,7 +789,7 @@ open class DbHelper(              context: Context,
         it.getObjMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend inline fun <reified T : Any> getObjMapSusp(           table: String,
+    suspend inline fun <reified T : DbEntity> getObjMapSusp(      table: String,
                                                          noinline joins: JoinBuilder.()->Unit = {},
                                                          noinline where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
@@ -802,7 +803,7 @@ open class DbHelper(              context: Context,
         it.getObjMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    fun <T : Any> getObjMap(                                      clazz: KClass<T>,
+    fun <T : DbEntity> getObjMap(                                 clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -817,7 +818,7 @@ open class DbHelper(              context: Context,
         it.getObjMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
     }
     
-    suspend fun <T : Any> getObjMapSusp(                          clazz: KClass<T>,
+    suspend fun <T : DbEntity> getObjMapSusp(                     clazz: KClass<T>,
                                                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
@@ -1179,13 +1180,14 @@ open class DbHelper(              context: Context,
     }
     
     
-    inline fun <reified T : Any> getRandomObj(                    table: String,
+    inline fun <reified T : DbEntity> getRandomObj(               table: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
     ): T? = read(null, "getRandomObj") { db ->
         db.getRandomObj<T>(table, where)
     }
     
-    suspend inline fun <reified T : Any> getRandomObjSusp(        table: String,
+    suspend inline fun <reified T : DbEntity> getRandomObjSusp(
+                                                                  table: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
     ): T? = readSusp(null, "getRandomObjSusp") { db ->
         db.getRandomObj<T>(table, where)

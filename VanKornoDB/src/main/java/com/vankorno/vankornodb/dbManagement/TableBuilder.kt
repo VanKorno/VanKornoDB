@@ -8,6 +8,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.dbDefault
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnDefinition
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnType
 import com.vankorno.vankornodb.dbManagement.data.*
+import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KParameter
@@ -17,7 +18,7 @@ import kotlin.reflect.full.primaryConstructor
 /**
  * Creates a single table in db.
  */
-fun SQLiteDatabase.createTable(table: String, clazz: KClass<*>) = createTables(TableInfo(table, clazz))
+fun SQLiteDatabase.createTable(table: String, clazz: KClass<out DbEntity>) = createTables(TableInfo(table, clazz))
 
 /**
  * Creates multiple tables in the database given vararg TableInfo.
@@ -57,8 +58,8 @@ fun SQLiteDatabase.createTables(tables: List<TableInfo>) {
  * @return A complete `CREATE TABLE` SQL string based on [entityClass].
  */
 
-fun newTableQuery(                                                                 table: String,
-                                                                             entityClass: KClass<*>,
+fun newTableQuery(                                                      table: String,
+                                                                  entityClass: KClass<out DbEntity>,
 ): String {
     val constructor = entityClass.primaryConstructor
         ?: error("Class ${entityClass.simpleName} must have a primary constructor")

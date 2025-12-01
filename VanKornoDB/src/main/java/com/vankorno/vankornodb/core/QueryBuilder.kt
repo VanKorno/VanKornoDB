@@ -5,6 +5,9 @@ package com.vankorno.vankornodb.core
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 
+// TODO better orderBy, to avoid to cover stuff like this: orderBy = Stage+comma + Position + descending
+// TODO Params DSL
+// TODO interface for builders
 
 fun getQuery(                                               table: String,
                                                           columns: Array<out String> = arrayOf("*"),

@@ -19,3 +19,19 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+
+# Keep all classes implementing DbEntity and their primary constructors
+-keep class * implements com.vankorno.vankornodb.getSet.DbEntity {
+    <init>(...);
+}
+
+# Keep all fields and methods (needed for defaultInstanceValueOf and reflection)
+-keepclassmembers class * implements com.vankorno.vankornodb.getSet.DbEntity {
+    <fields>;
+    <methods>;
+}
+
+# Keep constructor parameter names (needed for reflection-based mapping)
+-keepattributes RuntimeVisibleParameterAnnotations,ParameterNames

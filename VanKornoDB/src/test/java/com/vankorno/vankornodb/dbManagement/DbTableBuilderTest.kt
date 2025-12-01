@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.dbManagement
 
+import com.vankorno.vankornodb.getSet.DbEntity
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -10,7 +11,7 @@ class DbTableBuilderTest {
         val name: String = "default",
         val isActive: Boolean = true,
         val age: Int = 25
-    )
+    ) : DbEntity
     
     @Test
     fun testSimpleEntityTableCreation() {
@@ -31,7 +32,7 @@ class DbTableBuilderTest {
         val data: ByteArray? = null,
         val name: String = "blob",
         val flags: Int = 0
-    )
+    ) : DbEntity
     
     @Test
     fun testComplexEntityTableCreation() {
@@ -46,7 +47,7 @@ class DbTableBuilderTest {
         val id: Int = 0,
         val note: String? = "some", // nullable, should NOT emit DEFAULT
         val enabled: Boolean? = null
-    )
+    ) : DbEntity
     
     @Test
     fun testNullableDefaultsEntity() {
@@ -65,7 +66,7 @@ class DbTableBuilderTest {
         val id: Int = 0,
         val numbers: List<Int> = emptyList(), // should be skipped
         val values: Array<String> = emptyArray() // should be skipped
-    )
+    ) : DbEntity
     
     @Test
     fun testUnsupportedTypesEntity() {
@@ -82,7 +83,7 @@ class DbTableBuilderTest {
         val id: Int? = null,
         val name: String? = null,
         val score: Float? = null
-    )
+    ) : DbEntity
     
     @Test
     fun testAllNullableEntity() {
@@ -101,7 +102,7 @@ class DbTableBuilderTest {
         val name: String = "middle",
         val id: Int = 0,
         val active: Boolean = false
-    )
+    ) : DbEntity
     
     @Test
     fun testIdInMiddleEntity() {
@@ -120,7 +121,7 @@ class DbTableBuilderTest {
     data class ListEntitySingle(
         val id: Int = 0,
         val scoresList: List<Int> = listOf(1, 2, 3)
-    )
+    ) : DbEntity
     
     @Test
     fun testListEntitySingle() {
@@ -140,7 +141,7 @@ class DbTableBuilderTest {
         val id: Int = 0,
         val flagsList: List<Boolean> = listOf(true, false),
         val namesList: List<String> = listOf("alpha", "beta")
-    )
+    ) : DbEntity
     
     @Test
     fun testListEntityMixed() {

@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.dbManagement.data
 
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
+import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 /**
@@ -27,7 +28,7 @@ import kotlin.reflect.KClass
 interface BaseEntityMeta {
     val currVersion: Int
     val dbRowName: String
-    val currClass: KClass<*>
+    val currClass: KClass<out DbEntity>
     val migrationBundle: Lazy<MigrationBundle>
     val limitedToTable: String? get() = null
 }

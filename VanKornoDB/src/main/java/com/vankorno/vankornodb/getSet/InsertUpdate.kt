@@ -40,7 +40,7 @@ import kotlin.reflect.full.primaryConstructor
  * @param obj The entity object to insert.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-fun <T : Any> SQLiteDatabase.insertObj(                                            table: String,
+fun <T : DbEntity> SQLiteDatabase.insertObj(                                       table: String,
                                                                                      obj: T,
 ): Long {
     val modifiedEntity = if (obj.hasIdField() && obj.getId() < 1) {
@@ -60,7 +60,7 @@ fun <T : Any> SQLiteDatabase.insertObj(                                         
  * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
  */
-fun <T : Any> SQLiteDatabase.insertObjects(                                        table: String,
+fun <T : DbEntity> SQLiteDatabase.insertObjects(                                   table: String,
                                                                                  objects: List<T>,
 ): Int {
     var count = 0
@@ -74,7 +74,7 @@ fun <T : Any> SQLiteDatabase.insertObjects(                                     
 
 // TODO Check if needed
 
-inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(              table: String,
+inline fun <reified T : DbEntity> SQLiteDatabase.insertObjectsWithAutoIds(         table: String,
                                                                                  objects: List<T>,
 ): Int {
     if (objects.isEmpty()) return 0
@@ -125,7 +125,7 @@ inline fun <reified T : Any> SQLiteDatabase.insertObjectsWithAutoIds(           
  * @param obj The entity object with updated data.
  * @return The number of rows affected.
  */
-fun <T : Any> SQLiteDatabase.updateObjById(                                           id: Int,
+fun <T : DbEntity> SQLiteDatabase.updateObjById(                                      id: Int,
                                                                                    table: String,
                                                                                      obj: T,
 ): Int {
@@ -134,7 +134,7 @@ fun <T : Any> SQLiteDatabase.updateObjById(                                     
 }
 
 
-inline fun <T : Any> SQLiteDatabase.updateObj(                         table: String,
+inline fun <T : DbEntity> SQLiteDatabase.updateObj(                    table: String,
                                                                          obj: T,
                                                                        where: WhereBuilder.()->Unit,
 ): Int {
@@ -157,15 +157,15 @@ inline fun <T : Any> SQLiteDatabase.updateObj(                         table: St
 
 
 @PublishedApi
-internal fun Any.hasIdField(): Boolean = this::class.memberProperties.any { it.name == "id" }
+internal fun DbEntity.hasIdField(): Boolean = this::class.memberProperties.any { it.name == "id" }
 
 @PublishedApi
-internal fun Any.getId(): Int = this::class.memberProperties
+internal fun DbEntity.getId(): Int = this::class.memberProperties
     .firstOrNull { it.name == "id" }
     ?.getter?.call(this) as? Int ?: -1
 
 @PublishedApi
-internal fun <T : Any> T.withId(                                                   newId: Int
+internal fun <T : DbEntity> T.withId(                                                   newId: Int
 ): T {
     val kClass = this::class
     val constructor = kClass.primaryConstructor!!
@@ -188,7 +188,7 @@ internal fun <T : Any> T.withId(                                                
  * @return ContentValues representing the entity suitable for database insertion/update.
  * @throws IllegalArgumentException if list element types are unsupported.
  */
-fun <T : Any> toContentValues(                                   obj: T,
+fun <T : DbEntity> toContentValues(                                   obj: T,
                                                                clazz: KClass<out T> = obj::class,
 ): ContentValues {
     val cv = ContentValues()
