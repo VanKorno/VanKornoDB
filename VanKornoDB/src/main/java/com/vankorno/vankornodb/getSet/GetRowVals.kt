@@ -2,21 +2,22 @@ package com.vankorno.vankornodb.getSet
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.JoinBuilder
-import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.core.QueryOpts
 
 /**
  * Retrieves values of one type from multiple columns of a single row of the specified table.
  *
  * @param table Name of the table to query.
- * @param where Lambda that defines the WHERE clause conditions.
  * @param columns One or more column names to retrieve.
  * @return A list of column values (nullable) for the first matching row, or an empty list if no rows match.
  */
-inline fun <reified T> SQLiteDatabase.getRowVals(                      table: String,
-                                                              noinline where: WhereBuilder.()->Unit,
-                                                              vararg columns: String,
-): List<T?> = getMultiRowVals<T>(table, columns, where = where, limit = 1).firstOrNull() ?: emptyList()
+inline fun <reified T> SQLiteDatabase.getRowVals(                    table: String,
+                                                                   columns: Array<out String>,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+): List<T?> = getMultiRowVals<T>(table, columns) {
+    applyOpts(queryOpts)
+    limit(1)
+}.firstOrNull() ?: emptyList()
 
 
 
@@ -27,29 +28,13 @@ inline fun <reified T> SQLiteDatabase.getRowVals(                      table: St
  *
  * @param table Name of the table to query.
  * @param columns Array of column names to retrieve.
- * @param joins Optional lambda that defines JOIN clauses.
- * @param where Optional lambda that defines WHERE conditions.
- * @param groupBy Optional GROUP BY clause.
- * @param having Optional HAVING clause.
- * @param orderBy Optional ORDER BY clause.
- * @param limit Optional maximum number of rows to return.
- * @param offset Optional offset for pagination.
- * @param customEnd Optional raw SQL appended to the end of the query.
- * @return A list of rows, where each row is a list of column values (nullable).
  */
-inline fun <reified T> SQLiteDatabase.getMultiRowVals(            table: String,
-                                                                columns: Array<out String>,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-): List<List<T?>> = getCursor(
-    table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd
-).use { cursor ->
+inline fun <reified T> SQLiteDatabase.getMultiRowVals(               table: String,
+                                                                   columns: Array<out String>,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+): List<List<T?>> = getCursor(table, columns) {
+    applyOpts(queryOpts)
+}.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {

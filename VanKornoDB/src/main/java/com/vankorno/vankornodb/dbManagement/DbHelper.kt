@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.database.sqlite.transaction
 import com.vankorno.vankornodb.core.JoinBuilder
+import com.vankorno.vankornodb.core.QueryOpts
 import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
@@ -595,49 +596,21 @@ open class DbHelper(              context: Context,
     
     // Multiple values
     
-    inline fun <reified T : Any> getMultiRowVals(                 table: String,
-                                                                columns: Array<out String>,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    inline fun <reified T : Any> getMultiRowVals(                    table: String,
+                                                                   columns: Array<out String>,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<List<T?>> = read(emptyList(), "getMultiRowVals") {
-        it.getMultiRowVals(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getMultiRowVals(table, columns, queryOpts)
     }
     
-    suspend inline fun <reified T : Any> getMultiRowValsSusp(     table: String,
-                                                                columns: Array<out String>,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    suspend inline fun <reified T : Any> getMultiRowValsSusp(        table: String,
+                                                                   columns: Array<out String>,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<List<T?>> = readSusp(emptyList(), "getMultiRowValsSusp") {
-        it.getMultiRowVals(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getMultiRowVals(table, columns, queryOpts)
     }
     
     
-    
-    inline fun <reified T : Any> getRowVals(                           table: String,
-                                                              noinline where: WhereBuilder.()->Unit,
-                                                              vararg columns: String,
-    ): List<T?> = read(emptyList(), "getRowVals") {
-        it.getRowVals(table, where, *columns)
-    }
-    
-    suspend inline fun <reified T : Any> getRowValsSusp(               table: String,
-                                                              noinline where: WhereBuilder.()->Unit,
-                                                              vararg columns: String,
-    ): List<T?> = readSusp(emptyList(), "getRowValsSusp") {
-        it.getRowVals(table, where, *columns)
-    }
     
     
     
@@ -659,209 +632,114 @@ open class DbHelper(              context: Context,
     }
     
     
-    inline fun <reified T : DbEntity> getObjOrNull(               table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    inline fun <reified T : DbEntity> getObjOrNull(                  table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
     ): T? = read(null, "getObjOrNull") {
-        it.getObjOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
+        it.getObjOrNull<T>(table, queryOpts)
     }
     
     
-    suspend inline fun <reified T : DbEntity> getObjOrNullSusp(
-                                                                  table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    suspend inline fun <reified T : DbEntity> getObjOrNullSusp(      table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
     ): T? = readSusp(null, "getObjOrNullSusp") {
-        it.getObjOrNull<T>(table, joins, where, groupBy, having, orderBy, offset, customEnd)
+        it.getObjOrNull<T>(table, queryOpts)
     }
     
     
-    fun <T : DbEntity> getObjOrNull(                              clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    fun <T : DbEntity> getObjOrNull(                                 clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
     ): T? = read(null, "getObjOrNull") {
-        it.getObjOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
+        it.getObjOrNull(clazz, table, queryOpts)
     }
     
     
-    suspend fun <T : DbEntity> getObjOrNullSusp(                  clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    suspend fun <T : DbEntity> getObjOrNullSusp(                     clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
     ): T? = readSusp(null, "getObjOrNullSusp") {
-        it.getObjOrNull(clazz, table, joins, where, groupBy, having, orderBy, offset, customEnd)
+        it.getObjOrNull(clazz, table, queryOpts)
     }
     
     
     
-    inline fun <reified T : DbEntity> getObjects(                 table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it },
+    inline fun <reified T : DbEntity> getObjects(                    table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                         noinline mapAfter: (T)->T = { it },
     ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjects(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjects(table, queryOpts, mapAfter)
     }
     
-    suspend inline fun <reified T : DbEntity> getObjectsSusp(     table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it },
+    suspend inline fun <reified T : DbEntity> getObjectsSusp(        table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                         noinline mapAfter: (T)->T = { it },
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjects(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjects(table, queryOpts, mapAfter)
     }
     
-    fun <T : DbEntity> getObjects(                                clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                               mapAfter: (T)->T = { it },
+    fun <T : DbEntity> getObjects(                                   clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                  mapAfter: (T)->T = { it },
     ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjects(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjects(clazz, table, queryOpts, mapAfter)
     }
     
-    suspend fun <T : DbEntity> getObjectsSusp(                    clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                               mapAfter: (T)->T = { it },
+    suspend fun <T : DbEntity> getObjectsSusp(                       clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                  mapAfter: (T)->T = { it },
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjects(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjects(clazz, table, queryOpts, mapAfter)
     }
     
     
     
-    inline fun <reified T : DbEntity> getObjMap(                  table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it },
+    inline fun <reified T : DbEntity> getObjMap(                     table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                         noinline mapAfter: (T)->T = { it },
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjMap(table, queryOpts, mapAfter)
     }
     
-    suspend inline fun <reified T : DbEntity> getObjMapSusp(      table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = { it },
+    suspend inline fun <reified T : DbEntity> getObjMapSusp(         table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                         noinline mapAfter: (T)->T = { it },
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMap(table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjMap(table, queryOpts, mapAfter)
     }
     
-    fun <T : DbEntity> getObjMap(                                 clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                               mapAfter: (T)->T = { it },
+    fun <T : DbEntity> getObjMap(                                    clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                  mapAfter: (T)->T = { it },
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjMap(clazz, table, queryOpts, mapAfter)
     }
     
-    suspend fun <T : DbEntity> getObjMapSusp(                     clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                               mapAfter: (T)->T = { it },
+    suspend fun <T : DbEntity> getObjMapSusp(                        clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                  mapAfter: (T)->T = { it },
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMap(clazz, table, joins, where, groupBy, having, orderBy, limit, offset, customEnd, mapAfter)
+        it.getObjMap(clazz, table, queryOpts, mapAfter)
     }
     
     
     // =====================================   L I S T   ===================================== \\
     
-    inline fun <reified T> getList(                               table: String,
-                                                                 column: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    inline fun <reified T> getList(                                  table: String,
+                                                                    column: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<T> = read(emptyList(), "getList") {
-        it.getList(table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getList(table, column, queryOpts)
     }
     
-    suspend inline fun <reified T> getListSusp(                   table: String,
-                                                                 column: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
+    suspend inline fun <reified T> getListSusp(                      table: String,
+                                                                    column: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getListSusp") {
-        it.getList(table, column, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        it.getList(table, column, queryOpts)
     }
     
     

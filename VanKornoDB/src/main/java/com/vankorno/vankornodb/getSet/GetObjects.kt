@@ -3,8 +3,7 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.JoinBuilder
-import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.core.QueryOpts
 import kotlin.reflect.KClass
 
 
@@ -12,19 +11,12 @@ import kotlin.reflect.KClass
  * Retrieves a list of entities of type [T] mapped from the specified columns. 
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(      table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = {it},
-): List<T> = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
-).use { cursor ->
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(         table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                         noinline mapAfter: (T)->T = {it},
+): List<T> = getCursor(table) {
+    applyOpts(queryOpts)
+}.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
@@ -42,20 +34,13 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(      table: String,
  * Retrieves a list of objects of the specified [clazz] mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : DbEntity> SQLiteDatabase.getObjects(                     clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                               mapAfter: (T)->T = {it},
-): List<T> = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
-).use { cursor ->
+fun <T : DbEntity> SQLiteDatabase.getObjects(                        clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                  mapAfter: (T)->T = {it},
+): List<T> = getCursor(table) {
+    applyOpts(queryOpts)
+}.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
@@ -71,19 +56,12 @@ fun <T : DbEntity> SQLiteDatabase.getObjects(                     clazz: KClass<
  * using the `id` column (Int) as the key. 
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(       table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                      noinline mapAfter: (T)->T = {it},
-): Map<Int, T> = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
-).use { cursor ->
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(          table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                         noinline mapAfter: (T)->T = {it},
+): Map<Int, T> = getCursor(table) {
+    applyOpts(queryOpts)
+}.use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
@@ -101,20 +79,13 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(       table: String,
  * using the `id` column (Int) as the key. 
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : DbEntity> SQLiteDatabase.getObjMap(                      clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                  limit: Int? = null,
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-                                                               mapAfter: (T)->T = {it},
-): Map<Int, T> = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, limit, offset, customEnd
-).use { cursor ->
+fun <T : DbEntity> SQLiteDatabase.getObjMap(                         clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                  mapAfter: (T)->T = {it},
+): Map<Int, T> = getCursor(table) {
+    applyOpts(queryOpts)
+}.use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
