@@ -7,20 +7,19 @@ import com.vankorno.vankornodb.core.data.QueryOptsHolder
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 
 // TODO better orderBy, to avoid to cover stuff like this: orderBy = Stage+comma + Position + descending
-// TODO Params DSL: QueryBuilder
 // TODO interface for builders
 
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                     queryOpts: QueryOpts.()->Unit = {},
+                                                        queryOpts: QueryOpts.()->Unit = {},
 ) = getQuery(table, columns, QueryOpts().apply(queryOpts).query)
 
 
 
-internal fun getQuery(                                      table: String,
-                                                          columns: Array<out String> = arrayOf("*"),
-                                                      sqlOpts: QueryOptsHolder = QueryOptsHolder(),
+internal fun getQuery(                                   table: String,
+                                                       columns: Array<out String> = arrayOf("*"),
+                                                       sqlOpts: QueryOptsHolder = QueryOptsHolder(),
 ): QueryWithArgs {
     val conditions = WhereBuilder().apply(sqlOpts.where)
     val joinBuilder = JoinBuilder().apply(sqlOpts.joins)

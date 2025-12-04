@@ -34,9 +34,10 @@ class QueryOpts {
     fun customEnd(queryStr: String) {
         query.customEnd = queryStr
     }
-    
-    
-    
-    
-    
 }
+
+
+
+
+
+
