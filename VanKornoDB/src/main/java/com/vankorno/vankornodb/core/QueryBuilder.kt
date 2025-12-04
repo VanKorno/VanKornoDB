@@ -6,22 +6,28 @@ import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 
 // TODO better orderBy, to avoid to cover stuff like this: orderBy = Stage+comma + Position + descending
-// TODO Params DSL
+// TODO Params DSL: QueryBuilder
 // TODO interface for builders
+
+data class QueryHolder(
+                                 var joins: JoinBuilder.()->Unit = {},
+                                 var where: WhereBuilder.()->Unit = {},
+                               var groupBy: String = "",
+                                var having: String = "",
+                               var orderBy: String = "",
+                                 var limit: Int? = null,
+                                var offset: Int? = null,
+                             var customEnd: String = "", /* To pass your own string. */
+)
+
+
 
 fun getQuery(                                               table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                            joins: JoinBuilder.()->Unit = {},
-                                                            where: WhereBuilder.()->Unit = {},
-                                                          groupBy: String = "",
-                                                           having: String = "",
-                                                          orderBy: String = "",
-                                                            limit: Int? = null,
-                                                           offset: Int? = null,
-                                                        customEnd: String = "", /* To pass your own string. */
+                                                      queryHolder: QueryHolder = QueryHolder(),
 ): QueryWithArgs {
-    val conditions = WhereBuilder().apply(where)
-    val joinBuilder = JoinBuilder().apply(joins)
+    val conditions = WhereBuilder().apply(queryHolder.where)
+    val joinBuilder = JoinBuilder().apply(queryHolder.joins)
     
     val query = buildString {
         append("SELECT ")
@@ -36,28 +42,28 @@ fun getQuery(                                               table: String,
             append(" WHERE ")
             append(conditions.clauses.joinToString(" "))
         }
-        if (groupBy.isNotBlank()) {
+        if (queryHolder.groupBy.isNotBlank()) {
             append(" GROUP BY ")
-            append(groupBy)
+            append(queryHolder.groupBy)
         }
-        if (having.isNotBlank()) {
+        if (queryHolder.having.isNotBlank()) {
             append(" HAVING ")
-            append(having)
+            append(queryHolder.having)
         }
-        if (orderBy.isNotBlank()) {
+        if (queryHolder.orderBy.isNotBlank()) {
             append(" ORDER BY ")
-            append(orderBy)
+            append(queryHolder.orderBy)
         }
-        if (limit != null) {
+        if (queryHolder.limit != null) {
             append(" LIMIT ")
-            append(limit)
+            append(queryHolder.limit)
         }
-        if (offset != null) {
+        if (queryHolder.offset != null) {
             append(" OFFSET ")
-            append(offset)
+            append(queryHolder.offset)
         }
-        if (customEnd.isNotBlank()) {
-            append(customEnd)
+        if (queryHolder.customEnd.isNotBlank()) {
+            append(queryHolder.customEnd)
         }
     }
     return QueryWithArgs(query, conditions.args.toTypedArray())

@@ -38,3 +38,13 @@ fun SQLiteDatabase.getCursor(                                     table: String,
     val (query, args) = getQuery(table, arrayOf(column), joins, where, groupBy, having, orderBy, limit, offset, customEnd)
     return rawQuery(query, args)
 }
+
+
+
+/*
+fun SQLiteDatabase.getCursor(                                     table: String,
+                                                                vararg columns: String,
+): Cursor {
+    val (query, args) = getQuery(table, columns)
+    return rawQuery(query, args)
+}*/
