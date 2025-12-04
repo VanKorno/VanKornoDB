@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.core.data;
 
 public class DbConstants {
     public static final String
-        InMemoryDB=":memory:", // You can create an in-memory db for tests with this instead of your db file name
+        InMemoryDB = ":memory:", // You can create an in-memory db for tests with this instead of your db file name
         DbTAG = "VanKornoDB", // for logs
         
         ID = "id", // Reserved name for int IDs. Entity data classes should have this exact param name.
@@ -41,11 +41,15 @@ public class DbConstants {
         comma = ", ",    dot = ".",
         max = "MAX",
         
-        groupBy = " GROUP BY ",   having = " HAVING ",   count = "COUNT",   countAll = "COUNT(*)",
+        groupBy = " GROUP BY ",
+        having = " HAVING ",   
+        count = "COUNT", countAll = "COUNT(*)",
+    
         orderBy = " ORDER BY ",   ascending = " ASC",    descending = " DESC",
         
-        like = " LIKE ",   notLike = " NOT LIKE ",
-        IN = " IN ",       notIN = " NOT IN ",
+        like = " LIKE ",        notLike = " NOT LIKE ",
+        IN = " IN ",            notIN = " NOT IN ",
+        
         limit = " LIMIT ",
         offset = " OFFSET ",
         randomVal = "random()",

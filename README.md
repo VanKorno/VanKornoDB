@@ -26,6 +26,14 @@ Designed primarily for Android, but with potential to support other platforms in
 - Full db management system, working out of the box.
 - Convenient, efficient and reliable multi-step migration system with its own DSL that minimizes boilerplate code.
 - Designed for full control over your database logic.
+- With VanKornoDB you can even generate a thousand of tables with a thousand of columns via 2 lines of code:
+```kotlin
+data class Shop(val someList: List<Int> = List(1000) { 0 } ) : DbEntity  // all those list elements become individual columns
+
+for (i in 1..1000) { db.createTable(ShopTable + i, Shop::class) }
+```
+
+
 
 
 ## Examples
