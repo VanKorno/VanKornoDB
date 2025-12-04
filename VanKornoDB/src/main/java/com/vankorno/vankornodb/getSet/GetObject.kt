@@ -4,8 +4,10 @@ package com.vankorno.vankornodb.getSet
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.JoinBuilder
+import com.vankorno.vankornodb.core.QueryOpts
 import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
+import com.vankorno.vankornodb.core.data.DbConstants.where
 import kotlin.reflect.KClass
 
 /** Gets one db table row as an object of type [T] by its ID. Throws if no row found.*/
@@ -30,16 +32,12 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNullById(              
  * Throws if no row is found.
  * Uses reified type parameter and default "*" column selection.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-): T = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, 1, offset
-).use { cursor ->
+inline fun <reified T : DbEntity> SQLiteDatabase.getObj(             table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+): T = getCursor(table) {
+    applyOpts(queryOpts)
+    limit(1) // enforce limit
+}.use { cursor ->
     if (!cursor.moveToFirst()) error("No result for getObj<>()")
     cursor.toEntity(T::class)
 }

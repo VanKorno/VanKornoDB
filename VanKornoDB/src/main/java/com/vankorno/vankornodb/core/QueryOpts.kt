@@ -24,6 +24,9 @@ class QueryOpts {
     
     
     
+    fun applyOpts(opts: QueryOpts.()->Unit) { this.opts() }
+    
+    
     fun applyOpts(                                                joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
                                                                 groupBy: String = "",
