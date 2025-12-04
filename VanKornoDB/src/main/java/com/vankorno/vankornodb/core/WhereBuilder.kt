@@ -6,14 +6,14 @@ class WhereBuilder {
     val clauses = mutableListOf<String>()
     val args = mutableListOf<String>()
     
-    fun condition(                                                                column: String,
+    private fun condition(                                                        column: String,
                                                                                 operator: String,
                                                                                    value: String,
     ) {
         clauses.add(column + operator + "?")
         args.add(value)
     }
-    fun conditionRaw(                                                             column: String,
+    private fun conditionRaw(                                                     column: String,
                                                                                 operator: String,
                                                                              otherColumn: String,
     ) = clauses.add(column + operator + otherColumn)
