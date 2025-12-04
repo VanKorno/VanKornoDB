@@ -10,6 +10,7 @@ import android.database.Cursor
 fun Cursor.getBool(col: Int) = this.getInt(col) == 1
 
 
-internal infix fun String.c(str2: String = "") = this + ", " + str2 // for pre-DSL syntax
+
+
 
 

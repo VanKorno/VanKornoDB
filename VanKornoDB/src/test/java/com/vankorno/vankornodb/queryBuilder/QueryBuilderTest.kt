@@ -1,12 +1,14 @@
 package com.vankorno.vankornodb.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.*
-import com.vankorno.vankornodb.c
 import com.vankorno.vankornodb.core.getQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class QueryBuilderTest { // TODO split tests/files
+    
+    private infix fun String.c(str2: String = "") = this + ", " + str2
+    
     
     @Test
     fun `Simple checks`() {
