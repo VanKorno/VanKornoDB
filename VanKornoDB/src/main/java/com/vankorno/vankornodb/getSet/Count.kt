@@ -5,7 +5,6 @@ package com.vankorno.vankornodb.getSet
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.WhereBuilder
-import com.vankorno.vankornodb.core.applyOpts
 
 /** Returns the number of rows matching the query conditions. */
 

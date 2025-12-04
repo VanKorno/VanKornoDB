@@ -119,7 +119,7 @@ class WhereBuilder {
     
     fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                    queryOpts: QueryOpts.()->Unit = {},
+                                                        queryOpts: QueryOpts.()->Unit = {},
     ): String {
         val innerBuilder = getQuery(table, columns, queryOpts)
         
