@@ -25,7 +25,7 @@ fun SQLiteDatabase.getRowCount(                                   table: String,
 fun SQLiteDatabase.hasRows(                                       table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
-): Boolean = getCursor(table, arrayOf("1")){
+): Boolean = getCursor(table, arrayOf("1")) {
     applyOpts(joins = joins, where = where, limit = 1)
 }.use { it.moveToFirst() }
 
