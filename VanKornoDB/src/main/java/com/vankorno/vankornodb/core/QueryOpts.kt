@@ -9,7 +9,7 @@ import com.vankorno.vankornodb.core.data.QueryWithArgs
 // TODO Params DSL: QueryBuilder
 // TODO interface for builders
 
-data class QueryHolder(
+data class QueryOptsHolder(
                                  var joins: JoinBuilder.()->Unit = {},
                                  var where: WhereBuilder.()->Unit = {},
                                var groupBy: String = "",
@@ -23,14 +23,14 @@ data class QueryHolder(
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                     queryBuilder: QueryBuilder.()->Unit = {},
-) = getQuery(table, columns, QueryBuilder().apply(queryBuilder).query)
+                                                     queryOpts: QueryOpts.()->Unit = {},
+) = getQuery(table, columns, QueryOpts().apply(queryOpts).query)
 
 
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                      sqlOpts: QueryHolder = QueryHolder(),
+                                                      sqlOpts: QueryOptsHolder = QueryOptsHolder(),
 ): QueryWithArgs {
     val conditions = WhereBuilder().apply(sqlOpts.where)
     val joinBuilder = JoinBuilder().apply(sqlOpts.joins)
@@ -76,8 +76,8 @@ internal fun getQuery(                                      table: String,
 }
 
 
-class QueryBuilder {
-    val query = QueryHolder()
+class QueryOpts {
+    val query = QueryOptsHolder()
     
     fun joins() 
     
@@ -205,9 +205,9 @@ class WhereBuilder {
     
     fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                    queryBuilder: QueryBuilder.()->Unit = {},
+                                                    queryOpts: QueryOpts.()->Unit = {},
     ): String {
-        val innerBuilder = getQuery(table, columns, queryBuilder)
+        val innerBuilder = getQuery(table, columns, queryOpts)
         
         val clause = "(${innerBuilder.query})"
         
