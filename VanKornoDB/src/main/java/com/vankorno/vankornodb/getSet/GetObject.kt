@@ -3,18 +3,17 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.QueryOpts
-import com.vankorno.vankornodb.core.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
-import com.vankorno.vankornodb.core.data.DbConstants.where
 import kotlin.reflect.KClass
 
 /** Gets one db table row as an object of type [T] by its ID. Throws if no row found.*/
 
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjById(                          id: Int,
                                                                                    table: String,
-): T = getObj(table, where = { ID equal id })
+): T = getObj(table) {
+    where { ID equal id }
+}
 
 
 
@@ -22,7 +21,9 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjById(                    
 
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNullById(                    id: Int,
                                                                                    table: String,
-): T? = getObjOrNull(table, where = { ID equal id })
+): T? = getObjOrNull(table) {
+    where { ID equal id }
+}
 
 
 
@@ -36,7 +37,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(             table: Stri
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
 ): T = getCursor(table) {
     applyOpts(queryOpts)
-    limit(1) // enforce limit
+    limit(1)
 }.use { cursor ->
     if (!cursor.moveToFirst()) error("No result for getObj<>()")
     cursor.toEntity(T::class)
@@ -47,17 +48,13 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(             table: Stri
 /**
  * Gets one db table row as an object of type [T] from [table] with explicit type. Throws if no result.
  */
-fun <T : DbEntity> SQLiteDatabase.getObj(                         clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-): T = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, 1, offset
-).use { cursor ->
+fun <T : DbEntity> SQLiteDatabase.getObj(                            clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+): T = getCursor(table) {
+    applyOpts(queryOpts)
+    limit(1)
+}.use { cursor ->
     if (!cursor.moveToFirst()) error("No result for getObj($clazz)")
     cursor.toEntity(clazz)
 }
@@ -75,18 +72,12 @@ fun <T : DbEntity> SQLiteDatabase.getObj(                         clazz: KClass<
 /**
  * Gets one db table row as an object of type [T] using the usual VanKorno DSL. Returns null if no result found.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(
-                                                                  table: String,
-                                                         noinline joins: JoinBuilder.()->Unit = {},
-                                                         noinline where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-): T? = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, 1, offset, customEnd
-).use { cursor ->
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(       table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+): T? = getCursor(table) {
+    applyOpts(queryOpts)
+    limit(1)
+}.use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(T::class)
 }
@@ -97,18 +88,13 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(
 /**
  * Gets one db table row as an object of [clazz] using using the usual VanKorno DSL. Returns null if no result found.
  */
-fun <T : DbEntity> SQLiteDatabase.getObjOrNull(                   clazz: KClass<T>,
-                                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                groupBy: String = "",
-                                                                 having: String = "",
-                                                                orderBy: String = "",
-                                                                 offset: Int? = null,
-                                                              customEnd: String = "",
-): T? = getCursor(
-    table, "*", joins, where, groupBy, having, orderBy, 1, offset, customEnd
-).use { cursor ->
+fun <T : DbEntity> SQLiteDatabase.getObjOrNull(                      clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+): T? = getCursor(table) {
+    applyOpts(queryOpts)
+    limit(1)
+}.use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(clazz)
 }
