@@ -21,13 +21,19 @@ data class QueryHolder(
 )
 
 
-
-fun getQuery(                                               table: String,
+internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                      queryHolder: QueryHolder = QueryHolder(),
+                                                     queryBuilder: QueryBuilder.()->Unit = {},
+) = getQuery(table, columns, QueryBuilder().apply(queryBuilder).query)
+
+
+
+internal fun getQuery(                                      table: String,
+                                                          columns: Array<out String> = arrayOf("*"),
+                                                      sqlOpts: QueryHolder = QueryHolder(),
 ): QueryWithArgs {
-    val conditions = WhereBuilder().apply(queryHolder.where)
-    val joinBuilder = JoinBuilder().apply(queryHolder.joins)
+    val conditions = WhereBuilder().apply(sqlOpts.where)
+    val joinBuilder = JoinBuilder().apply(sqlOpts.joins)
     
     val query = buildString {
         append("SELECT ")
@@ -42,32 +48,44 @@ fun getQuery(                                               table: String,
             append(" WHERE ")
             append(conditions.clauses.joinToString(" "))
         }
-        if (queryHolder.groupBy.isNotBlank()) {
+        if (sqlOpts.groupBy.isNotBlank()) {
             append(" GROUP BY ")
-            append(queryHolder.groupBy)
+            append(sqlOpts.groupBy)
         }
-        if (queryHolder.having.isNotBlank()) {
+        if (sqlOpts.having.isNotBlank()) {
             append(" HAVING ")
-            append(queryHolder.having)
+            append(sqlOpts.having)
         }
-        if (queryHolder.orderBy.isNotBlank()) {
+        if (sqlOpts.orderBy.isNotBlank()) {
             append(" ORDER BY ")
-            append(queryHolder.orderBy)
+            append(sqlOpts.orderBy)
         }
-        if (queryHolder.limit != null) {
+        if (sqlOpts.limit != null) {
             append(" LIMIT ")
-            append(queryHolder.limit)
+            append(sqlOpts.limit)
         }
-        if (queryHolder.offset != null) {
+        if (sqlOpts.offset != null) {
             append(" OFFSET ")
-            append(queryHolder.offset)
+            append(sqlOpts.offset)
         }
-        if (queryHolder.customEnd.isNotBlank()) {
-            append(queryHolder.customEnd)
+        if (sqlOpts.customEnd.isNotBlank()) {
+            append(sqlOpts.customEnd)
         }
     }
     return QueryWithArgs(query, conditions.args.toTypedArray())
 }
+
+
+class QueryBuilder {
+    val query = QueryHolder()
+    
+    fun joins() 
+    
+    
+    
+}
+
+
 
 
 class WhereBuilder {
@@ -187,16 +205,9 @@ class WhereBuilder {
     
     fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                            joins: JoinBuilder.()->Unit = {},
-                                                            where: WhereBuilder.()->Unit = {},
-                                                          groupBy: String = "",
-                                                           having: String = "",
-                                                          orderBy: String = "",
-                                                            limit: Int? = null,
-                                                           offset: Int? = null,
-                                                        customEnd: String = "",
+                                                    queryBuilder: QueryBuilder.()->Unit = {},
     ): String {
-        val innerBuilder = getQuery(table, columns, joins, where, groupBy, having, orderBy, limit, offset, customEnd)
+        val innerBuilder = getQuery(table, columns, queryBuilder)
         
         val clause = "(${innerBuilder.query})"
         
@@ -207,6 +218,8 @@ class WhereBuilder {
     /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
     fun rawClause(str: String) = clauses.add(str)
 }
+
+
 
 
 class JoinBuilder {
