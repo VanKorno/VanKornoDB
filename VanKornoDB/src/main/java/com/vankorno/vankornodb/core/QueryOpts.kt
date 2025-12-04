@@ -37,7 +37,24 @@ class QueryOpts {
 }
 
 
-
+fun QueryOpts.applyOpts(                                          joins: JoinBuilder.()->Unit = {},
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                groupBy: String = "",
+                                                                 having: String = "",
+                                                                orderBy: String = "",
+                                                                  limit: Int? = null,
+                                                                 offset: Int? = null,
+                                                              customEnd: String = "",
+) {
+    this.joins(joins)
+    this.where(where)
+    if (groupBy.isNotBlank()) this.groupBy(groupBy)
+    if (having.isNotBlank()) this.having(having)
+    if (orderBy.isNotBlank()) this.orderBy(orderBy)
+    if (limit != null) this.limit(limit)
+    if (offset != null) this.offset(offset)
+    if (customEnd.isNotBlank()) this.customEnd(customEnd)
+}
 
 
 

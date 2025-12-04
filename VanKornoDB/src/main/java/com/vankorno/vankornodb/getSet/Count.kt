@@ -5,15 +5,16 @@ package com.vankorno.vankornodb.getSet
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.JoinBuilder
 import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.core.applyOpts
 
 /** Returns the number of rows matching the query conditions. */
 
-fun SQLiteDatabase.getRowCount(                               tableName: String,
+fun SQLiteDatabase.getRowCount(                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
-): Int = getCursor(
-    tableName, arrayOf("1"), joins, where
-).use { it.count }
+): Int = getCursor(table, arrayOf("1")) {
+    applyOpts(joins = joins, where = where)
+}.use { it.count }
 
 
 
@@ -21,10 +22,10 @@ fun SQLiteDatabase.getRowCount(                               tableName: String,
 
 /** Returns true if at least one row matches the query conditions. */
 
-fun SQLiteDatabase.hasRows(                                   tableName: String,
+fun SQLiteDatabase.hasRows(                                       table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
-): Boolean = getCursor(
-    tableName, arrayOf("1"), joins, where, limit = 1
-).use { it.moveToFirst() }
+): Boolean = getCursor(table, arrayOf("1")){
+    applyOpts(joins = joins, where = where, limit = 1)
+}.use { it.moveToFirst() }
 
