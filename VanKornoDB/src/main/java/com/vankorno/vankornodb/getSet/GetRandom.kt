@@ -17,19 +17,17 @@ import com.vankorno.vankornodb.core.data.DbConstants.randomVal
 inline fun <reified T> SQLiteDatabase.getRandomVal(               table: String,
                                                                  column: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
-): T? {
-    return getCursor(
-        table,
-        column = column,
+): T? = getCursor(table, column) {
+    applyOpts(
         where = where,
         orderBy = randomVal,
         limit = 1
-    ).use { cursor ->
-        if (cursor.moveToFirst())
-            cursor.getTypedVal<T>(0)
-        else
-            null
-    }
+    )
+}.use { cursor ->
+    if (cursor.moveToFirst())
+        cursor.getTypedVal<T>(0)
+    else
+        null
 }
 
 
@@ -58,9 +56,13 @@ fun SQLiteDatabase.getRandomId(                                   table: String,
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
-): T? = getCursor(
-    table, "*", where = where, orderBy = randomVal, limit = 1
-).use { cursor ->
+): T? = getCursor(table) {
+    applyOpts(
+        where = where,
+        orderBy = randomVal,
+        limit = 1
+    )
+}.use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(T::class)
 }
