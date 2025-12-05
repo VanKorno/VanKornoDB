@@ -663,67 +663,131 @@ open class DbHelper(              context: Context,
     
     
     
-    inline fun <reified T : DbEntity> getObjects(                    table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-                                                         noinline mapAfter: (T)->T = { it },
+    
+    inline fun <reified T : DbEntity> getObjects(                         table: String,
+                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                              noinline mapAfter: (T)->T,
     ): List<T> = read(emptyList(), "getObjects") {
         it.getObjects(table, queryOpts, mapAfter)
     }
     
-    suspend inline fun <reified T : DbEntity> getObjectsSusp(        table: String,
+    inline fun <reified T : DbEntity> getObjects(                    table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-                                                         noinline mapAfter: (T)->T = { it },
+    ): List<T> = read(emptyList(), "getObjects") {
+        it.getObjects(table, queryOpts)
+    }
+    
+    
+    suspend inline fun <reified T : DbEntity> getObjectsSusp(             table: String,
+                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                              noinline mapAfter: (T)->T,
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
         it.getObjects(table, queryOpts, mapAfter)
+    }
+    suspend inline fun <reified T : DbEntity> getObjectsSusp(        table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+    ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
+        it.getObjects(table, queryOpts)
+    }
+    
+    
+    
+    fun <T : DbEntity> getObjects(                                        clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                       mapAfter: (T)->T,
+    ): List<T> = read(emptyList(), "getObjects") {
+        it.getObjects(clazz, table, queryOpts, mapAfter)
     }
     
     fun <T : DbEntity> getObjects(                                   clazz: KClass<T>,
                                                                      table: String,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-                                                                  mapAfter: (T)->T = { it },
     ): List<T> = read(emptyList(), "getObjects") {
+        it.getObjects(clazz, table, queryOpts)
+    }
+    
+    
+    suspend fun <T : DbEntity> getObjectsSusp(                            clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                       mapAfter: (T)->T,
+    ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
         it.getObjects(clazz, table, queryOpts, mapAfter)
     }
     
     suspend fun <T : DbEntity> getObjectsSusp(                       clazz: KClass<T>,
                                                                      table: String,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-                                                                  mapAfter: (T)->T = { it },
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjects(clazz, table, queryOpts, mapAfter)
+        it.getObjects(clazz, table, queryOpts)
     }
     
     
     
+    inline fun <reified T : DbEntity> getObjMap(                          table: String,
+                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                              noinline mapAfter: (T)->T,
+    ): Map<Int, T> = read(emptyMap(), "getObjMap") {
+        it.getObjMap(table, queryOpts, mapAfter)
+    }
+    
     inline fun <reified T : DbEntity> getObjMap(                     table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-                                                         noinline mapAfter: (T)->T = { it },
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
+        it.getObjMap(table, queryOpts)
+    }
+    
+    
+    suspend inline fun <reified T : DbEntity> getObjMapSusp(              table: String,
+                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                              noinline mapAfter: (T)->T,
+    ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
         it.getObjMap(table, queryOpts, mapAfter)
     }
     
     suspend inline fun <reified T : DbEntity> getObjMapSusp(         table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-                                                         noinline mapAfter: (T)->T = { it },
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMap(table, queryOpts, mapAfter)
+        it.getObjMap(table, queryOpts)
+    }
+    
+    
+    
+    fun <T : DbEntity> getObjMap(                                         clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                       mapAfter: (T)->T,
+    ): Map<Int, T> = read(emptyMap(), "getObjMap") {
+        it.getObjMap(clazz, table, queryOpts, mapAfter)
     }
     
     fun <T : DbEntity> getObjMap(                                    clazz: KClass<T>,
                                                                      table: String,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-                                                                  mapAfter: (T)->T = { it },
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
+        it.getObjMap(clazz, table, queryOpts)
+    }
+    
+    
+    suspend fun <T : DbEntity> getObjMapSusp(                             clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                       mapAfter: (T)->T,
+    ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
         it.getObjMap(clazz, table, queryOpts, mapAfter)
     }
     
     suspend fun <T : DbEntity> getObjMapSusp(                        clazz: KClass<T>,
                                                                      table: String,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-                                                                  mapAfter: (T)->T = { it },
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMap(clazz, table, queryOpts, mapAfter)
+        it.getObjMap(clazz, table, queryOpts)
     }
+    
+    
+    
+    
     
     
     // =====================================   L I S T   ===================================== \\
