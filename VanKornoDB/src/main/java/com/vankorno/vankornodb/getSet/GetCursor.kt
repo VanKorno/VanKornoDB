@@ -25,12 +25,10 @@ fun SQLiteDatabase.getCursor(                                        table: Stri
 }
 
 
-
-/*
-fun SQLiteDatabase.getCursor(                                     table: String,
-                                                                vararg columns: String,
-                                                                queryOpts: QueryOpts.()->Unit = {},
+fun SQLiteDatabase.getCursor(                                        table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                            vararg columns: String,
 ): Cursor {
-    val (query, args) = getQuery(table, columns)
+    val (query, args) = getQuery(table, columns, queryOpts)
     return rawQuery(query, args)
-}*/
+}
