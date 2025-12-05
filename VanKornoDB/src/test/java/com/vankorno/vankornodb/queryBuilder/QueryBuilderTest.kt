@@ -118,15 +118,14 @@ class QueryBuilderTest { // TODO split tests/files
     fun `condition values`() {
         assertEquals(
             arrayOf("1", "1", "1.1", "1").joinToString(comma),
-            getQuery(
-                table = DirtyTable,
-                where = {
+            getQuery(DirtyTable) {
+                where {
                     ID greaterEqual 1
                     and { ID equal 1 }
                     and { ID greaterEqual 1.1F }
                     and { ID greaterEqual 1L }
                 }
-            ).args.joinToString(comma)
+            }.args.joinToString(comma)
         )
     }
     
@@ -140,9 +139,8 @@ class QueryBuilderTest { // TODO split tests/files
                 and + Name+"=?" +
                 or + "("+Position+"=?" + or + ID+"=?)",
             
-            getQuery(
-                DirtyTable,
-                where = {
+            getQuery(DirtyTable) {
+                where {
                     ID greaterEqual 10
                     and { Name equal BestName }
                     orGroup {
@@ -150,7 +148,7 @@ class QueryBuilderTest { // TODO split tests/files
                         or { ID equal 1 }
                     }
                 }
-            ).query
+            }.query
         )
     }
     
@@ -162,9 +160,8 @@ class QueryBuilderTest { // TODO split tests/files
                 and + Position+"=?" + 
                 or + ID+"=?"
             ,
-            getQuery(
-                DirtyTable,
-                where = {
+            getQuery(DirtyTable) {
+                where {
                     group {
                         ID greaterEqual 10
                         and { Name equal BestName }
@@ -172,7 +169,7 @@ class QueryBuilderTest { // TODO split tests/files
                     and { Position equal 1.1F }
                     or { ID equal 1 }
                 }
-            ).query
+            }.query
         )
     }
     
@@ -187,9 +184,8 @@ class QueryBuilderTest { // TODO split tests/files
                 and + Position+"=?" + 
                 or + ID+"=?"
             ,
-            getQuery(
-                DirtyTable,
-                where = {
+            getQuery(DirtyTable) {
+                where {
                     Position equal 1.1F
                     andGroup {
                         ID greaterEqual 10
@@ -198,16 +194,15 @@ class QueryBuilderTest { // TODO split tests/files
                     and { Position equal 1.1F }
                     or { ID equal 1 }
                 }
-            ).query
+            }.query
         )
     }
     
     
     @Test
     fun `Five lvl conditions`() {
-        val result = getQuery(
-            DirtyTable,
-            where = {
+        val result = getQuery(DirtyTable) {
+            where {
                 Position equal 1
                 andGroup {
                     ID greaterEqual 2
@@ -225,7 +220,7 @@ class QueryBuilderTest { // TODO split tests/files
                 and { Position equal 1.1F }
                 or { ID equal 1 }
             }
-        )
+        }
         
         assertEquals(
             selectAllFrom + DirtyTable +
@@ -262,19 +257,15 @@ class QueryBuilderTest { // TODO split tests/files
     
     @Test
     fun `Query in query`() {
-        val result = getQuery(
-            table = Users,
-            columns = arrayOf(Name),
-            where = {
-                subquery(
-                    table = Posts,
-                    columns = arrayOf(countAll),
-                    where = {
+        val result = getQuery(Users, columns(Name)) {
+            where {
+                subquery(Posts, columns(countAll)) {
+                    where {
                         (Posts dot UserID)  equal  (Users dot ID)
                     }
-                ) greater 10
+                } greater 10
             }
-        )
+        }
         
         assertEquals(
             "SELECT $Name FROM $Users WHERE (SELECT COUNT(*) FROM $Posts WHERE $Posts.user_id=?)>?",
