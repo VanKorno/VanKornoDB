@@ -10,7 +10,13 @@ import android.database.Cursor
 fun Cursor.getBool(col: Int) = this.getInt(col) == 1
 
 
-
+/**
+ * Simplifies passing columns where named param isn't needed:
+ *     columns(Column1, Column2)
+ * instead of:
+ *     columns = arrayOf(Column1, Column2)
+ */
+fun columns(vararg columns: String): Array<out String> = columns
 
 
 

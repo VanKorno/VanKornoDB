@@ -12,7 +12,7 @@ fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, ID, null, nul
 
 fun SQLiteDatabase.getAllIDs(                                                   table: String,
                                                                               orderBy: String = "",
-) = getList<Int>(table, ID, orderBy = orderBy)
+) = getList<Int>(table, ID) { orderBy(orderBy) }
 
 
 
@@ -26,33 +26,30 @@ fun SQLiteDatabase.tableExists(                                                 
 /**
  * Gets the names of all tables in the database that are not "internal"
  */
-fun SQLiteDatabase.getAppTableNames(): List<String> = getList<String>(
-    table = TABLE_Master,
-    column = Name,
-    where = {
+fun SQLiteDatabase.getAppTableNames(): List<String> = getList<String>(TABLE_Master, Name) {
+    where {
         Type equal DbTypeTable
         and { Name notLike "sqlite_%" }
         and { Name.equalNone(TABLE_AndroidMetadata, TABLE_EntityVersions) }
-    },
-    orderBy = Name
-)
+    }
+    orderBy(Name)
+}
+
 
 /**
  * Gets the names of all internal, system tables in the database, including the entity version table,
  * that is managed by VanKornoDB
  */
-fun SQLiteDatabase.getInternalTableNames(): List<String> = getList<String>(
-    table = TABLE_Master,
-    column = Name,
-    where = {
+fun SQLiteDatabase.getInternalTableNames(): List<String> = getList<String>(TABLE_Master, Name) {
+    where {
         Type equal DbTypeTable
         andGroup {
             Name like "sqlite_%"
             or { Name.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
         }
-    },
-    orderBy = Name
-)
+    }
+    orderBy(Name)
+}
 
 // TODO get tables with data, not just names
 
