@@ -16,7 +16,7 @@ inline fun <reified T> SQLiteDatabase.getRowVals(                    table: Stri
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
 ): List<T?> = getMultiRowVals<T>(table, columns) {
     applyOpts(queryOpts)
-    limit(1)
+    limit = 1
 }.firstOrNull() ?: emptyList()
 
 

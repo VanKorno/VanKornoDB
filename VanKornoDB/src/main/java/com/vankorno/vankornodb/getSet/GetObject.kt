@@ -37,7 +37,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(             table: Stri
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
 ): T = getCursor(table) {
     applyOpts(queryOpts)
-    limit(1)
+    limit = 1
 }.use { cursor ->
     if (!cursor.moveToFirst()) error("No result for getObj<>()")
     cursor.toEntity(T::class)
@@ -53,7 +53,7 @@ fun <T : DbEntity> SQLiteDatabase.getObj(                            clazz: KCla
                                                                  queryOpts: QueryOpts.()->Unit = {},
 ): T = getCursor(table) {
     applyOpts(queryOpts)
-    limit(1)
+    limit = 1
 }.use { cursor ->
     if (!cursor.moveToFirst()) error("No result for getObj($clazz)")
     cursor.toEntity(clazz)
@@ -76,7 +76,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(       table: Stri
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
 ): T? = getCursor(table) {
     applyOpts(queryOpts)
-    limit(1)
+    limit = 1
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(T::class)
@@ -93,7 +93,7 @@ fun <T : DbEntity> SQLiteDatabase.getObjOrNull(                      clazz: KCla
                                                                  queryOpts: QueryOpts.()->Unit = {},
 ): T? = getCursor(table) {
     applyOpts(queryOpts)
-    limit(1)
+    limit = 1
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(clazz)

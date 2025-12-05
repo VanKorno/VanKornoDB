@@ -23,6 +23,30 @@ class QueryOpts {
     fun customEnd(queryStr: String) { query.customEnd = queryStr }
     
     
+    var groupBy: String
+        get() = query.groupBy
+        set(value) { query.groupBy = value }
+    
+    var having: String
+        get() = query.having
+        set(value) { query.having = value }
+    
+    var orderBy: String
+        get() = query.orderBy
+        set(value) { query.orderBy = value }
+    
+    var limit: Int?
+        get() = query.limit
+        set(value) { query.limit = value }
+    
+    var offset: Int?
+        get() = query.offset
+        set(value) { query.offset = value }
+    
+    var customEnd: String
+        get() = query.customEnd
+        set(value) { query.customEnd = value }
+    
     
     fun applyOpts(opts: QueryOpts.()->Unit) { this.opts() }
     
@@ -46,6 +70,9 @@ class QueryOpts {
         if (customEnd.isNotBlank()) this.customEnd(customEnd)
     }
 }
+
+
+
 
 
 
