@@ -11,9 +11,9 @@ import kotlin.reflect.KClass
  * Retrieves a list of entities of type [T] mapped from the specified columns. 
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(         table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-                                                         noinline mapAfter: (T)->T = {it},
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(              table: String,
+                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                              noinline mapAfter: (T)->T,
 ): List<T> = getCursor(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
@@ -26,6 +26,10 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(         table: Stri
     }
 }
 
+// TODO Descr
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(         table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+): List<T> = getObjects(table, queryOpts) { it }
 
 
 
@@ -34,10 +38,10 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(         table: Stri
  * Retrieves a list of objects of the specified [clazz] mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : DbEntity> SQLiteDatabase.getObjects(                        clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-                                                                  mapAfter: (T)->T = {it},
+fun <T : DbEntity> SQLiteDatabase.getObjects(                             clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                       mapAfter: (T)->T,
 ): List<T> = getCursor(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
@@ -50,15 +54,24 @@ fun <T : DbEntity> SQLiteDatabase.getObjects(                        clazz: KCla
     }
 }
 
+// TODO Descr
+fun <T : DbEntity> SQLiteDatabase.getObjects(                        clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+): List<T> = getObjects(clazz, table, queryOpts) { it }
+
+
+
+
 
 /** 
  * Retrieves a map of objects of type [T] from the specified table, 
  * using the `id` column (Int) as the key. 
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(          table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-                                                         noinline mapAfter: (T)->T = {it},
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(               table: String,
+                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                              noinline mapAfter: (T)->T,
 ): Map<Int, T> = getCursor(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
@@ -74,15 +87,24 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(          table: Stri
 }
 
 
+// TODO Descr
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(          table: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+): Map<Int, T> = getObjMap(table, queryOpts) { it }
+
+
+
+
+
 /** 
  * Retrieves a map of objects of the specified [clazz] from the given table, 
  * using the `id` column (Int) as the key. 
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : DbEntity> SQLiteDatabase.getObjMap(                         clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-                                                                  mapAfter: (T)->T = {it},
+fun <T : DbEntity> SQLiteDatabase.getObjMap(                              clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                       mapAfter: (T)->T,
 ): Map<Int, T> = getCursor(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
@@ -98,7 +120,11 @@ fun <T : DbEntity> SQLiteDatabase.getObjMap(                         clazz: KCla
 }
 
 
-
+// TODO Descr
+fun <T : DbEntity> SQLiteDatabase.getObjMap(                         clazz: KClass<T>,
+                                                                     table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+): Map<Int, T> = getObjMap(clazz, table, queryOpts) { it }
 
 
 
