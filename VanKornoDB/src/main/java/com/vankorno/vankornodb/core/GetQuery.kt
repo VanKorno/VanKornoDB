@@ -12,7 +12,7 @@ import com.vankorno.vankornodb.core.data.QueryWithArgs
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                        queryOpts: QueryOpts.()->Unit = {},
+                                                        queryOpts: QueryOpts.()->Unit,
 ) = getQuery(table, columns, QueryOpts().apply(queryOpts).query)
 
 

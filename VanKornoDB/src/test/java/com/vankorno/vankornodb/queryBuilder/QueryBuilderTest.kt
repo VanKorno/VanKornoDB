@@ -1,6 +1,8 @@
 package com.vankorno.vankornodb.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.*
+import com.vankorno.vankornodb.columns
+import com.vankorno.vankornodb.core.data.DbConstants.where
 import com.vankorno.vankornodb.core.getQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -18,48 +20,51 @@ class QueryBuilderTest { // TODO split tests/files
         )
         assertEquals(
             selectAllFrom + DirtyTable + orderBy + ID,
-            getQuery(DirtyTable, orderBy = ID).query
+            getQuery(DirtyTable) { orderBy(ID) }.query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+"=?" + orderBy + ID c Name,
-            getQuery(DirtyTable, where={ ID equal 1 }, orderBy=ID c Name).query
+            
+            getQuery(DirtyTable) {
+                where { ID equal 1 }
+                orderBy(ID c Name)
+            }.query
         )
         
         assertEquals(
             select + ID c Name + from + DirtyTable + where + ID+">=?",
-            getQuery(
-                table = DirtyTable,
-                columns = arrayOf(ID, Name),
-                where = { ID greaterEqual 10 }
-            ).query
+            
+            getQuery(DirtyTable, columns(ID, Name)) {
+                where { ID greaterEqual 10 }
+            }.query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+">?",
-            getQuery(
-                table = DirtyTable,
-                where = { ID greater 1 }
-            ).query
+            
+            getQuery(DirtyTable) {
+                where { ID greater 1 }
+            }.query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+"<?",
-            getQuery(
-                table = DirtyTable,
-                where = { ID less 1 }
-            ).query
+            
+            getQuery(DirtyTable) {
+                where { ID less 1 }
+            }.query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+"<=?",
-            getQuery(
-                table = DirtyTable,
-                where = { ID lessEqual 1 }
-            ).query
+            
+            getQuery(DirtyTable) {
+                where { ID lessEqual 1 }
+            }.query
         )
         assertEquals(
             selectAllFrom + DirtyTable + where + Bool1+"=?",
-            getQuery(
-                table = DirtyTable,
-                where = { Bool1 equal true }
-            ).query
+            
+            getQuery(DirtyTable) {
+                where { Bool1 equal true }
+            }.query
         )
     }
     
@@ -67,13 +72,13 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Simple AND OR conditions`() {
         assertEquals(
             selectAllFrom + DirtyTable + where + ID+">=?" + and + Name+"=?",
-            getQuery(
-                table = DirtyTable,
-                where = {
+            
+            getQuery(DirtyTable) {
+                where {
                     ID greaterEqual 10
                     and { Name equal BestName }
                 }
-            ).query
+            }.query
         )
         
         assertEquals(
@@ -82,15 +87,14 @@ class QueryBuilderTest { // TODO split tests/files
                 and + Name+"=?" +
                 and + Position+"=?" +
                 and + ID+"=?",
-            getQuery(
-                table = DirtyTable,
-                where = {
+            getQuery(DirtyTable) {
+                where {
                     ID greaterEqual 10
                     and { Name equal BestName }
                     and { Position equal 1.1F }
                     and { ID equal "1" }
                 }
-            ).query
+            }.query
         )
         
         assertEquals(
@@ -99,15 +103,14 @@ class QueryBuilderTest { // TODO split tests/files
                 and + Name+"=?" +
                 or + Position+"=?" +
                 or + ID+"=?",
-            getQuery(
-                table = DirtyTable,
-                where = {
+            getQuery(DirtyTable) {
+                where {
                     ID greaterEqual 10
                     and { Name equal BestName }
                     or { Position equal 1.1F }
                     or { ID equal 1 }
                 }
-            ).query
+            }.query
         )
     }
     
