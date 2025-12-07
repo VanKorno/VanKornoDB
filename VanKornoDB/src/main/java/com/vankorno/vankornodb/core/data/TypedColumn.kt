@@ -1,9 +1,9 @@
 package com.vankorno.vankornodb.core.data
 
 sealed class TypedColumn<T>(
-    val name: String,
-    val defaultVal: T,
-    val size: Int = 1, // default 1 for scalar columns, >1 for lists
+                                   val name: String,
+                             val defaultVal: T,
+                                   val size: Int = 1, // default 1 for scalar columns, >1 for lists
 )
 
 
@@ -42,3 +42,8 @@ fun bListCol(name: String, size: Int, defaultVal: Boolean = false) = BoolListCol
 fun lListCol(name: String, size: Int, defaultVal: Long = 0L) = LongListCol(name, size, defaultVal)
 fun fListCol(name: String, size: Int, defaultVal: Float = 0F) = FloatListCol(name, size, defaultVal)
 fun pListCol(name: String, size: Int, defaultVal: ByteArray = ByteArray(0)) = BlobListCol(name, size, defaultVal)
+
+
+
+
+

@@ -1,10 +1,37 @@
 package com.vankorno.vankornodb.core
 
+import com.vankorno.vankornodb.core.data.BlobCol
+import com.vankorno.vankornodb.core.data.BoolCol
 import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.FloatCol
+import com.vankorno.vankornodb.core.data.IntCol
+import com.vankorno.vankornodb.core.data.LongCol
+import com.vankorno.vankornodb.core.data.StrCol
 
 class WhereBuilder {
     val clauses = mutableListOf<String>()
     val args = mutableListOf<String>()
+    
+    infix fun IntCol.equal(value: Int) = condition(this.name, "=", value.toString())
+    infix fun StrCol.equal(value: String) = condition(this.name, "=", value)
+    infix fun BoolCol.equal(value: Boolean) = condition(this.name, "=", if (value) "1" else "0")
+    infix fun LongCol.equal(value: Long) = condition(this.name, "=", value.toString())
+    infix fun FloatCol.equal(value: Float) = condition(this.name, "=", value.toString())
+    infix fun BlobCol.equal(value: ByteArray) = condition(this.name, "=", value.toString())
+    
+    infix fun IntCol.notEqual(value: Int) = condition(this.name, "!=", value.toString())
+    infix fun StrCol.notEqual(value: String) = condition(this.name, "!=", value)
+    infix fun BoolCol.notEqual(value: Boolean) = condition(this.name, "!=", if (value) "1" else "0")
+    infix fun LongCol.notEqual(value: Long) = condition(this.name, "!=", value.toString())
+    infix fun FloatCol.notEqual(value: Float) = condition(this.name, "!=", value.toString())
+    infix fun BlobCol.notEqual(value: ByteArray) = condition(this.name, "!=", value.toString())
+    
+    
+    
+    
+    
+    
+    
     
     private fun condition(                                                        column: String,
                                                                                 operator: String,
