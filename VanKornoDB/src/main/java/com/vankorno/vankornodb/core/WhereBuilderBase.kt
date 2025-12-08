@@ -19,7 +19,9 @@ abstract class WhereBuilderBase() {
     internal fun conditionRaw(                                                    column: String,
                                                                                 operator: String,
                                                                              otherColumn: String,
-    ) = clauses.add(column + operator + otherColumn)
+    ) {
+        clauses.add(column + operator + otherColumn)
+    }
     
     
     internal fun <T> multCompare(                                                 column: String,
@@ -45,10 +47,10 @@ abstract class WhereBuilderBase() {
     }
     
     
-    internal fun multCompareRaw(                                             column: String,
-                                                                           operator: String,
-                                                                          otherCols: Array<out String>,
-                                                                           positive: Boolean,
+    internal fun multCompareRaw(                                          column: String,
+                                                                        operator: String,
+                                                                       otherCols: Array<out String>,
+                                                                        positive: Boolean,
     ) {
         clauses.add(
             buildString {
@@ -65,8 +67,13 @@ abstract class WhereBuilderBase() {
         )
     }
     
-    
-    
-    
-    
 }
+
+
+
+
+
+
+
+
+

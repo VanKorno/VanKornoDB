@@ -10,6 +10,59 @@ import com.vankorno.vankornodb.core.data.StrCol
 
 class WhereBuilder() : WhereBuilderBase() {
     
+    fun group(                                                   whereBuilder: WhereBuilder.()->Unit
+    ) {
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        clauses.add("(" + innerBuilder.clauses.joinToString(" ") + ")")
+        args.addAll(innerBuilder.args)
+    }
+
+    
+    fun and(                                                     whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("AND")
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        clauses.addAll(innerBuilder.clauses)
+        args.addAll(innerBuilder.args)
+    }
+    fun andGroup(                                                whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("AND")
+        group(whereBuilder)
+    }
+    
+    fun or(                                                      whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("OR")
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        clauses.addAll(innerBuilder.clauses)
+        args.addAll(innerBuilder.args)
+    }
+    fun orGroup(                                                 whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("OR")
+        group(whereBuilder)
+    }
+    
+    fun subquery(                                           table: String,
+                                                          columns: Array<out String> = arrayOf("*"),
+                                                        queryOpts: QueryOpts.()->Unit = {},
+    ): String {
+        val innerBuilder = getQuery(table, columns, queryOpts)
+        
+        val clause = "(${innerBuilder.query})"
+        
+        args.addAll(innerBuilder.args)
+        return clause
+    }
+    
+    /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
+    fun rawClause(str: String) = clauses.add(str)
+    
+    
+    
+    // ======================  T Y P E - S A F E   C O M P A R I S O N  ====================== \\
+    
     infix fun IntCol.equal(value: Int) = condition(this.name, "=", value.toString())
     infix fun StrCol.equal(value: String) = condition(this.name, "=", value)
     infix fun BoolCol.equal(value: Boolean) = condition(this.name, "=", if (value) "1" else "0")
@@ -45,8 +98,6 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun BoolCol.lessEqual(value: Boolean) = condition(this.name, "<=", if (value) "1" else "0")
     infix fun LongCol.lessEqual(value: Long) = condition(this.name, "<=", value.toString())
     infix fun FloatCol.lessEqual(value: Float) = condition(this.name, "<=", value.toString())
-    
-    
     
     
     
@@ -98,9 +149,7 @@ class WhereBuilder() : WhereBuilderBase() {
     fun StrCol.notLikeAny(vararg values: String) = multCompare(this.name, " NOT LIKE ", values)
     
     fun StrCol.likeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " LIKE ", otherCols.map { it.name }.toTypedArray(), true)
-    
     fun StrCol.notLikeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " NOT LIKE ", otherCols.map { it.name }.toTypedArray(), false)
-    
     
     
     infix fun StrCol.equalAny(values: Array<String>) = multCompare(this.name, IN, values)
@@ -115,11 +164,12 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun BoolCol.notEqualAny(values: Array<Boolean>) = multCompare(this.name, notIN, values.map { if (it) "1" else "0" }.toTypedArray())
     infix fun LongCol.notEqualAny(values: Array<Long>) = multCompare(this.name, notIN, values)
     infix fun FloatCol.notEqualAny(values: Array<Float>) = multCompare(this.name, notIN, values)
-
     
     
     
     
+    
+    // ==================  N O T   T Y P E - S A F E   C O M P A R I S O N  ================== \\
     
     /** For comparisons to provided values. The values are automatically put into the arg array. **/
     
@@ -167,54 +217,4 @@ class WhereBuilder() : WhereBuilderBase() {
     fun <T> String.equalAny(vararg values: T) = multCompare(this, IN, values)
     fun <T> String.notEqualAny(vararg values: T) = multCompare(this, notIN, values)
     
-    
-    
-    fun group(                                                   whereBuilder: WhereBuilder.()->Unit
-    ) {
-        val innerBuilder = WhereBuilder().apply(whereBuilder)
-        clauses.add("(" + innerBuilder.clauses.joinToString(" ") + ")")
-        args.addAll(innerBuilder.args)
-    }
-
-    
-    fun and(                                                     whereBuilder: WhereBuilder.()->Unit
-    ) {
-        clauses.add("AND")
-        val innerBuilder = WhereBuilder().apply(whereBuilder)
-        clauses.addAll(innerBuilder.clauses)
-        args.addAll(innerBuilder.args)
-    }
-    fun andGroup(                                                whereBuilder: WhereBuilder.()->Unit
-    ) {
-        clauses.add("AND")
-        group(whereBuilder)
-    }
-    
-    fun or(                                                      whereBuilder: WhereBuilder.()->Unit
-    ) {
-        clauses.add("OR")
-        val innerBuilder = WhereBuilder().apply(whereBuilder)
-        clauses.addAll(innerBuilder.clauses)
-        args.addAll(innerBuilder.args)
-    }
-    fun orGroup(                                                 whereBuilder: WhereBuilder.()->Unit
-    ) {
-        clauses.add("OR")
-        group(whereBuilder)
-    }
-    
-    fun subquery(                                           table: String,
-                                                          columns: Array<out String> = arrayOf("*"),
-                                                        queryOpts: QueryOpts.()->Unit = {},
-    ): String {
-        val innerBuilder = getQuery(table, columns, queryOpts)
-        
-        val clause = "(${innerBuilder.query})"
-        
-        args.addAll(innerBuilder.args)
-        return clause
-    }
-    
-    /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
-    fun rawClause(str: String) = clauses.add(str)
 }
