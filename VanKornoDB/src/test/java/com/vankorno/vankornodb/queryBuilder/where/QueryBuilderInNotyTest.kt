@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.queryBuilder
+package com.vankorno.vankornodb.queryBuilder.where
 
 import com.vankorno.vankornodb.TestConstants.DirtyTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
@@ -6,7 +6,7 @@ import com.vankorno.vankornodb.core.getQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class QueryBuilderInTest {
+class QueryBuilderInNotyTest {
     
     @Test
     fun `IN basic`() {

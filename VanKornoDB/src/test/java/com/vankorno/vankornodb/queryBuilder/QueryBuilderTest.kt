@@ -255,27 +255,6 @@ class QueryBuilderTest { // TODO split tests/files
     }
     
     
-    @Test
-    fun `Query in query`() {
-        val result = getQuery(Users, columns(Name)) {
-            where {
-                subquery(Posts, columns(countAll)) {
-                    where {
-                        (Posts dot UserID)  equal  (Users dot ID)
-                    }
-                } greater 10
-            }
-        }
-        
-        assertEquals(
-            "SELECT $Name FROM $Users WHERE (SELECT COUNT(*) FROM $Posts WHERE $Posts.user_id=?)>?",
-            result.query
-        )
-        assertEquals(
-            arrayOf("$Users.$ID", "10").joinToString(comma),
-            result.args.joinToString(comma)
-        )
-    }
     
     
     
