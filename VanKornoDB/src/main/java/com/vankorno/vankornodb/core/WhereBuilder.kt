@@ -50,6 +50,24 @@ class WhereBuilder() : WhereBuilderBase() {
     
     
     
+    infix fun IntCol.equalCol(otherCol: IntCol) = conditionRaw(this.name, "=", otherCol.name)
+    infix fun StrCol.equalCol(otherCol: StrCol) = conditionRaw(this.name, "=", otherCol.name)
+    infix fun BoolCol.equalCol(otherCol: BoolCol) = conditionRaw(this.name, "=", otherCol.name)
+    infix fun LongCol.equalCol(otherCol: LongCol) = conditionRaw(this.name, "=", otherCol.name)
+    infix fun FloatCol.equalCol(otherCol: FloatCol) = conditionRaw(this.name, "=", otherCol.name)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /** For comparisons to provided values. The values are automatically put into the arg array. **/
     
@@ -64,12 +82,12 @@ class WhereBuilder() : WhereBuilderBase() {
     /** For comparisons to values from other columns.
      *  The provided column names aren't treated as values and are not put into the arg array, but put directly inside the query string.
     **/
-    infix fun String.equalCol(other: String) = conditionRaw(this, "=", other)
-    infix fun String.notEqualCol(other: String) = conditionRaw(this, "!=", other)
-    infix fun String.lessCol(other: String) = conditionRaw(this, "<", other)
-    infix fun String.lessEqualCol(other: String) = conditionRaw(this, "<=", other)
-    infix fun String.greaterCol(other: String) = conditionRaw(this, ">", other)
-    infix fun String.greaterEqualCol(other: String) = conditionRaw(this, ">=", other)
+    infix fun String.equalCol(otherCol: String) = conditionRaw(this, "=", otherCol)
+    infix fun String.notEqualCol(otherCol: String) = conditionRaw(this, "!=", otherCol)
+    infix fun String.lessCol(otherCol: String) = conditionRaw(this, "<", otherCol)
+    infix fun String.lessEqualCol(otherCol: String) = conditionRaw(this, "<=", otherCol)
+    infix fun String.greaterCol(otherCol: String) = conditionRaw(this, ">", otherCol)
+    infix fun String.greaterEqualCol(otherCol: String) = conditionRaw(this, ">=", otherCol)
     
     
     infix fun String.dot(str2: String = "") = this + "." + str2
