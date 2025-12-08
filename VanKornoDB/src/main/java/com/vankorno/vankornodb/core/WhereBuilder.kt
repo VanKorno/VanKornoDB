@@ -22,9 +22,29 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun LongCol.notEqual(value: Long) = condition(this.name, "!=", value.toString())
     infix fun FloatCol.notEqual(value: Float) = condition(this.name, "!=", value.toString())
     
+    infix fun IntCol.greater(value: Int) = condition(this.name, ">", value.toString())
+    infix fun StrCol.greater(value: String) = condition(this.name, ">", value)
+    infix fun BoolCol.greater(value: Boolean) = condition(this.name, ">", if (value) "1" else "0")
+    infix fun LongCol.greater(value: Long) = condition(this.name, ">", value.toString())
+    infix fun FloatCol.greater(value: Float) = condition(this.name, ">", value.toString())
     
+    infix fun IntCol.greaterEqual(value: Int) = condition(this.name, ">=", value.toString())
+    infix fun StrCol.greaterEqual(value: String) = condition(this.name, ">=", value)
+    infix fun BoolCol.greaterEqual(value: Boolean) = condition(this.name, ">=", if (value) "1" else "0")
+    infix fun LongCol.greaterEqual(value: Long) = condition(this.name, ">=", value.toString())
+    infix fun FloatCol.greaterEqual(value: Float) = condition(this.name, ">=", value.toString())
     
+    infix fun IntCol.less(value: Int) = condition(this.name, "<", value.toString())
+    infix fun StrCol.less(value: String) = condition(this.name, "<", value)
+    infix fun BoolCol.less(value: Boolean) = condition(this.name, "<", if (value) "1" else "0")
+    infix fun LongCol.less(value: Long) = condition(this.name, "<", value.toString())
+    infix fun FloatCol.less(value: Float) = condition(this.name, "<", value.toString())
     
+    infix fun IntCol.lessEqual(value: Int) = condition(this.name, "<=", value.toString())
+    infix fun StrCol.lessEqual(value: String) = condition(this.name, "<=", value)
+    infix fun BoolCol.lessEqual(value: Boolean) = condition(this.name, "<=", if (value) "1" else "0")
+    infix fun LongCol.lessEqual(value: Long) = condition(this.name, "<=", value.toString())
+    infix fun FloatCol.lessEqual(value: Float) = condition(this.name, "<=", value.toString())
     
     
     
