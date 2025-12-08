@@ -34,13 +34,13 @@ import com.vankorno.vankornodb.getSet.tableExists
 /**
  * Creates the db file, initializes DbProvider, handles the entity version table, onCreate and onUpdate.
  */
-open class DbMaker(               context: Context,
+abstract class DbMaker(           context: Context,
                                    dbName: String,
                                 dbVersion: Int,
                            val entityMeta: Collection<BaseEntityMeta>,
                           val runOnCreate: (SQLiteDatabase)->Unit = {},
                          val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
-    
+
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
     
     val dbLock = Any()
