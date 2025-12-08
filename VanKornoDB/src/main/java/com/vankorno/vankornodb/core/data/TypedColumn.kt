@@ -4,6 +4,7 @@ sealed class TypedColumn<T>(
                                    val name: String,
                              val defaultVal: T,
                                    val size: Int = 1, // default 1 for scalar columns, >1 for lists
+                               val nullable: Boolean = false, // Not used yet
 )
 
 
