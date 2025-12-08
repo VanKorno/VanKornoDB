@@ -8,6 +8,15 @@ sealed class TypedColumn<T>(
 )
 
 
+abstract class TypedListColumn<T>(                                           name: String,
+                                                                             size: Int,
+                                                                       defaultVal: T,
+                                                                         nullable: Boolean = false,
+) : TypedColumn<List<T>>(name, List(size) { defaultVal }, size, nullable) {
+    fun at(idx: Int) = name + (idx + 1)
+}
+
+
 interface EntityColumns {
     val columns: List<TypedColumn<*>>
 }
@@ -29,13 +38,12 @@ fun fCol(name: String, defaultVal: Float = 0F) = FloatCol(name, defaultVal)
 fun pCol(name: String, defaultVal: ByteArray = ByteArray(0)) = BlobCol(name, defaultVal)
 
 
-class IntListCol(name: String, size: Int, defaultVal: Int = 0) : TypedColumn<List<Int>>(name, List(size) { defaultVal }, size)
-class StrListCol(name: String, size: Int, defaultVal: String = "") : TypedColumn<List<String>>(name, List(size) { defaultVal }, size)
-class BoolListCol(name: String, size: Int, defaultVal: Boolean = false) : TypedColumn<List<Boolean>>(name, List(size) { defaultVal }, size)
-class LongListCol(name: String, size: Int, defaultVal: Long = 0L) : TypedColumn<List<Long>>(name, List(size) { defaultVal }, size)
-class FloatListCol(name: String, size: Int, defaultVal: Float = 0F) : TypedColumn<List<Float>>(name, List(size) { defaultVal }, size)
-class BlobListCol(name: String, size: Int, defaultVal: ByteArray = ByteArray(0)) : TypedColumn<List<ByteArray>>(name, List(size) { defaultVal }, size)
-
+class IntListCol(name: String, size: Int, defaultVal: Int = 0) : TypedListColumn<Int>(name, size, defaultVal)
+class StrListCol(name: String, size: Int, defaultVal: String = "") : TypedListColumn<String>(name, size, defaultVal)
+class BoolListCol(name: String, size: Int, defaultVal: Boolean = false) : TypedListColumn<Boolean>(name, size, defaultVal)
+class LongListCol(name: String, size: Int, defaultVal: Long = 0L) : TypedListColumn<Long>(name, size, defaultVal)
+class FloatListCol(name: String, size: Int, defaultVal: Float = 0F) : TypedListColumn<Float>(name, size, defaultVal)
+class BlobListCol(name: String, size: Int, defaultVal: ByteArray = ByteArray(0)) : TypedListColumn<ByteArray>(name, size, defaultVal)
 
 fun iListCol(name: String, size: Int, defaultVal: Int = 0) = IntListCol(name, size, defaultVal)
 fun sListCol(name: String, size: Int, defaultVal: String = "") = StrListCol(name, size, defaultVal)
