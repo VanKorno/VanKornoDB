@@ -80,26 +80,18 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun FloatCol.notEqual(value: Float) = condition(this.name, "!=", value.toString())
     
     infix fun IntCol.greater(value: Int) = condition(this.name, ">", value.toString())
-    infix fun StrCol.greater(value: String) = condition(this.name, ">", value)
-    infix fun BoolCol.greater(value: Boolean) = condition(this.name, ">", if (value) "1" else "0")
     infix fun LongCol.greater(value: Long) = condition(this.name, ">", value.toString())
     infix fun FloatCol.greater(value: Float) = condition(this.name, ">", value.toString())
     
     infix fun IntCol.greaterEqual(value: Int) = condition(this.name, ">=", value.toString())
-    infix fun StrCol.greaterEqual(value: String) = condition(this.name, ">=", value)
-    infix fun BoolCol.greaterEqual(value: Boolean) = condition(this.name, ">=", if (value) "1" else "0")
     infix fun LongCol.greaterEqual(value: Long) = condition(this.name, ">=", value.toString())
     infix fun FloatCol.greaterEqual(value: Float) = condition(this.name, ">=", value.toString())
     
     infix fun IntCol.less(value: Int) = condition(this.name, "<", value.toString())
-    infix fun StrCol.less(value: String) = condition(this.name, "<", value)
-    infix fun BoolCol.less(value: Boolean) = condition(this.name, "<", if (value) "1" else "0")
     infix fun LongCol.less(value: Long) = condition(this.name, "<", value.toString())
     infix fun FloatCol.less(value: Float) = condition(this.name, "<", value.toString())
     
     infix fun IntCol.lessEqual(value: Int) = condition(this.name, "<=", value.toString())
-    infix fun StrCol.lessEqual(value: String) = condition(this.name, "<=", value)
-    infix fun BoolCol.lessEqual(value: Boolean) = condition(this.name, "<=", if (value) "1" else "0")
     infix fun LongCol.lessEqual(value: Long) = condition(this.name, "<=", value.toString())
     infix fun FloatCol.lessEqual(value: Float) = condition(this.name, "<=", value.toString())
     
@@ -118,26 +110,18 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun FloatCol.notEqualCol(otherCol: FloatCol) = conditionRaw(this.name, "!=", otherCol.name)
     
     infix fun IntCol.greaterCol(otherCol: IntCol) = conditionRaw(this.name, ">", otherCol.name)
-    infix fun StrCol.greaterCol(otherCol: StrCol) = conditionRaw(this.name, ">", otherCol.name)
-    infix fun BoolCol.greaterCol(otherCol: BoolCol) = conditionRaw(this.name, ">", otherCol.name)
     infix fun LongCol.greaterCol(otherCol: LongCol) = conditionRaw(this.name, ">", otherCol.name)
     infix fun FloatCol.greaterCol(otherCol: FloatCol) = conditionRaw(this.name, ">", otherCol.name)
     
     infix fun IntCol.greaterEqualCol(otherCol: IntCol) = conditionRaw(this.name, ">=", otherCol.name)
-    infix fun StrCol.greaterEqualCol(otherCol: StrCol) = conditionRaw(this.name, ">=", otherCol.name)
-    infix fun BoolCol.greaterEqualCol(otherCol: BoolCol) = conditionRaw(this.name, ">=", otherCol.name)
     infix fun LongCol.greaterEqualCol(otherCol: LongCol) = conditionRaw(this.name, ">=", otherCol.name)
     infix fun FloatCol.greaterEqualCol(otherCol: FloatCol) = conditionRaw(this.name, ">=", otherCol.name)
     
     infix fun IntCol.lessCol(otherCol: IntCol) = conditionRaw(this.name, "<", otherCol.name)
-    infix fun StrCol.lessCol(otherCol: StrCol) = conditionRaw(this.name, "<", otherCol.name)
-    infix fun BoolCol.lessCol(otherCol: BoolCol) = conditionRaw(this.name, "<", otherCol.name)
     infix fun LongCol.lessCol(otherCol: LongCol) = conditionRaw(this.name, "<", otherCol.name)
     infix fun FloatCol.lessCol(otherCol: FloatCol) = conditionRaw(this.name, "<", otherCol.name)
     
     infix fun IntCol.lessEqualCol(otherCol: IntCol) = conditionRaw(this.name, "<=", otherCol.name)
-    infix fun StrCol.lessEqualCol(otherCol: StrCol) = conditionRaw(this.name, "<=", otherCol.name)
-    infix fun BoolCol.lessEqualCol(otherCol: BoolCol) = conditionRaw(this.name, "<=", otherCol.name)
     infix fun LongCol.lessEqualCol(otherCol: LongCol) = conditionRaw(this.name, "<=", otherCol.name)
     infix fun FloatCol.lessEqualCol(otherCol: FloatCol) = conditionRaw(this.name, "<=", otherCol.name)
     
