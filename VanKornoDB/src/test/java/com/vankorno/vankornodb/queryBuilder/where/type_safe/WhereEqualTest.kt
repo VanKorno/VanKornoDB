@@ -1,12 +1,11 @@
 package com.vankorno.vankornodb.queryBuilder.where.type_safe
 
 import com.vankorno.vankornodb.core.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants
 import com.vankorno.vankornodb.core.data.SharedCol.shActive
-import com.vankorno.vankornodb.core.data.SharedCol.shName
 import com.vankorno.vankornodb.core.data.SharedCol.shPosition
 import com.vankorno.vankornodb.core.data.fCol
 import com.vankorno.vankornodb.core.data.lCol
+import com.vankorno.vankornodb.core.data.sCol
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -23,11 +22,10 @@ class WhereEqualTest {
     
     @Test
     fun `Equal Str`() {
-        val where: WhereBuilder.()->Unit = { shName equal "russiaIsATerroristState" }
-        val whereObj = WhereBuilder().apply(where)
+        val whereObj = WhereBuilder().apply { sCol("russiaIs") equal "aTerroristState" }
         
-        assertEquals(whereObj.clauses[0], DbConstants.Name + "=?")
-        assertEquals(whereObj.args[0], "russiaIsATerroristState")
+        assertEquals(whereObj.clauses[0], "russiaIs=?")
+        assertEquals(whereObj.args[0], "aTerroristState")
     }
     
     
@@ -56,9 +54,9 @@ class WhereEqualTest {
     
     @Test
     fun `Equal Float`() {
-        val whereObj = WhereBuilder().apply { fCol("ruFloatSucks") equal 13.2F }
+        val whereObj = WhereBuilder().apply { fCol("ruFloatDoesntFloat") equal 13.2F }
         
-        assertEquals(whereObj.clauses[0], "ruFloatSucks=?")
+        assertEquals(whereObj.clauses[0], "ruFloatDoesntFloat=?")
         assertEquals(whereObj.args[0], "13.2")
     }
     
