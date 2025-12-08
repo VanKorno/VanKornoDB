@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core
 
-
+@Suppress("unused")
 class JoinBuilder {
     val joins = mutableListOf<String>()
 

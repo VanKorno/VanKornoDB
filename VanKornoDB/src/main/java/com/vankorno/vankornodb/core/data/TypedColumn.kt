@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.core.data
 
+@Suppress("unused")
 sealed class TypedColumn<T>(
                                    val name: String,
                              val defaultVal: T,

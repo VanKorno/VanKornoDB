@@ -2,6 +2,7 @@ package com.vankorno.vankornodb.core
 
 import com.vankorno.vankornodb.core.data.QueryOptsHolder
 
+@Suppress("unused")
 class QueryOpts {
     val query = QueryOptsHolder()
     

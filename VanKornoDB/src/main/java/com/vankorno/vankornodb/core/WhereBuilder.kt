@@ -8,6 +8,7 @@ import com.vankorno.vankornodb.core.data.IntCol
 import com.vankorno.vankornodb.core.data.LongCol
 import com.vankorno.vankornodb.core.data.StrCol
 
+@Suppress("unused")
 class WhereBuilder() : WhereBuilderBase() {
     
     fun group(                                                   whereBuilder: WhereBuilder.()->Unit
