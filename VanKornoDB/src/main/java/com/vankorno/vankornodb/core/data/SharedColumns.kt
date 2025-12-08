@@ -9,7 +9,7 @@ object SharedCol {
     val shID = iCol(ID, -1)
     val shRowID = iCol(RowID, -1)
     val shName = sCol(Name)
-    val shPositon = iCol(Position)
+    val shPosition = iCol(Position)
     val shType = sCol(Type)
     val shActive = bCol("active")
 }
