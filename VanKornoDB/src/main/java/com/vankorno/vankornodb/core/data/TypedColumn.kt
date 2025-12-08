@@ -8,11 +8,6 @@ sealed class TypedColumn<T>(
 )
 
 
-interface EntityColumns {
-    val columns: List<TypedColumn<*>>
-}
-
-
 class IntCol(name: String, defaultVal: Int = 0) : TypedColumn<Int>(name, defaultVal)
 class StrCol(name: String, defaultVal: String = "") : TypedColumn<String>(name, defaultVal)
 class BoolCol(name: String, defaultVal: Boolean = false) : TypedColumn<Boolean>(name, defaultVal)
