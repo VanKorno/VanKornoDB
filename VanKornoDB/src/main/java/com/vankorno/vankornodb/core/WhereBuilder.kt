@@ -56,10 +56,35 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun LongCol.equalCol(otherCol: LongCol) = conditionRaw(this.name, "=", otherCol.name)
     infix fun FloatCol.equalCol(otherCol: FloatCol) = conditionRaw(this.name, "=", otherCol.name)
     
+    infix fun IntCol.notEqualCol(otherCol: IntCol) = conditionRaw(this.name, "!=", otherCol.name)
+    infix fun StrCol.notEqualCol(otherCol: StrCol) = conditionRaw(this.name, "!=", otherCol.name)
+    infix fun BoolCol.notEqualCol(otherCol: BoolCol) = conditionRaw(this.name, "!=", otherCol.name)
+    infix fun LongCol.notEqualCol(otherCol: LongCol) = conditionRaw(this.name, "!=", otherCol.name)
+    infix fun FloatCol.notEqualCol(otherCol: FloatCol) = conditionRaw(this.name, "!=", otherCol.name)
     
+    infix fun IntCol.greaterCol(otherCol: IntCol) = conditionRaw(this.name, ">", otherCol.name)
+    infix fun StrCol.greaterCol(otherCol: StrCol) = conditionRaw(this.name, ">", otherCol.name)
+    infix fun BoolCol.greaterCol(otherCol: BoolCol) = conditionRaw(this.name, ">", otherCol.name)
+    infix fun LongCol.greaterCol(otherCol: LongCol) = conditionRaw(this.name, ">", otherCol.name)
+    infix fun FloatCol.greaterCol(otherCol: FloatCol) = conditionRaw(this.name, ">", otherCol.name)
     
+    infix fun IntCol.greaterEqualCol(otherCol: IntCol) = conditionRaw(this.name, ">=", otherCol.name)
+    infix fun StrCol.greaterEqualCol(otherCol: StrCol) = conditionRaw(this.name, ">=", otherCol.name)
+    infix fun BoolCol.greaterEqualCol(otherCol: BoolCol) = conditionRaw(this.name, ">=", otherCol.name)
+    infix fun LongCol.greaterEqualCol(otherCol: LongCol) = conditionRaw(this.name, ">=", otherCol.name)
+    infix fun FloatCol.greaterEqualCol(otherCol: FloatCol) = conditionRaw(this.name, ">=", otherCol.name)
     
+    infix fun IntCol.lessCol(otherCol: IntCol) = conditionRaw(this.name, "<", otherCol.name)
+    infix fun StrCol.lessCol(otherCol: StrCol) = conditionRaw(this.name, "<", otherCol.name)
+    infix fun BoolCol.lessCol(otherCol: BoolCol) = conditionRaw(this.name, "<", otherCol.name)
+    infix fun LongCol.lessCol(otherCol: LongCol) = conditionRaw(this.name, "<", otherCol.name)
+    infix fun FloatCol.lessCol(otherCol: FloatCol) = conditionRaw(this.name, "<", otherCol.name)
     
+    infix fun IntCol.lessEqualCol(otherCol: IntCol) = conditionRaw(this.name, "<=", otherCol.name)
+    infix fun StrCol.lessEqualCol(otherCol: StrCol) = conditionRaw(this.name, "<=", otherCol.name)
+    infix fun BoolCol.lessEqualCol(otherCol: BoolCol) = conditionRaw(this.name, "<=", otherCol.name)
+    infix fun LongCol.lessEqualCol(otherCol: LongCol) = conditionRaw(this.name, "<=", otherCol.name)
+    infix fun FloatCol.lessEqualCol(otherCol: FloatCol) = conditionRaw(this.name, "<=", otherCol.name)
     
     
     
