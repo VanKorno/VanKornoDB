@@ -103,6 +103,22 @@ class WhereBuilder() : WhereBuilderBase() {
     
     
     
+    infix fun StrCol.equalAny(values: Array<String>) = multCompare(this.name, IN, values)
+    infix fun IntCol.equalAny(values: Array<Int>) = multCompare(this.name, IN, values)
+    infix fun BoolCol.equalAny(values: Array<Boolean>) = multCompare(this.name, IN, values.map { if (it) "1" else "0" }.toTypedArray())
+    infix fun LongCol.equalAny(values: Array<Long>) = multCompare(this.name, IN, values)
+    infix fun FloatCol.equalAny(values: Array<Float>) = multCompare(this.name, IN, values)
+    
+    
+    infix fun StrCol.notEqualAny(values: Array<String>) = multCompare(this.name, notIN, values)
+    infix fun IntCol.notEqualAny(values: Array<Int>) = multCompare(this.name, notIN, values)
+    infix fun BoolCol.notEqualAny(values: Array<Boolean>) = multCompare(this.name, notIN, values.map { if (it) "1" else "0" }.toTypedArray())
+    infix fun LongCol.notEqualAny(values: Array<Long>) = multCompare(this.name, notIN, values)
+    infix fun FloatCol.notEqualAny(values: Array<Float>) = multCompare(this.name, notIN, values)
+
+    
+    
+    
     
     
     /** For comparisons to provided values. The values are automatically put into the arg array. **/
