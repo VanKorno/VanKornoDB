@@ -8,13 +8,19 @@ sealed class TypedColumn<T>(
 )
 
 
+class ListAt<T>(val col: TypedListColumn<T>, val idx: Int)
+
+
 abstract class TypedListColumn<T>(                                           name: String,
                                                                              size: Int,
                                                                        defaultVal: T,
                                                                          nullable: Boolean = false,
 ) : TypedColumn<List<T>>(name, List(size) { defaultVal }, size, nullable) {
-    fun at(idx: Int) = name + (idx + 1)
+    fun nameAt(idx: Int) = name + (idx + 1)
+    
+    infix fun at(idx: Int) = ListAt(this, idx)
 }
+
 
 
 interface EntityColumns {
