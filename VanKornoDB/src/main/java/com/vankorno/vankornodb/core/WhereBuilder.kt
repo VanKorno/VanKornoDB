@@ -87,6 +87,11 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun FloatCol.lessEqualCol(otherCol: FloatCol) = conditionRaw(this.name, "<=", otherCol.name)
     
     
+    infix fun StrCol.like(value: String) = condition(this.name, " LIKE ", value)
+    infix fun StrCol.notLike(value: String) = condition(this.name, " NOT LIKE ", value)
+    
+    infix fun StrCol.likeCol(otherCol: StrCol) = conditionRaw(this.name, " LIKE ", otherCol.name)
+    infix fun StrCol.notLikeCol(otherCol: StrCol) = conditionRaw(this.name, " NOT LIKE ", otherCol.name)
     
     
     
@@ -126,6 +131,10 @@ class WhereBuilder() : WhereBuilderBase() {
     
     infix fun <T> String.like(value: T) = condition(this, " LIKE ", value.toString())
     infix fun <T> String.notLike(value: T) = condition(this, " NOT LIKE ", value.toString())
+    
+    infix fun String.likeCol(otherCol: String) = conditionRaw(this, " LIKE ", otherCol)
+    infix fun String.notLikeCol(otherCol: String) = conditionRaw(this, " NOT LIKE ", otherCol)
+    
     
     fun <T> String.likeAny(vararg values: T) = multCompare(this, " LIKE ", values)
     fun <T> String.likeNone(vararg values: T) = multCompare(this, " NOT LIKE ", values)
