@@ -94,6 +94,12 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun StrCol.notLikeCol(otherCol: StrCol) = conditionRaw(this.name, " NOT LIKE ", otherCol.name)
     
     
+    fun StrCol.likeAny(vararg values: String) = multCompare(this.name, " LIKE ", values)
+    fun StrCol.notLikeAny(vararg values: String) = multCompare(this.name, " NOT LIKE ", values)
+    
+    fun StrCol.likeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " LIKE ", otherCols.map { it.name }.toTypedArray(), true)
+    
+    fun StrCol.notLikeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " NOT LIKE ", otherCols.map { it.name }.toTypedArray(), false)
     
     
     
@@ -137,10 +143,13 @@ class WhereBuilder() : WhereBuilderBase() {
     
     
     fun <T> String.likeAny(vararg values: T) = multCompare(this, " LIKE ", values)
-    fun <T> String.likeNone(vararg values: T) = multCompare(this, " NOT LIKE ", values)
+    fun <T> String.notLikeAny(vararg values: T) = multCompare(this, " NOT LIKE ", values)
+    
+    fun String.likeAnyCol(vararg otherCols: String) = multCompareRaw(this, " LIKE ", otherCols, true)
+    fun String.notLikeAnyCol(vararg otherCols: String) = multCompareRaw(this, " NOT LIKE ", otherCols, false)
     
     fun <T> String.equalAny(vararg values: T) = multCompare(this, IN, values)
-    fun <T> String.equalNone(vararg values: T) = multCompare(this, notIN, values)
+    fun <T> String.notEqualAny(vararg values: T) = multCompare(this, notIN, values)
     
     
     

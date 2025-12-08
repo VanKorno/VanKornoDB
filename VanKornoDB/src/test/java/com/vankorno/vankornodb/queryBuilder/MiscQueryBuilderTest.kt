@@ -16,7 +16,7 @@ class MiscQueryBuilderTest {
             where {
                 Type equal DbTypeTable
                 and { Name notLike "sqlite_%" }
-                and { Name.equalNone(TABLE_AndroidMetadata, TABLE_EntityVersions) }
+                and { Name.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
             }
             orderBy(Name)
         }.query

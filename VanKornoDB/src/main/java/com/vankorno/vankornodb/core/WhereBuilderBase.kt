@@ -43,4 +43,30 @@ abstract class WhereBuilderBase() {
             args.add(value.toString())
         }
     }
+    
+    
+    internal fun multCompareRaw(                                             column: String,
+                                                                           operator: String,
+                                                                          otherCols: Array<out String>,
+                                                                           positive: Boolean,
+    ) {
+        clauses.add(
+            buildString {
+                append("(")
+                for (idx in otherCols.indices) {
+                    append(column)
+                    append(operator)
+                    append(otherCols[idx])
+                    if (idx != otherCols.lastIndex)
+                        append(if (positive) " OR " else " AND ")
+                }
+                append(")")
+            }
+        )
+    }
+    
+    
+    
+    
+    
 }

@@ -23,7 +23,7 @@ class QueryBuilderInTest {
         assertEquals(
             selectAllFrom + DirtyTable + where + ID + notIN + "(?, ?, ?)",
             getQuery(DirtyTable) {
-                where { ID.equalNone(1, 2, 3) }
+                where { ID.notEqualAny(1, 2, 3) }
             }.query
         )
     }

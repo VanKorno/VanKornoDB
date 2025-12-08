@@ -60,7 +60,7 @@ class QueryBuilderLikeTest {
         assertEquals(
             selectAllFrom + DirtyTable + where + Name + notLike + "(?, ?, ?)",
             getQuery(DirtyTable) {
-                where { Name.likeNone("%a%", "%b%", "%c%") }
+                where { Name.notLikeAny("%a%", "%b%", "%c%") }
             }.query
         )
     }
