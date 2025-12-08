@@ -61,6 +61,9 @@ class WhereBuilder() : WhereBuilderBase() {
     fun rawClause(str: String) = clauses.add(str)
     
     
+    infix fun String.dot(str2: String = "") = this + "." + str2
+    
+    
     
     // ======================  T Y P E - S A F E   C O M P A R I S O N  ====================== \\
     
@@ -191,10 +194,6 @@ class WhereBuilder() : WhereBuilderBase() {
     infix fun String.lessEqualCol(otherCol: String) = conditionRaw(this, "<=", otherCol)
     infix fun String.greaterCol(otherCol: String) = conditionRaw(this, ">", otherCol)
     infix fun String.greaterEqualCol(otherCol: String) = conditionRaw(this, ">=", otherCol)
-    
-    
-    infix fun String.dot(str2: String = "") = this + "." + str2
-    
     
     
     // TODO Complex nested LIKE and IN:
