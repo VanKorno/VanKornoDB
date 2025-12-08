@@ -1,15 +1,14 @@
 package com.vankorno.vankornodb.core
 
 import com.vankorno.vankornodb.core.data.BoolCol
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.IN
+import com.vankorno.vankornodb.core.data.DbConstants.notIN
 import com.vankorno.vankornodb.core.data.FloatCol
 import com.vankorno.vankornodb.core.data.IntCol
 import com.vankorno.vankornodb.core.data.LongCol
 import com.vankorno.vankornodb.core.data.StrCol
 
-class WhereBuilder {
-    val clauses = mutableListOf<String>()
-    val args = mutableListOf<String>()
+class WhereBuilder() : WhereBuilderBase() {
     
     infix fun IntCol.equal(value: Int) = condition(this.name, "=", value.toString())
     infix fun StrCol.equal(value: String) = condition(this.name, "=", value)
@@ -30,17 +29,6 @@ class WhereBuilder {
     
     
     
-    private fun condition(                                                        column: String,
-                                                                                operator: String,
-                                                                                   value: String,
-    ) {
-        clauses.add(column + operator + "?")
-        args.add(value)
-    }
-    private fun conditionRaw(                                                     column: String,
-                                                                                operator: String,
-                                                                             otherColumn: String,
-    ) = clauses.add(column + operator + otherColumn)
     
     
     /** For comparisons to provided values. The values are automatically put into the arg array. **/
@@ -81,29 +69,6 @@ class WhereBuilder {
     
     fun <T> String.equalAny(vararg values: T) = multCompare(this, IN, values)
     fun <T> String.equalNone(vararg values: T) = multCompare(this, notIN, values)
-    
-    
-    private fun <T> multCompare(                                                  column: String,
-                                                                                operator: String,
-                                                                                  values: Array<T>,
-    ) {
-        clauses.add(
-            buildString {
-                append(column)
-                append(operator)
-                append("(")
-                for (idx in values.indices) {
-                    append("?")
-                    if (idx != values.lastIndex)
-                        append(comma)
-                }
-                append(")")
-            }
-        )
-        for (value in values) {
-            args.add(value.toString())
-        }
-    }
     
     
     
