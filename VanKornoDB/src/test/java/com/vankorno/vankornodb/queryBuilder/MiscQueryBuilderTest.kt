@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.*
-import com.vankorno.vankornodb.columns
+import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.core.getQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test

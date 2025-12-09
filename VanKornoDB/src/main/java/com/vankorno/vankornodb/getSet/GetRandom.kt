@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.getSet
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.WhereBuilder
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
 import com.vankorno.vankornodb.core.data.DbConstants.randomVal
 

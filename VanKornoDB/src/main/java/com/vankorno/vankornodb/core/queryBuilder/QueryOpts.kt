@@ -1,11 +1,14 @@
-package com.vankorno.vankornodb.core
+package com.vankorno.vankornodb.core.queryBuilder
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 
-import com.vankorno.vankornodb.JoinBuilder
-import com.vankorno.vankornodb.WhereBuilder
+import com.vankorno.vankornodb.api.JoinBuilder
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.QueryOptsHolder
 
 @Suppress("unused")
-class QueryOpts {
+open class QueryOptsInternal {
     val query = QueryOptsHolder()
     
     
@@ -72,8 +75,6 @@ class QueryOpts {
         set(value) { query.customEnd = value }
     
     
-    
-    fun applyOpts(opts: QueryOpts.()->Unit) { this.opts() }
     
     
     fun applyOpts(                                                joins: JoinBuilder.()->Unit = {},

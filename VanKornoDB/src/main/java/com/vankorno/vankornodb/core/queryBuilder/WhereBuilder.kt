@@ -1,12 +1,17 @@
-package com.vankorno.vankornodb.core
+package com.vankorno.vankornodb.core.queryBuilder
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 
-import com.vankorno.vankornodb.core.data.BoolCol
+import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.core.data.DbConstants.IN
 import com.vankorno.vankornodb.core.data.DbConstants.notIN
-import com.vankorno.vankornodb.core.data.FloatCol
-import com.vankorno.vankornodb.core.data.IntCol
-import com.vankorno.vankornodb.core.data.LongCol
-import com.vankorno.vankornodb.core.data.StrCol
+import com.vankorno.vankornodb.core.getQuery
+import com.vankorno.vankornodb.dbManagement.data.BoolCol
+import com.vankorno.vankornodb.dbManagement.data.FloatCol
+import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.LongCol
+import com.vankorno.vankornodb.dbManagement.data.StrCol
 
 /**
  *  Internal base — use `WhereBuilder` instead

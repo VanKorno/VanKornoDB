@@ -1,11 +1,11 @@
 package com.vankorno.vankornodb.core
 
-import com.vankorno.vankornodb.core.data.bListCol
-import com.vankorno.vankornodb.core.data.fListCol
-import com.vankorno.vankornodb.core.data.iListCol
-import com.vankorno.vankornodb.core.data.lListCol
-import com.vankorno.vankornodb.core.data.pListCol
-import com.vankorno.vankornodb.core.data.sListCol
+import com.vankorno.vankornodb.dbManagement.data.bListCol
+import com.vankorno.vankornodb.dbManagement.data.fListCol
+import com.vankorno.vankornodb.dbManagement.data.iListCol
+import com.vankorno.vankornodb.dbManagement.data.lListCol
+import com.vankorno.vankornodb.dbManagement.data.pListCol
+import com.vankorno.vankornodb.dbManagement.data.sListCol
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

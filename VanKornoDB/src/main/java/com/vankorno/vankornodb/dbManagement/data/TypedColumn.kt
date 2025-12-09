@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.data
+package com.vankorno.vankornodb.dbManagement.data
 
 @Suppress("unused")
 sealed class TypedColumn<T>(

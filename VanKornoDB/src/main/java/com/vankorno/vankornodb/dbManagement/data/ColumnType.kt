@@ -1,5 +1,9 @@
 package com.vankorno.vankornodb.dbManagement.data
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 
+// TODO Check if still needed
 
 enum class ColumnType(                                                           val sql: String
 ) {
@@ -23,15 +27,6 @@ enum class ColumnType(                                                          
     BLOB(" BLOB NOT NULL"),
     BLOB_NULLABLE(" BLOB")
 }
-
-
-val PrimeId = ColumnType.ID
-val IntCol = ColumnType.INT
-val StrCol = ColumnType.STR
-val BoolCol = ColumnType.BOOL
-val LongCol = ColumnType.LONG
-val FloatCol = ColumnType.FLOAT
-val BlobCol = ColumnType.BLOB
 
 
 val IntColNullable  = ColumnType.INT_NULLABLE

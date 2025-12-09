@@ -1,8 +1,10 @@
 package com.vankorno.vankornodb.core
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
+import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
-import com.vankorno.vankornodb.core.data.TypedColumn
-
-interface EntityColumns {
+interface EntityColumnsInternal {
     val columns: List<TypedColumn<*>>
     
     fun buildColList(builder: ColumnsBuilder.()->Unit): List<TypedColumn<*>> = ColumnsBuilder().apply(builder).build()

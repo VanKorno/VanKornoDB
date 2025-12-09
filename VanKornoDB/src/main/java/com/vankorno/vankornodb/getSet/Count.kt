@@ -3,8 +3,8 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.JoinBuilder
-import com.vankorno.vankornodb.WhereBuilder
+import com.vankorno.vankornodb.api.JoinBuilder
+import com.vankorno.vankornodb.api.WhereBuilder
 
 /** Returns the number of rows matching the query conditions. */
 

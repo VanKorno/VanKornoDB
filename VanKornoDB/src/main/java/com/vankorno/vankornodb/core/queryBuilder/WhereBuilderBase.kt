@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core
+package com.vankorno.vankornodb.core.queryBuilder
 
 import com.vankorno.vankornodb.core.data.DbConstants.comma
 

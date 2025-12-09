@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.getSet.raw
 
 import android.database.Cursor
-import com.vankorno.vankornodb.getBool
+import com.vankorno.vankornodb.misc.getBool
 
 inline fun <reified V> Cursor.getTypedValAt(                                         idx: Int
 ): V = when (V::class) {

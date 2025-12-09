@@ -130,15 +130,15 @@ object TableBuilderUtils {
     
         return when (classifier) {
             Int::class ->       if (paramName == "id") {
-                                    PrimeId
+                                    ColumnType.ID
                                 } else {
-                                    if (isNullable) IntColNullable else IntCol
+                                    if (isNullable) IntColNullable else ColumnType.INT
                                 }
-            String::class ->    if (isNullable) StrColNullable else StrCol
-            Boolean::class ->   if (isNullable) BoolColNullable else BoolCol
-            Long::class ->      if (isNullable) LongColNullable else LongCol
-            Float::class ->     if (isNullable) FloatColNullable else FloatCol
-            ByteArray::class -> if (isNullable) BlobColNullable else BlobCol
+            String::class ->    if (isNullable) StrColNullable else ColumnType.STR
+            Boolean::class ->   if (isNullable) BoolColNullable else ColumnType.BOOL
+            Long::class ->      if (isNullable) LongColNullable else ColumnType.LONG
+            Float::class ->     if (isNullable) FloatColNullable else ColumnType.FLOAT
+            ByteArray::class -> if (isNullable) BlobColNullable else ColumnType.BLOB
             else -> null
         }
     }
@@ -156,7 +156,7 @@ object TableBuilderUtils {
             .firstOrNull { it.name == name }?.getter?.call(defaultsInstance)
         
         // SKIP default clause for AutoId/AutoIdNullable or null default
-        val skipDefault = colType == PrimeId || defaultValue == null
+        val skipDefault = colType == ColumnType.ID || defaultValue == null
         
         val defaultClause = if (!isNullable  &&  !skipDefault) {
             val defaultSqlValue = when (defaultValue) {

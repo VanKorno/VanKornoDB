@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.getSet
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.QueryOpts
+import com.vankorno.vankornodb.api.QueryOpts
 
 /**
  * Retrieves values of one type from multiple columns of a single row of the specified table.

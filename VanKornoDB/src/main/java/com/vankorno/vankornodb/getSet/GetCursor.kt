@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.getSet
 **/
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.QueryOpts
+import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.core.getQuery
 
 fun SQLiteDatabase.getCursor(                                        table: String,

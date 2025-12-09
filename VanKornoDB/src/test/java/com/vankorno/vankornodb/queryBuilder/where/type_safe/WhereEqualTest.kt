@@ -1,11 +1,11 @@
 package com.vankorno.vankornodb.queryBuilder.where.type_safe
 
-import com.vankorno.vankornodb.WhereBuilder
-import com.vankorno.vankornodb.core.data.SharedCol.shActive
-import com.vankorno.vankornodb.core.data.SharedCol.shPosition
-import com.vankorno.vankornodb.core.data.fCol
-import com.vankorno.vankornodb.core.data.lCol
-import com.vankorno.vankornodb.core.data.sCol
+import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.dbManagement.data.fCol
+import com.vankorno.vankornodb.dbManagement.data.lCol
+import com.vankorno.vankornodb.dbManagement.data.sCol
+import com.vankorno.vankornodb.misc.data.SharedCol.shActive
+import com.vankorno.vankornodb.misc.data.SharedCol.shPosition
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

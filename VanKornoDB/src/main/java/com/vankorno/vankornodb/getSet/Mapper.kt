@@ -3,11 +3,11 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.Cursor
-import com.vankorno.vankornodb.getBool
 import com.vankorno.vankornodb.getSet.EntityMapperUtils.defaultInstanceValueOf
 import com.vankorno.vankornodb.getSet.EntityMapperUtils.getListFromCursor
 import com.vankorno.vankornodb.getSet.EntityMapperUtils.getListSizeFromDefault
 import com.vankorno.vankornodb.getSet.EntityMapperUtils.getNullable
+import com.vankorno.vankornodb.misc.getBool
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1

@@ -1,12 +1,13 @@
 package com.vankorno.vankornodb.core
 
-import com.vankorno.vankornodb.core.data.IntCol
-import com.vankorno.vankornodb.core.data.SharedCol.shActive
-import com.vankorno.vankornodb.core.data.SharedCol.shID
-import com.vankorno.vankornodb.core.data.SharedCol.shName
-import com.vankorno.vankornodb.core.data.SharedCol.shRowID
-import com.vankorno.vankornodb.core.data.iListCol
-import com.vankorno.vankornodb.core.data.sListCol
+import com.vankorno.vankornodb.api.EntityColumns
+import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.iListCol
+import com.vankorno.vankornodb.dbManagement.data.sListCol
+import com.vankorno.vankornodb.misc.data.SharedCol.shActive
+import com.vankorno.vankornodb.misc.data.SharedCol.shID
+import com.vankorno.vankornodb.misc.data.SharedCol.shName
+import com.vankorno.vankornodb.misc.data.SharedCol.shRowID
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
