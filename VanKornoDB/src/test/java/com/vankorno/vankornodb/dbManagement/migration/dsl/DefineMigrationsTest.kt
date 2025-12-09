@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
+import com.vankorno.vankornodb.api.defineMigrations
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.getSet.DbEntity
 import org.junit.Assert.*

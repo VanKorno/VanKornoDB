@@ -11,4 +11,20 @@ open class DbHelper(             context: Context,
                               entityMeta: Collection<BaseEntityMeta>,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-) : DbHelperInternal(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {}
+) : DbHelperInternal(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

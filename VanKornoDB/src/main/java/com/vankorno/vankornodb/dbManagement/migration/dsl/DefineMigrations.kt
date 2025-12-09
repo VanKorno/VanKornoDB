@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
+import com.vankorno.vankornodb.api.MigrationDefinitionBuilder
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
@@ -10,7 +11,8 @@ import kotlin.reflect.KClass
 class ModifyRow(val fieldName: String, val block: TransformCol.FieldOverride.()->Unit)
 
 
-fun <T: DbEntity> defineMigrations(              latestVersion: Int,
+internal fun <T: DbEntity> defineMigrationsInternal(
+                                                 latestVersion: Int,
                                                    latestClass: KClass<T>,
                                                          block: MigrationDefinitionBuilder.()->Unit,
 ): MigrationBundle {
@@ -29,7 +31,7 @@ fun <T: DbEntity> defineMigrations(              latestVersion: Int,
 }
 
 
-class MigrationDefinitionBuilder {
+abstract class MigrationDefinitionBuilderInternal {
     val versionedClasses = mutableMapOf<Int, KClass<out DbEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
