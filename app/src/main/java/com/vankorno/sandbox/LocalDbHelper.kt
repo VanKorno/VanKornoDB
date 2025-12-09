@@ -6,7 +6,7 @@ import com.vankorno.sandbox.entities.TestTable
 import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
-import com.vankorno.vankornodb.dbManagement.createTables
+import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 
 const val DbName = "DbFile.dp"

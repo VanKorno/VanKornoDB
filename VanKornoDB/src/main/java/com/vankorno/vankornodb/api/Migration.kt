@@ -4,13 +4,16 @@ package com.vankorno.vankornodb.api
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
+import com.vankorno.vankornodb.dbManagement.migration.dropAndCreateEmptyTablesInternal
 import com.vankorno.vankornodb.dbManagement.migration.dsl.MigrationDefinitionBuilderInternal
 import com.vankorno.vankornodb.dbManagement.migration.dsl.defineMigrationsInternal
+import com.vankorno.vankornodb.dbManagement.migration.migrateMultiStepInternal
+import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeInternal
 import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
-
 
 class MigrationDefinitionBuilder() : MigrationDefinitionBuilderInternal()
 
@@ -41,6 +44,63 @@ fun <T: DbEntity> defineMigrations(              latestVersion: Int,
 open class DbMigrator(                                               db: SQLiteDatabase,
                                                           allEntityMeta: Collection<BaseEntityMeta>,
 ) : DbMigratorInternal(db, allEntityMeta)
+
+
+
+
+/**
+ * Migrates the contents of a table through multiple versioned entity definitions and optional transformation lambdas.
+ *
+ * This function performs step-by-step data migration from [oldVersion] to [newVersion], converting each entity instance
+ * according to the provided versioned classes, rename history, and transformation lambdas. The table is dropped,
+ * recreated using the structure of the final version class, and repopulated with the migrated data.
+ *
+ * @param table The name of the table to migrate.
+ * @param oldVersion The version of the entity currently stored in the table.
+ * @param newVersion The target version of the entity to migrate to.
+ * @param migrationBundle A bundle of versioned classes, rename history and milestone lambdas.
+ * @param onNewDbFilled An optional callback invoked with the list of fully migrated objects after the table has been repopulated.
+ *
+ * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
+ */
+fun SQLiteDatabase.migrateMultiStep(                             table: String,
+                                                            oldVersion: Int,
+                                                            newVersion: Int,
+                                                       migrationBundle: MigrationBundle,
+                                                         onNewDbFilled: (List<DbEntity>)->Unit = {},
+) {
+    this.migrateMultiStepInternal(
+        table = table,
+        oldVersion = oldVersion,
+        newVersion = newVersion,
+        versionedClasses = migrationBundle.versionedClasses,
+        renameHistory = migrationBundle.renameHistory,
+        milestones = migrationBundle.milestones,
+        onNewDbFilled = onNewDbFilled,
+    )
+}
+
+
+
+
+/**
+ * Drops and recreates tables that don't need to be migrated.
+ * Table content gets deleted.
+ * 
+ * @param tables A list of table names and entity data classes
+ */
+fun SQLiteDatabase.dropAndCreateEmptyTables(vararg tables: TableInfo) = this.dropAndCreateEmptyTablesInternal(*tables)
+
+
+/**
+ * Drops and recreates tables and their content without doing any real migrations.
+ * Could be useful for things like switching from auto-incremented IDs to non-auto-incremented IDs, etc.
+ * 
+ * @param tables A list of table names and entity data classes
+ */
+fun SQLiteDatabase.migrateWithoutChange(vararg tables: TableInfo) = this.migrateWithoutChangeInternal(*tables)
+
+
 
 
 

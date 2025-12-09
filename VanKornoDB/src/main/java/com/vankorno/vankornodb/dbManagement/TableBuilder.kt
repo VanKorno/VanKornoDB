@@ -15,20 +15,9 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
-/**
- * Creates a single table in db.
- */
-fun SQLiteDatabase.createTable(table: String, clazz: KClass<out DbEntity>) = createTables(TableInfo(table, clazz))
 
-/**
- * Creates multiple tables in the database given vararg TableInfo.
- */
-fun SQLiteDatabase.createTables(vararg tables: TableInfo) = createTables(tables.toList())
-
-/**
- * Creates multiple tables in the database from a list of TableInfo.
- */
-fun SQLiteDatabase.createTables(tables: List<TableInfo>) {
+internal fun SQLiteDatabase.createTablesInternal(                          vararg tables: TableInfo
+) {
     for (table in tables) {
         execSQL(newTableQuery(table.name, table.entityClass))
     }
@@ -58,7 +47,7 @@ fun SQLiteDatabase.createTables(tables: List<TableInfo>) {
  * @return A complete `CREATE TABLE` SQL string based on [entityClass].
  */
 
-fun newTableQuery(                                                      table: String,
+internal fun newTableQuery(                                             table: String,
                                                                   entityClass: KClass<out DbEntity>,
 ): String {
     val constructor = entityClass.primaryConstructor
@@ -116,7 +105,7 @@ fun newTableQuery(                                                      table: S
 
 
 
-object TableBuilderUtils {
+private object TableBuilderUtils {
     /**
     * Maps a Kotlin type to an internal SQL column type, considering nullability and field name.
     * Special case: if the field is named "id", it's treated as non auto-incremented primary key.

@@ -2,7 +2,7 @@ package com.vankorno.sandbox
 
 import com.vankorno.sandbox.entities.TestTable
 import com.vankorno.sandbox.entities.testEntity.TestEntity
-import com.vankorno.vankornodb.dbManagement.createTable
+import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.getSet.getDbFileName
 import com.vankorno.vankornodb.getSet.insertObjects
 import com.vankorno.vankornodb.getSet.isTableEmpty

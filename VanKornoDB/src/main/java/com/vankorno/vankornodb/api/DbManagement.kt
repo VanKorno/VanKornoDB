@@ -5,8 +5,12 @@ package com.vankorno.vankornodb.api
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.DbHelperInternal
+import com.vankorno.vankornodb.dbManagement.createTablesInternal
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformColInternal
+import com.vankorno.vankornodb.getSet.DbEntity
+import kotlin.reflect.KClass
 
 open class DbHelper(             context: Context,
                                   dbName: String,
@@ -25,6 +29,17 @@ class TransformCol() : TransformColInternal()
 
 
 
+/**
+ * Creates a single table in db.
+ */
+fun SQLiteDatabase.createTable(table: String, clazz: KClass<out DbEntity>) = createTablesInternal(
+    TableInfo(table, clazz)
+)
+
+/**
+ * Creates multiple tables in the database given vararg TableInfo.
+ */
+fun SQLiteDatabase.createTables(vararg tables: TableInfo) = createTablesInternal(*tables)
 
 
 
