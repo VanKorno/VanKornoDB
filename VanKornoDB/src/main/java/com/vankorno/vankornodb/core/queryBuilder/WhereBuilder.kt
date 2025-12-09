@@ -6,7 +6,6 @@ package com.vankorno.vankornodb.core.queryBuilder
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.core.data.DbConstants.IN
 import com.vankorno.vankornodb.core.data.DbConstants.notIN
-import com.vankorno.vankornodb.core.getQuery
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol

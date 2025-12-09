@@ -1,9 +1,9 @@
 package com.vankorno.vankornodb.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.*
-import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.core.data.DbConstants.where
-import com.vankorno.vankornodb.core.getQuery
+import com.vankorno.vankornodb.core.queryBuilder.getQuery
+import com.vankorno.vankornodb.misc.columns
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
