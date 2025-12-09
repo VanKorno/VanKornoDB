@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.DbHelperInternal
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformColInternal
 
 open class DbHelper(             context: Context,
                                   dbName: String,
@@ -18,7 +19,7 @@ open class DbHelper(             context: Context,
 
 
 
-
+class TransformCol() : TransformColInternal()
 
 
 

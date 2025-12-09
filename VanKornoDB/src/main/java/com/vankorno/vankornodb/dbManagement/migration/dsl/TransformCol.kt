@@ -3,9 +3,7 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 
-// TODO API or not
-
-class TransformCol {
+open class TransformColInternal {
     private val overrides = mutableMapOf<String, FieldOverride>()
     
     fun modify(                                                   fieldName: String,

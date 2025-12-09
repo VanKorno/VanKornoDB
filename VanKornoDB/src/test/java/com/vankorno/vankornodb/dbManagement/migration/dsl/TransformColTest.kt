@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
+import com.vankorno.vankornodb.api.TransformCol
 import org.junit.Assert
 import org.junit.Test
 

@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
 import com.vankorno.vankornodb.api.MigrationDefinitionBuilder
+import com.vankorno.vankornodb.api.TransformCol
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
@@ -8,7 +9,7 @@ import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 
-class ModifyRow(val fieldName: String, val block: TransformCol.FieldOverride.()->Unit)
+class ModifyRow(val fieldName: String, val block: TransformColInternal.FieldOverride.()->Unit)
 
 
 internal fun <T: DbEntity> defineMigrationsInternal(
@@ -92,7 +93,7 @@ abstract class MigrationDefinitionBuilderInternal {
         }
         
         
-        infix fun String.modify(block: TransformCol.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
+        infix fun String.modify(block: TransformColInternal.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
         
         
         fun milestone(
