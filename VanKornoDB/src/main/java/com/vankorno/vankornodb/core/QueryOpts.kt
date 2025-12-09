@@ -1,5 +1,7 @@
 package com.vankorno.vankornodb.core
 
+import com.vankorno.vankornodb.JoinBuilder
+import com.vankorno.vankornodb.WhereBuilder
 import com.vankorno.vankornodb.core.data.QueryOptsHolder
 
 @Suppress("unused")

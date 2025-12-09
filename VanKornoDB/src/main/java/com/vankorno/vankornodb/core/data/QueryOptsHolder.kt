@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.core.data
 
-import com.vankorno.vankornodb.core.JoinBuilder
-import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.JoinBuilder
+import com.vankorno.vankornodb.WhereBuilder
 
 
 data class QueryOptsHolder(

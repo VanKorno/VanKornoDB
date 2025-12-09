@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.core
 
 @Suppress("unused")
-class JoinBuilder {
+open class JoinBuilderInternal {
     val joins = mutableListOf<String>()
 
     fun inner(table: String, on: String) {

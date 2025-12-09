@@ -8,38 +8,41 @@ import com.vankorno.vankornodb.core.data.IntCol
 import com.vankorno.vankornodb.core.data.LongCol
 import com.vankorno.vankornodb.core.data.StrCol
 
+/**
+ *  Internal base — use `WhereBuilder` instead
+ */
 @Suppress("unused")
-class WhereBuilder() : WhereBuilderBase() {
+open class WhereBuilderInternal() : WhereBuilderBase() {
     
-    fun group(                                                   whereBuilder: WhereBuilder.()->Unit
+    fun group(                                           whereBuilder: WhereBuilderInternal.()->Unit
     ) {
-        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        val innerBuilder = WhereBuilderInternal().apply(whereBuilder)
         clauses.add("(" + innerBuilder.clauses.joinToString(" ") + ")")
         args.addAll(innerBuilder.args)
     }
 
     
-    fun and(                                                     whereBuilder: WhereBuilder.()->Unit
+    fun and(                                             whereBuilder: WhereBuilderInternal.()->Unit
     ) {
         clauses.add("AND")
-        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        val innerBuilder = WhereBuilderInternal().apply(whereBuilder)
         clauses.addAll(innerBuilder.clauses)
         args.addAll(innerBuilder.args)
     }
-    fun andGroup(                                                whereBuilder: WhereBuilder.()->Unit
+    fun andGroup(                                        whereBuilder: WhereBuilderInternal.()->Unit
     ) {
         clauses.add("AND")
         group(whereBuilder)
     }
     
-    fun or(                                                      whereBuilder: WhereBuilder.()->Unit
+    fun or(                                              whereBuilder: WhereBuilderInternal.()->Unit
     ) {
         clauses.add("OR")
-        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        val innerBuilder = WhereBuilderInternal().apply(whereBuilder)
         clauses.addAll(innerBuilder.clauses)
         args.addAll(innerBuilder.args)
     }
-    fun orGroup(                                                 whereBuilder: WhereBuilder.()->Unit
+    fun orGroup(                                         whereBuilder: WhereBuilderInternal.()->Unit
     ) {
         clauses.add("OR")
         group(whereBuilder)

@@ -5,7 +5,7 @@ package com.vankorno.vankornodb.getSet
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.data.DbConstants.ID
 import kotlin.reflect.KClass

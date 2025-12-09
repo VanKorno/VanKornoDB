@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.queryBuilder.where.type_safe
 
-import com.vankorno.vankornodb.core.WhereBuilder
+import com.vankorno.vankornodb.WhereBuilder
 import com.vankorno.vankornodb.core.data.bCol
 import com.vankorno.vankornodb.core.data.fCol
 import com.vankorno.vankornodb.core.data.iCol
