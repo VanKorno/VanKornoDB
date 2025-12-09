@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.queryBuilder.where.type_safe
+package com.vankorno.vankornodb.core.queryBuilder.where.type_safe
 
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.dbManagement.data.fCol

@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.queryBuilder.where
+package com.vankorno.vankornodb.core.queryBuilder.where
 
 import com.vankorno.vankornodb.TestConstants.DirtyTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
