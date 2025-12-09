@@ -27,13 +27,13 @@ import kotlinx.coroutines.withContext
 import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")
-open class DbHelper(              context: Context,
-                                   dbName: String,
-                                dbVersion: Int,
-                               entityMeta: Collection<BaseEntityMeta>,
-                                 onCreate: (SQLiteDatabase)->Unit = {},
-                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-    
+abstract class DbHelperInternal(
+                                 context: Context,
+                                  dbName: String,
+                               dbVersion: Int,
+                              entityMeta: Collection<BaseEntityMeta>,
+                                onCreate: (SQLiteDatabase)->Unit = {},
+                               onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbMaker(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
     
     /**
