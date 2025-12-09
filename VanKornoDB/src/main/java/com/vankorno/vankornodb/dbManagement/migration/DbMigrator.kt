@@ -1,5 +1,7 @@
 package com.vankorno.vankornodb.dbManagement.migration
-
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.core.data.DbConstants.*
@@ -7,21 +9,7 @@ import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.getSet.getInt
 import com.vankorno.vankornodb.getSet.set
 
-/**
- * High-level entry point for running database migrations.
- *
- * This class handles migration logic for entities defined in your [allEntityMeta] enum,
- * which must implement [BaseEntityMeta]. It can be subclassed or extended with custom
- * migration methods for complex or multi-table scenarios.
- *
- * @property db the active [SQLiteDatabase] instance used for all migration operations.
- * @property allEntityMeta a collection of all entity metadata entries. Typically, this is your project's enum
- * that lists every entity type and its migration configuration. Example: DbMigrator(db, EntityMeta.entries)
- *
- * Call [migrateSingleTableEntities] to automatically migrate all entities limited to a single table
- * (those with a non-null [BaseEntityMeta.limitedToTable]).
- */
-open class DbMigrator(                                           val db: SQLiteDatabase,
+abstract class DbMigratorInternal(                                           val db: SQLiteDatabase,
                                               private val allEntityMeta: Collection<BaseEntityMeta>,
 ) {
     /**
@@ -43,7 +31,7 @@ open class DbMigrator(                                           val db: SQLiteD
      * Migrate one entity limited to a single table.
      * (with a non-null [BaseEntityMeta.limitedToTable]).
      */
-    fun migrateSingleTableEntity(                                            entity: BaseEntityMeta,
+    fun migrateSingleTableEntity(                                            entity: BaseEntityMeta
     ) {
         val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
         val newVer = entity.currVersion
