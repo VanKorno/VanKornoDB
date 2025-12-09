@@ -2,8 +2,6 @@ package com.vankorno.vankornodb.core.queryBuilder
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
-
-import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.core.data.DbConstants.IN
 import com.vankorno.vankornodb.core.data.DbConstants.notIN
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
@@ -17,52 +15,6 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
  */
 @Suppress("unused")
 open class WhereBuilderInternal() : WhereBuilderBase() {
-    
-    fun group(                                           whereBuilder: WhereBuilderInternal.()->Unit
-    ) {
-        val innerBuilder = WhereBuilderInternal().apply(whereBuilder)
-        clauses.add("(" + innerBuilder.clauses.joinToString(" ") + ")")
-        args.addAll(innerBuilder.args)
-    }
-
-    
-    fun and(                                             whereBuilder: WhereBuilderInternal.()->Unit
-    ) {
-        clauses.add("AND")
-        val innerBuilder = WhereBuilderInternal().apply(whereBuilder)
-        clauses.addAll(innerBuilder.clauses)
-        args.addAll(innerBuilder.args)
-    }
-    fun andGroup(                                        whereBuilder: WhereBuilderInternal.()->Unit
-    ) {
-        clauses.add("AND")
-        group(whereBuilder)
-    }
-    
-    fun or(                                              whereBuilder: WhereBuilderInternal.()->Unit
-    ) {
-        clauses.add("OR")
-        val innerBuilder = WhereBuilderInternal().apply(whereBuilder)
-        clauses.addAll(innerBuilder.clauses)
-        args.addAll(innerBuilder.args)
-    }
-    fun orGroup(                                         whereBuilder: WhereBuilderInternal.()->Unit
-    ) {
-        clauses.add("OR")
-        group(whereBuilder)
-    }
-    
-    fun subquery(                                           table: String,
-                                                          columns: Array<out String> = arrayOf("*"),
-                                                        queryOpts: QueryOpts.()->Unit = {},
-    ): String {
-        val innerBuilder = getQuery(table, columns, queryOpts)
-        
-        val clause = "(${innerBuilder.query})"
-        
-        args.addAll(innerBuilder.args)
-        return clause
-    }
     
     /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
     fun rawClause(str: String) = clauses.add(str)

@@ -5,6 +5,7 @@ package com.vankorno.vankornodb.api
 import com.vankorno.vankornodb.core.queryBuilder.JoinBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.QueryOptsInternal
 import com.vankorno.vankornodb.core.queryBuilder.WhereBuilderInternal
+import com.vankorno.vankornodb.core.queryBuilder.getQuery
 import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal
 
 
@@ -13,8 +14,6 @@ class QueryOpts : QueryOptsInternal() {
 }
 
 
-class WhereBuilder : WhereBuilderInternal()
-
 
 class JoinBuilder : JoinBuilderInternal()
 
@@ -22,6 +21,54 @@ class JoinBuilder : JoinBuilderInternal()
 interface EntityColumns : EntityColumnsInternal
 
 
+
+
+class WhereBuilder : WhereBuilderInternal() {
+    fun group(                                                   whereBuilder: WhereBuilder.()->Unit
+    ) {
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        clauses.add("(" + innerBuilder.clauses.joinToString(" ") + ")")
+        args.addAll(innerBuilder.args)
+    }
+    
+    fun and(                                                     whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("AND")
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        clauses.addAll(innerBuilder.clauses)
+        args.addAll(innerBuilder.args)
+    }
+    fun andGroup(                                                whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("AND")
+        group(whereBuilder)
+    }
+    
+    fun or(                                                      whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("OR")
+        val innerBuilder = WhereBuilder().apply(whereBuilder)
+        clauses.addAll(innerBuilder.clauses)
+        args.addAll(innerBuilder.args)
+    }
+    fun orGroup(                                                 whereBuilder: WhereBuilder.()->Unit
+    ) {
+        clauses.add("OR")
+        group(whereBuilder)
+    }
+    
+    fun subquery(                                           table: String,
+                                                          columns: Array<out String> = arrayOf("*"),
+                                                        queryOpts: QueryOpts.()->Unit = {},
+    ): String {
+        val innerBuilder = getQuery(table, columns, queryOpts)
+        
+        val clause = "(${innerBuilder.query})"
+        
+        args.addAll(innerBuilder.args)
+        return clause
+    }
+}
 
 
 
