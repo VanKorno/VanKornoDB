@@ -147,19 +147,18 @@ open class WhereBuilderInternal() : WhereBuilderBase() {
     fun StrCol.notLikeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " NOT LIKE ", otherCols.map { it.name }.toTypedArray(), false)
     
     
-    infix fun StrCol.equalAny(values: Array<String>) = multCompare(this.name, IN, values)
-    infix fun IntCol.equalAny(values: Array<Int>) = multCompare(this.name, IN, values)
-    infix fun BoolCol.equalAny(values: Array<Boolean>) = multCompare(this.name, IN, values.map { if (it) "1" else "0" }.toTypedArray())
-    infix fun LongCol.equalAny(values: Array<Long>) = multCompare(this.name, IN, values)
-    infix fun FloatCol.equalAny(values: Array<Float>) = multCompare(this.name, IN, values)
+    fun IntCol.equalAny(vararg values: Int) = multCompare(this.name, IN, values.toTypedArray())
+    fun StrCol.equalAny(vararg values: String) = multCompare(this.name, IN, values)
+    fun BoolCol.equalAny(vararg values: Boolean) = multCompare(this.name, IN, values.map { if (it) "1" else "0" }.toTypedArray())
+    fun LongCol.equalAny(vararg values: Long) = multCompare(this.name, IN, values.toTypedArray())
+    fun FloatCol.equalAny(vararg values: Float) = multCompare(this.name, IN, values.toTypedArray())
     
-    
-    infix fun StrCol.notEqualAny(values: Array<String>) = multCompare(this.name, notIN, values)
-    infix fun IntCol.notEqualAny(values: Array<Int>) = multCompare(this.name, notIN, values)
-    infix fun BoolCol.notEqualAny(values: Array<Boolean>) = multCompare(this.name, notIN, values.map { if (it) "1" else "0" }.toTypedArray())
-    infix fun LongCol.notEqualAny(values: Array<Long>) = multCompare(this.name, notIN, values)
-    infix fun FloatCol.notEqualAny(values: Array<Float>) = multCompare(this.name, notIN, values)
-    
+    fun IntCol.notEqualAny(vararg values: Int) = multCompare(this.name, notIN, values.toTypedArray())
+    fun StrCol.notEqualAny(vararg values: String) = multCompare(this.name, notIN, values)
+    fun BoolCol.notEqualAny(vararg values: Boolean) = multCompare(this.name, notIN, values.map { if (it) "1" else "0" }.toTypedArray())
+    fun LongCol.notEqualAny(vararg values: Long) = multCompare(this.name, notIN, values.toTypedArray())
+    fun FloatCol.notEqualAny(vararg values: Float) = multCompare(this.name, notIN, values.toTypedArray())
+
     
     
     
