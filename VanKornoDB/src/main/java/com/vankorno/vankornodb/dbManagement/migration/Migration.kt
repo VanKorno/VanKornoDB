@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.dbManagement.migration
 **/
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformCol
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
@@ -13,7 +14,6 @@ import com.vankorno.vankornodb.core.data.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
-import com.vankorno.vankornodb.getSet.DbEntity
 import com.vankorno.vankornodb.getSet.getObjects
 import com.vankorno.vankornodb.getSet.insertObj
 import com.vankorno.vankornodb.getSet.insertObjects

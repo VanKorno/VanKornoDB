@@ -7,6 +7,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.database.sqlite.transaction
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.JoinBuilder
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder

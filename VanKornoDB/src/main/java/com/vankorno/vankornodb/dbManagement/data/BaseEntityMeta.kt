@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.dbManagement.data
 
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
-import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 /**

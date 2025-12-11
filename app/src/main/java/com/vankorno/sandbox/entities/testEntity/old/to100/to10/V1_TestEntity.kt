@@ -1,6 +1,6 @@
 package com.vankorno.sandbox.entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.getSet.DbEntity
+import com.vankorno.vankornodb.api.DbEntity
 
 data class V1_TestEntity(
                                   val name: String = "",

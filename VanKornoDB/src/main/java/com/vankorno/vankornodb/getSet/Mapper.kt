@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.getSet
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.Cursor
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.getSet.EntityMapperUtils.defaultInstanceValueOf
 import com.vankorno.vankornodb.getSet.EntityMapperUtils.getListFromCursor
 import com.vankorno.vankornodb.getSet.EntityMapperUtils.getListSizeFromDefault
@@ -33,13 +34,7 @@ import kotlin.reflect.jvm.jvmErasure
  */
 
 
-/**
- * Marker interface for all VanKornoDB entities.
- * 
- * Entities must be data classes and implement this interface
- * to be mappable by VanKornoDB.
- */
-interface DbEntity
+
 
 
 /**

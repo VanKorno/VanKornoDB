@@ -1,11 +1,11 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.MigrationDefinitionBuilder
 import com.vankorno.vankornodb.api.TransformCol
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
-import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 

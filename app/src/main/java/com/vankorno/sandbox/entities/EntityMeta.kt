@@ -2,9 +2,9 @@ package com.vankorno.sandbox.entities
 
 import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.sandbox.entities.testEntity.migrationsTestEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
-import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 /**

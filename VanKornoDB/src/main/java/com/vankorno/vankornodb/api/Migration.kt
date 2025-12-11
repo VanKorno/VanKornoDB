@@ -12,7 +12,6 @@ import com.vankorno.vankornodb.dbManagement.migration.dsl.MigrationDefinitionBui
 import com.vankorno.vankornodb.dbManagement.migration.dsl.defineMigrationsInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateMultiStepInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeInternal
-import com.vankorno.vankornodb.getSet.DbEntity
 import kotlin.reflect.KClass
 
 class MigrationDefinitionBuilder() : MigrationDefinitionBuilderInternal()

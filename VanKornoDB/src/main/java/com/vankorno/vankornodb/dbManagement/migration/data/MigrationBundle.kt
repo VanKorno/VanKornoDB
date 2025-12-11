@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.getSet.DbEntity
+import com.vankorno.vankornodb.api.DbEntity
 import kotlin.reflect.KClass
 
 data class MigrationBundle(

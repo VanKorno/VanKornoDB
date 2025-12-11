@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
-import com.vankorno.vankornodb.getSet.DbEntity
+import com.vankorno.vankornodb.api.DbEntity
 import org.junit.Assert.*
 import org.junit.Test
 
