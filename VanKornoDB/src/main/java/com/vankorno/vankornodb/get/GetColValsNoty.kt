@@ -31,9 +31,7 @@ internal inline fun <R> SQLiteDatabase.getColVals(                table: String,
                                                                  column: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
                                              crossinline getCursorValue: (Cursor)->R,
-): List<R> = getCursorPro(table, column) {
-    this.where = where
-}.use { cursor ->
+): List<R> = getCursor(table, column, where).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {

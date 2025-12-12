@@ -1,16 +1,15 @@
 package com.vankorno.vankornodb.get.raw
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.get.getCursorPro
+import com.vankorno.vankornodb.get.getCursor
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
 
 
 fun SQLiteDatabase.getRawTableStr(                                                 table: String
-): RawTableStr = getCursorPro(table).use { cursor ->
+): RawTableStr = getCursor(table).use { cursor ->
     val cols = cursor.columnNames.toList()
     
     val types = getTableTypesFromInitQuery(table)
-    
     val rows = mutableListOf<List<String>>()
     
     while (cursor.moveToNext()) {
@@ -24,7 +23,6 @@ fun SQLiteDatabase.getRawTableStr(                                              
             }
         }
     }
-    
     RawTableStr(cols, types, rows)
 }
 
