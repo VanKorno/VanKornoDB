@@ -532,11 +532,21 @@ abstract class DbHelperInternal(
     suspend fun getIntSusp(table: String, column: IntCol, where: WhereBuilder.()->Unit): Int =
         readSusp(0, "getIntSusp") { it.getInt(table, column, where) }
     
+    
     fun getIntById(id: Int, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
         read(0, "getIntById") { it.getIntById(id, table, column, andWhere) }
     
     suspend fun getIntByIdSusp(id: Int, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
         readSusp(0, "getIntByIdSusp") { it.getIntById(id, table, column, andWhere) }
+    
+    
+    fun getIntByName(name: String, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
+        read(0, "getIntByName") { it.getIntByName(name, table, column, andWhere) }
+    
+    suspend fun getIntByNameSusp(name: String, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
+        readSusp(0, "getIntByNameSusp") { it.getIntByName(name, table, column, andWhere) }
+    
+    
     
     
     
@@ -548,12 +558,19 @@ abstract class DbHelperInternal(
     suspend fun getStrSusp(table: String, column: StrCol, where: WhereBuilder.()->Unit): String =
         readSusp("", "getStrSusp") { it.getStr(table, column, where) }
     
+    
     fun getIntById(id: Int, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
         read("", "getStrById") { it.getStrById(id, table, column, andWhere) }
     
     suspend fun getStrByIdSusp(id: Int, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
         readSusp("", "getStrByIdSusp") { it.getStrById(id, table, column, andWhere) }
     
+    
+    fun getIntByName(name: String, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
+        read("", "getStrByName") { it.getStrByName(name, table, column, andWhere) }
+    
+    suspend fun getStrByNameSusp(name: String, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
+        readSusp("", "getStrByNameSusp") { it.getStrByName(name, table, column, andWhere) }
     
     
     
@@ -566,11 +583,19 @@ abstract class DbHelperInternal(
     suspend fun getBoolSusp(table: String, column: BoolCol, where: WhereBuilder.()->Unit): Boolean =
         readSusp(false, "getBoolSusp") { it.getBool(table, column, where) }
     
+    
     fun getBoolById(id: Int, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
         read(false, "getBoolById") { it.getBoolById(id, table, column, andWhere) }
     
     suspend fun getBoolByIdSusp(id: Int, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
         readSusp(false, "getBoolByIdSusp") { it.getBoolById(id, table, column, andWhere) }
+    
+    
+    fun getBoolByName(name: String, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
+        read(false, "getBoolByName") { it.getBoolByName(name, table, column, andWhere) }
+    
+    suspend fun getBoolByNameSusp(name: String, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
+        readSusp(false, "getBoolByNameSusp") { it.getBoolByName(name, table, column, andWhere) }
     
     
     
@@ -584,12 +609,19 @@ abstract class DbHelperInternal(
     suspend fun getLongSusp(table: String, column: LongCol, where: WhereBuilder.()->Unit): Long =
         readSusp(0L, "getLongSusp") { it.getLong(table, column, where) }
     
+    
     fun getLongById(id: Int, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
         read(0L, "getLongById") { it.getLongById(id, table, column, andWhere) }
     
     suspend fun getLongByIdSusp(id: Int, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
         readSusp(0L, "getLongByIdSusp") { it.getLongById(id, table, column, andWhere) }
     
+    
+    fun getLongByName(name: String, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
+        read(0L, "getLongByName") { it.getLongByName(name, table, column, andWhere) }
+    
+    suspend fun getLongByNameSusp(name: String, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
+        readSusp(0L, "getLongByNameSusp") { it.getLongByName(name, table, column, andWhere) }
     
     
     
@@ -602,11 +634,19 @@ abstract class DbHelperInternal(
     suspend fun getFloatSusp(table: String, column: FloatCol, where: WhereBuilder.()->Unit): Float =
         readSusp(0F, "getFloatSusp") { it.getFloat(table, column, where) }
     
+    
     fun getFloatById(id: Int, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
         read(0F, "getFloatById") { it.getFloatById(id, table, column, andWhere) }
     
     suspend fun getFloatByIdSusp(id: Int, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
         readSusp(0F, "getFloatByIdSusp") { it.getFloatById(id, table, column, andWhere) }
+    
+    
+    fun getFloatByName(name: String, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
+        read(0F, "getFloatByName") { it.getFloatByName(name, table, column, andWhere) }
+    
+    suspend fun getFloatByNameSusp(name: String, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
+        readSusp(0F, "getFloatByNameSusp") { it.getFloatByName(name, table, column, andWhere) }
     
     
     
@@ -620,11 +660,19 @@ abstract class DbHelperInternal(
     suspend fun getBlobSusp(table: String, column: BlobCol, where: WhereBuilder.()->Unit): ByteArray =
         readSusp(ByteArray(0), "getBlobSusp") { it.getBlob(table, column, where) }
     
+    
     fun getBlobById(id: Int, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
         read(ByteArray(0), "getBlobById") { it.getBlobById(id, table, column, andWhere) }
     
     suspend fun getBlobByIdSusp(id: Int, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
         readSusp(ByteArray(0), "getBlobByIdSusp") { it.getBlobById(id, table, column, andWhere) }
+    
+    
+    fun getBlobByName(name: String, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
+        read(ByteArray(0), "getBlobByName") { it.getBlobByName(name, table, column, andWhere) }
+    
+    suspend fun getBlobByNameSusp(name: String, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
+        readSusp(ByteArray(0), "getBlobByNameSusp") { it.getBlobByName(name, table, column, andWhere) }
     
     
     
