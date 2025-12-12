@@ -1174,14 +1174,14 @@ abstract class DbHelperInternal(
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<T> = read(emptyList(), "getList") {
-        it.getList(table, column, queryOpts)
+        it.getListNoty(table, column, queryOpts)
     }
     
     suspend inline fun <reified T> getListSusp(                      table: String,
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getListSusp") {
-        it.getList(table, column, queryOpts)
+        it.getListNoty(table, column, queryOpts)
     }
     
     

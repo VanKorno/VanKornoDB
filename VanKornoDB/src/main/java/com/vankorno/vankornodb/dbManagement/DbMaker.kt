@@ -12,7 +12,7 @@ import com.vankorno.vankornodb.dbManagement.DbProvider.mainDb
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
 import com.vankorno.vankornodb.delete.deleteRow
-import com.vankorno.vankornodb.get.getList
+import com.vankorno.vankornodb.get.getListNoty
 import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
@@ -143,7 +143,7 @@ abstract class DbMaker(           context: Context,
     
     private fun cleanupVersionTable(                                             db: SQLiteDatabase
     ) {
-        val allNames = db.getList<String>(TABLE_EntityVersions, Name)
+        val allNames = db.getListNoty<String>(TABLE_EntityVersions, Name)
         if (allNames.isEmpty()) return //\/\/\/\/\/\
         
         val namesToDelete = allNames.filter { name ->
