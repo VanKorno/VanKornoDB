@@ -36,7 +36,7 @@ abstract class DbHelperInternal(
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
-    fun <T> setInt(                                                    value: Int,
+    fun setInt(                                                        value: Int,
                                                                        table: String,
                                                                       column: IntCol,
                                                                        async: Boolean = false,
@@ -45,7 +45,7 @@ abstract class DbHelperInternal(
         it.setInt(value, table, column, where)
     }
     
-    suspend fun <T> setIntSusp(                                        value: Int,
+    suspend fun setIntSusp(                                            value: Int,
                                                                        table: String,
                                                                       column: IntCol,
                                                                        where: WhereBuilder.()->Unit,
@@ -54,7 +54,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> setIntById(                                           value: Int,
+    fun setIntById(                                               value: Int,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: IntCol,
@@ -64,7 +64,7 @@ abstract class DbHelperInternal(
         it.setIntById(value, id, table, column, andWhere)
     }
     
-    suspend fun <T> setIntByIdSusp(                               value: Int,
+    suspend fun setIntByIdSusp(                                   value: Int,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: IntCol,
@@ -74,8 +74,7 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    fun <T> setIntByName(                                         value: Int,
+    fun setIntByName(                                             value: Int,
                                                                    name: String,
                                                                   table: String,
                                                                  column: IntCol,
@@ -85,7 +84,7 @@ abstract class DbHelperInternal(
         it.setIntByName(value, name, table, column, andWhere)
     }
     
-    suspend fun <T> setIntByNameSusp(                             value: Int,
+    suspend fun setIntByNameSusp(                                 value: Int,
                                                                    name: String,
                                                                   table: String,
                                                                  column: IntCol,
@@ -99,7 +98,7 @@ abstract class DbHelperInternal(
     
     //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
-    fun <T> setStr(                                                    value: String,
+    fun setStr(                                                        value: String,
                                                                        table: String,
                                                                       column: StrCol,
                                                                        async: Boolean = false,
@@ -108,7 +107,7 @@ abstract class DbHelperInternal(
         it.setStr(value, table, column, where)
     }
     
-    suspend fun <T> setStrSusp(                                        value: String,
+    suspend fun setStrSusp(                                            value: String,
                                                                        table: String,
                                                                       column: StrCol,
                                                                        where: WhereBuilder.()->Unit,
@@ -117,7 +116,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> setStrById(                                           value: String,
+    fun setStrById(                                               value: String,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: StrCol,
@@ -127,7 +126,7 @@ abstract class DbHelperInternal(
         it.setStrById(value, id, table, column, andWhere)
     }
     
-    suspend fun <T> setStrByIdSusp(                               value: String,
+    suspend fun setStrByIdSusp(                                   value: String,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: StrCol,
@@ -137,8 +136,7 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    fun <T> setStrByName(                                         value: String,
+    fun setStrByName(                                             value: String,
                                                                    name: String,
                                                                   table: String,
                                                                  column: StrCol,
@@ -148,7 +146,7 @@ abstract class DbHelperInternal(
         it.setStrByName(value, name, table, column, andWhere)
     }
     
-    suspend fun <T> setStrByNameSusp(                             value: String,
+    suspend fun setStrByNameSusp(                                 value: String,
                                                                    name: String,
                                                                   table: String,
                                                                  column: StrCol,
@@ -163,7 +161,7 @@ abstract class DbHelperInternal(
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
-    fun <T> setBool(                                                   value: Boolean,
+    fun setBool(                                                       value: Boolean,
                                                                        table: String,
                                                                       column: BoolCol,
                                                                        async: Boolean = false,
@@ -172,7 +170,7 @@ abstract class DbHelperInternal(
         it.setBool(value, table, column, where)
     }
     
-    suspend fun <T> setBoolSusp(                                       value: Boolean,
+    suspend fun setBoolSusp(                                           value: Boolean,
                                                                        table: String,
                                                                       column: BoolCol,
                                                                        where: WhereBuilder.()->Unit,
@@ -181,7 +179,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> setBoolById(                                          value: Boolean,
+    fun setBoolById(                                              value: Boolean,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: BoolCol,
@@ -191,7 +189,7 @@ abstract class DbHelperInternal(
         it.setBoolById(value, id, table, column, andWhere)
     }
     
-    suspend fun <T> setBoolByIdSusp(                              value: Boolean,
+    suspend fun setBoolByIdSusp(                                  value: Boolean,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: BoolCol,
@@ -201,8 +199,7 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    fun <T> setBoolByName(                                        value: Boolean,
+    fun setBoolByName(                                            value: Boolean,
                                                                    name: String,
                                                                   table: String,
                                                                  column: BoolCol,
@@ -212,7 +209,7 @@ abstract class DbHelperInternal(
         it.setBoolByName(value, name, table, column, andWhere)
     }
     
-    suspend fun <T> setBoolByNameSusp(                            value: Boolean,
+    suspend fun setBoolByNameSusp(                                value: Boolean,
                                                                    name: String,
                                                                   table: String,
                                                                  column: BoolCol,
@@ -227,7 +224,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
-    fun <T> setLong(                                                   value: Long,
+    fun setLong(                                                       value: Long,
                                                                        table: String,
                                                                       column: LongCol,
                                                                        async: Boolean = false,
@@ -236,7 +233,7 @@ abstract class DbHelperInternal(
         it.setLong(value, table, column, where)
     }
     
-    suspend fun <T> setLongSusp(                                       value: Long,
+    suspend fun setLongSusp(                                           value: Long,
                                                                        table: String,
                                                                       column: LongCol,
                                                                        where: WhereBuilder.()->Unit,
@@ -245,7 +242,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> setLongById(                                          value: Long,
+    fun setLongById(                                              value: Long,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: LongCol,
@@ -255,7 +252,7 @@ abstract class DbHelperInternal(
         it.setLongById(value, id, table, column, andWhere)
     }
     
-    suspend fun <T> setLongByIdSusp(                              value: Long,
+    suspend fun setLongByIdSusp(                                  value: Long,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: LongCol,
@@ -265,8 +262,7 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    fun <T> setLongByName(                                        value: Long,
+    fun setLongByName(                                            value: Long,
                                                                    name: String,
                                                                   table: String,
                                                                  column: LongCol,
@@ -276,7 +272,7 @@ abstract class DbHelperInternal(
         it.setLongByName(value, name, table, column, andWhere)
     }
     
-    suspend fun <T> setLongByNameSusp(                            value: Long,
+    suspend fun setLongByNameSusp(                                value: Long,
                                                                    name: String,
                                                                   table: String,
                                                                  column: LongCol,
@@ -291,7 +287,7 @@ abstract class DbHelperInternal(
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
     
-    fun <T> setFloat(                                                  value: Float,
+    fun setFloat(                                                      value: Float,
                                                                        table: String,
                                                                       column: FloatCol,
                                                                        async: Boolean = false,
@@ -300,7 +296,7 @@ abstract class DbHelperInternal(
         it.setFloat(value, table, column, where)
     }
     
-    suspend fun <T> setFloatSusp(                                      value: Float,
+    suspend fun setFloatSusp(                                          value: Float,
                                                                        table: String,
                                                                       column: FloatCol,
                                                                        where: WhereBuilder.()->Unit,
@@ -309,7 +305,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> setFloatById(                                         value: Float,
+    fun setFloatById(                                             value: Float,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: FloatCol,
@@ -319,7 +315,7 @@ abstract class DbHelperInternal(
         it.setFloatById(value, id, table, column, andWhere)
     }
     
-    suspend fun <T> setFloatByIdSusp(                             value: Float,
+    suspend fun setFloatByIdSusp(                                 value: Float,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: FloatCol,
@@ -329,7 +325,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> setFloatByName(                                        value: Float,
+    fun setFloatByName(                                           value: Float,
                                                                    name: String,
                                                                   table: String,
                                                                  column: FloatCol,
@@ -339,7 +335,7 @@ abstract class DbHelperInternal(
         it.setFloatByName(value, name, table, column, andWhere)
     }
     
-    suspend fun <T> setFloatByNameSusp(                            value: Float,
+    suspend fun setFloatByNameSusp(                               value: Float,
                                                                    name: String,
                                                                   table: String,
                                                                  column: FloatCol,
@@ -356,7 +352,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
-    fun <T> setBlob(                                                   value: ByteArray,
+    fun setBlob(                                                       value: ByteArray,
                                                                        table: String,
                                                                       column: BlobCol,
                                                                        async: Boolean = false,
@@ -365,7 +361,7 @@ abstract class DbHelperInternal(
         it.setBlob(value, table, column, where)
     }
     
-    suspend fun <T> setBlobSusp(                                       value: ByteArray,
+    suspend fun setBlobSusp(                                           value: ByteArray,
                                                                        table: String,
                                                                       column: BlobCol,
                                                                        where: WhereBuilder.()->Unit,
@@ -374,7 +370,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> setBlobById(                                          value: ByteArray,
+    fun setBlobById(                                              value: ByteArray,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: BlobCol,
@@ -384,7 +380,7 @@ abstract class DbHelperInternal(
         it.setBlobById(value, id, table, column, andWhere)
     }
     
-    suspend fun <T> setBlobByIdSusp(                              value: ByteArray,
+    suspend fun setBlobByIdSusp(                                  value: ByteArray,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: BlobCol,
@@ -394,8 +390,7 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    fun <T> setBlobByName(                                        value: ByteArray,
+    fun setBlobByName(                                            value: ByteArray,
                                                                    name: String,
                                                                   table: String,
                                                                  column: BlobCol,
@@ -405,7 +400,7 @@ abstract class DbHelperInternal(
         it.setBlobByName(value, name, table, column, andWhere)
     }
     
-    suspend fun <T> setBlobByNameSusp(                            value: ByteArray,
+    suspend fun setBlobByNameSusp(                                value: ByteArray,
                                                                    name: String,
                                                                   table: String,
                                                                  column: BlobCol,
