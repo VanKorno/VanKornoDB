@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.values.LibGlobals2.currScr
-import com.vankorno.vankornodb.getSet.getAppTableNames
+import com.vankorno.vankornodb.get.getAppTableNames
 import com.vankorno.vankornohelpers.dLog
 
 private const val TAG = "UpdateScr"

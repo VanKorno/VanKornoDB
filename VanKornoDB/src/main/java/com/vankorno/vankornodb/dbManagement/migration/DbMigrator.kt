@@ -7,8 +7,8 @@ import android.util.Log
 import com.vankorno.vankornodb.api.migrateMultiStep
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.getSet.getIntNoty
-import com.vankorno.vankornodb.getSet.setNoty
+import com.vankorno.vankornodb.get.getIntNoty
+import com.vankorno.vankornodb.set.setNoty
 
 abstract class DbMigratorInternal(                                           val db: SQLiteDatabase,
                                               private val allEntityMeta: Collection<BaseEntityMeta>,

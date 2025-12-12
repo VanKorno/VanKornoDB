@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.getSet
+package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
-import com.vankorno.vankornodb.getSet.internal.byIdAnd
+import com.vankorno.vankornodb.misc.byIdAnd
 
 fun SQLiteDatabase.getInt(table: String, column: IntCol, where: WhereBuilder.()->Unit) = getIntNoty(table, column.name, where)
 fun SQLiteDatabase.getStr(table: String, column: StrCol, where: WhereBuilder.()->Unit) = getStrNoty(table, column.name, where)

@@ -1,10 +1,11 @@
-package com.vankorno.vankornodb.getSet
+package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
 import com.vankorno.vankornodb.core.data.DbConstants.randomVal
+import com.vankorno.vankornodb.mapper.toEntity
 
 /**
  * Retrieves a single random value from the specified column in a table.

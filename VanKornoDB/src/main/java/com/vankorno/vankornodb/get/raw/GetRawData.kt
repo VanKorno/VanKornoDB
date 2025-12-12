@@ -1,8 +1,8 @@
-package com.vankorno.vankornodb.getSet.raw
+package com.vankorno.vankornodb.get.raw
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.getSet.getCursor
-import com.vankorno.vankornodb.getSet.raw.data.RawTableStr
+import com.vankorno.vankornodb.get.getCursor
+import com.vankorno.vankornodb.get.raw.data.RawTableStr
 
 
 fun SQLiteDatabase.getRawTableStr(                                                 table: String

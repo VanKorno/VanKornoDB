@@ -14,9 +14,9 @@ import com.vankorno.vankornodb.core.data.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
-import com.vankorno.vankornodb.getSet.getObjects
-import com.vankorno.vankornodb.getSet.insertObj
-import com.vankorno.vankornodb.getSet.insertObjects
+import com.vankorno.vankornodb.get.getObjects
+import com.vankorno.vankornodb.set.insertObj
+import com.vankorno.vankornodb.set.insertObjects
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf

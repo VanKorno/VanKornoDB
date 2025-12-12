@@ -19,7 +19,8 @@ import com.vankorno.vankornodb.delete.deleteLastRow
 import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteRowById
 import com.vankorno.vankornodb.delete.deleteTable
-import com.vankorno.vankornodb.getSet.*
+import com.vankorno.vankornodb.get.*
+import com.vankorno.vankornodb.set.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

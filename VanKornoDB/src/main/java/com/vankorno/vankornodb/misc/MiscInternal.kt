@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.getSet.internal
+package com.vankorno.vankornodb.misc
 
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants

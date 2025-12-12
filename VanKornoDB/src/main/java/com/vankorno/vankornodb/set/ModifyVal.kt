@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.getSet
+package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
 

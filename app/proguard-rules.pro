@@ -23,12 +23,12 @@
 
 
 # Keep all classes implementing DbEntity and their primary constructors
--keep class * implements com.vankorno.vankornodb.getSet.DbEntity {
+-keep class * implements com.vankorno.vankornodb.get.DbEntity {
     <init>(...);
 }
 
 # Keep all fields and methods (needed for defaultInstanceValueOf and reflection)
--keepclassmembers class * implements com.vankorno.vankornodb.getSet.DbEntity {
+-keepclassmembers class * implements com.vankorno.vankornodb.get.DbEntity {
     <fields>;
     <methods>;
 }

@@ -12,11 +12,11 @@ import com.vankorno.vankornodb.dbManagement.DbProvider.mainDb
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
 import com.vankorno.vankornodb.delete.deleteRow
-import com.vankorno.vankornodb.getSet.getList
-import com.vankorno.vankornodb.getSet.hasRows
-import com.vankorno.vankornodb.getSet.insertObj
-import com.vankorno.vankornodb.getSet.isTableEmpty
-import com.vankorno.vankornodb.getSet.tableExists
+import com.vankorno.vankornodb.get.getList
+import com.vankorno.vankornodb.get.hasRows
+import com.vankorno.vankornodb.get.isTableEmpty
+import com.vankorno.vankornodb.get.tableExists
+import com.vankorno.vankornodb.set.insertObj
 
 /* 
 * THE LIFECYCLE AT RUNTIME:

@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.getSet
+package com.vankorno.vankornodb.get
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase

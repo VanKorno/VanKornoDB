@@ -19,4 +19,3 @@ fun Cursor.getBool(col: Int) = this.getInt(col) == 1
 fun columns(vararg columns: String): Array<out String> = columns
 
 
-

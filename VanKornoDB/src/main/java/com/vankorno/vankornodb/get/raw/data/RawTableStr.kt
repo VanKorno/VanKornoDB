@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.getSet.raw.data
+package com.vankorno.vankornodb.get.raw.data
 
 data class RawTableStr(
                                val columns: List<String>,

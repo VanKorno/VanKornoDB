@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.getSet
+package com.vankorno.vankornodb.set
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
@@ -6,7 +6,7 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
-import com.vankorno.vankornodb.getSet.internal.byIdAnd
+import com.vankorno.vankornodb.misc.byIdAnd
 
 
 fun SQLiteDatabase.setByIdNoty(                                   value: Any,

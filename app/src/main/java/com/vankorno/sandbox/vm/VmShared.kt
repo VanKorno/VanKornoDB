@@ -1,7 +1,7 @@
 package com.vankorno.sandbox.vm
 
 import androidx.lifecycle.ViewModel
-import com.vankorno.vankornodb.getSet.raw.data.RawTableStr
+import com.vankorno.vankornodb.get.raw.data.RawTableStr
 import com.vankorno.vankornohelpers.dLog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

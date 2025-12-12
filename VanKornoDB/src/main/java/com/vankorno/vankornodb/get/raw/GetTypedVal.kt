@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.getSet.raw
+package com.vankorno.vankornodb.get.raw
 
 import android.database.Cursor
 import com.vankorno.vankornodb.misc.getBool

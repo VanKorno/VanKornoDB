@@ -6,9 +6,9 @@ import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornocompose.values.LibGlobals2.currScr
 import com.vankorno.vankornocompose.values.LibGlobals2.previousScr
-import com.vankorno.vankornodb.getSet.getAppTableNames
-import com.vankorno.vankornodb.getSet.getInternalTableNames
-import com.vankorno.vankornodb.getSet.raw.getRawTableStr
+import com.vankorno.vankornodb.get.getAppTableNames
+import com.vankorno.vankornodb.get.getInternalTableNames
+import com.vankorno.vankornodb.get.raw.getRawTableStr
 import com.vankorno.vankornohelpers.dLog
 import com.vankorno.vankornohelpers.values.hideKeyboard
 
