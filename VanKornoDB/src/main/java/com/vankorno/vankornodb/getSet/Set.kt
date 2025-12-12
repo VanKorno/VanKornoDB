@@ -8,10 +8,10 @@ import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
 
 
-fun SQLiteDatabase.setById(value: Any, id: Int, table: String, column: String) = set(value, table, column, ID, id)
+fun SQLiteDatabase.setByIdNoty(value: Any, id: Int, table: String, column: String) = setNoty(value, table, column, ID, id)
 
 
-fun <T> SQLiteDatabase.set(                                                        value: Any,
+fun <T> SQLiteDatabase.setNoty(                                                    value: Any,
                                                                                    table: String,
                                                                                   column: String,
                                                                                    where: String,
@@ -23,7 +23,7 @@ fun <T> SQLiteDatabase.set(                                                     
 }
 
 
-fun SQLiteDatabase.set(                                                value: Any,
+fun SQLiteDatabase.setNoty(                                            value: Any,
                                                                        table: String,
                                                                       column: String,
                                                                        where: WhereBuilder.()->Unit,

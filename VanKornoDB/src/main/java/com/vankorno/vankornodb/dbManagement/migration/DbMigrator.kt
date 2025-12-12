@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.api.migrateMultiStep
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.getSet.getInt
-import com.vankorno.vankornodb.getSet.set
+import com.vankorno.vankornodb.getSet.setNoty
 
 abstract class DbMigratorInternal(                                           val db: SQLiteDatabase,
                                               private val allEntityMeta: Collection<BaseEntityMeta>,
@@ -46,7 +46,7 @@ abstract class DbMigratorInternal(                                           val
             newVersion = newVer,
             migrationBundle = entity.migrationBundle.value
         )
-        db.set(newVer, TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
+        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
     }
     
     
@@ -71,7 +71,7 @@ abstract class DbMigratorInternal(                                           val
         // region LOG
             Log.d(DbTAG, "migrateTables(): Finished migrating $dbRowName tables. Setting the new entity version ($newVer)...")
         // endregion
-        db.set(newVer, TABLE_EntityVersions, EntityVersion, Name, dbRowName)
+        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, Name, dbRowName)
     }
     
     
