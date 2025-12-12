@@ -12,9 +12,7 @@ import com.vankorno.vankornodb.api.JoinBuilder
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
-import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.IntCol
-import com.vankorno.vankornodb.dbManagement.data.StrCol
+import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteFirstRow
 import com.vankorno.vankornodb.delete.deleteLastRow
@@ -308,9 +306,172 @@ abstract class DbHelperInternal(
     
     
     
+    //  ----------------------------------  B O O L E A N  ----------------------------------  \\
+    
+    fun <T> setBool(                                                   value: Boolean,
+                                                                       table: String,
+                                                                      column: BoolCol,
+                                                                       async: Boolean = false,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setBool", async) {
+        it.setBool(value, table, column, where)
+    }
+    
+    suspend fun <T> setBoolSusp(                                       value: Boolean,
+                                                                       table: String,
+                                                                      column: BoolCol,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setBoolSusp") {
+        it.setBool(value, table, column, where)
+    }
+    
+    
+    fun <T> setBoolById(                                          value: Boolean,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: BoolCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setBoolById", async) {
+        it.setBoolById(value, id, table, column, andWhere)
+    }
+    
+    suspend fun <T> setBoolByIdSusp(                              value: Boolean,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: BoolCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setBoolByIdSusp") {
+        it.setBoolById(value, id, table, column, andWhere)
+    }
     
     
     
+    
+    
+    //  -------------------------------------  L O N G  -------------------------------------  \\
+    
+    fun <T> setLong(                                                   value: Long,
+                                                                       table: String,
+                                                                      column: LongCol,
+                                                                       async: Boolean = false,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setLong", async) {
+        it.setLong(value, table, column, where)
+    }
+    
+    suspend fun <T> setLongSusp(                                       value: Long,
+                                                                       table: String,
+                                                                      column: LongCol,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setLongSusp") {
+        it.setLong(value, table, column, where)
+    }
+    
+    
+    fun <T> setLongById(                                          value: Long,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: LongCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setLongById", async) {
+        it.setLongById(value, id, table, column, andWhere)
+    }
+    
+    suspend fun <T> setLongByIdSusp(                              value: Long,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: LongCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setLongByIdSusp") {
+        it.setLongById(value, id, table, column, andWhere)
+    }
+    
+    
+    
+    
+    //  ------------------------------------  F L O A T  ------------------------------------  \\
+    
+    fun <T> setFloat(                                                  value: Float,
+                                                                       table: String,
+                                                                      column: FloatCol,
+                                                                       async: Boolean = false,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setFloat", async) {
+        it.setFloat(value, table, column, where)
+    }
+    
+    suspend fun <T> setFloatSusp(                                      value: Float,
+                                                                       table: String,
+                                                                      column: FloatCol,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setFloatSusp") {
+        it.setFloat(value, table, column, where)
+    }
+    
+    
+    fun <T> setFloatById(                                         value: Float,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: FloatCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setFloatById", async) {
+        it.setFloatById(value, id, table, column, andWhere)
+    }
+    
+    suspend fun <T> setFloatByIdSusp(                             value: Float,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: FloatCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setFloatByIdSusp") {
+        it.setFloatById(value, id, table, column, andWhere)
+    }
+    
+    
+    
+    
+    
+    //  -------------------------------------  B L O B  -------------------------------------  \\
+    
+    fun <T> setBlob(                                                   value: ByteArray,
+                                                                       table: String,
+                                                                      column: BlobCol,
+                                                                       async: Boolean = false,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setBlob", async) {
+        it.setBlob(value, table, column, where)
+    }
+    
+    suspend fun <T> setBlobSusp(                                       value: ByteArray,
+                                                                       table: String,
+                                                                      column: BlobCol,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setBlobSusp") {
+        it.setBlob(value, table, column, where)
+    }
+    
+    
+    fun <T> setBlobById(                                          value: ByteArray,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: BlobCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setBlobById", async) {
+        it.setBlobById(value, id, table, column, andWhere)
+    }
+    
+    suspend fun <T> setBlobByIdSusp(                              value: ByteArray,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: BlobCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setBlobByIdSusp") {
+        it.setBlobById(value, id, table, column, andWhere)
+    }
     
     
     
