@@ -13,6 +13,7 @@ import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteFirstRow
 import com.vankorno.vankornodb.delete.deleteLastRow
@@ -222,18 +223,76 @@ abstract class DbHelperInternal(
     
     // ===================================  S E T T E R S  =================================== \\
     
-    inline fun setByIdNoty(                                                 value: Any,
-                                                                               id: Int,
-                                                                            table: String,
-                                                                           column: String,
-                                                                            async: Boolean = false,
-    ) = setNoty(value, table, column, ID, id, async)
     
-    suspend fun setByIdNotySusp(                                                   value: Any,
-                                                                                      id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
-    ) = setNotySusp(value, table, column, ID, id)
+    
+    fun <T> setInt(                                                    value: Int,
+                                                                       table: String,
+                                                                      column: IntCol,
+                                                                       async: Boolean = false,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setInt", async) {
+        it.setInt(value, table, column, where)
+    }
+    
+    suspend fun <T> setIntSusp(                                        value: Int,
+                                                                       table: String,
+                                                                      column: IntCol,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setIntSusp") {
+        it.setInt(value, table, column, where)
+    }
+    
+    
+    fun <T> setIntById(                                           value: Int,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: IntCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setIntById", async) {
+        it.setIntById(value, id, table, column, andWhere)
+    }
+    
+    suspend fun <T> setIntByIdSusp(                               value: Int,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: IntCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setIntByIdSusp") {
+        it.setIntById(value, id, table, column, andWhere)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // -------------------- Not type-safe --------------------
+    
+    fun setByIdNoty(                                              value: Any,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: String,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setByIdNoty", async) {
+        it.setByIdNoty(value, id, table, column, andWhere)
+    }
+    
+    suspend fun setByIdNotySusp(                                  value: Any,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: String,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setByIdNotySusp") {
+        it.setByIdNoty(value, id, table, column, andWhere)
+    }
     
     
     inline fun <T> setNoty(                                                 value: Any,
