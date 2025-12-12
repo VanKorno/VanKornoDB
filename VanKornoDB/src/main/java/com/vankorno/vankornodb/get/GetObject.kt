@@ -37,7 +37,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNullById(              
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObj(             table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-): T = getCursor(table) {
+): T = getCursorPro(table) {
     applyOpts(queryOpts)
     limit = 1
 }.use { cursor ->
@@ -53,7 +53,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(             table: Stri
 fun <T : DbEntity> SQLiteDatabase.getObj(                            clazz: KClass<T>,
                                                                      table: String,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): T = getCursor(table) {
+): T = getCursorPro(table) {
     applyOpts(queryOpts)
     limit = 1
 }.use { cursor ->
@@ -76,7 +76,7 @@ fun <T : DbEntity> SQLiteDatabase.getObj(                            clazz: KCla
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(       table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-): T? = getCursor(table) {
+): T? = getCursorPro(table) {
     applyOpts(queryOpts)
     limit = 1
 }.use { cursor ->
@@ -93,7 +93,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(       table: Stri
 fun <T : DbEntity> SQLiteDatabase.getObjOrNull(                      clazz: KClass<T>,
                                                                      table: String,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): T? = getCursor(table) {
+): T? = getCursorPro(table) {
     applyOpts(queryOpts)
     limit = 1
 }.use { cursor ->

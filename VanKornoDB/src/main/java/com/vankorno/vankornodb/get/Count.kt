@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.api.WhereBuilder
 fun SQLiteDatabase.getRowCount(                                   table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
-): Int = getCursor(table, arrayOf("1")) {
+): Int = getCursorPro(table, arrayOf("1")) {
     applyOpts(joins = joins, where = where)
 }.use { it.count }
 
@@ -24,7 +24,7 @@ fun SQLiteDatabase.getRowCount(                                   table: String,
 fun SQLiteDatabase.hasRows(                                       table: String,
                                                                   joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
-): Boolean = getCursor(table, arrayOf("1")) {
+): Boolean = getCursorPro(table, arrayOf("1")) {
     applyOpts(joins = joins, where = where, limit = 1)
 }.use { it.moveToFirst() }
 

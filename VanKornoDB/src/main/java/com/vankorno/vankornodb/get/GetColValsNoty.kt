@@ -15,7 +15,7 @@ internal inline fun <R> SQLiteDatabase.getColValsPro(                table: Stri
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
                                                 crossinline getCursorValue: (Cursor)->R,
-): List<R> = getCursor(table, column) {
+): List<R> = getCursorPro(table, column) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
@@ -31,7 +31,7 @@ internal inline fun <R> SQLiteDatabase.getColVals(                table: String,
                                                                  column: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
                                              crossinline getCursorValue: (Cursor)->R,
-): List<R> = getCursor(table, column) {
+): List<R> = getCursorPro(table, column) {
     this.where = where
 }.use { cursor ->
     buildList {
@@ -50,7 +50,7 @@ internal inline fun <R> SQLiteDatabase.getColVals(                table: String,
 inline fun <reified V> SQLiteDatabase.getColValsNoty(                table: String,
                                                                 columnName: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-): List<V> = getCursor(table, columnName) {
+): List<V> = getCursorPro(table, columnName) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {

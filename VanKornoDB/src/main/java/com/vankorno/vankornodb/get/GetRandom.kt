@@ -19,7 +19,7 @@ import com.vankorno.vankornodb.mapper.toEntity
 inline fun <reified T> SQLiteDatabase.getRandomVal(               table: String,
                                                                  column: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
-): T? = getCursor(table, column) {
+): T? = getCursorPro(table, column) {
     applyOpts(
         where = where,
         orderBy = randomVal,
@@ -58,7 +58,7 @@ fun SQLiteDatabase.getRandomId(                                   table: String,
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
-): T? = getCursor(table) {
+): T? = getCursorPro(table) {
     applyOpts(
         where = where,
         orderBy = randomVal,

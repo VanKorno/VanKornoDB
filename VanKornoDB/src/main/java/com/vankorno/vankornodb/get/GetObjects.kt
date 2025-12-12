@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(              table: String,
                                                              noinline queryOpts: QueryOpts.()->Unit,
                                                               noinline mapAfter: (T)->T,
-): List<T> = getCursor(table) {
+): List<T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
@@ -44,7 +44,7 @@ fun <T : DbEntity> SQLiteDatabase.getObjects(                             clazz:
                                                                           table: String,
                                                                       queryOpts: QueryOpts.()->Unit,
                                                                        mapAfter: (T)->T,
-): List<T> = getCursor(table) {
+): List<T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
@@ -74,7 +74,7 @@ fun <T : DbEntity> SQLiteDatabase.getObjects(                        clazz: KCla
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(               table: String,
                                                              noinline queryOpts: QueryOpts.()->Unit,
                                                               noinline mapAfter: (T)->T,
-): Map<Int, T> = getCursor(table) {
+): Map<Int, T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildMap {
@@ -107,7 +107,7 @@ fun <T : DbEntity> SQLiteDatabase.getObjMap(                              clazz:
                                                                           table: String,
                                                                       queryOpts: QueryOpts.()->Unit,
                                                                        mapAfter: (T)->T,
-): Map<Int, T> = getCursor(table) {
+): Map<Int, T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildMap {

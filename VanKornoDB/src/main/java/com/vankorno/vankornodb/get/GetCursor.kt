@@ -5,9 +5,30 @@ package com.vankorno.vankornodb.get
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.queryBuilder.getQuery
 
-fun SQLiteDatabase.getCursor(                                        table: String,
+fun SQLiteDatabase.getCursor(                                     table: String,
+                                                                columns: Array<out String>,
+                                                                  where: WhereBuilder.()->Unit = {},
+): Cursor {
+    val (query, args) = getQuery(table, columns) { this.where = where }
+    return rawQuery(query, args)
+}
+
+
+fun SQLiteDatabase.getCursor(                                     table: String,
+                                                                 column: String = "*",
+                                                                  where: WhereBuilder.()->Unit = {},
+): Cursor {
+    val (query, args) = getQuery(table, arrayOf(column)) { this.where = where }
+    return rawQuery(query, args)
+}
+
+
+
+
+fun SQLiteDatabase.getCursorPro(                                     table: String,
                                                                    columns: Array<out String>,
                                                                  queryOpts: QueryOpts.()->Unit = {},
 ): Cursor {
@@ -16,7 +37,7 @@ fun SQLiteDatabase.getCursor(                                        table: Stri
 }
 
 
-fun SQLiteDatabase.getCursor(                                        table: String,
+fun SQLiteDatabase.getCursorPro(                                     table: String,
                                                                     column: String = "*",
                                                                  queryOpts: QueryOpts.()->Unit = {},
 ): Cursor {
@@ -25,10 +46,3 @@ fun SQLiteDatabase.getCursor(                                        table: Stri
 }
 
 
-fun SQLiteDatabase.getCursor(                                        table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-                                                            vararg columns: String,
-): Cursor {
-    val (query, args) = getQuery(table, columns, queryOpts)
-    return rawQuery(query, args)
-}

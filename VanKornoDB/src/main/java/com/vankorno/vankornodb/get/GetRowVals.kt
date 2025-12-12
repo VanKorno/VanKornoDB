@@ -32,7 +32,7 @@ inline fun <reified T> SQLiteDatabase.getRowVals(                    table: Stri
 inline fun <reified T> SQLiteDatabase.getMultiRowVals(               table: String,
                                                                    columns: Array<out String>,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-): List<List<T?>> = getCursor(table, columns) {
+): List<List<T?>> = getCursorPro(table, columns) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
