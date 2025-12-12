@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.get
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -18,7 +19,17 @@ import com.vankorno.vankornodb.misc.getBoolean
 fun SQLiteDatabase.getColInts(                                       table: String,
                                                                     column: IntCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Int> = getColValsNoty(table, column.name, queryOpts) { it.getInt(0) }
+): List<Int> = getColVals(table, column.name, queryOpts) { it.getInt(0) }
+
+
+/**
+ * Retrieves a list of Ints from a single column.
+ */
+fun SQLiteDatabase.getColIntsWhere(                               table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): List<Int> = getColValsWhere(table, column.name, where) { it.getInt(0) }
+
 
 
 /**
@@ -27,7 +38,7 @@ fun SQLiteDatabase.getColInts(                                       table: Stri
 fun SQLiteDatabase.getColStrings(                                    table: String,
                                                                     column: StrCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<String> = getColValsNoty(table, column.name, queryOpts) { it.getString(0) }
+): List<String> = getColVals(table, column.name, queryOpts) { it.getString(0) }
 
 
 /**
@@ -36,7 +47,7 @@ fun SQLiteDatabase.getColStrings(                                    table: Stri
 fun SQLiteDatabase.getColBools(                                      table: String,
                                                                     column: BoolCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Boolean> = getColValsNoty(table, column.name, queryOpts) { it.getBoolean(0) }
+): List<Boolean> = getColVals(table, column.name, queryOpts) { it.getBoolean(0) }
 
 
 /**
@@ -45,7 +56,7 @@ fun SQLiteDatabase.getColBools(                                      table: Stri
 fun SQLiteDatabase.getColLongs(                                      table: String,
                                                                     column: LongCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Long> = getColValsNoty(table, column.name, queryOpts) { it.getLong(0) }
+): List<Long> = getColVals(table, column.name, queryOpts) { it.getLong(0) }
 
 
 /**
@@ -54,7 +65,7 @@ fun SQLiteDatabase.getColLongs(                                      table: Stri
 fun SQLiteDatabase.getColFloats(                                     table: String,
                                                                     column: FloatCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Float> = getColValsNoty(table, column.name, queryOpts) { it.getFloat(0) }
+): List<Float> = getColVals(table, column.name, queryOpts) { it.getFloat(0) }
 
 
 /**
@@ -63,7 +74,7 @@ fun SQLiteDatabase.getColFloats(                                     table: Stri
 fun SQLiteDatabase.getColBlobs(                                      table: String,
                                                                     column: BlobCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<ByteArray> = getColValsNoty(table, column.name, queryOpts) { it.getBlob(0) }
+): List<ByteArray> = getColVals(table, column.name, queryOpts) { it.getBlob(0) }
 
 
 

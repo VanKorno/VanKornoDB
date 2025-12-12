@@ -5,17 +5,34 @@ package com.vankorno.vankornodb.get
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.get.raw.getTypedValAt
 
 /**
  * For internal use with the type-safe getColVals... functions.
  */
-internal inline fun <R> SQLiteDatabase.getColValsNoty(               table: String,
+internal inline fun <R> SQLiteDatabase.getColVals(                   table: String,
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
                                                 crossinline getCursorValue: (Cursor)->R,
 ): List<R> = getCursor(table, column) {
     applyOpts(queryOpts)
+}.use { cursor ->
+    buildList {
+        if (cursor.moveToFirst()) {
+            do {
+                add(getCursorValue(cursor))
+            } while (cursor.moveToNext())
+        }
+    }
+}
+
+internal inline fun <R> SQLiteDatabase.getColValsWhere(            table: String,
+                                                                 column: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+                                             crossinline getCursorValue: (Cursor)->R,
+): List<R> = getCursor(table, column) {
+    this.where = where
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
