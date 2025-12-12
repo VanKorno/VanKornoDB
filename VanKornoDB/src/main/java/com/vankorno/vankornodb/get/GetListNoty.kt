@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.get.raw.getTypedValAt
  * Retrieves a list of values from a single column, cast to the specified type [V].
  * Supports filtering, sorting, grouping, and pagination.
  */
-inline fun <reified V> SQLiteDatabase.getListNoty(                       table: String,
+inline fun <reified V> SQLiteDatabase.getListNoty(                   table: String,
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
 ): List<V> = getCursor(table, column) {

@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.get
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.misc.data.SharedCol.shID
 import java.io.File
 
 
@@ -12,7 +13,7 @@ fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, ID, null, nul
 
 fun SQLiteDatabase.getAllIDs(                                                   table: String,
                                                                               orderBy: String = "",
-) = getListNoty<Int>(table, ID) { orderBy(orderBy) }
+) = getColInts(table, shID) { orderBy(orderBy) }
 
 
 
