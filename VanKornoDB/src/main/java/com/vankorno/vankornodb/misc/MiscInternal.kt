@@ -9,3 +9,11 @@ internal fun byIdAnd(                                                     id: In
     DbConstants.ID equal id
     andGroup(andWhere)
 }
+
+internal fun byNameAnd(                                                 name: String,
+                                                                    andWhere: WhereBuilder.()->Unit,
+): WhereBuilder.()->Unit = {
+    DbConstants.Name equal name
+    andGroup(andWhere)
+}
+
