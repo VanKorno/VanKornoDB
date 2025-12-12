@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
-import com.vankorno.vankornodb.misc.getBool
+import com.vankorno.vankornodb.misc.getBoolean
 
 inline fun <T, R> SQLiteDatabase.getValueNoty(                                  table: String,
                                                                                column: String,
@@ -36,7 +36,7 @@ fun <T> SQLiteDatabase.getStrNoty(table: String, column: String, whereClause: St
     getValueNoty(table, column, whereClause, whereArg, "", "getStrNoty") { it.getString(0) }
 
 fun <T> SQLiteDatabase.getBoolNoty(table: String, column: String, whereClause: String, whereArg: T) =
-    getValueNoty(table, column, whereClause, whereArg, false, "getBoolNoty") { it.getBool(0) }
+    getValueNoty(table, column, whereClause, whereArg, false, "getBoolNoty") { it.getBoolean(0) }
 
 fun <T> SQLiteDatabase.getLongNoty(table: String, column: String, whereClause: String, whereArg: T) =
     getValueNoty(table, column, whereClause, whereArg, -1L, "getLongNoty") { it.getLong(0) }

@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.mapper.EntityMapperUtils.defaultInstanceValueOf
 import com.vankorno.vankornodb.mapper.EntityMapperUtils.getListFromCursor
 import com.vankorno.vankornodb.mapper.EntityMapperUtils.getListSizeFromDefault
 import com.vankorno.vankornodb.mapper.EntityMapperUtils.getNullable
-import com.vankorno.vankornodb.misc.getBool
+import com.vankorno.vankornodb.misc.getBoolean
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
@@ -73,7 +73,7 @@ fun <T : DbEntity> Cursor.toEntity(                                             
             Int::class -> if (isNullable) getNullable(index) { getInt(it) } else getInt(index)
             String::class -> if (isNullable) getNullable(index) { getString(it) } else getString(index)
             
-            Boolean::class -> if (isNullable) getNullable(index) { getBool(it) } else getBool(index)
+            Boolean::class -> if (isNullable) getNullable(index) { getBoolean(it) } else getBoolean(index)
             Long::class -> if (isNullable) getNullable(index) { getLong(it) } else getLong(index)
             Float::class -> if (isNullable) getNullable(index) { getFloat(it) } else getFloat(index)
             ByteArray::class -> if (isNullable) getNullable(index) { getBlob(it) } else getBlob(index)
@@ -168,7 +168,7 @@ internal object EntityMapperUtils {
             val idx = firstListColumnIndex + i
             val value = when (elementType) {
                 Int::class -> getInt(idx)
-                Boolean::class -> getBool(idx)
+                Boolean::class -> getBoolean(idx)
                 Long::class -> getLong(idx)
                 String::class -> getString(idx)
                 Float::class -> getFloat(idx)

@@ -1,11 +1,11 @@
 package com.vankorno.vankornodb.get.raw
 
 import android.database.Cursor
-import com.vankorno.vankornodb.misc.getBool
+import com.vankorno.vankornodb.misc.getBoolean
 
 inline fun <reified V> Cursor.getTypedValAt(                                         idx: Int
 ): V = when (V::class) {
-    Boolean::class -> getBool(idx)
+    Boolean::class -> getBoolean(idx)
     Int::class -> getInt(idx)
     Long::class -> getLong(idx)
     Float::class -> getFloat(idx)

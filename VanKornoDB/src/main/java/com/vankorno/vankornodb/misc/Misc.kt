@@ -7,7 +7,7 @@ import android.database.Cursor
 /**
  * The missing getter for Booleans
  */
-fun Cursor.getBool(col: Int) = this.getInt(col) == 1
+fun Cursor.getBoolean(col: Int) = this.getInt(col) == 1
 
 
 /**
