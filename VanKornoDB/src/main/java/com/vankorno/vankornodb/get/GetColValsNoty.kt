@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.get.raw.getTypedValAt
 /**
  * For internal use with the type-safe getColVals... functions.
  */
-internal inline fun <R> SQLiteDatabase.getColVals(                   table: String,
+internal inline fun <R> SQLiteDatabase.getColValsPro(                table: String,
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
                                                 crossinline getCursorValue: (Cursor)->R,
@@ -27,7 +27,7 @@ internal inline fun <R> SQLiteDatabase.getColVals(                   table: Stri
     }
 }
 
-internal inline fun <R> SQLiteDatabase.getColValsWhere(            table: String,
+internal inline fun <R> SQLiteDatabase.getColVals(                table: String,
                                                                  column: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
                                              crossinline getCursorValue: (Cursor)->R,

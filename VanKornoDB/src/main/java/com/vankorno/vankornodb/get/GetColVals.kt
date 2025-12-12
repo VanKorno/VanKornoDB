@@ -13,68 +13,139 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.misc.getBoolean
 
+//  ----------------------------------------  I N T  ----------------------------------------  \\
+
 /**
  * Retrieves a list of Ints from a single column.
+ * [table] Db table name
+ * [column] IntCol object with db column name, type, etc.
+ * [queryOpts] DSL with full SQLite query options
  */
-fun SQLiteDatabase.getColInts(                                       table: String,
+fun SQLiteDatabase.getColIntsPro(                                    table: String,
                                                                     column: IntCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Int> = getColVals(table, column.name, queryOpts) { it.getInt(0) }
-
+): List<Int> = getColValsPro(table, column.name, queryOpts) { it.getInt(0) }
 
 /**
  * Retrieves a list of Ints from a single column.
  */
-fun SQLiteDatabase.getColIntsWhere(                               table: String,
+fun SQLiteDatabase.getColInts(                                    table: String,
                                                                  column: IntCol,
                                                                   where: WhereBuilder.()->Unit = {},
-): List<Int> = getColValsWhere(table, column.name, where) { it.getInt(0) }
+): List<Int> = getColVals(table, column.name, where) { it.getInt(0) }
 
+
+
+
+
+//  -------------------------------------  S T R I N G  -------------------------------------  \\
+
+/**
+ * Retrieves a list of Strings from a single column.
+ */
+fun SQLiteDatabase.getColStrings(                                 table: String,
+                                                                 column: StrCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): List<String> = getColVals(table, column.name, where) { it.getString(0) }
 
 
 /**
  * Retrieves a list of Strings from a single column.
  */
-fun SQLiteDatabase.getColStrings(                                    table: String,
+fun SQLiteDatabase.getColStringsPro(                                 table: String,
                                                                     column: StrCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<String> = getColVals(table, column.name, queryOpts) { it.getString(0) }
+): List<String> = getColValsPro(table, column.name, queryOpts) { it.getString(0) }
+
+
+
+
+//  ------------------------------------  B O O L E A N  ------------------------------------  \\
+
+/**
+ * Retrieves a list of Booleans from a single column.
+ */
+fun SQLiteDatabase.getColBools(                                   table: String,
+                                                                 column: BoolCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): List<Boolean> = getColVals(table, column.name, where) { it.getBoolean(0) }
 
 
 /**
  * Retrieves a list of Booleans from a single column.
  */
-fun SQLiteDatabase.getColBools(                                      table: String,
+fun SQLiteDatabase.getColBoolsPro(                                   table: String,
                                                                     column: BoolCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Boolean> = getColVals(table, column.name, queryOpts) { it.getBoolean(0) }
+): List<Boolean> = getColValsPro(table, column.name, queryOpts) { it.getBoolean(0) }
+
+
+
+
+
+//  ---------------------------------------  L O N G  ---------------------------------------  \\
+
+/**
+ * Retrieves a list of Longs from a single column.
+ */
+fun SQLiteDatabase.getColLongs(                                   table: String,
+                                                                 column: LongCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): List<Long> = getColVals(table, column.name, where) { it.getLong(0) }
 
 
 /**
  * Retrieves a list of Longs from a single column.
  */
-fun SQLiteDatabase.getColLongs(                                      table: String,
+fun SQLiteDatabase.getColLongsPro(                                   table: String,
                                                                     column: LongCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Long> = getColVals(table, column.name, queryOpts) { it.getLong(0) }
+): List<Long> = getColValsPro(table, column.name, queryOpts) { it.getLong(0) }
+
+
+
+
+//  --------------------------------------  F L O A T  --------------------------------------  \\
+
+/**
+ * Retrieves a list of Floats from a single column.
+ */
+fun SQLiteDatabase.getColFloats(                                  table: String,
+                                                                 column: FloatCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): List<Float> = getColVals(table, column.name, where) { it.getFloat(0) }
 
 
 /**
  * Retrieves a list of Floats from a single column.
  */
-fun SQLiteDatabase.getColFloats(                                     table: String,
+fun SQLiteDatabase.getColFloatsPro(                                  table: String,
                                                                     column: FloatCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<Float> = getColVals(table, column.name, queryOpts) { it.getFloat(0) }
+): List<Float> = getColValsPro(table, column.name, queryOpts) { it.getFloat(0) }
+
+
+
+
+
+//  ---------------------------------------  B L O B  ---------------------------------------  \\
+
+/**
+ * Retrieves a list of Blobs from a single column.
+ */
+fun SQLiteDatabase.getColBlobs(                                   table: String,
+                                                                 column: BlobCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): List<ByteArray> = getColVals(table, column.name, where) { it.getBlob(0) }
 
 
 /**
  * Retrieves a list of Blobs from a single column.
  */
-fun SQLiteDatabase.getColBlobs(                                      table: String,
+fun SQLiteDatabase.getColBlobsPro(                                   table: String,
                                                                     column: BlobCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-): List<ByteArray> = getColVals(table, column.name, queryOpts) { it.getBlob(0) }
+): List<ByteArray> = getColValsPro(table, column.name, queryOpts) { it.getBlob(0) }
 
 
 

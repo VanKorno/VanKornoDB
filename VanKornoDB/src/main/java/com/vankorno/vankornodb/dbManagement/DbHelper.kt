@@ -1172,18 +1172,33 @@ abstract class DbHelperInternal(
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
-    fun getColInts(                                                  table: String,
-                                                                    column: IntCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+    fun getColInts(                                               table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
     ): List<Int> = read(emptyList(), "getColInts") {
-        it.getColInts(table, column, queryOpts)
+        it.getColInts(table, column, where)
     }
     
-    suspend fun getColIntsSusp(                                      table: String,
+    suspend fun getColIntsSusp(                                   table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<Int> = readSusp(emptyList(), "getColIntsSusp") {
+        it.getColInts(table, column, where)
+    }
+    
+    
+    fun getColIntsPro(                                               table: String,
                                                                     column: IntCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
-    ): List<Int> = readSusp(emptyList(), "getColIntsSusp") {
-        it.getColInts(table, column, queryOpts)
+    ): List<Int> = read(emptyList(), "getColIntsPro") {
+        it.getColIntsPro(table, column, queryOpts)
+    }
+    
+    suspend fun getColIntsProSusp(                                   table: String,
+                                                                    column: IntCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Int> = readSusp(emptyList(), "getColIntsProSusp") {
+        it.getColIntsPro(table, column, queryOpts)
     }
     
     
@@ -1193,14 +1208,14 @@ abstract class DbHelperInternal(
                                                                     column: StrCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<String> = read(emptyList(), "getColStrings") {
-        it.getColStrings(table, column, queryOpts)
+        it.getColStringsPro(table, column, queryOpts)
     }
     
     suspend fun getColStringsSusp(                                   table: String,
                                                                     column: StrCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<String> = readSusp(emptyList(), "getColStringsSusp") {
-        it.getColStrings(table, column, queryOpts)
+        it.getColStringsPro(table, column, queryOpts)
     }
     
     
@@ -1210,14 +1225,14 @@ abstract class DbHelperInternal(
                                                                     column: BoolCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getColBools") {
-        it.getColBools(table, column, queryOpts)
+        it.getColBoolsPro(table, column, queryOpts)
     }
     
     suspend fun getColBoolsSusp(                                     table: String,
                                                                     column: BoolCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<Boolean> = readSusp(emptyList(), "getColBoolsSusp") {
-        it.getColBools(table, column, queryOpts)
+        it.getColBoolsPro(table, column, queryOpts)
     }
     
     
@@ -1227,14 +1242,14 @@ abstract class DbHelperInternal(
                                                                     column: LongCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<Long> = read(emptyList(), "getColLongs") {
-        it.getColLongs(table, column, queryOpts)
+        it.getColLongsPro(table, column, queryOpts)
     }
     
     suspend fun getColLongsSusp(                                     table: String,
                                                                     column: LongCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<Long> = readSusp(emptyList(), "getColLongsSusp") {
-        it.getColLongs(table, column, queryOpts)
+        it.getColLongsPro(table, column, queryOpts)
     }
     
     
@@ -1244,14 +1259,14 @@ abstract class DbHelperInternal(
                                                                     column: FloatCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<Float> = read(emptyList(), "getColFloats") {
-        it.getColFloats(table, column, queryOpts)
+        it.getColFloatsPro(table, column, queryOpts)
     }
     
     suspend fun getColFloatsSusp(                                      table: String,
                                                                     column: FloatCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<Float> = readSusp(emptyList(), "getColFloatsSusp") {
-        it.getColFloats(table, column, queryOpts)
+        it.getColFloatsPro(table, column, queryOpts)
     }
     
     
@@ -1261,14 +1276,14 @@ abstract class DbHelperInternal(
                                                                     column: BlobCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getColBlobs") {
-        it.getColBlobs(table, column, queryOpts)
+        it.getColBlobsPro(table, column, queryOpts)
     }
     
     suspend fun getColBlobsSusp(                                     table: String,
                                                                     column: BlobCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
     ): List<ByteArray> = readSusp(emptyList(), "getColBlobsSusp") {
-        it.getColBlobs(table, column, queryOpts)
+        it.getColBlobsPro(table, column, queryOpts)
     }
     
     
