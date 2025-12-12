@@ -222,54 +222,54 @@ abstract class DbHelperInternal(
     
     // ===================================  S E T T E R S  =================================== \\
     
-    inline fun setByIdNoty(                                                     value: Any,
+    inline fun setByIdNoty(                                                 value: Any,
                                                                                id: Int,
                                                                             table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
     ) = setNoty(value, table, column, ID, id, async)
     
-    suspend fun setByIdNotySusp(                                                       value: Any,
+    suspend fun setByIdNotySusp(                                                   value: Any,
                                                                                       id: Int,
                                                                                    table: String,
                                                                                   column: String,
     ) = setNotySusp(value, table, column, ID, id)
     
     
-    inline fun <T> setNoty(                                                     value: Any,
+    inline fun <T> setNoty(                                                 value: Any,
                                                                             table: String,
                                                                            column: String,
                                                                             where: String,
                                                                            equals: T,
                                                                             async: Boolean = false,
-    ) = write("set", async) {
+    ) = write("setNoty", async) {
         it.setNoty(value, table, column, where, equals)
     }
     
-    fun <T> setNoty(                                                       value: Any,
+    fun <T> setNoty(                                                   value: Any,
                                                                        table: String,
                                                                       column: String,
                                                                        async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
-    ) = write("set", async) {
+    ) = write("setNoty", async) {
         it.setNoty(value, table, column, where)
     }
     
     
-    suspend fun <T> setNotySusp(                                                       value: Any,
+    suspend fun <T> setNotySusp(                                                   value: Any,
                                                                                    table: String,
                                                                                   column: String,
                                                                                    where: String,
                                                                                   equals: T,
-    ) = writeSusp("setSusp") {
+    ) = writeSusp("setNotySusp") {
         it.setNoty(value, table, column, where, equals)
     }
     
-    suspend fun <T> setNotySusp(                                           value: Any,
+    suspend fun <T> setNotySusp(                                       value: Any,
                                                                        table: String,
                                                                       column: String,
                                                                        where: WhereBuilder.()->Unit,
-    ) = writeSusp("setSusp") {
+    ) = writeSusp("setNotySusp") {
         it.setNoty(value, table, column, where)
     }
     
