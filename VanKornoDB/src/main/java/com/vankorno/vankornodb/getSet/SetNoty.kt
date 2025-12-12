@@ -6,16 +6,15 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
+import com.vankorno.vankornodb.getSet.internal.byIdAnd
+
 
 fun SQLiteDatabase.setByIdNoty(                                   value: Any,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: String,
                                                                andWhere: WhereBuilder.()->Unit = {},
-) = setNoty(value, table, column) {
-    ID equal id
-    andGroup(andWhere)
-}
+) = setNoty(value, table, column, byIdAnd(id, andWhere))
 
 
 fun <T> SQLiteDatabase.setNoty(                                                    value: Any,

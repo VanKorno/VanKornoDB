@@ -7,7 +7,7 @@ import android.util.Log
 import com.vankorno.vankornodb.api.migrateMultiStep
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.getSet.getInt
+import com.vankorno.vankornodb.getSet.getIntNoty
 import com.vankorno.vankornodb.getSet.setNoty
 
 abstract class DbMigratorInternal(                                           val db: SQLiteDatabase,
@@ -34,7 +34,7 @@ abstract class DbMigratorInternal(                                           val
      */
     fun migrateSingleTableEntity(                                            entity: BaseEntityMeta
     ) {
-        val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
+        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
         val newVer = entity.currVersion
         val tableName = entity.limitedToTable ?: return //\/\/\
         // region LOG
@@ -62,7 +62,7 @@ abstract class DbMigratorInternal(                                           val
         // region LOG
             Log.d(DbTAG, "migrateTables(): Migrating tables that use the $dbRowName entity...")
         // endregion
-        val oldVer = db.getInt(TABLE_EntityVersions, EntityVersion, Name, dbRowName)
+        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, Name, dbRowName)
         
         for (tableName in tables) {
             migrateTable(tableName, oldVer, entityMeta, doAfterEachTable)

@@ -2,11 +2,11 @@ package com.vankorno.vankornodb.getSet.raw
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.getSet.getStr
+import com.vankorno.vankornodb.getSet.getStrNoty
 
 fun SQLiteDatabase.getTableTypesFromInitQuery(                                     table: String
 ): List<String> {
-    val queryStr = getStr(TABLE_Master, SQL,
+    val queryStr = getStrNoty(TABLE_Master, SQL,
         where = {
             Type equal DbTypeTable
             and { Name equal table }

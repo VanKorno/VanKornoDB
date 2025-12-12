@@ -717,61 +717,61 @@ abstract class DbHelperInternal(
     
     inline fun <T> getInt(table: String, column: String, whereClause: String, whereArg: T) =
         read(0, "getInt") {
-            it.getInt(table, column, whereClause, whereArg)
+            it.getIntNoty(table, column, whereClause, whereArg)
         }
     suspend fun <T> getIntSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(0, "getIntSusp") {
-            it.getInt(table, column, whereClause, whereArg)
+            it.getIntNoty(table, column, whereClause, whereArg)
         }
     
     
     inline fun <T> getStr(table: String, column: String, whereClause: String, whereArg: T): String =
         read("", "getStr") {
-            it.getStr(table, column, whereClause, whereArg)
+            it.getStrNoty(table, column, whereClause, whereArg)
         }
     suspend fun <T> getStrSusp(table: String, column: String, whereClause: String, whereArg: T): String =
         readSusp("", "getStrSusp") {
-            it.getStr(table, column, whereClause, whereArg)
+            it.getStrNoty(table, column, whereClause, whereArg)
         }
     
     
     inline fun <T> getBool(table: String, column: String, whereClause: String, whereArg: T) =
         read(false, "getBool") { 
-            it.getBool(table, column, whereClause, whereArg)
+            it.getBoolNoty(table, column, whereClause, whereArg)
         }
     suspend fun <T> getBoolSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(false, "getBoolSusp") {
-            it.getBool(table, column, whereClause, whereArg)
+            it.getBoolNoty(table, column, whereClause, whereArg)
         }
     
     
     inline fun <T> getLong(table: String, column: String, whereClause: String, whereArg: T) =
         read(0L, "getLong") { 
-            it.getLong(table, column, whereClause, whereArg)
+            it.getLongNoty(table, column, whereClause, whereArg)
         }
     suspend fun <T> getLongSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(0L, "getLongSusp") {
-            it.getLong(table, column, whereClause, whereArg)
+            it.getLongNoty(table, column, whereClause, whereArg)
         }
     
     
     inline fun <T> getFloat(table: String, column: String, whereClause: String, whereArg: T) =
         read(0F, "getFloat") { 
-            it.getFloat(table, column, whereClause, whereArg)
+            it.getFloatNoty(table, column, whereClause, whereArg)
         }
     suspend fun <T> getFloatSusp(table: String, column: String, whereClause: String, whereArg: T) =
         readSusp(0F, "getFloatSusp") {
-            it.getFloat(table, column, whereClause, whereArg)
+            it.getFloatNoty(table, column, whereClause, whereArg)
         }
     
     
     inline fun <T> getBlob(table: String, column: String, whereClause: String, whereArg: T) =
         read(null, "getBlob") {
-            it.getBlob(table, column, whereClause, whereArg)
+            it.getBlobNoty(table, column, whereClause, whereArg)
         }
     suspend fun <T> getBlobSusp(table: String, column: String, whereClause: String, whereArg: T): ByteArray? =
         readSusp(null, "getBlobSusp") {
-            it.getBlob(table, column, whereClause, whereArg)
+            it.getBlobNoty(table, column, whereClause, whereArg)
         }
     
     
@@ -779,61 +779,61 @@ abstract class DbHelperInternal(
     
     fun getInt(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(0, "getInt") {
-            it.getInt(table, column, where)
+            it.getIntNoty(table, column, where)
         }
     suspend fun getIntSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(0, "getIntSusp") {
-            it.getInt(table, column, where)
+            it.getIntNoty(table, column, where)
         }
     
     
     fun getStr(table: String, column: String, where: WhereBuilder.()->Unit): String =
         read("", "getStr") {
-            it.getStr(table, column, where)
+            it.getStrNoty(table, column, where)
         }
     suspend fun getStrSusp(table: String, column: String, where: WhereBuilder.()->Unit): String =
         readSusp("", "getStrSusp") {
-            it.getStr(table, column, where)
+            it.getStrNoty(table, column, where)
         }
     
     
     fun getBool(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(false, "getBool") {
-            it.getBool(table, column, where)
+            it.getBoolNoty(table, column, where)
         }
     suspend fun getBoolSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(false, "getBoolSusp") {
-            it.getBool(table, column, where)
+            it.getBoolNoty(table, column, where)
         }
     
     
     fun getLong(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(0L, "getLong") {
-            it.getLong(table, column, where)
+            it.getLongNoty(table, column, where)
         }
     suspend fun getLongSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(0L, "getLongSusp") {
-            it.getLong(table, column, where)
+            it.getLongNoty(table, column, where)
         }
     
     
     fun getFloat(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(0F, "getFloat") {
-            it.getFloat(table, column, where)
+            it.getFloatNoty(table, column, where)
         }
     suspend fun getFloatSusp(table: String, column: String, where: WhereBuilder.()->Unit) =
         readSusp(0F, "getFloatSusp") {
-            it.getFloat(table, column, where)
+            it.getFloatNoty(table, column, where)
         }
     
     
     fun getBlob(table: String, column: String, where: WhereBuilder.()->Unit) =
         read(null, "getBlob") {
-            it.getBlob(table, column, where)
+            it.getBlobNoty(table, column, where)
         }
     suspend fun getBlobSusp(table: String, column: String, where: WhereBuilder.()->Unit): ByteArray? =
         readSusp(null, "getBlobSusp") {
-            it.getBlob(table, column, where)
+            it.getBlobNoty(table, column, where)
         }
     
     

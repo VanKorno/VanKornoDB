@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.misc.getBool
 
 
-inline fun <R> SQLiteDatabase.getValue(                                table: String,
+inline fun <R> SQLiteDatabase.getValueNoty(                            table: String,
                                                                       column: String,
                                                                      default: R,
                                                                     typeName: String,
@@ -34,20 +34,24 @@ inline fun <R> SQLiteDatabase.getValue(                                table: St
 }
 
 
-fun SQLiteDatabase.getInt(table: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(table, column, -1, "getInt", where) { it.getInt(0) }
+fun SQLiteDatabase.getIntNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValueNoty(table, column, -1, "getInt", where) { it.getInt(0) }
 
-fun SQLiteDatabase.getStr(table: String, column: String, where: WhereBuilder.()->Unit): String =
-    getValue(table, column, "", "getStr", where) { it.getString(0) }
+fun SQLiteDatabase.getStrNoty(table: String, column: String, where: WhereBuilder.()->Unit): String =
+    getValueNoty(table, column, "", "getStr", where) { it.getString(0) }
 
-fun SQLiteDatabase.getBool(table: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(table, column, false, "getBool", where) { it.getBool(0) }
+fun SQLiteDatabase.getBoolNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValueNoty(table, column, false, "getBool", where) { it.getBool(0) }
 
-fun SQLiteDatabase.getLong(table: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(table, column, -1L, "getLong", where) { it.getLong(0) }
+fun SQLiteDatabase.getLongNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValueNoty(table, column, -1L, "getLong", where) { it.getLong(0) }
 
-fun SQLiteDatabase.getFloat(table: String, column: String, where: WhereBuilder.()->Unit) =
-    getValue(table, column, -1F, "getFloat", where) { it.getFloat(0) }
+fun SQLiteDatabase.getFloatNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+    getValueNoty(table, column, -1F, "getFloat", where) { it.getFloat(0) }
 
-fun SQLiteDatabase.getBlob(table: String, column: String, where: WhereBuilder.()->Unit): ByteArray =
-    getValue(table, column, ByteArray(0), "getBlob", where) { it.getBlob(0) }
+fun SQLiteDatabase.getBlobNoty(table: String, column: String, where: WhereBuilder.()->Unit): ByteArray =
+    getValueNoty(table, column, ByteArray(0), "getBlob", where) { it.getBlob(0) }
+
+
+
+
