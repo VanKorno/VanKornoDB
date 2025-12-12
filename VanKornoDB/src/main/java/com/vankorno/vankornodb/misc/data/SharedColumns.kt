@@ -8,9 +8,9 @@ import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
 
 /**
- * Just some commonly used columns, defined here for convenience and for some non-essential lib functions.
+ * Just some commonly used columns
  */
-object SharedCol {
+internal object SharedCol {
     val shID = iCol(ID, -1)
     val shRowID = iCol(RowID, -1)
     val shName = sCol(Name)
