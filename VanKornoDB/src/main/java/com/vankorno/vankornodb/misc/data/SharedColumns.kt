@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
 /**
  * Just some commonly used columns
  */
-internal object SharedCol {
+object SharedCol {
     val shID = iCol(ID, -1)
     val shRowID = iCol(RowID, -1)
     val shName = sCol(Name)

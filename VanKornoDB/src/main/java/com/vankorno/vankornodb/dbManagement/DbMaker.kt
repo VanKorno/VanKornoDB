@@ -12,10 +12,11 @@ import com.vankorno.vankornodb.dbManagement.DbProvider.mainDb
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
 import com.vankorno.vankornodb.delete.deleteRow
-import com.vankorno.vankornodb.get.getListNoty
+import com.vankorno.vankornodb.get.getColStrings
 import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
+import com.vankorno.vankornodb.misc.data.SharedCol.shName
 import com.vankorno.vankornodb.set.insertObj
 
 /* 
@@ -143,7 +144,7 @@ abstract class DbMaker(           context: Context,
     
     private fun cleanupVersionTable(                                             db: SQLiteDatabase
     ) {
-        val allNames = db.getListNoty<String>(TABLE_EntityVersions, Name)
+        val allNames = db.getColStrings(TABLE_EntityVersions, shName)
         if (allNames.isEmpty()) return //\/\/\/\/\/\
         
         val namesToDelete = allNames.filter { name ->
@@ -158,7 +159,7 @@ abstract class DbMaker(           context: Context,
     ) {
         for (meta in entityMeta) {
             val dbName = meta.dbRowName
-            val rowExists = db.hasRows(TABLE_EntityVersions) { Name equal dbName }
+            val rowExists = db.hasRows(TABLE_EntityVersions) { shName equal dbName }
             if (rowExists)
                 continue //\/\/\
             

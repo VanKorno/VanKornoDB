@@ -1170,6 +1170,8 @@ abstract class DbHelperInternal(
     
     // =====================================   L I S T   ===================================== \\
     
+    //  --------------------------------------  I N T  --------------------------------------  \\
+    
     fun getColInts(                                                  table: String,
                                                                     column: IntCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
@@ -1185,26 +1187,107 @@ abstract class DbHelperInternal(
     }
     
     
+    //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
-    
-    
-    
-    
-    
-    // Not type-safe
-    
-    inline fun <reified T> getListNoty(                              table: String,
-                                                                    column: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-    ): List<T> = read(emptyList(), "getListNoty") {
-        it.getListNoty(table, column, queryOpts)
+    fun getColStrings(                                               table: String,
+                                                                    column: StrCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<String> = read(emptyList(), "getColStrings") {
+        it.getColStrings(table, column, queryOpts)
     }
     
-    suspend inline fun <reified T> getListNotySusp(                  table: String,
+    suspend fun getColStringsSusp(                                   table: String,
+                                                                    column: StrCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<String> = readSusp(emptyList(), "getColStringsSusp") {
+        it.getColStrings(table, column, queryOpts)
+    }
+    
+    
+    //  ----------------------------------  B O O L E A N  ----------------------------------  \\
+    
+    fun getColBools(                                                 table: String,
+                                                                    column: BoolCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Boolean> = read(emptyList(), "getColBools") {
+        it.getColBools(table, column, queryOpts)
+    }
+    
+    suspend fun getColBoolsSusp(                                     table: String,
+                                                                    column: BoolCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Boolean> = readSusp(emptyList(), "getColBoolsSusp") {
+        it.getColBools(table, column, queryOpts)
+    }
+    
+    
+    //  -------------------------------------  L O N G  -------------------------------------  \\
+    
+    fun getColLongs(                                                 table: String,
+                                                                    column: LongCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Long> = read(emptyList(), "getColLongs") {
+        it.getColLongs(table, column, queryOpts)
+    }
+    
+    suspend fun getColLongsSusp(                                     table: String,
+                                                                    column: LongCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Long> = readSusp(emptyList(), "getColLongsSusp") {
+        it.getColLongs(table, column, queryOpts)
+    }
+    
+    
+    //  ------------------------------------  F L O A T  ------------------------------------  \\
+    
+    fun getColFloats(                                                table: String,
+                                                                    column: FloatCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Float> = read(emptyList(), "getColFloats") {
+        it.getColFloats(table, column, queryOpts)
+    }
+    
+    suspend fun getColFloatsSusp(                                      table: String,
+                                                                    column: FloatCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Float> = readSusp(emptyList(), "getColFloatsSusp") {
+        it.getColFloats(table, column, queryOpts)
+    }
+    
+    
+    //  -------------------------------------  B L O B  -------------------------------------  \\
+    
+    fun getColBlobs(                                                 table: String,
+                                                                    column: BlobCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<ByteArray> = read(emptyList(), "getColBlobs") {
+        it.getColBlobs(table, column, queryOpts)
+    }
+    
+    suspend fun getColBlobsSusp(                                     table: String,
+                                                                    column: BlobCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<ByteArray> = readSusp(emptyList(), "getColBlobsSusp") {
+        it.getColBlobs(table, column, queryOpts)
+    }
+    
+    
+    
+    
+    // ------------- Not type-safe
+    
+    inline fun <reified T> getColValsNoty(                           table: String,
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-    ): List<T> = readSusp(emptyList(), "getListNotySusp") {
-        it.getListNoty(table, column, queryOpts)
+    ): List<T> = read(emptyList(), "getColValsNoty") {
+        it.getColValsNoty(table, column, queryOpts)
+    }
+    
+    suspend inline fun <reified T> getColValsNotySusp(               table: String,
+                                                                    column: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+    ): List<T> = readSusp(emptyList(), "getColValsNotySusp") {
+        it.getColValsNoty(table, column, queryOpts)
     }
     
     

@@ -5,6 +5,8 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.misc.data.SharedCol.shID
+import com.vankorno.vankornodb.misc.data.SharedCol.shName
+import com.vankorno.vankornodb.misc.data.SharedCol.shType
 import java.io.File
 
 
@@ -27,11 +29,11 @@ fun SQLiteDatabase.tableExists(                                                 
 /**
  * Gets the names of all tables in the database that are not "internal"
  */
-fun SQLiteDatabase.getAppTableNames(): List<String> = getListNoty<String>(TABLE_Master, Name) {
+fun SQLiteDatabase.getAppTableNames(): List<String> = getColStrings(TABLE_Master, shName) {
     where {
-        Type equal DbTypeTable
-        and { Name notLike "sqlite_%" }
-        and { Name.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
+        shType equal DbTypeTable
+        and { shName notLike "sqlite_%" }
+        and { shName.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
     }
     orderBy(Name)
 }
@@ -41,12 +43,12 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getListNoty<String>(TABLE_
  * Gets the names of all internal, system tables in the database, including the entity version table,
  * that is managed by VanKornoDB
  */
-fun SQLiteDatabase.getInternalTableNames(): List<String> = getListNoty<String>(TABLE_Master, Name) {
+fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStrings(TABLE_Master, shName) {
     where {
-        Type equal DbTypeTable
+        shType equal DbTypeTable
         andGroup {
-            Name like "sqlite_%"
-            or { Name.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
+            shName like "sqlite_%"
+            or { shName.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
         }
     }
     orderBy(Name)

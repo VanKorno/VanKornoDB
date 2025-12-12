@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.get.raw.getTypedValAt
 
-
+/**
+ * For internal use with the type-safe getColVals... functions.
+ */
 internal inline fun <R> SQLiteDatabase.getColValsNoty(               table: String,
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
@@ -27,12 +29,11 @@ internal inline fun <R> SQLiteDatabase.getColValsNoty(               table: Stri
 
 /**
  * Retrieves a list of values from a single column, cast to the specified type [V].
- * Supports filtering, sorting, grouping, and pagination.
  */
-inline fun <reified V> SQLiteDatabase.getListNoty(                   table: String,
-                                                                    column: String,
+inline fun <reified V> SQLiteDatabase.getColValsNoty(                table: String,
+                                                                columnName: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-): List<V> = getCursor(table, column) {
+): List<V> = getCursor(table, columnName) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
