@@ -329,6 +329,27 @@ abstract class DbHelperInternal(
     }
     
     
+    fun <T> setFloatByName(                                        value: Float,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: FloatCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setFloatByName", async) {
+        it.setFloatByName(value, name, table, column, andWhere)
+    }
+    
+    suspend fun <T> setFloatByNameSusp(                            value: Float,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: FloatCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setFloatByNameSusp") {
+        it.setFloatByName(value, name, table, column, andWhere)
+    }
+    
+    
+    
     
     
     
@@ -370,6 +391,27 @@ abstract class DbHelperInternal(
                                                                andWhere: WhereBuilder.()->Unit = {},
     ) = writeSusp("setBlobByIdSusp") {
         it.setBlobById(value, id, table, column, andWhere)
+    }
+    
+    
+    
+    fun <T> setBlobByName(                                        value: ByteArray,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: BlobCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setBlobByName", async) {
+        it.setBlobByName(value, name, table, column, andWhere)
+    }
+    
+    suspend fun <T> setBlobByNameSusp(                            value: ByteArray,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: BlobCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setBlobByNameSusp") {
+        it.setBlobByName(value, name, table, column, andWhere)
     }
     
     
