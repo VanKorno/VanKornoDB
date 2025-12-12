@@ -14,6 +14,7 @@ import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteFirstRow
 import com.vankorno.vankornodb.delete.deleteLastRow
@@ -224,6 +225,7 @@ abstract class DbHelperInternal(
     // ===================================  S E T T E R S  =================================== \\
     
     
+    //  --------------------------------------  I N T  --------------------------------------  \\
     
     fun <T> setInt(                                                    value: Int,
                                                                        table: String,
@@ -261,6 +263,48 @@ abstract class DbHelperInternal(
     ) = writeSusp("setIntByIdSusp") {
         it.setIntById(value, id, table, column, andWhere)
     }
+    
+    
+    
+    //  ------------------------------------  S T R I N G  ------------------------------------  \\
+    
+    fun <T> setStr(                                                    value: String,
+                                                                       table: String,
+                                                                      column: StrCol,
+                                                                       async: Boolean = false,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setStr", async) {
+        it.setStr(value, table, column, where)
+    }
+    
+    suspend fun <T> setStrSusp(                                        value: String,
+                                                                       table: String,
+                                                                      column: StrCol,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setStrSusp") {
+        it.setStr(value, table, column, where)
+    }
+    
+    
+    fun <T> setStrById(                                           value: String,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: StrCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setStrById", async) {
+        it.setStrById(value, id, table, column, andWhere)
+    }
+    
+    suspend fun <T> setStrByIdSusp(                               value: String,
+                                                                     id: Int,
+                                                                  table: String,
+                                                                 column: StrCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setStrByIdSusp") {
+        it.setStrById(value, id, table, column, andWhere)
+    }
+    
     
     
     
