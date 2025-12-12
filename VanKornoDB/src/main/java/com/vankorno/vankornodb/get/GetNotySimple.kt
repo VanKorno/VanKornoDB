@@ -13,7 +13,7 @@ inline fun <T, R> SQLiteDatabase.getValueNoty(                                  
                                                                           whereClause: String,
                                                                              whereArg: T,
                                                                               default: R,
-                                                                             typeName: String,
+                                                                              funName: String,
                                                            crossinline getCursorValue: (Cursor)->R,
 ): R = rawQuery(
     "SELECT $column FROM $table WHERE $whereClause=? LIMIT 1",
@@ -22,7 +22,7 @@ inline fun <T, R> SQLiteDatabase.getValueNoty(                                  
     if (cursor.moveToFirst()) getCursorValue(cursor)
     else {
         // region LOG
-        Log.e(DbTAG, "$typeName() Unable to get value from $table (column: $column). Returning default. Condition: $whereClause = $whereArg")
+        Log.e(DbTAG, "$funName() Unable to get value from $table (column: $column). Returning default. Condition: $whereClause = $whereArg")
         // endregion
         default
     }

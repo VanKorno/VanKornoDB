@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.misc.getBoolean
 inline fun <R> SQLiteDatabase.getValueNoty(                            table: String,
                                                                       column: String,
                                                                      default: R,
-                                                                    typeName: String,
+                                                                     funName: String,
                                                                        where: WhereBuilder.()->Unit,
                                                   crossinline getCursorValue: (Cursor)->R,
 ): R {
@@ -26,7 +26,7 @@ inline fun <R> SQLiteDatabase.getValueNoty(                            table: St
         if (cursor.moveToFirst()) getCursorValue(cursor)
         else {
             // region LOG
-            Log.e(DbTAG, "$typeName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
+            Log.e(DbTAG, "$funName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
             // endregion
             default
         }
