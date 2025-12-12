@@ -1170,19 +1170,28 @@ abstract class DbHelperInternal(
     
     // =====================================   L I S T   ===================================== \\
     
-    /*inline fun <reified T> getList(                                  table: String,
-                                                                    column: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-    ): List<T> = read(emptyList(), "getList") {
-        it.getListNoty(table, column, queryOpts)
+    fun getColInts(                                                  table: String,
+                                                                    column: IntCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Int> = read(emptyList(), "getColInts") {
+        it.getColInts(table, column, queryOpts)
     }
     
-    suspend inline fun <reified T> getListSusp(                      table: String,
-                                                                    column: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-    ): List<T> = readSusp(emptyList(), "getListSusp") {
-        it.getListNoty(table, column, queryOpts)
-    }*/
+    suspend fun getColIntsSusp(                                      table: String,
+                                                                    column: IntCol,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<Int> = readSusp(emptyList(), "getColIntsSusp") {
+        it.getColInts(table, column, queryOpts)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    // Not type-safe
     
     inline fun <reified T> getListNoty(                              table: String,
                                                                     column: String,
