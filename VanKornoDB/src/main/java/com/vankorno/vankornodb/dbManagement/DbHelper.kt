@@ -75,6 +75,28 @@ abstract class DbHelperInternal(
     
     
     
+    fun <T> setIntByName(                                         value: Int,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: IntCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setIntByName", async) {
+        it.setIntByName(value, name, table, column, andWhere)
+    }
+    
+    suspend fun <T> setIntByNameSusp(                             value: Int,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: IntCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setIntByNameSusp") {
+        it.setIntByName(value, name, table, column, andWhere)
+    }
+    
+    
+    
+    
     //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
     fun <T> setStr(                                                    value: String,
@@ -116,6 +138,28 @@ abstract class DbHelperInternal(
     
     
     
+    fun <T> setStrByName(                                         value: String,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: StrCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setStrByName", async) {
+        it.setStrByName(value, name, table, column, andWhere)
+    }
+    
+    suspend fun <T> setStrByNameSusp(                             value: String,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: StrCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setStrByNameSusp") {
+        it.setStrByName(value, name, table, column, andWhere)
+    }
+    
+    
+    
+    
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
@@ -154,6 +198,27 @@ abstract class DbHelperInternal(
                                                                andWhere: WhereBuilder.()->Unit = {},
     ) = writeSusp("setBoolByIdSusp") {
         it.setBoolById(value, id, table, column, andWhere)
+    }
+    
+    
+    
+    fun <T> setBoolByName(                                        value: Boolean,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: BoolCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setBoolByName", async) {
+        it.setBoolByName(value, name, table, column, andWhere)
+    }
+    
+    suspend fun <T> setBoolByNameSusp(                            value: Boolean,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: BoolCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setBoolByNameSusp") {
+        it.setBoolByName(value, name, table, column, andWhere)
     }
     
     
@@ -201,6 +266,28 @@ abstract class DbHelperInternal(
     
     
     
+    fun <T> setLongByName(                                        value: Long,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: LongCol,
+                                                                  async: Boolean = false,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = write("setLongByName", async) {
+        it.setLongByName(value, name, table, column, andWhere)
+    }
+    
+    suspend fun <T> setLongByNameSusp(                            value: Long,
+                                                                   name: String,
+                                                                  table: String,
+                                                                 column: LongCol,
+                                                               andWhere: WhereBuilder.()->Unit = {},
+    ) = writeSusp("setLongByNameSusp") {
+        it.setLongByName(value, name, table, column, andWhere)
+    }
+    
+    
+    
+    
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
     
@@ -240,6 +327,7 @@ abstract class DbHelperInternal(
     ) = writeSusp("setFloatByIdSusp") {
         it.setFloatById(value, id, table, column, andWhere)
     }
+    
     
     
     
