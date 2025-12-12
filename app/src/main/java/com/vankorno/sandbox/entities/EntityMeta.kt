@@ -33,7 +33,7 @@ enum class EntityMeta(                              override val currVersion: In
                                                       override val dbRowName: String,
                                                       override val currClass: KClass<out DbEntity>,
                                                 override val migrationBundle: Lazy<MigrationBundle>,
-                                                 override val limitedToTable: String? = null
+                                                 override val limitedToTable: String? = null,
 ): BaseEntityMeta {
     TestEntt(1, "TestEntity", TestEntity::class, lazy { migrationsTestEntity() }, TestTable),
     
