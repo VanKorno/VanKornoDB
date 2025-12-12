@@ -1170,7 +1170,7 @@ abstract class DbHelperInternal(
     
     // =====================================   L I S T   ===================================== \\
     
-    inline fun <reified T> getList(                                  table: String,
+    /*inline fun <reified T> getList(                                  table: String,
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<T> = read(emptyList(), "getList") {
@@ -1181,6 +1181,20 @@ abstract class DbHelperInternal(
                                                                     column: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getListSusp") {
+        it.getListNoty(table, column, queryOpts)
+    }*/
+    
+    inline fun <reified T> getListNoty(                              table: String,
+                                                                    column: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+    ): List<T> = read(emptyList(), "getListNoty") {
+        it.getListNoty(table, column, queryOpts)
+    }
+    
+    suspend inline fun <reified T> getListNotySusp(                  table: String,
+                                                                    column: String,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+    ): List<T> = readSusp(emptyList(), "getListNotySusp") {
         it.getListNoty(table, column, queryOpts)
     }
     
