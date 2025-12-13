@@ -1,21 +1,32 @@
 package com.vankorno.vankornodb.core.queryBuilder
 
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 open class OrderByBuilderInternal {
-    val items = mutableListOf<String>()
+    val orderoids = mutableListOf<String>()
     val args = mutableListOf<String>()
     
-    operator fun TypedColumn<*>.unaryPlus() { items += name }
-    operator fun TypedColumn<*>.unaryMinus() { items += name + " DESC" }
+    operator fun TypedColumn<*>.unaryPlus() { orderoids += name }
+    operator fun TypedColumn<*>.unaryMinus() { orderoids += name + " DESC" }
     
-    operator fun String.unaryPlus() { items += this }
-    
-    
+    operator fun String.unaryPlus() { orderoids += this }
     
     
+    operator fun WhereBuilder.unaryPlus() {
+        val inner = this
+        orderoids += "WHERE " + inner.buildStr()
+        args += inner.args
+    }
     
-    internal fun build(): String = items.joinToString(", ")
+    operator fun (WhereBuilder.()->Unit).unaryPlus() {
+        val builder = WhereBuilder().apply(this)
+        +builder
+    }
+    
+    
+    
+    internal fun buildStr(): String = orderoids.joinToString(", ")
 }
 
 

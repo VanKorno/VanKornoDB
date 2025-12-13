@@ -6,6 +6,7 @@ abstract class WhereBuilderBase() {
     val clauses = mutableListOf<String>()
     val args = mutableListOf<String>()
     
+    internal fun buildStr(): String = clauses.joinToString(" ")
     
     internal fun condition(                                                       column: String,
                                                                                 operator: String,

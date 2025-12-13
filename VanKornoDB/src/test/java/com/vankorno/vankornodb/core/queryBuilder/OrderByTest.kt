@@ -20,7 +20,7 @@ class OrderByTest {
     fun `orderBy with single column ascending`() {
         val order = OrderByBuilder().apply {
             +colInt
-        }.build()
+        }.buildStr()
 
         assertEquals("intCol", order)
     }
@@ -29,7 +29,7 @@ class OrderByTest {
     fun `orderBy with single column descending`() {
         val order = OrderByBuilder().apply {
             -colStr
-        }.build()
+        }.buildStr()
 
         assertEquals("strCol DESC", order)
     }
@@ -40,7 +40,7 @@ class OrderByTest {
             +colInt
             -colStr
             +colBool
-        }.build()
+        }.buildStr()
 
         assertEquals("intCol, strCol DESC, boolCol", order)
     }
@@ -49,7 +49,7 @@ class OrderByTest {
     fun `orderBy with raw string`() {
         val order = OrderByBuilder().apply {
             +"customCol DESC"
-        }.build()
+        }.buildStr()
 
         assertEquals("customCol DESC", order)
     }
@@ -63,7 +63,7 @@ class OrderByTest {
             -colLong
             +colFloat
             +"rawCol ASC"
-        }.build()
+        }.buildStr()
 
         assertEquals("intCol, strCol DESC, boolCol, longCol DESC, floatCol, rawCol ASC", order)
     }

@@ -36,11 +36,11 @@ internal fun getQuery(                                   table: String,
         append(table)
         if (joinBuilder.joins.isNotEmpty()) {
             append(" ")
-            append(joinBuilder.joins.joinToString(" "))
+            append(joinBuilder.buildStr())
         }
         if (whereBuilder.clauses.isNotEmpty()) {
             append(" WHERE ")
-            append(whereBuilder.clauses.joinToString(" "))
+            append(whereBuilder.buildStr())
         }
         if (sqlOpts.groupBy.isNotBlank()) {
             append(" GROUP BY ")
@@ -50,9 +50,9 @@ internal fun getQuery(                                   table: String,
             append(" HAVING ")
             append(sqlOpts.having)
         }
-        if (orderByBuilder.items.isNotEmpty()) {
+        if (orderByBuilder.orderoids.isNotEmpty()) {
             append(" ORDER BY ")
-            append(orderByBuilder.build())
+            append(orderByBuilder.buildStr())
         }
         if (sqlOpts.limit != null) {
             append(" LIMIT ")

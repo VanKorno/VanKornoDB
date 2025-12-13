@@ -26,15 +26,15 @@ class OrderByBuilder : OrderByBuilderInternal() {
     fun and(                                                        builder: OrderByBuilder.()->Unit
     ) {
         val inner = OrderByBuilder().apply(builder)
-        items.addAll(inner.items)
+        orderoids.addAll(inner.orderoids)
         args.addAll(inner.args)
     }
 
     fun group(                                                      builder: OrderByBuilder.()->Unit
     ) {
         val inner = OrderByBuilder().apply(builder)
-        if (inner.items.isNotEmpty()) {
-            items += "(" + inner.items.joinToString(", ") + ")"
+        if (inner.orderoids.isNotEmpty()) {
+            orderoids += "(" + inner.orderoids.joinToString(", ") + ")"
             args.addAll(inner.args)
         }
     }
