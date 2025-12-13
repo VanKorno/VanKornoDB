@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.delete
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants._ID
 
 fun SQLiteDatabase.deleteRowById(                                                     id: Int,
                                                                                    table: String,
@@ -40,11 +40,11 @@ fun SQLiteDatabase.deleteLastRow(                                               
 fun SQLiteDatabase.clearTable(                                                     table: String,
                                                                        //resetAutoID: Boolean = true
 ) {
-    execSQL(deleteFrom + table)
+    execSQL("DELETE FROM " + table)
     //if (resetAutoID)
     //    execSQL("DELETE FROM sqlite_sequence WHERE name = '$tableName'")
 }
 
 
 
-fun SQLiteDatabase.deleteTable(table: String) { execSQL(dbDrop + table) }
+fun SQLiteDatabase.deleteTable(table: String) { execSQL("DROP TABLE IF EXISTS " + table) }

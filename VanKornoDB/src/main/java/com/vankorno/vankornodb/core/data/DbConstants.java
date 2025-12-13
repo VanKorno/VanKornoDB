@@ -27,11 +27,9 @@ public class DbConstants { // TODO Remake, make internal, clean up
         
         // =====================  Pre-DSL syntax:  =====================
         
-        select = "SELECT ",  from = " FROM ",   selectAllFrom = "SELECT * FROM ",
-        dbCreateT = "CREATE TABLE IF NOT EXISTS ",
-        dbDefault = " DEFAULT ",
-        dbDrop = "DROP TABLE IF EXISTS ",
-        deleteFrom = "DELETE FROM ",
+        SELECT = "SELECT ",  FROM = " FROM ",   SELECT_ALL_FROM = "SELECT * FROM ",
+        CREATE_TABLE = "CREATE TABLE IF NOT EXISTS ",
+        DEFAULT = " DEFAULT ",
         
         
         WHERE = " WHERE ",
@@ -44,13 +42,13 @@ public class DbConstants { // TODO Remake, make internal, clean up
         //count = "COUNT",
         countAll = "COUNT(*)",
     
-        OrderBy = " ORDER BY ",   ascending = " ASC",    descending = " DESC",
+        ORDER_BY = " ORDER BY ",   ascending = " ASC",    descending = " DESC",
         
-        LIKE = " LIKE ",        notLIKE = " NOT LIKE ",
-        IN = " IN ",            notIN = " NOT IN ",
+        LIKE = " LIKE ",        NOT_LIKE = " NOT LIKE ",
+        IN = " IN ",            NOT_IN = " NOT IN ",
         
-        limit = " LIMIT ",
-        offset = " OFFSET ",
+        LIMIT = " LIMIT ",
+        OFFSET = " OFFSET ",
         randomVal = "random()"
         
         //innerJoin = " INNER JOIN ",   leftJoin = " LEFT JOIN ",   crossJoin = " CROSS JOIN "

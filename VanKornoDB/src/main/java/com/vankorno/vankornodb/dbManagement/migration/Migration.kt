@@ -10,10 +10,10 @@ import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.api.dropAndCreateEmptyTables
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
-import com.vankorno.vankornodb.core.data.DbConstants.dbDrop
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
+import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.getObjects
 import com.vankorno.vankornodb.set.insertObj
 import com.vankorno.vankornodb.set.insertObjects
@@ -77,7 +77,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(      table: String,
     val migratedEntities = oldUnits.map { original ->
         utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
     }
-    this.execSQL(dbDrop + table)
+    this.deleteTable(table)
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() $table table is dropped. Recreating...")
     // endregion
@@ -337,7 +337,7 @@ internal fun SQLiteDatabase.dropAndCreateEmptyTablesInternal(              varar
         Log.d(DbTAG, "dropDroppables(): Dropping $size table(s)...")
     // endregion
     for (table in tables) {
-        execSQL(dbDrop + table.name)
+        deleteTable(table.name)
     }
     // region LOG
         Log.d(DbTAG, "dropDroppables(): Creating $size table(s)...")

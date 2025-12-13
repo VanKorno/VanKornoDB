@@ -104,11 +104,11 @@ open class WhereBuilderInternal() : WhereBuilderBase() {
     fun LongCol.equalAny(vararg values: Long) = multCompare(this.name, IN, values.toTypedArray())
     fun FloatCol.equalAny(vararg values: Float) = multCompare(this.name, IN, values.toTypedArray())
     
-    fun IntCol.notEqualAny(vararg values: Int) = multCompare(this.name, notIN, values.toTypedArray())
-    fun StrCol.notEqualAny(vararg values: String) = multCompare(this.name, notIN, values)
-    fun BoolCol.notEqualAny(vararg values: Boolean) = multCompare(this.name, notIN, values.map { if (it) "1" else "0" }.toTypedArray())
-    fun LongCol.notEqualAny(vararg values: Long) = multCompare(this.name, notIN, values.toTypedArray())
-    fun FloatCol.notEqualAny(vararg values: Float) = multCompare(this.name, notIN, values.toTypedArray())
+    fun IntCol.notEqualAny(vararg values: Int) = multCompare(this.name, NOT_IN, values.toTypedArray())
+    fun StrCol.notEqualAny(vararg values: String) = multCompare(this.name, NOT_IN, values)
+    fun BoolCol.notEqualAny(vararg values: Boolean) = multCompare(this.name, NOT_IN, values.map { if (it) "1" else "0" }.toTypedArray())
+    fun LongCol.notEqualAny(vararg values: Long) = multCompare(this.name, NOT_IN, values.toTypedArray())
+    fun FloatCol.notEqualAny(vararg values: Float) = multCompare(this.name, NOT_IN, values.toTypedArray())
 
     
     
@@ -156,7 +156,7 @@ open class WhereBuilderInternal() : WhereBuilderBase() {
     fun String.notLikeAnyCol(vararg otherCols: String) = multCompareRaw(this, " NOT LIKE ", otherCols, false)
     
     fun <T> String.equalAny(vararg values: T) = multCompare(this, IN, values)
-    fun <T> String.notEqualAny(vararg values: T) = multCompare(this, notIN, values)
+    fun <T> String.notEqualAny(vararg values: T) = multCompare(this, NOT_IN, values)
     
     
     

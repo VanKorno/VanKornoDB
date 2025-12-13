@@ -4,8 +4,8 @@ package com.vankorno.vankornodb.dbManagement
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.core.data.DbConstants.dbCreateT
-import com.vankorno.vankornodb.core.data.DbConstants.dbDefault
+import com.vankorno.vankornodb.core.data.DbConstants.CREATE_TABLE
+import com.vankorno.vankornodb.core.data.DbConstants.DEFAULT
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnDefinition
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnType
 import com.vankorno.vankornodb.dbManagement.data.*
@@ -84,7 +84,7 @@ internal fun newTableQuery(                                             table: S
                 else -> defaultValue.toString()
             }
             
-            val defaultClause = defaultSqlValue?.let { dbDefault + it } ?: ""
+            val defaultClause = defaultSqlValue?.let { DEFAULT + it } ?: ""
             
             for (idx in list.indices) {
                 val colName = name.removeSuffix("List") + (idx + 1)
@@ -96,7 +96,7 @@ internal fun newTableQuery(                                             table: S
             if (col != null) columns += col
         }
     }
-    val queryStr = dbCreateT + table + " (" + columns.joinToString(", ") + ")"
+    val queryStr = CREATE_TABLE + table + " (" + columns.joinToString(", ") + ")"
     // region LOG
         println("newTableQuery(): $queryStr")
     // endregion
@@ -154,7 +154,7 @@ private object TableBuilderUtils {
                 is ByteArray -> null // skip default for blobs
                 else -> defaultValue.toString()
             }
-            if (defaultSqlValue != null) dbDefault + defaultSqlValue else ""
+            if (defaultSqlValue != null) DEFAULT + defaultSqlValue else ""
         } else ""
         
         return name + colType.sql + defaultClause

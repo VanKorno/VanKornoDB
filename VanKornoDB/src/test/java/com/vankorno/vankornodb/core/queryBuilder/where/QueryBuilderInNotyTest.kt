@@ -11,7 +11,7 @@ class QueryBuilderInNotyTest {
     @Test
     fun `IN basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + WHERE + _ID + IN + "(?, ?, ?)",
+            SELECT_ALL_FROM + DirtyTable + WHERE + _ID + IN + "(?, ?, ?)",
             getQuery(DirtyTable) {
                 where { _ID.equalAny(1, 2, 3) }
             }.query
@@ -21,7 +21,7 @@ class QueryBuilderInNotyTest {
     @Test
     fun `NOT IN basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + WHERE + _ID + notIN + "(?, ?, ?)",
+            SELECT_ALL_FROM + DirtyTable + WHERE + _ID + NOT_IN + "(?, ?, ?)",
             getQuery(DirtyTable) {
                 where { _ID.notEqualAny(1, 2, 3) }
             }.query

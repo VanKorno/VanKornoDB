@@ -11,7 +11,7 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + WHERE + _Name + LIKE + "?",
+            SELECT_ALL_FROM + DirtyTable + WHERE + _Name + LIKE + "?",
             getQuery(DirtyTable) {
                 where { _Name like "%abc%" }
             }.query
@@ -21,7 +21,7 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `NOT LIKE basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + WHERE + _Name + notLIKE + "?",
+            SELECT_ALL_FROM + DirtyTable + WHERE + _Name + NOT_LIKE + "?",
             getQuery(DirtyTable) {
                 where { _Name notLike "%xyz%" }
             }.query
@@ -48,7 +48,7 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE ANY basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + WHERE + _Name + LIKE + "(?, ?, ?)",
+            SELECT_ALL_FROM + DirtyTable + WHERE + _Name + LIKE + "(?, ?, ?)",
             getQuery(DirtyTable) {
                 where { _Name.likeAny("%a%", "%b%", "%c%") }
             }.query
@@ -58,7 +58,7 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE NONE basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + WHERE + _Name + notLIKE + "(?, ?, ?)",
+            SELECT_ALL_FROM + DirtyTable + WHERE + _Name + NOT_LIKE + "(?, ?, ?)",
             getQuery(DirtyTable) {
                 where { _Name.notLikeAny("%a%", "%b%", "%c%") }
             }.query
