@@ -19,14 +19,17 @@ class QueryBuilderTest { // TODO split tests/files
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + ORDER_BY + _ID,
-            getQuery(DirtyTable) { orderBy(_ID) }.query
+            getQuery(DirtyTable) { orderBy { +_ID } }.query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID+"=?" + ORDER_BY + _ID c _Name,
             
             getQuery(DirtyTable) {
                 where { ID = 1 }
-                orderBy(_ID c _Name)
+                orderBy {
+                    +_ID
+                    +_Name
+                }
             }.query
         )
         

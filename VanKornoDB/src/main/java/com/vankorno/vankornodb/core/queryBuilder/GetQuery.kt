@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.core.queryBuilder
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import com.vankorno.vankornodb.api.JoinBuilder
+import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.comma
@@ -26,6 +27,7 @@ internal fun getQuery(                                   table: String,
 ): QueryWithArgs {
     val conditions = WhereBuilder().apply(sqlOpts.where)
     val joinBuilder = JoinBuilder().apply(sqlOpts.joins)
+    val orderByBuilder = OrderByBuilder().apply(sqlOpts.orderBy)
     
     val query = buildString {
         append("SELECT ")
@@ -48,9 +50,9 @@ internal fun getQuery(                                   table: String,
             append(" HAVING ")
             append(sqlOpts.having)
         }
-        if (sqlOpts.orderBy.isNotBlank()) {
+        if (orderByBuilder.items.isNotEmpty()) {
             append(" ORDER BY ")
-            append(sqlOpts.orderBy)
+            append(orderByBuilder.build())
         }
         if (sqlOpts.limit != null) {
             append(" LIMIT ")

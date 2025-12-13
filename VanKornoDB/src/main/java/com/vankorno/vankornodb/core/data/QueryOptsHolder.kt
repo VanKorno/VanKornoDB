@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.core.data
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import com.vankorno.vankornodb.api.JoinBuilder
+import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.api.WhereBuilder
 
 
@@ -11,7 +12,7 @@ data class QueryOptsHolder(
                                  var where: WhereBuilder.()->Unit = {},
                                var groupBy: String = "",
                                 var having: String = "",
-                               var orderBy: String = "",
+                               var orderBy: OrderByBuilder.()->Unit = {},
                                  var limit: Int? = null,
                                 var offset: Int? = null,
                              var customEnd: String = "", /* To pass your own string. */

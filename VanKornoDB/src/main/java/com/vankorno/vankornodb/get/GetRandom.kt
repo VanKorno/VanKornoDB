@@ -22,9 +22,9 @@ inline fun <reified T> SQLiteDatabase.getRandomVal(               table: String,
 ): T? = getCursorPro(table, column) {
     applyOpts(
         where = where,
-        orderBy = randomVal,
         limit = 1
     )
+    orderBy { +randomVal }
 }.use { cursor ->
     if (cursor.moveToFirst())
         cursor.getTypedVal<T>(0)
@@ -61,9 +61,9 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
 ): T? = getCursorPro(table) {
     applyOpts(
         where = where,
-        orderBy = randomVal,
         limit = 1
     )
+    orderBy { +randomVal }
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(T::class)

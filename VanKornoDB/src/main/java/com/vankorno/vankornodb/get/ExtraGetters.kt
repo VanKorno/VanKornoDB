@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.get
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.misc.data.SharedCol.shID
 import com.vankorno.vankornodb.misc.data.SharedCol.shName
@@ -13,8 +14,8 @@ import java.io.File
 fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, _ID, null, null)
 
 
-fun SQLiteDatabase.getAllIDs(                                                   table: String,
-                                                                              orderBy: String = "",
+fun SQLiteDatabase.getAllIDs(                                   table: String,
+                                                              orderBy: OrderByBuilder.()->Unit = {},
 ) = getColIntsPro(table, shID) { orderBy(orderBy) }
 
 
@@ -35,7 +36,7 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getColStringsPro(TABLE_Mas
         and { shName notLike "sqlite_%" }
         and { shName.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
     }
-    orderBy(_Name)
+    orderBy { +shName } // TODO orderByName
 }
 
 
@@ -51,7 +52,7 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
             or { shName.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
         }
     }
-    orderBy(_Name)
+    orderBy { +shName } // TODO orderByName
 }
 
 // TODO get tables with data, not just names
