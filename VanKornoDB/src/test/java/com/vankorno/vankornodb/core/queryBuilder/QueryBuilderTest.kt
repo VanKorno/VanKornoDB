@@ -18,44 +18,44 @@ class QueryBuilderTest { // TODO split tests/files
             getQuery(DirtyTable).query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + orderBy + ID,
-            getQuery(DirtyTable) { orderBy(ID) }.query
+            selectAllFrom + DirtyTable + orderBy + _ID,
+            getQuery(DirtyTable) { orderBy(_ID) }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + ID+"=?" + orderBy + ID c Name,
+            selectAllFrom + DirtyTable + where + _ID+"=?" + orderBy + _ID c _Name,
             
             getQuery(DirtyTable) {
-                where { ID equal 1 }
-                orderBy(ID c Name)
+                where { ID = 1 }
+                orderBy(_ID c _Name)
             }.query
         )
         
         assertEquals(
-            select + ID c Name + from + DirtyTable + where + ID+">=?",
+            select + _ID c _Name + from + DirtyTable + where + _ID+">=?",
             
-            getQuery(DirtyTable, columns(ID, Name)) {
-                where { ID greaterEqual 10 }
+            getQuery(DirtyTable, columns(_ID, _Name)) {
+                where { _ID greaterEqual 10 }
             }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + ID+">?",
+            selectAllFrom + DirtyTable + where + _ID+">?",
             
             getQuery(DirtyTable) {
-                where { ID greater 1 }
+                where { _ID greater 1 }
             }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + ID+"<?",
+            selectAllFrom + DirtyTable + where + _ID+"<?",
             
             getQuery(DirtyTable) {
-                where { ID less 1 }
+                where { _ID less 1 }
             }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + ID+"<=?",
+            selectAllFrom + DirtyTable + where + _ID+"<=?",
             
             getQuery(DirtyTable) {
-                where { ID lessEqual 1 }
+                where { _ID lessEqual 1 }
             }.query
         )
         assertEquals(
@@ -70,44 +70,44 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Simple AND OR conditions`() {
         assertEquals(
-            selectAllFrom + DirtyTable + where + ID+">=?" + and + Name+"=?",
+            selectAllFrom + DirtyTable + where + _ID+">=?" + and + _Name+"=?",
             
             getQuery(DirtyTable) {
                 where {
-                    ID greaterEqual 10
-                    and { Name equal BestName }
+                    _ID greaterEqual 10
+                    and { Name = BestName }
                 }
             }.query
         )
         
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + ID+">=?" +
-                and + Name+"=?" +
-                and + Position+"=?" +
-                and + ID+"=?",
+                where + _ID+">=?" +
+                and + _Name+"=?" +
+                and + _Position+"=?" +
+                and + _ID+"=?",
             getQuery(DirtyTable) {
                 where {
-                    ID greaterEqual 10
-                    and { Name equal BestName }
-                    and { Position equal 1.1F }
-                    and { ID equal "1" }
+                    _ID greaterEqual 10
+                    and { _Name equal BestName }
+                    and { _Position equal 1.1F }
+                    and { _ID equal "1" }
                 }
             }.query
         )
         
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + ID+">=?" +
-                and + Name+"=?" +
-                or + Position+"=?" +
-                or + ID+"=?",
+                where + _ID+">=?" +
+                and + _Name+"=?" +
+                or + _Position+"=?" +
+                or + _ID+"=?",
             getQuery(DirtyTable) {
                 where {
-                    ID greaterEqual 10
-                    and { Name equal BestName }
-                    or { Position equal 1.1F }
-                    or { ID equal 1 }
+                    _ID greaterEqual 10
+                    and { _Name equal BestName }
+                    or { _Position equal 1.1F }
+                    or { _ID equal 1 }
                 }
             }.query
         )
@@ -119,10 +119,10 @@ class QueryBuilderTest { // TODO split tests/files
             arrayOf("1", "1", "1.1", "1").joinToString(comma),
             getQuery(DirtyTable) {
                 where {
-                    ID greaterEqual 1
-                    and { ID equal 1 }
-                    and { ID greaterEqual 1.1F }
-                    and { ID greaterEqual 1L }
+                    _ID greaterEqual 1
+                    and { _ID equal 1 }
+                    and { _ID greaterEqual 1.1F }
+                    and { _ID greaterEqual 1L }
                 }
             }.args.joinToString(comma)
         )
@@ -134,17 +134,17 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Two lvl conditions orGroup is last`() {
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + ID+">=?" +
-                and + Name+"=?" +
-                or + "("+Position+"=?" + or + ID+"=?)",
+                where + _ID+">=?" +
+                and + _Name+"=?" +
+                or + "("+_Position+"=?" + or + _ID+"=?)",
             
             getQuery(DirtyTable) {
                 where {
-                    ID greaterEqual 10
-                    and { Name equal BestName }
+                    _ID greaterEqual 10
+                    and { _Name equal BestName }
                     orGroup {
-                        Position equal 1.1F
-                        or { ID equal 1 }
+                        _Position equal 1.1F
+                        or { _ID equal 1 }
                     }
                 }
             }.query
@@ -155,18 +155,18 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Two lvl conditions group{} is first`() {
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + "("+ID+">=?" + and + Name+"=?)" +
-                and + Position+"=?" + 
-                or + ID+"=?"
+                where + "("+_ID+">=?" + and + _Name+"=?)" +
+                and + _Position+"=?" + 
+                or + _ID+"=?"
             ,
             getQuery(DirtyTable) {
                 where {
                     group {
-                        ID greaterEqual 10
-                        and { Name equal BestName }
+                        _ID greaterEqual 10
+                        and { _Name equal BestName }
                     }
-                    and { Position equal 1.1F }
-                    or { ID equal 1 }
+                    and { _Position equal 1.1F }
+                    or { _ID equal 1 }
                 }
             }.query
         )
@@ -177,21 +177,21 @@ class QueryBuilderTest { // TODO split tests/files
         assertEquals(
             selectAllFrom + DirtyTable +
                 where + 
-                Position+"=?" +
+                _Position+"=?" +
                 and +
-                    "("+ID+">=?" + and + Name+"=?)" +
-                and + Position+"=?" + 
-                or + ID+"=?"
+                    "("+_ID+">=?" + and + _Name+"=?)" +
+                and + _Position+"=?" + 
+                or + _ID+"=?"
             ,
             getQuery(DirtyTable) {
                 where {
-                    Position equal 1.1F
+                    _Position equal 1.1F
                     andGroup {
-                        ID greaterEqual 10
-                        and { Name equal BestName }
+                        _ID greaterEqual 10
+                        and { _Name equal BestName }
                     }
-                    and { Position equal 1.1F }
-                    or { ID equal 1 }
+                    and { _Position equal 1.1F }
+                    or { _ID equal 1 }
                 }
             }.query
         )
@@ -202,44 +202,44 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Five lvl conditions`() {
         val result = getQuery(DirtyTable) {
             where {
-                Position equal 1
+                _Position equal 1
                 andGroup {
-                    ID greaterEqual 2
+                    _ID greaterEqual 2
                     orGroup {
-                        Name equal BestName
+                        _Name equal BestName
                         andGroup {
-                            Name equal BestName
+                            _Name equal BestName
                             orGroup {
-                                Name equal BestName
-                                or { Position less 5 }
+                                _Name equal BestName
+                                or { _Position less 5 }
                             }
                         }
                     }
                 }
-                and { Position equal 1.1F }
-                or { ID equal 1 }
+                and { _Position equal 1.1F }
+                or { _ID equal 1 }
             }
         }
         
         assertEquals(
             selectAllFrom + DirtyTable +
                 where + 
-                Position+"=?" +
+                _Position+"=?" +
                 and + "("+
-                    ID+">=?" +
+                    _ID+">=?" +
                     or + "("+
-                        Name+"=?"+
+                        _Name+"=?"+
                         and + "("+
-                            Name+"=?"+
+                            _Name+"=?"+
                             or + "("+
-                                Name+"=?"+
-                                or + Position+"<?" +
+                                _Name+"=?"+
+                                or + _Position+"<?" +
                             ")" +
                         ")" +
                     ")" +
                 ")" +
-                and + Position+"=?" + 
-                or + ID+"=?"
+                and + _Position+"=?" + 
+                or + _ID+"=?"
             ,
             result.query
         )
@@ -248,7 +248,7 @@ class QueryBuilderTest { // TODO split tests/files
             result.args.joinToString(", ")
         )
         assertEquals(
-            "SELECT * FROM $DirtyTable WHERE $Position=? AND ($ID>=? OR ($Name=? AND ($Name=? OR ($Name=? OR $Position<?)))) AND $Position=? OR $ID=?",
+            "SELECT * FROM $DirtyTable WHERE $_Position=? AND ($_ID>=? OR ($_Name=? AND ($_Name=? OR ($_Name=? OR $_Position<?)))) AND $_Position=? OR $_ID=?",
             result.query
         )
     }

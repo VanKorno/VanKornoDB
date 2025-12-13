@@ -10,23 +10,23 @@ import org.junit.Test
 class SubqueryTest {
     @Test
     fun `Query in query`() {
-        val result = getQuery(TestConstants.Users, columns(DbConstants.Name)) {
+        val result = getQuery(TestConstants.Users, columns(DbConstants._Name)) {
             where {
                 subquery(TestConstants.Posts, columns(DbConstants.countAll)) {
                     where {
-                        (TestConstants.Posts dot TestConstants.UserID) equal (TestConstants.Users dot DbConstants.ID)
+                        (TestConstants.Posts dot TestConstants.UserID) equal (TestConstants.Users dot DbConstants._ID)
                     }
                 } greater 10
             }
         }
         
         Assert.assertEquals(
-            "SELECT ${DbConstants.Name} FROM ${TestConstants.Users} WHERE (SELECT COUNT(*) FROM ${TestConstants.Posts} WHERE ${TestConstants.Posts}.user_id=?)>?",
+            "SELECT ${DbConstants._Name} FROM ${TestConstants.Users} WHERE (SELECT COUNT(*) FROM ${TestConstants.Posts} WHERE ${TestConstants.Posts}.user_id=?)>?",
             result.query
         )
         Assert.assertEquals(
             arrayOf(
-                "${TestConstants.Users}.${DbConstants.ID}",
+                "${TestConstants.Users}.${DbConstants._ID}",
                 "10"
             ).joinToString(DbConstants.comma),
             result.args.joinToString(DbConstants.comma)

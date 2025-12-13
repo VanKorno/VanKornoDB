@@ -5,11 +5,11 @@ public class DbConstants {
         InMemoryDB = ":memory:", // You can create an in-memory db for tests with this instead of your db file name
         DbTAG = "VanKornoDB", // for logs
         
-        ID = "id", // Reserved name for int IDs. Entity data classes should have this exact param name.
+        _ID = "id", // Reserved name for int IDs. Entity data classes should have this exact param name.
         RowID = "ROWID",
-        Name = "name",
-        Position = "position", // Optional column name you can use in your own projects. Has some convenience functions in the lib.
-        Type = "type",
+        _Name = "name",
+        _Position = "position", // Optional column name you can use in your own projects. Has some convenience functions in the lib.
+        _Type = "type",
         DbTypeTable = "table",
         
         
@@ -21,9 +21,6 @@ public class DbConstants {
         
         TABLE_AndroidMetadata = "android_metadata",
         TABLE_Master = "sqlite_master",
-        SQL = "sql",
-        TBL_Name = "tbl_name",
-        Rootpage = "rootpage",
         
         
         

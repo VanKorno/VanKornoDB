@@ -11,9 +11,9 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + where + Name + like + "?",
+            selectAllFrom + DirtyTable + where + _Name + like + "?",
             getQuery(DirtyTable) {
-                where { Name like "%abc%" }
+                where { _Name like "%abc%" }
             }.query
         )
     }
@@ -21,9 +21,9 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `NOT LIKE basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + where + Name + notLike + "?",
+            selectAllFrom + DirtyTable + where + _Name + notLike + "?",
             getQuery(DirtyTable) {
-                where { Name notLike "%xyz%" }
+                where { _Name notLike "%xyz%" }
             }.query
         )
     }
@@ -34,8 +34,8 @@ class QueryBuilderLikeNotyTest {
             arrayOf("%abc%", "%xyz%").joinToString(comma),
             getQuery(DirtyTable) {
                 where {
-                    Name like "%abc%"
-                    and { Name notLike "%xyz%" }
+                    _Name like "%abc%"
+                    and { _Name notLike "%xyz%" }
                 }
             }.args.joinToString(comma)
         )
@@ -48,9 +48,9 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE ANY basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + where + Name + like + "(?, ?, ?)",
+            selectAllFrom + DirtyTable + where + _Name + like + "(?, ?, ?)",
             getQuery(DirtyTable) {
-                where { Name.likeAny("%a%", "%b%", "%c%") }
+                where { _Name.likeAny("%a%", "%b%", "%c%") }
             }.query
         )
     }
@@ -58,9 +58,9 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE NONE basic`() {
         assertEquals(
-            selectAllFrom + DirtyTable + where + Name + notLike + "(?, ?, ?)",
+            selectAllFrom + DirtyTable + where + _Name + notLike + "(?, ?, ?)",
             getQuery(DirtyTable) {
-                where { Name.notLikeAny("%a%", "%b%", "%c%") }
+                where { _Name.notLikeAny("%a%", "%b%", "%c%") }
             }.query
         )
     }
@@ -70,7 +70,7 @@ class QueryBuilderLikeNotyTest {
         assertEquals(
             arrayOf("%a%", "%b%", "%c%").joinToString(comma),
             getQuery(DirtyTable) {
-                where { Name.likeAny("%a%", "%b%", "%c%") }
+                where { _Name.likeAny("%a%", "%b%", "%c%") }
             }.args.joinToString(comma)
         )
     }

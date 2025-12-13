@@ -23,8 +23,8 @@ open class QueryOptsInternal {
     fun where(builder: WhereBuilder.()->Unit) { query.where = builder }
     
     var where: WhereBuilder.() -> Unit
-    get() = query.where
-    set(value) { query.where = value }
+        get() = query.where
+        set(value) { query.where = value }
     
     
     

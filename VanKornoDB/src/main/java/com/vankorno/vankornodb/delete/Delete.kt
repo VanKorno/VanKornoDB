@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.*
 
 fun SQLiteDatabase.deleteRowById(                                                     id: Int,
                                                                                    table: String,
-): Int = delete(table, "$ID = ?", arrayOf(id.toString()))
+): Int = delete(table, "$_ID = ?", arrayOf(id.toString()))
 
 
 fun <T> SQLiteDatabase.deleteRow(                                                  table: String,

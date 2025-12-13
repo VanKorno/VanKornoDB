@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants.ID
+import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteFirstRow
@@ -935,23 +935,23 @@ abstract class DbHelperInternal(
     
     // By ID
     
-    inline fun getIntById(id: Int, table: String, column: String) = getIntNoty(table, column, ID, id)
-    suspend fun getIntByIdSusp(id: Int, table: String, column: String) = getIntNotySusp(table, column, ID, id)
+    inline fun getIntById(id: Int, table: String, column: String) = getIntNoty(table, column, _ID, id)
+    suspend fun getIntByIdSusp(id: Int, table: String, column: String) = getIntNotySusp(table, column, _ID, id)
     
-    inline fun getStrById(id: Int, table: String, column: String) = getStrNoty(table, column, ID, id)
-    suspend fun getStrByIdSusp(id: Int, table: String, column: String) = getStrNotySusp(table, column, ID, id)
+    inline fun getStrById(id: Int, table: String, column: String) = getStrNoty(table, column, _ID, id)
+    suspend fun getStrByIdSusp(id: Int, table: String, column: String) = getStrNotySusp(table, column, _ID, id)
     
-    inline fun getBoolById(id: Int, table: String, column: String) = getBoolNoty(table, column, ID, id)
-    suspend fun getBoolByIdSusp(id: Int, table: String, column: String) = getBoolNotySusp(table, column, ID, id)
+    inline fun getBoolById(id: Int, table: String, column: String) = getBoolNoty(table, column, _ID, id)
+    suspend fun getBoolByIdSusp(id: Int, table: String, column: String) = getBoolNotySusp(table, column, _ID, id)
     
-    inline fun getLongById(id: Int, table: String, column: String) = getLongNoty(table, column, ID, id)
-    suspend fun getLongByIdSusp(id: Int, table: String, column: String) = getLongNotySusp(table, column, ID, id)
+    inline fun getLongById(id: Int, table: String, column: String) = getLongNoty(table, column, _ID, id)
+    suspend fun getLongByIdSusp(id: Int, table: String, column: String) = getLongNotySusp(table, column, _ID, id)
     
-    inline fun getFloatById(id: Int, table: String, column: String) = getFloatNoty(table, column, ID, id)
-    suspend fun getFloatByIdSusp(id: Int, table: String, column: String) = getFloatNotySusp(table, column, ID, id)
+    inline fun getFloatById(id: Int, table: String, column: String) = getFloatNoty(table, column, _ID, id)
+    suspend fun getFloatByIdSusp(id: Int, table: String, column: String) = getFloatNotySusp(table, column, _ID, id)
     
-    inline fun getBlobById(id: Int, table: String, column: String): ByteArray? = getBlobNoty(table, column, ID, id)
-    suspend fun getBlobByIdSusp(id: Int, table: String, column: String): ByteArray? = getBlobNotySusp(table, column, ID, id)
+    inline fun getBlobById(id: Int, table: String, column: String): ByteArray? = getBlobNoty(table, column, _ID, id)
+    suspend fun getBlobByIdSusp(id: Int, table: String, column: String): ByteArray? = getBlobNotySusp(table, column, _ID, id)
     
     
     // Multiple values

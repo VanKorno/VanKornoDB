@@ -11,10 +11,10 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
  * Just some commonly used columns
  */
 object SharedCol {
-    val shID = iCol(ID, -1)
+    val shID = iCol(_ID, -1)
     val shRowID = iCol(RowID, -1)
-    val shName = sCol(Name)
-    val shPosition = iCol(Position)
-    val shType = sCol(Type)
+    val shName = sCol(_Name)
+    val shPosition = iCol(_Position)
+    val shType = sCol(_Type)
     val shActive = bCol("active")
 }

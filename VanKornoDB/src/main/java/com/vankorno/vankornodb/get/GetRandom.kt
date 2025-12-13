@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants.ID
+import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.core.data.DbConstants.randomVal
 import com.vankorno.vankornodb.mapper.toEntity
 
@@ -43,7 +43,7 @@ inline fun <reified T> SQLiteDatabase.getRandomVal(               table: String,
  */
 fun SQLiteDatabase.getRandomId(                                   table: String,
                                                                   where: WhereBuilder.()->Unit = {},
-): Int = getRandomVal<Int>(table, ID, where) ?: -1
+): Int = getRandomVal<Int>(table, _ID, where) ?: -1
 
 
 

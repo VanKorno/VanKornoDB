@@ -11,13 +11,13 @@ class MiscQueryBuilderTest {
     fun `App Table Getter query`() {
         val queryStr = "SELECT name FROM sqlite_master WHERE type=? AND name NOT LIKE ? AND name NOT IN (?, ?) ORDER BY name"
         
-        val builtQuery = getQuery(TABLE_Master, columns(Name)) {
+        val builtQuery = getQuery(TABLE_Master, columns(_Name)) {
             where {
-                Type equal DbTypeTable
-                and { Name notLike "sqlite_%" }
-                and { Name.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
+                _Type equal DbTypeTable
+                and { _Name notLike "sqlite_%" }
+                and { _Name.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
             }
-            orderBy(Name)
+            orderBy(_Name)
         }.query
         
         assertEquals(queryStr, builtQuery)

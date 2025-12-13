@@ -6,10 +6,10 @@ import com.vankorno.vankornodb.get.getStrNoty
 
 fun SQLiteDatabase.getTableTypesFromInitQuery(                                     table: String
 ): List<String> {
-    val queryStr = getStrNoty(TABLE_Master, SQL,
+    val queryStr = getStrNoty(TABLE_Master, "sql",
         where = {
-            Type equal DbTypeTable
-            and { Name equal table }
+            _Type equal DbTypeTable
+            and { _Name equal table }
         }
     )
     if (queryStr.isBlank()) {

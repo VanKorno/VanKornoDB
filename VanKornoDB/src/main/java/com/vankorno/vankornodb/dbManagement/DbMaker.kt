@@ -151,7 +151,7 @@ abstract class DbMaker(           context: Context,
             entityMeta.none { meta -> meta.dbRowName == name }
         }
         for (name in namesToDelete) {
-            db.deleteRow(TABLE_EntityVersions, Name, name)
+            db.deleteRow(TABLE_EntityVersions, _Name, name)
         }
     }
     

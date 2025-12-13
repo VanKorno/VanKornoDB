@@ -34,7 +34,7 @@ abstract class DbMigratorInternal(                                           val
      */
     fun migrateSingleTableEntity(                                            entity: BaseEntityMeta
     ) {
-        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
+        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, _Name, entity.dbRowName)
         val newVer = entity.currVersion
         val tableName = entity.limitedToTable ?: return //\/\/\
         // region LOG
@@ -46,7 +46,7 @@ abstract class DbMigratorInternal(                                           val
             newVersion = newVer,
             migrationBundle = entity.migrationBundle.value
         )
-        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, Name, entity.dbRowName)
+        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, _Name, entity.dbRowName)
     }
     
     
@@ -62,7 +62,7 @@ abstract class DbMigratorInternal(                                           val
         // region LOG
             Log.d(DbTAG, "migrateTables(): Migrating tables that use the $dbRowName entity...")
         // endregion
-        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, Name, dbRowName)
+        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, _Name, dbRowName)
         
         for (tableName in tables) {
             migrateTable(tableName, oldVer, entityMeta, doAfterEachTable)
@@ -71,7 +71,7 @@ abstract class DbMigratorInternal(                                           val
         // region LOG
             Log.d(DbTAG, "migrateTables(): Finished migrating $dbRowName tables. Setting the new entity version ($newVer)...")
         // endregion
-        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, Name, dbRowName)
+        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, _Name, dbRowName)
     }
     
     

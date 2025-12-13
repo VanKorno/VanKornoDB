@@ -5,7 +5,7 @@ package com.vankorno.vankornodb.set
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants.ID
+import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.misc.byIdAnd
 
 
@@ -74,7 +74,7 @@ fun SQLiteDatabase.setRowVals(                                         table: St
 fun SQLiteDatabase.setRowValsById(                                               id: Int,
                                                                               table: String,
                                                                                  cv: ContentValues,
-) = update(table, cv, ID+"=?", arrayOf(id.toString()))
+) = update(table, cv, _ID+"=?", arrayOf(id.toString()))
 
 
 fun SQLiteDatabase.setRowValsById(                                           id: Int,
@@ -88,7 +88,7 @@ fun SQLiteDatabase.setRowValsById(                                           id:
             putSmart(col, value)
         }
     }
-    update(table, cv, ID + "=?", arrayOf(id.toString()))
+    update(table, cv, _ID + "=?", arrayOf(id.toString()))
 }
 
 

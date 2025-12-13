@@ -8,7 +8,7 @@ import android.util.Log
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
-import com.vankorno.vankornodb.core.data.DbConstants.ID
+import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.get.getLastId
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
@@ -82,8 +82,8 @@ inline fun <reified T : DbEntity> SQLiteDatabase.insertObjectsWithAutoIds(      
     if (objects.isEmpty()) return 0
 
     val kClass = T::class
-    val hasId = kClass.memberProperties.any { it.name == ID }
-    val idProp = kClass.memberProperties.firstOrNull { it.name == ID }
+    val hasId = kClass.memberProperties.any { it.name == _ID }
+    val idProp = kClass.memberProperties.firstOrNull { it.name == _ID }
     val ctor = kClass.primaryConstructor!!
 
     var nextId = getLastId(table) + 1
@@ -93,7 +93,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.insertObjectsWithAutoIds(      
         val currentId = idProp?.getter?.call(obj) as? Int ?: -1
         val modified = if (hasId && currentId < 1) {
             val args = ctor.parameters.associateWith { param ->
-                if (param.name == ID) nextId++
+                if (param.name == _ID) nextId++
                 else kClass.memberProperties.first { it.name == param.name }.getter.call(obj)
             }
             ctor.callBy(args)
@@ -132,7 +132,7 @@ fun <T : DbEntity> SQLiteDatabase.updateObjById(                                
                                                                                      obj: T,
 ): Int {
     val cv = toContentValues(obj)
-    return update(table, cv, ID+"=?", arrayOf(id.toString()))
+    return update(table, cv, _ID+"=?", arrayOf(id.toString()))
 }
 
 

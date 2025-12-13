@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.misc.data.SharedCol.shType
 import java.io.File
 
 
-fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, ID, null, null)
+fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, _ID, null, null)
 
 
 fun SQLiteDatabase.getAllIDs(                                                   table: String,
@@ -35,7 +35,7 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getColStringsPro(TABLE_Mas
         and { shName notLike "sqlite_%" }
         and { shName.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
     }
-    orderBy(Name)
+    orderBy(_Name)
 }
 
 
@@ -51,7 +51,7 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
             or { shName.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
         }
     }
-    orderBy(Name)
+    orderBy(_Name)
 }
 
 // TODO get tables with data, not just names
@@ -61,13 +61,13 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
 fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
 
-fun SQLiteDatabase.getLastPosition(table: String) = getLargestInt(table, Position, null, null)
+fun SQLiteDatabase.getLastPosition(table: String) = getLargestInt(table, _Position, null, null)
 
 
 fun <T> SQLiteDatabase.getLastPositionBy(                                          table: String,
                                                                              whereColumn: String,
                                                                                   equals: T,
-) = getLargestInt(table, Position, whereColumn, equals)
+) = getLargestInt(table, _Position, whereColumn, equals)
 
 
 

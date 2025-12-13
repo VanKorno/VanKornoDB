@@ -5,7 +5,6 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.core.data.DbConstants.ID
 import com.vankorno.vankornodb.mapper.toEntity
 import kotlin.reflect.KClass
 
@@ -14,7 +13,7 @@ import kotlin.reflect.KClass
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjById(                          id: Int,
                                                                                    table: String,
 ): T = getObj(table) {
-    where { ID equal id }
+    where { ID = id }
 }
 
 
@@ -24,7 +23,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjById(                    
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNullById(                    id: Int,
                                                                                    table: String,
 ): T? = getObjOrNull(table) {
-    where { ID equal id }
+    where { ID = id }
 }
 
 

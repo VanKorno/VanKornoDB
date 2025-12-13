@@ -2,8 +2,7 @@ package com.vankorno.vankornodb.core.queryBuilder
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
-import com.vankorno.vankornodb.core.data.DbConstants.IN
-import com.vankorno.vankornodb.core.data.DbConstants.notIN
+import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
@@ -158,5 +157,30 @@ open class WhereBuilderInternal() : WhereBuilderBase() {
     
     fun <T> String.equalAny(vararg values: T) = multCompare(this, IN, values)
     fun <T> String.notEqualAny(vararg values: T) = multCompare(this, notIN, values)
+    
+    
+    
+    
+    
+    // ===============================  C O N V E N I E N C E  =============================== \\
+    
+    var ID: Int
+        get() = error("id is write-only")
+        set(value) {
+            condition(_ID, "=", value.toString())
+        }
+    
+    var Name: String
+        get() = error("Name is write-only")
+        set(value) {
+            condition(_Name, "=", value)
+        }
+    
+    
+    
+    
+    
+    
+    
     
 }
