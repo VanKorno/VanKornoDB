@@ -5,8 +5,13 @@ package com.vankorno.vankornodb.core.queryBuilder
 import com.vankorno.vankornodb.api.JoinBuilder
 import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.core.data.DbConstants.RowID
+import com.vankorno.vankornodb.core.data.DbConstants.descending
 import com.vankorno.vankornodb.core.data.QueryOptsHolder
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
+import com.vankorno.vankornodb.misc.data.SharedCol.shID
+import com.vankorno.vankornodb.misc.data.SharedCol.shName
+import com.vankorno.vankornodb.misc.data.SharedCol.shPosition
 
 @Suppress("unused")
 open class QueryOptsInternal {
@@ -69,9 +74,19 @@ open class QueryOptsInternal {
         }
     }
     
-    fun orderRandomly() = orderBy { +"RANDOM()" }
+    fun orderRandomly() = orderBy("RANDOM()")
+    
+    fun orderById() = orderBy(shID)
+    fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { +shID; and(andOrderBy) }
     
     
+    fun orderByName() = orderBy { +shName }
+    fun orderByNameAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { +shName; and(andOrderBy) }
+    
+    fun orderPosition() = orderBy { +shPosition }
+    fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { +shPosition; and(andOrderBy) }
+    
+    fun reverseOrder() = orderBy { RowID + descending }
     
     
     

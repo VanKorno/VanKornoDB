@@ -21,7 +21,24 @@ class JoinBuilder : JoinBuilderInternal()
 interface EntityColumns : EntityColumnsInternal
 
 
-class OrderByBuilder : OrderByBuilderInternal()
+
+class OrderByBuilder : OrderByBuilderInternal() {
+    fun and(                                                        builder: OrderByBuilder.()->Unit
+    ) {
+        val inner = OrderByBuilder().apply(builder)
+        items.addAll(inner.items)
+        args.addAll(inner.args)
+    }
+
+    fun group(                                                      builder: OrderByBuilder.()->Unit
+    ) {
+        val inner = OrderByBuilder().apply(builder)
+        if (inner.items.isNotEmpty()) {
+            items += "(" + inner.items.joinToString(", ") + ")"
+            args.addAll(inner.args)
+        }
+    }
+}
 
 
 
