@@ -6,6 +6,7 @@ package com.vankorno.vankornodb.core.queryBuilder
 @Suppress("unused")
 open class JoinBuilderInternal {
     val joins = mutableListOf<String>()
+    val args = mutableListOf<String>()
 
     fun inner(table: String, on: String) {
         joins.add("INNER JOIN $table ON $on")

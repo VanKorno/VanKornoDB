@@ -25,7 +25,7 @@ internal fun getQuery(                                   table: String,
                                                        columns: Array<out String> = arrayOf("*"),
                                                        sqlOpts: QueryOptsHolder = QueryOptsHolder(),
 ): QueryWithArgs {
-    val conditions = WhereBuilder().apply(sqlOpts.where)
+    val whereBuilder = WhereBuilder().apply(sqlOpts.where)
     val joinBuilder = JoinBuilder().apply(sqlOpts.joins)
     val orderByBuilder = OrderByBuilder().apply(sqlOpts.orderBy)
     
@@ -38,9 +38,9 @@ internal fun getQuery(                                   table: String,
             append(" ")
             append(joinBuilder.joins.joinToString(" "))
         }
-        if (conditions.clauses.isNotEmpty()) {
+        if (whereBuilder.clauses.isNotEmpty()) {
             append(" WHERE ")
-            append(conditions.clauses.joinToString(" "))
+            append(whereBuilder.clauses.joinToString(" "))
         }
         if (sqlOpts.groupBy.isNotBlank()) {
             append(" GROUP BY ")
@@ -66,7 +66,13 @@ internal fun getQuery(                                   table: String,
             append(sqlOpts.customEnd)
         }
     }
-    return QueryWithArgs(query, conditions.args.toTypedArray())
+    
+    val args =  joinBuilder.args +
+                whereBuilder.args +
+                orderByBuilder.args
+                // + havingBuilder.args, etc.
+    
+    return QueryWithArgs(query, args.toTypedArray())
 }
 
 

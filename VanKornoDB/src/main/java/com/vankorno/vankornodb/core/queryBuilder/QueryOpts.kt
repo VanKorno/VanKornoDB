@@ -69,6 +69,13 @@ open class QueryOptsInternal {
         }
     }
     
+    fun orderRandomly() = orderBy { +"RANDOM()" }
+    
+    
+    
+    
+    
+    
     
     
     fun limit(limit: Int) { query.limit = limit }
