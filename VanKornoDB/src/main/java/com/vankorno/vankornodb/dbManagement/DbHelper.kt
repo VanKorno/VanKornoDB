@@ -8,13 +8,11 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteFirstRow
 import com.vankorno.vankornodb.delete.deleteLastRow
 import com.vankorno.vankornodb.delete.deleteRow
-import com.vankorno.vankornodb.delete.deleteRowById
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.set.*
@@ -53,48 +51,6 @@ abstract class DbHelperInternal(
     }
     
     
-    fun setIntById(                                               value: Int,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: IntCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setIntById", async) {
-        it.setIntById(value, id, table, column, andWhere)
-    }
-    
-    suspend fun setIntByIdSusp(                                   value: Int,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: IntCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setIntByIdSusp") {
-        it.setIntById(value, id, table, column, andWhere)
-    }
-    
-    
-    fun setIntByName(                                             value: Int,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: IntCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setIntByName", async) {
-        it.setIntByName(value, name, table, column, andWhere)
-    }
-    
-    suspend fun setIntByNameSusp(                                 value: Int,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: IntCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setIntByNameSusp") {
-        it.setIntByName(value, name, table, column, andWhere)
-    }
-    
-    
-    
-    
     //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
     fun setStr(                                                        value: String,
@@ -113,49 +69,6 @@ abstract class DbHelperInternal(
     ) = writeSusp("setStrSusp") {
         it.setStr(value, table, column, where)
     }
-    
-    
-    fun setStrById(                                               value: String,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: StrCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setStrById", async) {
-        it.setStrById(value, id, table, column, andWhere)
-    }
-    
-    suspend fun setStrByIdSusp(                                   value: String,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: StrCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setStrByIdSusp") {
-        it.setStrById(value, id, table, column, andWhere)
-    }
-    
-    
-    fun setStrByName(                                             value: String,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: StrCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setStrByName", async) {
-        it.setStrByName(value, name, table, column, andWhere)
-    }
-    
-    suspend fun setStrByNameSusp(                                 value: String,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: StrCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setStrByNameSusp") {
-        it.setStrByName(value, name, table, column, andWhere)
-    }
-    
-    
-    
     
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
@@ -178,49 +91,6 @@ abstract class DbHelperInternal(
     }
     
     
-    fun setBoolById(                                              value: Boolean,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: BoolCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setBoolById", async) {
-        it.setBoolById(value, id, table, column, andWhere)
-    }
-    
-    suspend fun setBoolByIdSusp(                                  value: Boolean,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: BoolCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setBoolByIdSusp") {
-        it.setBoolById(value, id, table, column, andWhere)
-    }
-    
-    
-    fun setBoolByName(                                            value: Boolean,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: BoolCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setBoolByName", async) {
-        it.setBoolByName(value, name, table, column, andWhere)
-    }
-    
-    suspend fun setBoolByNameSusp(                                value: Boolean,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: BoolCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setBoolByNameSusp") {
-        it.setBoolByName(value, name, table, column, andWhere)
-    }
-    
-    
-    
-    
-    
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
     fun setLong(                                                       value: Long,
@@ -239,49 +109,6 @@ abstract class DbHelperInternal(
     ) = writeSusp("setLongSusp") {
         it.setLong(value, table, column, where)
     }
-    
-    
-    fun setLongById(                                              value: Long,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: LongCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setLongById", async) {
-        it.setLongById(value, id, table, column, andWhere)
-    }
-    
-    suspend fun setLongByIdSusp(                                  value: Long,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: LongCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setLongByIdSusp") {
-        it.setLongById(value, id, table, column, andWhere)
-    }
-    
-    
-    fun setLongByName(                                            value: Long,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: LongCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setLongByName", async) {
-        it.setLongByName(value, name, table, column, andWhere)
-    }
-    
-    suspend fun setLongByNameSusp(                                value: Long,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: LongCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setLongByNameSusp") {
-        it.setLongByName(value, name, table, column, andWhere)
-    }
-    
-    
-    
     
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
@@ -304,51 +131,6 @@ abstract class DbHelperInternal(
     }
     
     
-    fun setFloatById(                                             value: Float,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: FloatCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setFloatById", async) {
-        it.setFloatById(value, id, table, column, andWhere)
-    }
-    
-    suspend fun setFloatByIdSusp(                                 value: Float,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: FloatCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setFloatByIdSusp") {
-        it.setFloatById(value, id, table, column, andWhere)
-    }
-    
-    
-    fun setFloatByName(                                           value: Float,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: FloatCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setFloatByName", async) {
-        it.setFloatByName(value, name, table, column, andWhere)
-    }
-    
-    suspend fun setFloatByNameSusp(                               value: Float,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: FloatCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setFloatByNameSusp") {
-        it.setFloatByName(value, name, table, column, andWhere)
-    }
-    
-    
-    
-    
-    
-    
-    
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
     fun setBlob(                                                       value: ByteArray,
@@ -369,71 +151,11 @@ abstract class DbHelperInternal(
     }
     
     
-    fun setBlobById(                                              value: ByteArray,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: BlobCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setBlobById", async) {
-        it.setBlobById(value, id, table, column, andWhere)
-    }
-    
-    suspend fun setBlobByIdSusp(                                  value: ByteArray,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: BlobCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setBlobByIdSusp") {
-        it.setBlobById(value, id, table, column, andWhere)
-    }
-    
-    
-    fun setBlobByName(                                            value: ByteArray,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: BlobCol,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setBlobByName", async) {
-        it.setBlobByName(value, name, table, column, andWhere)
-    }
-    
-    suspend fun setBlobByNameSusp(                                value: ByteArray,
-                                                                   name: String,
-                                                                  table: String,
-                                                                 column: BlobCol,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setBlobByNameSusp") {
-        it.setBlobByName(value, name, table, column, andWhere)
-    }
-    
-    
     
     
     
     
     // -------------------- Not type-safe --------------------
-    
-    fun setByIdNoty(                                              value: Any,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: String,
-                                                                  async: Boolean = false,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = write("setByIdNoty", async) {
-        it.setByIdNoty(value, id, table, column, andWhere)
-    }
-    
-    suspend fun setByIdNotySusp(                                  value: Any,
-                                                                     id: Int,
-                                                                  table: String,
-                                                                 column: String,
-                                                               andWhere: WhereBuilder.()->Unit = {},
-    ) = writeSusp("setByIdNotySusp") {
-        it.setByIdNoty(value, id, table, column, andWhere)
-    }
-    
     
     inline fun <T> setNoty(                                                 value: Any,
                                                                             table: String,
@@ -509,39 +231,7 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
-    inline fun setRowValsById(                                                 id: Int,
-                                                                            table: String,
-                                                                               cv: ContentValues,
-                                                                            async: Boolean = false,
-    ) = write("setRowValsById", async) {
-        it.setRowValsById(id, table, cv)
-    }
     
-    suspend fun setRowValsByIdSusp(                                              id: Int,
-                                                                              table: String,
-                                                                                 cv: ContentValues,
-    ) = writeSusp("setRowValsByIdSusp") {
-        it.setRowValsById(id, table, cv)
-    }
-    
-    
-    inline fun setRowValsById(                                               id: Int,
-                                                                          table: String,
-                                                                          async: Boolean = false,
-                                                                  vararg values: Pair<String, Any?>,
-    ) = write("setRowValsById", async) {
-        it.setRowValsById(id, table, *values)
-    }
-    
-    suspend fun setRowValsByIdSusp(                                          id: Int,
-                                                                          table: String,
-                                                                  vararg values: Pair<String, Any?>,
-    ) = writeSusp("setRowValsByIdSusp") {
-        it.setRowValsById(id, table, *values)
-    }
-    
-    
-    // -------------------------------------------------------------------------------------- \\
     
     inline fun setInAllRows(                                                value: Any,
                                                                             table: String,
@@ -621,22 +311,6 @@ abstract class DbHelperInternal(
     }
     
     
-    inline fun <T : DbEntity> updateObjById(                                   id: Int,
-                                                                            table: String,
-                                                                              obj: T,
-                                                                            async: Boolean = false,
-    ) = write("updateObjById", async) {
-        it.updateObjById(id, table, obj)
-    }
-    
-    
-    suspend fun <T : DbEntity> updateObjByIdSusp(                                     id: Int,
-                                                                                   table: String,
-                                                                                     obj: T,
-    ): Int = readWriteSusp(0, "updateObjByIdSusp") {
-        it.updateObjById(id, table, obj)
-    }
-    
     
     
     
@@ -657,23 +331,6 @@ abstract class DbHelperInternal(
         readSusp(0, "getIntSusp") { it.getInt(table, column, where) }
     
     
-    fun getIntById(id: Int, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
-        read(0, "getIntById") { it.getIntById(id, table, column, andWhere) }
-    
-    suspend fun getIntByIdSusp(id: Int, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
-        readSusp(0, "getIntByIdSusp") { it.getIntById(id, table, column, andWhere) }
-    
-    
-    fun getIntByName(name: String, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
-        read(0, "getIntByName") { it.getIntByName(name, table, column, andWhere) }
-    
-    suspend fun getIntByNameSusp(name: String, table: String, column: IntCol, andWhere: WhereBuilder.()->Unit = {}): Int =
-        readSusp(0, "getIntByNameSusp") { it.getIntByName(name, table, column, andWhere) }
-    
-    
-    
-    
-    
     //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
     fun getStr(table: String, column: StrCol, where: WhereBuilder.()->Unit): String =
@@ -681,22 +338,6 @@ abstract class DbHelperInternal(
     
     suspend fun getStrSusp(table: String, column: StrCol, where: WhereBuilder.()->Unit): String =
         readSusp("", "getStrSusp") { it.getStr(table, column, where) }
-    
-    
-    fun getIntById(id: Int, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
-        read("", "getStrById") { it.getStrById(id, table, column, andWhere) }
-    
-    suspend fun getStrByIdSusp(id: Int, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
-        readSusp("", "getStrByIdSusp") { it.getStrById(id, table, column, andWhere) }
-    
-    
-    fun getIntByName(name: String, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
-        read("", "getStrByName") { it.getStrByName(name, table, column, andWhere) }
-    
-    suspend fun getStrByNameSusp(name: String, table: String, column: StrCol, andWhere: WhereBuilder.()->Unit = {}): String =
-        readSusp("", "getStrByNameSusp") { it.getStrByName(name, table, column, andWhere) }
-    
-    
     
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
@@ -708,23 +349,6 @@ abstract class DbHelperInternal(
         readSusp(false, "getBoolSusp") { it.getBool(table, column, where) }
     
     
-    fun getBoolById(id: Int, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
-        read(false, "getBoolById") { it.getBoolById(id, table, column, andWhere) }
-    
-    suspend fun getBoolByIdSusp(id: Int, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
-        readSusp(false, "getBoolByIdSusp") { it.getBoolById(id, table, column, andWhere) }
-    
-    
-    fun getBoolByName(name: String, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
-        read(false, "getBoolByName") { it.getBoolByName(name, table, column, andWhere) }
-    
-    suspend fun getBoolByNameSusp(name: String, table: String, column: BoolCol, andWhere: WhereBuilder.()->Unit = {}): Boolean =
-        readSusp(false, "getBoolByNameSusp") { it.getBoolByName(name, table, column, andWhere) }
-    
-    
-    
-    
-    
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
     fun getLong(table: String, column: LongCol, where: WhereBuilder.()->Unit): Long =
@@ -732,22 +356,6 @@ abstract class DbHelperInternal(
     
     suspend fun getLongSusp(table: String, column: LongCol, where: WhereBuilder.()->Unit): Long =
         readSusp(0L, "getLongSusp") { it.getLong(table, column, where) }
-    
-    
-    fun getLongById(id: Int, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
-        read(0L, "getLongById") { it.getLongById(id, table, column, andWhere) }
-    
-    suspend fun getLongByIdSusp(id: Int, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
-        readSusp(0L, "getLongByIdSusp") { it.getLongById(id, table, column, andWhere) }
-    
-    
-    fun getLongByName(name: String, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
-        read(0L, "getLongByName") { it.getLongByName(name, table, column, andWhere) }
-    
-    suspend fun getLongByNameSusp(name: String, table: String, column: LongCol, andWhere: WhereBuilder.()->Unit = {}): Long =
-        readSusp(0L, "getLongByNameSusp") { it.getLongByName(name, table, column, andWhere) }
-    
-    
     
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
@@ -759,23 +367,6 @@ abstract class DbHelperInternal(
         readSusp(0F, "getFloatSusp") { it.getFloat(table, column, where) }
     
     
-    fun getFloatById(id: Int, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
-        read(0F, "getFloatById") { it.getFloatById(id, table, column, andWhere) }
-    
-    suspend fun getFloatByIdSusp(id: Int, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
-        readSusp(0F, "getFloatByIdSusp") { it.getFloatById(id, table, column, andWhere) }
-    
-    
-    fun getFloatByName(name: String, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
-        read(0F, "getFloatByName") { it.getFloatByName(name, table, column, andWhere) }
-    
-    suspend fun getFloatByNameSusp(name: String, table: String, column: FloatCol, andWhere: WhereBuilder.()->Unit = {}): Float =
-        readSusp(0F, "getFloatByNameSusp") { it.getFloatByName(name, table, column, andWhere) }
-    
-    
-    
-    
-    
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
     fun getBlob(table: String, column: BlobCol, where: WhereBuilder.()->Unit): ByteArray =
@@ -783,23 +374,6 @@ abstract class DbHelperInternal(
     
     suspend fun getBlobSusp(table: String, column: BlobCol, where: WhereBuilder.()->Unit): ByteArray =
         readSusp(ByteArray(0), "getBlobSusp") { it.getBlob(table, column, where) }
-    
-    
-    fun getBlobById(id: Int, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
-        read(ByteArray(0), "getBlobById") { it.getBlobById(id, table, column, andWhere) }
-    
-    suspend fun getBlobByIdSusp(id: Int, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
-        readSusp(ByteArray(0), "getBlobByIdSusp") { it.getBlobById(id, table, column, andWhere) }
-    
-    
-    fun getBlobByName(name: String, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
-        read(ByteArray(0), "getBlobByName") { it.getBlobByName(name, table, column, andWhere) }
-    
-    suspend fun getBlobByNameSusp(name: String, table: String, column: BlobCol, andWhere: WhereBuilder.()->Unit = {}): ByteArray =
-        readSusp(ByteArray(0), "getBlobByNameSusp") { it.getBlobByName(name, table, column, andWhere) }
-    
-    
-    
     
     
     
@@ -933,26 +507,6 @@ abstract class DbHelperInternal(
     
     
     
-    // By ID
-    
-    inline fun getIntById(id: Int, table: String, column: String) = getIntNoty(table, column, _ID, id)
-    suspend fun getIntByIdSusp(id: Int, table: String, column: String) = getIntNotySusp(table, column, _ID, id)
-    
-    inline fun getStrById(id: Int, table: String, column: String) = getStrNoty(table, column, _ID, id)
-    suspend fun getStrByIdSusp(id: Int, table: String, column: String) = getStrNotySusp(table, column, _ID, id)
-    
-    inline fun getBoolById(id: Int, table: String, column: String) = getBoolNoty(table, column, _ID, id)
-    suspend fun getBoolByIdSusp(id: Int, table: String, column: String) = getBoolNotySusp(table, column, _ID, id)
-    
-    inline fun getLongById(id: Int, table: String, column: String) = getLongNoty(table, column, _ID, id)
-    suspend fun getLongByIdSusp(id: Int, table: String, column: String) = getLongNotySusp(table, column, _ID, id)
-    
-    inline fun getFloatById(id: Int, table: String, column: String) = getFloatNoty(table, column, _ID, id)
-    suspend fun getFloatByIdSusp(id: Int, table: String, column: String) = getFloatNotySusp(table, column, _ID, id)
-    
-    inline fun getBlobById(id: Int, table: String, column: String): ByteArray? = getBlobNoty(table, column, _ID, id)
-    suspend fun getBlobByIdSusp(id: Int, table: String, column: String): ByteArray? = getBlobNotySusp(table, column, _ID, id)
-    
     
     // Multiple values
     
@@ -978,18 +532,6 @@ abstract class DbHelperInternal(
     
     
     // -------------------------------  G E T   O B J E C T S  ------------------------------- \\
-    
-    inline fun <reified T : DbEntity> getObjOrNullById(                               id: Int,
-                                                                                   table: String,
-    ): T? = read(null, "getObjOrNullById") {
-        it.getObjOrNullById<T>(id, table)
-    }
-    
-    suspend inline fun <reified T : DbEntity> getObjOrNullByIdSusp(                   id: Int,
-                                                                                   table: String,
-    ): T? = readSusp(null, "getObjOrNullByIdSusp") {
-        it.getObjOrNullById<T>(id, table)
-    }
     
     
     inline fun <reified T : DbEntity> getObjOrNull(                  table: String,
@@ -1491,18 +1033,6 @@ abstract class DbHelperInternal(
     }
     
     
-    inline fun deleteRowById(                                                  id: Int,
-                                                                            table: String,
-                                                                            async: Boolean = false,
-    ) = write("deleteRowById", async) {
-        it.deleteRowById(id, table)
-    }
-    
-    suspend fun deleteRowByIdSusp(                                                    id: Int,
-                                                                                   table: String,
-    ) = writeSusp("deleteRowByIdSusp") {
-        it.deleteRowById(id, table)
-    }
     
     
     

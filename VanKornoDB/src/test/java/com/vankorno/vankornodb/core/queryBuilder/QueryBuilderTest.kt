@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.core.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.*
-import com.vankorno.vankornodb.core.data.DbConstants.where
+import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.misc.columns
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -18,11 +18,11 @@ class QueryBuilderTest { // TODO split tests/files
             getQuery(DirtyTable).query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + orderBy + _ID,
+            selectAllFrom + DirtyTable + OrderBy + _ID,
             getQuery(DirtyTable) { orderBy(_ID) }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + _ID+"=?" + orderBy + _ID c _Name,
+            selectAllFrom + DirtyTable + WHERE + _ID+"=?" + OrderBy + _ID c _Name,
             
             getQuery(DirtyTable) {
                 where { ID = 1 }
@@ -31,35 +31,35 @@ class QueryBuilderTest { // TODO split tests/files
         )
         
         assertEquals(
-            select + _ID c _Name + from + DirtyTable + where + _ID+">=?",
+            select + _ID c _Name + from + DirtyTable + WHERE + _ID+">=?",
             
             getQuery(DirtyTable, columns(_ID, _Name)) {
                 where { _ID greaterEqual 10 }
             }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + _ID+">?",
+            selectAllFrom + DirtyTable + WHERE + _ID+">?",
             
             getQuery(DirtyTable) {
                 where { _ID greater 1 }
             }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + _ID+"<?",
+            selectAllFrom + DirtyTable + WHERE + _ID+"<?",
             
             getQuery(DirtyTable) {
                 where { _ID less 1 }
             }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + _ID+"<=?",
+            selectAllFrom + DirtyTable + WHERE + _ID+"<=?",
             
             getQuery(DirtyTable) {
                 where { _ID lessEqual 1 }
             }.query
         )
         assertEquals(
-            selectAllFrom + DirtyTable + where + Bool1+"=?",
+            selectAllFrom + DirtyTable + WHERE + Bool1+"=?",
             
             getQuery(DirtyTable) {
                 where { Bool1 equal true }
@@ -70,7 +70,7 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Simple AND OR conditions`() {
         assertEquals(
-            selectAllFrom + DirtyTable + where + _ID+">=?" + and + _Name+"=?",
+            selectAllFrom + DirtyTable + WHERE + _ID+">=?" + and + _Name+"=?",
             
             getQuery(DirtyTable) {
                 where {
@@ -82,7 +82,7 @@ class QueryBuilderTest { // TODO split tests/files
         
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + _ID+">=?" +
+                WHERE + _ID+">=?" +
                 and + _Name+"=?" +
                 and + _Position+"=?" +
                 and + _ID+"=?",
@@ -98,7 +98,7 @@ class QueryBuilderTest { // TODO split tests/files
         
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + _ID+">=?" +
+                WHERE + _ID+">=?" +
                 and + _Name+"=?" +
                 or + _Position+"=?" +
                 or + _ID+"=?",
@@ -134,7 +134,7 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Two lvl conditions orGroup is last`() {
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + _ID+">=?" +
+                WHERE + _ID+">=?" +
                 and + _Name+"=?" +
                 or + "("+_Position+"=?" + or + _ID+"=?)",
             
@@ -155,7 +155,7 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Two lvl conditions group{} is first`() {
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + "("+_ID+">=?" + and + _Name+"=?)" +
+                WHERE + "("+_ID+">=?" + and + _Name+"=?)" +
                 and + _Position+"=?" + 
                 or + _ID+"=?"
             ,
@@ -176,7 +176,7 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Two lvl conditions andGroup is mid`() {
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + 
+                WHERE + 
                 _Position+"=?" +
                 and +
                     "("+_ID+">=?" + and + _Name+"=?)" +
@@ -223,7 +223,7 @@ class QueryBuilderTest { // TODO split tests/files
         
         assertEquals(
             selectAllFrom + DirtyTable +
-                where + 
+                WHERE + 
                 _Position+"=?" +
                 and + "("+
                     _ID+">=?" +

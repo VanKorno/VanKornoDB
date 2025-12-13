@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.core.data;
 
-public class DbConstants {
+public class DbConstants { // TODO Remake, make internal, clean up
+    
     public static final String
         InMemoryDB = ":memory:", // You can create an in-memory db for tests with this instead of your db file name
         DbTAG = "VanKornoDB", // for logs
@@ -33,24 +34,25 @@ public class DbConstants {
         deleteFrom = "DELETE FROM ",
         
         
-        where = " WHERE ",
+        WHERE = " WHERE ",
         and = " AND ",   or = " OR ",
-        comma = ", ",    dot = ".",
-        max = "MAX",
+        comma = ", ",    //dot = ".",
+        //max = "MAX",
         
-        groupBy = " GROUP BY ",
-        having = " HAVING ",   
-        count = "COUNT", countAll = "COUNT(*)",
+        //GroupBy = " GROUP BY ",
+        //Having = " HAVING ",   
+        //count = "COUNT",
+        countAll = "COUNT(*)",
     
-        orderBy = " ORDER BY ",   ascending = " ASC",    descending = " DESC",
+        OrderBy = " ORDER BY ",   ascending = " ASC",    descending = " DESC",
         
-        like = " LIKE ",        notLike = " NOT LIKE ",
+        LIKE = " LIKE ",        notLIKE = " NOT LIKE ",
         IN = " IN ",            notIN = " NOT IN ",
         
         limit = " LIMIT ",
         offset = " OFFSET ",
-        randomVal = "random()",
+        randomVal = "random()"
         
-        innerJoin = " INNER JOIN ",   leftJoin = " LEFT JOIN ",   crossJoin = " CROSS JOIN "
+        //innerJoin = " INNER JOIN ",   leftJoin = " LEFT JOIN ",   crossJoin = " CROSS JOIN "
     ;
 }
