@@ -3,16 +3,24 @@ package com.vankorno.vankornodb.get
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.JoinBuilder
+import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
 
 /** Returns the number of rows matching the query conditions. */
 
 fun SQLiteDatabase.getRowCount(                                   table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
-): Int = getCursorPro(table, arrayOf("1")) {
-    applyOpts(joins = joins, where = where)
+): Int = getCursorPro(table, "1") {
+    applyOpts(where = where)
+}.use { it.count }
+
+
+/** Returns the number of rows matching the advanced query conditions. */
+
+fun SQLiteDatabase.getRowCountPro(                                        table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+): Int = getCursorPro(table, "1") {
+    applyOpts(queryOpts)
 }.use { it.count }
 
 
@@ -22,9 +30,35 @@ fun SQLiteDatabase.getRowCount(                                   table: String,
 /** Returns true if at least one row matches the query conditions. */
 
 fun SQLiteDatabase.hasRows(                                       table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
-): Boolean = getCursorPro(table, arrayOf("1")) {
-    applyOpts(joins = joins, where = where, limit = 1)
+): Boolean = getCursorPro(table, "1") {
+    this.where = where
+    limit = 1
 }.use { it.moveToFirst() }
+
+
+/** Returns true if at least one row matches the advanced query conditions. */
+
+fun SQLiteDatabase.hasRowsPro(                                            table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+): Boolean = getCursorPro(table, "1") {
+    applyOpts(queryOpts)
+    limit = 1
+}.use { it.moveToFirst() }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

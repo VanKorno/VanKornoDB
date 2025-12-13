@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.JoinBuilder
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.ID
@@ -1553,36 +1552,64 @@ abstract class DbHelperInternal(
     
     /** Returns the number of rows matching the query conditions. */
     fun getRowCount(                                              table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = read(0, "getRowCount") {
-        it.getRowCount(table, joins, where)
+        it.getRowCount(table, where)
     }
     
     /** Returns the number of rows matching the query conditions. */
     suspend fun getRowCountSusp(                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = readSusp(0, "getRowCountSusp") {
-        it.getRowCount(table, joins, where)
+        it.getRowCount(table, where)
     }
+    
+    
+    /** Returns the number of rows matching the query conditions. */
+    fun getRowCountPro(                                              table: String,
+                                                                  queryOpts: QueryOpts.()->Unit = {},
+    ) = read(0, "getRowCountPro") {
+        it.getRowCountPro(table, queryOpts)
+    }
+    
+    /** Returns the number of rows matching the query conditions. */
+    suspend fun getRowCountProSusp(                                  table: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ) = readSusp(0, "getRowCountProSusp") {
+        it.getRowCountPro(table, queryOpts)
+    }
+    
     
     
     /** Returns true if at least one row matches the query conditions. */
     fun hasRows(                                                  table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = read(false, "hasRows") {
-        it.hasRows(table, joins, where)
+        it.hasRows(table, where)
     }
     
     /** Returns true if at least one row matches the query conditions. */
     suspend fun hasRowsSusp(                                      table: String,
-                                                                  joins: JoinBuilder.()->Unit = {},
                                                                   where: WhereBuilder.()->Unit = {},
     ) = readSusp(false, "hasRowsSusp") {
-        it.hasRows(table, joins, where)
+        it.hasRows(table, where)
     }
+    
+    
+    /** Returns true if at least one row matches the query conditions. */
+    fun hasRowsPro(                                                       table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+    ) = read(false, "hasRowsPro") {
+        it.hasRowsPro(table, queryOpts)
+    }
+    
+    /** Returns true if at least one row matches the query conditions. */
+    suspend fun hasRowsProSusp(                                           table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+    ) = readSusp(false, "hasRowsProSusp") {
+        it.hasRowsPro(table, queryOpts)
+    }
+    
     
     
     

@@ -28,18 +28,18 @@ fun SQLiteDatabase.getCursor(                                     table: String,
 
 
 
-fun SQLiteDatabase.getCursorPro(                                     table: String,
-                                                                   columns: Array<out String>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+fun SQLiteDatabase.getCursorPro(                                          table: String,
+                                                                        columns: Array<out String>,
+                                                                      queryOpts: QueryOpts.()->Unit,
 ): Cursor {
     val (query, args) = getQuery(table, columns, queryOpts)
     return rawQuery(query, args)
 }
 
 
-fun SQLiteDatabase.getCursorPro(                                     table: String,
-                                                                    column: String = "*",
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+fun SQLiteDatabase.getCursorPro(                                          table: String,
+                                                                         column: String = "*",
+                                                                      queryOpts: QueryOpts.()->Unit,
 ): Cursor {
     val (query, args) = getQuery(table, arrayOf(column), queryOpts)
     return rawQuery(query, args)
