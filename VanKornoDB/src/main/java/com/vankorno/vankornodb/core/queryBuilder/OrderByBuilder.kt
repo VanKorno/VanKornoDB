@@ -7,10 +7,18 @@ open class OrderByBuilderInternal {
     val orderoids = mutableListOf<String>()
     val args = mutableListOf<String>()
     
-    operator fun TypedColumn<*>.unaryPlus() { orderoids += name }
-    operator fun TypedColumn<*>.unaryMinus() { orderoids += name + " DESC" }
+    operator fun TypedColumn<*>.invoke() {
+        orderoids += this.name
+    }
+    fun TypedColumn<*>.desc() {
+        orderoids += this.name + " DESC"
+    }
     
-    operator fun String.unaryPlus() { orderoids += this }
+    fun asc(vararg columns: TypedColumn<*>) = columns.forEach { orderoids += it.name }
+    
+    fun desc(vararg columns: TypedColumn<*>) = columns.forEach { orderoids += it.name + " DESC" }
+    
+    fun raw(vararg strings: String) = strings.forEach { orderoids += it }
     
     
     operator fun WhereBuilder.unaryPlus() {

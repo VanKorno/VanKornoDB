@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants._ID
-import com.vankorno.vankornodb.core.data.DbConstants.randomVal
 import com.vankorno.vankornodb.mapper.toEntity
 
 /**
@@ -24,7 +23,7 @@ inline fun <reified T> SQLiteDatabase.getRandomVal(               table: String,
         where = where,
         limit = 1
     )
-    orderBy { +randomVal }
+    orderRandomly()
 }.use { cursor ->
     if (cursor.moveToFirst())
         cursor.getTypedVal<T>(0)
@@ -63,7 +62,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
         where = where,
         limit = 1
     )
-    orderBy { +randomVal }
+    orderRandomly()
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(T::class)

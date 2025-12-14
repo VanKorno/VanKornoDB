@@ -17,7 +17,7 @@ class MiscQueryBuilderTest {
                 and { _Name notLike "sqlite_%" }
                 and { _Name.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
             }
-            orderBy { +_Name } // TODO orderByName
+            orderByName()
         }.query
         
         assertEquals(queryStr, builtQuery)

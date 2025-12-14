@@ -19,7 +19,7 @@ class OrderByTest {
     @Test
     fun `orderBy with single column ascending`() {
         val order = OrderByBuilder().apply {
-            +colInt
+            colInt()
         }.buildStr()
 
         assertEquals("intCol", order)
@@ -28,7 +28,7 @@ class OrderByTest {
     @Test
     fun `orderBy with single column descending`() {
         val order = OrderByBuilder().apply {
-            -colStr
+            colStr.desc()
         }.buildStr()
 
         assertEquals("strCol DESC", order)
@@ -37,9 +37,9 @@ class OrderByTest {
     @Test
     fun `orderBy multiple columns mixed`() {
         val order = OrderByBuilder().apply {
-            +colInt
-            -colStr
-            +colBool
+            colInt()
+            colStr.desc()
+            colBool()
         }.buildStr()
 
         assertEquals("intCol, strCol DESC, boolCol", order)
@@ -48,7 +48,7 @@ class OrderByTest {
     @Test
     fun `orderBy with raw string`() {
         val order = OrderByBuilder().apply {
-            +"customCol DESC"
+            raw("customCol DESC")
         }.buildStr()
 
         assertEquals("customCol DESC", order)
@@ -57,12 +57,12 @@ class OrderByTest {
     @Test
     fun `orderBy full mix`() {
         val order = OrderByBuilder().apply {
-            +colInt
-            -colStr
-            +colBool
-            -colLong
-            +colFloat
-            +"rawCol ASC"
+            colInt()
+            colStr.desc()
+            colBool()
+            colLong.desc()
+            colFloat()
+            raw("rawCol ASC")
         }.buildStr()
 
         assertEquals("intCol, strCol DESC, boolCol, longCol DESC, floatCol, rawCol ASC", order)

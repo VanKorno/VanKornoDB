@@ -36,7 +36,7 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getColStringsPro(TABLE_Mas
         and { shName notLike "sqlite_%" }
         and { shName.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
     }
-    orderBy { +shName } // TODO orderByName
+    orderByName()
 }
 
 
@@ -52,7 +52,7 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
             or { shName.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
         }
     }
-    orderBy { +shName } // TODO orderByName
+    orderByName()
 }
 
 // TODO get tables with data, not just names

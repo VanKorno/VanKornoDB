@@ -59,34 +59,23 @@ open class QueryOptsInternal {
         query.orderBy = builder
     }
     
-    fun orderBy(vararg cols: TypedColumn<*>) {
-        query.orderBy = {
-            for (col in cols) {
-                +col
-            }
-        }
-    }
-    fun orderBy(vararg strings: String) {
-        query.orderBy = {
-            for (str in strings) {
-                +str
-            }
-        }
-    }
+    fun orderBy(vararg columns: TypedColumn<*>) { query.orderBy = { asc(*columns) } }
+    
+    fun orderBy(vararg strings: String) { query.orderBy = { raw(*strings) } }
     
     fun orderRandomly() = orderBy("RANDOM()")
     
     fun orderById() = orderBy(shID)
-    fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { +shID; and(andOrderBy) }
+    fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { asc(shID); and(andOrderBy) }
     
     
-    fun orderByName() = orderBy { +shName }
-    fun orderByNameAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { +shName; and(andOrderBy) }
+    fun orderByName() = orderBy(shName)
+    fun orderByNameAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { asc(shName); and(andOrderBy) }
     
-    fun orderPosition() = orderBy { +shPosition }
-    fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { +shPosition; and(andOrderBy) }
+    fun orderPosition() = orderBy(shPosition)
+    fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { asc(shPosition); and(andOrderBy) }
     
-    fun reverseOrder() = orderBy { RowID + descending }
+    fun reverseOrder() = orderBy(RowID + descending)
     
     
     
