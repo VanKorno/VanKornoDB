@@ -1,8 +1,5 @@
 package com.vankorno.vankornodb.core.queryBuilder
 
-import com.vankorno.vankornodb.api.OrderByBuilder
-import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.WhereAndOrder
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 open class OrderByBuilderInternal {
@@ -26,6 +23,10 @@ open class OrderByBuilderInternal {
     fun raw(vararg strings: String) = strings.forEach { orderoids += it }
     
     
+    
+    
+    
+    
     /*operator fun WhereBuilder.unaryPlus() {
         val inner = this
         orderoids += "WHERE " + inner.buildStr()
@@ -36,21 +37,6 @@ open class OrderByBuilderInternal {
         val builder = WhereBuilder().apply(this)
         +builder
     }*/
-    
-    infix fun (WhereBuilder.()->Unit).then(orderBy: OrderByBuilder.()->Unit): WhereAndOrder {
-        val condBuilder = WhereBuilder().apply(this)
-        val orderBuilder = OrderByBuilder().apply(orderBy)
-        return WhereAndOrder(condBuilder, orderBuilder)
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 }
 

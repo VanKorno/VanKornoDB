@@ -2,12 +2,14 @@ package com.vankorno.vankornodb.api
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
+import com.vankorno.vankornodb.core.data.WhereAndOrder
 import com.vankorno.vankornodb.core.queryBuilder.JoinBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.OrderByBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.QueryOptsInternal
 import com.vankorno.vankornodb.core.queryBuilder.WhereBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.getQuery
 import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal
+import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 
 class QueryOpts : QueryOptsInternal() {
@@ -23,6 +25,7 @@ interface EntityColumns : EntityColumnsInternal
 
 
 class OrderByBuilder : OrderByBuilderInternal() {
+    
     fun and(                                                        builder: OrderByBuilder.()->Unit
     ) {
         val inner = OrderByBuilder().apply(builder)
@@ -38,6 +41,18 @@ class OrderByBuilder : OrderByBuilderInternal() {
             args.addAll(inner.args)
         }
     }
+    
+    
+    infix fun (WhereBuilder).then(orderBy: OrderByBuilder) = WhereAndOrder(this, orderBy)
+    
+    infix fun (WhereBuilder.()->Unit).then(orderBy: OrderByBuilder.()->Unit)
+        = WhereBuilder().apply(this) then OrderByBuilder().apply(orderBy)
+    
+    infix fun (WhereBuilder.()->Unit).then(orderBy: TypedColumn<*>)
+        = WhereBuilder().apply(this) then OrderByBuilder().apply { orderBy() }
+    
+    
+    
 }
 
 
