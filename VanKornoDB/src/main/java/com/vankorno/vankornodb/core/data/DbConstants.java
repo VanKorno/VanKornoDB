@@ -42,14 +42,14 @@ public class DbConstants { // TODO Remake, make internal, clean up
         //count = "COUNT",
         countAll = "COUNT(*)",
     
-        ORDER_BY = " ORDER BY ",   ascending = " ASC",    descending = " DESC",
+        ORDER_BY = " ORDER BY ",   ASCENDING = " ASC",    DESCENDING = " DESC",
         
         LIKE = " LIKE ",        NOT_LIKE = " NOT LIKE ",
         IN = " IN ",            NOT_IN = " NOT IN ",
         
         LIMIT = " LIMIT ",
         OFFSET = " OFFSET ",
-        randomVal = "random()"
+        RANDOM = "RANDOM()"
         
         //innerJoin = " INNER JOIN ",   leftJoin = " LEFT JOIN ",   crossJoin = " CROSS JOIN "
     ;

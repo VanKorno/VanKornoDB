@@ -28,7 +28,7 @@ class OrderByTest {
     @Test
     fun `orderBy with single column descending`() {
         val order = OrderByBuilder().apply {
-            colStr.desc()
+            colStr.flip()
         }.buildStr()
 
         assertEquals("strCol DESC", order)
@@ -38,7 +38,7 @@ class OrderByTest {
     fun `orderBy multiple columns mixed`() {
         val order = OrderByBuilder().apply {
             colInt()
-            colStr.desc()
+            colStr.flip()
             colBool()
         }.buildStr()
 
@@ -58,9 +58,9 @@ class OrderByTest {
     fun `orderBy full mix`() {
         val order = OrderByBuilder().apply {
             colInt()
-            colStr.desc()
+            colStr.flip()
             colBool()
-            colLong.desc()
+            colLong.flip()
             colFloat()
             raw("rawCol ASC")
         }.buildStr()

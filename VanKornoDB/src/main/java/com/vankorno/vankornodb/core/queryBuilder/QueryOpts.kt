@@ -5,10 +5,9 @@ package com.vankorno.vankornodb.core.queryBuilder
 import com.vankorno.vankornodb.api.JoinBuilder
 import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants.RowID
-import com.vankorno.vankornodb.core.data.DbConstants.descending
+import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.core.data.QueryOptsHolder
-import com.vankorno.vankornodb.dbManagement.data.TypedColumn
+import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.data.SharedCol.shID
 import com.vankorno.vankornodb.misc.data.SharedCol.shName
 import com.vankorno.vankornodb.misc.data.SharedCol.shPosition
@@ -59,11 +58,11 @@ open class QueryOptsInternal {
         query.orderBy = builder
     }
     
-    fun orderBy(vararg columns: TypedColumn<*>) { query.orderBy = { asc(*columns) } }
+    fun orderBy(vararg columns: BaseColumn) { query.orderBy = { col(*columns) } }
     
     fun orderBy(vararg strings: String) { query.orderBy = { raw(*strings) } }
     
-    fun orderRandomly() = orderBy("RANDOM()")
+    fun orderRandomly() = orderBy(RANDOM)
     
     fun orderById() = orderBy(shID)
     fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shID(); and(andOrderBy) }
@@ -75,9 +74,13 @@ open class QueryOptsInternal {
     fun orderPosition() = orderBy(shPosition)
     fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shPosition(); and(andOrderBy) }
     
-    fun reverseOrder() = orderBy(RowID + descending)
+    fun orderByFlippedRows() = orderBy(RowID + DESCENDING)
     
-    
+    fun IntCol.flip() = DescendingIntCol(this.name)
+    fun StrCol.flip() = DescendingStrCol(this.name)
+    fun BoolCol.flip() = DescendingBoolCol(this.name)
+    fun LongCol.flip() = DescendingLongCol(this.name)
+    fun FloatCol.flip() = DescendingFloatCol(this.name)
     
     
     

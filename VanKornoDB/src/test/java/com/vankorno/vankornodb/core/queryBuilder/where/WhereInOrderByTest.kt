@@ -17,7 +17,7 @@ class WhereInOrderByTest {
     fun `where() assembles CASE with multiple WhenAndOrders and else`() {
         val builder = OrderByBuilder().apply {
             When(
-                orderWhen({ shPosition(); shName.desc() }) { shID equal 1 },
+                orderWhen({ shPosition(); shName.flip() }) { shID equal 1 },
                 orderWhen("RANDOM()") { shName notEqual "NotBob" },
                 Else = { shID() }
             )
@@ -39,7 +39,7 @@ class WhereInOrderByTest {
         
         val builder = OrderByBuilder().apply {
             When(
-                orderWhen({ shPosition(); shName.desc() }) { shID equal 1 },
+                orderWhen({ shPosition(); shName.flip() }) { shID equal 1 },
                 orderWhen({ raw("RANDOM()") }) { shName notEqual "NotBob" },
                 orderWhen({ score(); shID() }) { shActive equal true },
                 Else = { shID() }

@@ -1,18 +1,19 @@
 package com.vankorno.vankornodb.dbManagement.data
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 
 @Suppress("unused")
-sealed class TypedColumn<T>(
-                                   val name: String,
-                             val defaultVal: T,
-                               val nullable: Boolean = false, // Not used yet
-)
+sealed class TypedColumn<T>(                                                        name: String,
+                                                                          val defaultVal: T,
+) : BaseColumn(name) 
 
 
-class IntCol(name: String, defaultVal: Int = 0) : TypedColumn<Int>(name, defaultVal)
-class StrCol(name: String, defaultVal: String = "") : TypedColumn<String>(name, defaultVal)
-class BoolCol(name: String, defaultVal: Boolean = false) : TypedColumn<Boolean>(name, defaultVal)
-class LongCol(name: String, defaultVal: Long = 0L) : TypedColumn<Long>(name, defaultVal)
-class FloatCol(name: String, defaultVal: Float = 0F) : TypedColumn<Float>(name, defaultVal)
+class IntCol(name: String, defaultVal: Int = 0) : AscendingColumn<Int>(name, defaultVal)
+class StrCol(name: String, defaultVal: String = "") : AscendingColumn<String>(name, defaultVal)
+class BoolCol(name: String, defaultVal: Boolean = false) : AscendingColumn<Boolean>(name, defaultVal)
+class LongCol(name: String, defaultVal: Long = 0L) : AscendingColumn<Long>(name, defaultVal)
+class FloatCol(name: String, defaultVal: Float = 0F) : AscendingColumn<Float>(name, defaultVal)
 class BlobCol(name: String, defaultVal: ByteArray = ByteArray(0)) : TypedColumn<ByteArray>(name, defaultVal)
 
 
@@ -33,11 +34,4 @@ fun pListCol(name: String, size: Int) = List(size) { pCol(name + (it + 1)) }
 
 
 
-
-
-class DescendingIntCol(name: String, defaultVal: Int = 0) : TypedColumn<Int>(name, defaultVal)
-class DescendingStrCol(name: String, defaultVal: String = "") : TypedColumn<String>(name, defaultVal)
-class DescendingBoolCol(name: String, defaultVal: Boolean = false) : TypedColumn<Boolean>(name, defaultVal)
-class DescendingLongCol(name: String, defaultVal: Long = 0L) : TypedColumn<Long>(name, defaultVal)
-class DescendingFloatCol(name: String, defaultVal: Float = 0F) : TypedColumn<Float>(name, defaultVal)
 

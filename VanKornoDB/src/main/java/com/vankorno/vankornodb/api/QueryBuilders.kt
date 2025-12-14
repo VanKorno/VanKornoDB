@@ -8,8 +8,9 @@ import com.vankorno.vankornodb.core.queryBuilder.OrderByBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.QueryOptsInternal
 import com.vankorno.vankornodb.core.queryBuilder.WhereBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.getQuery
+import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
+import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
 import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal
-import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 
 class QueryOpts : QueryOptsInternal() {
@@ -21,7 +22,6 @@ class JoinBuilder : JoinBuilderInternal()
 
 
 interface EntityColumns : EntityColumnsInternal
-
 
 
 class OrderByBuilder : OrderByBuilderInternal() {
@@ -45,7 +45,8 @@ class OrderByBuilder : OrderByBuilderInternal() {
     
     fun orderWhen(orders: OrderByBuilder.()->Unit, whens: WhereBuilder.()->Unit) = OrderWhen(orders, whens)
     
-    fun orderWhen(orderBy: TypedColumn<*>, whens: WhereBuilder.()->Unit) = OrderWhen({ orderBy() }, whens)
+    fun orderWhen(orderBy: AscendingColumn<*>, whens: WhereBuilder.()->Unit) = OrderWhen({ orderBy() }, whens)
+    fun orderWhen(orderBy: DescendingColumn, whens: WhereBuilder.()->Unit) = OrderWhen({ orderBy() }, whens)
     
     fun orderWhen(orderBy: String, whens: WhereBuilder.()->Unit) = OrderWhen({ raw(orderBy) }, whens)
     
