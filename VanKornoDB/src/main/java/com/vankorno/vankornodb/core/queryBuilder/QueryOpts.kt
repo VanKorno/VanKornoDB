@@ -66,14 +66,14 @@ open class QueryOptsInternal {
     fun orderRandomly() = orderBy("RANDOM()")
     
     fun orderById() = orderBy(shID)
-    fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { asc(shID); and(andOrderBy) }
+    fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shID(); and(andOrderBy) }
     
     
     fun orderByName() = orderBy(shName)
-    fun orderByNameAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { asc(shName); and(andOrderBy) }
+    fun orderByNameAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shName(); and(andOrderBy) }
     
     fun orderPosition() = orderBy(shPosition)
-    fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { asc(shPosition); and(andOrderBy) }
+    fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shPosition(); and(andOrderBy) }
     
     fun reverseOrder() = orderBy(RowID + descending)
     
