@@ -9,33 +9,13 @@ import org.junit.Test
 
 class WhereInOrderByTest {
     
-    /*@Test
-    fun `then() produces correct WhereAndOrder`() {
-        val where: WhereBuilder.()->Unit = { shID equal 1 }
-        val orderBy: OrderByBuilder.()->Unit = { shPosition(); shName.desc() }
-        lateinit var wo: WhereOrder
-        
-        val orderByMeta: OrderByBuilder.()->Unit = {
-            wo = where then orderBy
-        }
-        val builder = OrderByBuilder().apply(orderByMeta)
-        
-        assertEquals(1, wo.condition.clauses.size)
-        assertEquals("id=?", wo.condition.buildStr())
-        assertEquals(1, wo.condition.args.size)
-        assertEquals(2, wo.order.orderoids.size)
-        assertEquals("position", wo.order.orderoids[0])
-        assertEquals("name DESC", wo.order.orderoids[1])
-    }*/
-    
-    
     @Test
     fun `where() assembles CASE with multiple WhenAndOrders and else`() {
         val builder = OrderByBuilder().apply {
-            where(
+            When(
                 orderWhen({ shPosition(); shName.desc() }) { shID equal 1 },
-                orderWhen("RANDOM()") { shName notEqual "suka" },
-                else_ = { shID() }
+                orderWhen("RANDOM()") { shName notEqual "NotBob" },
+                Else = { shID() }
             )
         }
         
@@ -45,7 +25,7 @@ class WhereInOrderByTest {
             "WHEN name!=? THEN RANDOM() ELSE id END"
         
         assertEquals(expectedSql, sql)
-        assertEquals(listOf("1", "suka"), builder.args)
+        assertEquals(listOf("1", "NotBob"), builder.args)
     }
     
 }

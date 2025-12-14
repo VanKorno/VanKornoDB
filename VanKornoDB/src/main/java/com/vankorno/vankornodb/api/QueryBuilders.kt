@@ -50,8 +50,8 @@ class OrderByBuilder : OrderByBuilderInternal() {
     fun orderWhen(orderBy: String, whens: WhereBuilder.()->Unit) = OrderWhen({ raw(orderBy) }, whens)
     
     
-    fun where(                                       vararg orderWhen: OrderWhen,
-                                                                else_: OrderByBuilder.()->Unit = {},
+    fun When(                                       vararg orderWhen: OrderWhen,
+                                                                Else: OrderByBuilder.()->Unit = {},
     ) {
         val assembled = buildString {
             for (wo in orderWhen) {
@@ -62,7 +62,7 @@ class OrderByBuilder : OrderByBuilderInternal() {
                 args += whereBuilder.args
                 args += orderByBuilder.args
             }
-            val elseStr = OrderByBuilder().apply(else_).buildStr()
+            val elseStr = OrderByBuilder().apply(Else).buildStr()
             if (elseStr.isNotEmpty())
                 append(" ELSE $elseStr")
         }
