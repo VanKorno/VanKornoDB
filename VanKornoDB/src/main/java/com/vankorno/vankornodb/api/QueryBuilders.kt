@@ -42,7 +42,6 @@ class OrderByBuilder : OrderByBuilderInternal() {
         }
     }
     
-    
     infix fun (WhereBuilder).then(orderBy: OrderByBuilder) = WhereAndOrder(this, orderBy)
     
     infix fun (WhereBuilder.()->Unit).then(orderBy: OrderByBuilder.()->Unit)
@@ -52,6 +51,21 @@ class OrderByBuilder : OrderByBuilderInternal() {
         = WhereBuilder().apply(this) then OrderByBuilder().apply { orderBy() }
     
     
+    fun where(                                  vararg whereAndOrders: WhereAndOrder,
+                                                            elseOrder: OrderByBuilder.()->Unit = {},
+    ) {
+        val assembled = buildString {
+            for (wo in whereAndOrders) {
+                append(" WHEN ${wo.condition.buildStr()} THEN ${wo.order.buildStr()}")
+                args += wo.condition.args
+                args += wo.order.args
+            }
+            val elseStr = OrderByBuilder().apply(elseOrder).buildStr()
+            if (elseStr.isNotEmpty())
+                append(" ELSE $elseStr")
+        }
+        orderoids += case(assembled)
+    }
     
 }
 

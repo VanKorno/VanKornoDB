@@ -23,20 +23,8 @@ open class OrderByBuilderInternal {
     fun raw(vararg strings: String) = strings.forEach { orderoids += it }
     
     
+    fun case(encased: String) = "CASE $encased END" // TODO Find where to put
     
-    
-    
-    
-    /*operator fun WhereBuilder.unaryPlus() {
-        val inner = this
-        orderoids += "WHERE " + inner.buildStr()
-        args += inner.args
-    }
-    
-    operator fun (WhereBuilder.()->Unit).unaryPlus() {
-        val builder = WhereBuilder().apply(this)
-        +builder
-    }*/
     
 }
 
