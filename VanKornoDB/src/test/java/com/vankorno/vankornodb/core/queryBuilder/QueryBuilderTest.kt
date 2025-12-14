@@ -2,6 +2,7 @@ package com.vankorno.vankornodb.core.queryBuilder
 
 import com.vankorno.vankornodb.TestConstants.*
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
+import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.misc.columns
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -19,7 +20,7 @@ class QueryBuilderTest { // TODO split tests/files
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + ORDER_BY + _ID,
-            getQuery(DirtyTable) { orderBy { +_ID } }.query
+            getQuery(DirtyTable) { orderBy(_ID) }.query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID+"=?" + ORDER_BY + _ID c _Name,
@@ -27,8 +28,8 @@ class QueryBuilderTest { // TODO split tests/files
             getQuery(DirtyTable) {
                 where { ID = 1 }
                 orderBy {
-                    +_ID
-                    +_Name
+                    raw(_ID)
+                    raw(_Name)
                 }
             }.query
         )
