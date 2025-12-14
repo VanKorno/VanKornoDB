@@ -1,11 +1,13 @@
 package com.vankorno.vankornodb.core.queryBuilder
 
-import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 open class OrderByBuilderInternal {
     val orderoids = mutableListOf<String>()
     val args = mutableListOf<String>()
+    
+    internal fun buildStr(): String = orderoids.joinToString(", ")
+    
     
     operator fun TypedColumn<*>.invoke() {
         orderoids += this.name
@@ -21,7 +23,7 @@ open class OrderByBuilderInternal {
     fun raw(vararg strings: String) = strings.forEach { orderoids += it }
     
     
-    operator fun WhereBuilder.unaryPlus() {
+    /*operator fun WhereBuilder.unaryPlus() {
         val inner = this
         orderoids += "WHERE " + inner.buildStr()
         args += inner.args
@@ -30,11 +32,10 @@ open class OrderByBuilderInternal {
     operator fun (WhereBuilder.()->Unit).unaryPlus() {
         val builder = WhereBuilder().apply(this)
         +builder
-    }
+    }*/
     
     
     
-    internal fun buildStr(): String = orderoids.joinToString(", ")
 }
 
 
