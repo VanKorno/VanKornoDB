@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.api
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
-import com.vankorno.vankornodb.core.data.WhereAndOrder
+import com.vankorno.vankornodb.core.data.OrderWhen
 import com.vankorno.vankornodb.core.queryBuilder.JoinBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.OrderByBuilderInternal
 import com.vankorno.vankornodb.core.queryBuilder.QueryOptsInternal
@@ -42,25 +42,27 @@ class OrderByBuilder : OrderByBuilderInternal() {
         }
     }
     
-    infix fun (WhereBuilder).then(orderBy: OrderByBuilder) = WhereAndOrder(this, orderBy)
     
-    infix fun (WhereBuilder.()->Unit).then(orderBy: OrderByBuilder.()->Unit)
-        = WhereBuilder().apply(this) then OrderByBuilder().apply(orderBy)
+    fun orderWhen(orders: OrderByBuilder.()->Unit, whens: WhereBuilder.()->Unit) = OrderWhen(orders, whens)
     
-    infix fun (WhereBuilder.()->Unit).then(orderBy: TypedColumn<*>)
-        = WhereBuilder().apply(this) then OrderByBuilder().apply { orderBy() }
+    fun orderWhen(orderBy: TypedColumn<*>, whens: WhereBuilder.()->Unit) = OrderWhen({ orderBy() }, whens)
+    
+    fun orderWhen(orderBy: String, whens: WhereBuilder.()->Unit) = OrderWhen({ raw(orderBy) }, whens)
     
     
-    fun where(                                  vararg whereAndOrders: WhereAndOrder,
-                                                            elseOrder: OrderByBuilder.()->Unit = {},
+    fun where(                                       vararg orderWhen: OrderWhen,
+                                                                else_: OrderByBuilder.()->Unit = {},
     ) {
         val assembled = buildString {
-            for (wo in whereAndOrders) {
-                append(" WHEN ${wo.condition.buildStr()} THEN ${wo.order.buildStr()}")
-                args += wo.condition.args
-                args += wo.order.args
+            for (wo in orderWhen) {
+                val whereBuilder = WhereBuilder().apply(wo.whens)
+                val orderByBuilder = OrderByBuilder().apply(wo.orders)
+                
+                append(" WHEN ${whereBuilder.buildStr()} THEN ${orderByBuilder.buildStr()}")
+                args += whereBuilder.args
+                args += orderByBuilder.args
             }
-            val elseStr = OrderByBuilder().apply(elseOrder).buildStr()
+            val elseStr = OrderByBuilder().apply(else_).buildStr()
             if (elseStr.isNotEmpty())
                 append(" ELSE $elseStr")
         }

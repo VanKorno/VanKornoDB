@@ -23,7 +23,7 @@ open class OrderByBuilderInternal {
     fun raw(vararg strings: String) = strings.forEach { orderoids += it }
     
     
-    fun case(encased: String) = "CASE $encased END" // TODO Find where to put
+    fun case(encased: String) = "CASE$encased END" // TODO Find where to put
     
     
 }

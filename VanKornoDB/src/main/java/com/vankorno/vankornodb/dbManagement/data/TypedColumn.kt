@@ -35,4 +35,9 @@ fun pListCol(name: String, size: Int) = List(size) { pCol(name + (it + 1)) }
 
 
 
+class DescendingIntCol(name: String, defaultVal: Int = 0) : TypedColumn<Int>(name, defaultVal)
+class DescendingStrCol(name: String, defaultVal: String = "") : TypedColumn<String>(name, defaultVal)
+class DescendingBoolCol(name: String, defaultVal: Boolean = false) : TypedColumn<Boolean>(name, defaultVal)
+class DescendingLongCol(name: String, defaultVal: Long = 0L) : TypedColumn<Long>(name, defaultVal)
+class DescendingFloatCol(name: String, defaultVal: Float = 0F) : TypedColumn<Float>(name, defaultVal)
 
