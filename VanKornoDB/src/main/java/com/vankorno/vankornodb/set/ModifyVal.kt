@@ -34,7 +34,7 @@ fun SQLiteDatabase.addToFloat(                                   addend: Number,
 
 
 
-fun SQLiteDatabase.toggleBool(                                    table: String,
+fun SQLiteDatabase.flipBool(                                      table: String,
                                                                  column: BoolCol,
                                                                   where: WhereBuilder.()->Unit = {},
 ) {

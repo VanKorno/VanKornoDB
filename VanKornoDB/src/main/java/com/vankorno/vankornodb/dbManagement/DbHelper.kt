@@ -1154,14 +1154,14 @@ abstract class DbHelperInternal(
                                                                   async: Boolean = false,
                                                                   where: WhereBuilder.()->Unit = {},
     ) = write("toggleBool", async) {
-        it.toggleBool(table, column, where)
+        it.flipBool(table, column, where)
     }
     
     suspend fun toggleBoolSusp(                                   table: String,
                                                                  column: BoolCol,
                                                                   where: WhereBuilder.()->Unit = {},
     ) = readWriteSusp(Unit, "toggleBoolSusp") {
-        it.toggleBool(table, column, where)
+        it.flipBool(table, column, where)
     }
 
     

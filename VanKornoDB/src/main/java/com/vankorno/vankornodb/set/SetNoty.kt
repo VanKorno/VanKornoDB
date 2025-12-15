@@ -5,19 +5,61 @@ package com.vankorno.vankornodb.set
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.data.DbConstants._ID
-import com.vankorno.vankornodb.misc.byIdAnd
+import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 
-
+/*
 fun SQLiteDatabase.setByIdNoty(                                   value: Any,
                                                                      id: Int,
                                                                   table: String,
                                                                  column: String,
                                                                andWhere: WhereBuilder.()->Unit = {},
 ) = setNoty(value, table, column, byIdAnd(id, andWhere))
+*/
 
 
-fun <T> SQLiteDatabase.setNoty(                                                    value: Any,
+fun SQLiteDatabase.setNoty(                                                        value: Any,
+                                                                                   table: String,
+                                                                                  column: String,
+                                                                                   where: String,
+                                                                                  equals: Any,
+) {
+    val safeValue = getBoolSafeVal(value)
+    
+    execSQL("UPDATE $table SET $column = ?" + WHERE + where + "=?", arrayOf(safeValue, equals))
+}
+
+
+
+fun SQLiteDatabase.setNoty(                                       value: Any,
+                                                                  table: String,
+                                                                 column: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+) {
+    val builder = WhereBuilder().apply(where)
+    val safeValue = getBoolSafeVal(value)
+    
+    val wherePart: String
+    val args: Array<Any>
+    
+    if (builder.clauses.isNotEmpty()) {
+        wherePart = WHERE + builder.buildStr()
+        args = arrayOf(safeValue, *builder.args.toTypedArray())
+    } else {
+        wherePart = ""
+        args = arrayOf(safeValue)
+    }
+    execSQL("UPDATE $table SET $column = ?" + wherePart, args)
+}
+
+
+
+private fun getBoolSafeVal(value: Any) = if (value is Boolean)
+                                             if (value) 1 else 0
+                                         else
+                                             value
+
+
+/*fun <T> SQLiteDatabase.setNoty(                                                    value: Any,
                                                                                    table: String,
                                                                                   column: String,
                                                                                    where: String,
@@ -38,7 +80,7 @@ fun SQLiteDatabase.setNoty(                                            value: An
     cv.putSmart(column, value)
     val builder = WhereBuilder().apply(where)
     update(table, cv, builder.buildStr(), builder.args.toTypedArray())
-}
+}*/
 
 
 
@@ -70,7 +112,7 @@ fun SQLiteDatabase.setRowVals(                                         table: St
 
 
 
-
+/*
 fun SQLiteDatabase.setRowValsById(                                               id: Int,
                                                                               table: String,
                                                                                  cv: ContentValues,
@@ -90,6 +132,7 @@ fun SQLiteDatabase.setRowValsById(                                           id:
     }
     update(table, cv, _ID + "=?", arrayOf(id.toString()))
 }
+*/
 
 
 fun SQLiteDatabase.setInAllRows(                                                   value: Any,
