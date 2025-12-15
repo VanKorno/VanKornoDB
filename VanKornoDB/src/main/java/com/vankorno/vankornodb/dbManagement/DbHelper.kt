@@ -764,7 +764,7 @@ abstract class DbHelperInternal(
     }
     
     
-    //  ------------------------------------  S T R I N G  ------------------------------------  \\
+    //  -----------------------------------  S T R I N G  -----------------------------------  \\
     
     fun getRowStrings(                                            table: String,
                                                                 columns: Array<StrCol>,
@@ -795,7 +795,7 @@ abstract class DbHelperInternal(
     }
     
     
-    //  ------------------------------------  B O O L E A N  ------------------------------------  \\
+    //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
     fun getRowBools(                                              table: String,
                                                                 columns: Array<BoolCol>,
@@ -826,7 +826,7 @@ abstract class DbHelperInternal(
     }
     
     
-    //  ---------------------------------------  L O N G  ---------------------------------------  \\
+    //  -------------------------------------  L O N G  -------------------------------------  \\
     
     fun getRowLongs(                                              table: String,
                                                                 columns: Array<LongCol>,
@@ -857,7 +857,7 @@ abstract class DbHelperInternal(
     }
     
     
-    //  --------------------------------------  F L O A T  --------------------------------------  \\
+    //  ------------------------------------  F L O A T  ------------------------------------  \\
     
     fun getRowFloats(                                             table: String,
                                                                 columns: Array<FloatCol>,
@@ -888,7 +888,7 @@ abstract class DbHelperInternal(
     }
     
     
-    //  ---------------------------------------  B L O B  ---------------------------------------  \\
+    //  -------------------------------------  B L O B  -------------------------------------  \\
     
     fun getRowBlobs(                                              table: String,
                                                                 columns: Array<BlobCol>,
@@ -919,6 +919,196 @@ abstract class DbHelperInternal(
     }
     
     
+    
+    
+    
+    
+    // ===============================   T A B L E   V A L s   =============================== \\
+    
+    //  --------------------------------------  I N T  --------------------------------------  \\
+    
+    fun getTableInts(                                             table: String,
+                                                                columns: Array<IntCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Int>> = read(emptyList(), "getTableInts") {
+        it.getTableInts(table, columns, where)
+    }
+    
+    suspend fun getTableIntsSusp(                                 table: String,
+                                                                columns: Array<IntCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Int>> = readSusp(emptyList(), "getTableIntsSusp") {
+        it.getTableInts(table, columns, where)
+    }
+    
+    fun getTableIntsPro(                                             table: String,
+                                                                   columns: Array<IntCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Int>> = read(emptyList(), "getTableIntsPro") {
+        it.getTableIntsPro(table, columns, queryOpts)
+    }
+    
+    suspend fun getTableIntsProSusp(                                 table: String,
+                                                                   columns: Array<IntCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Int>> = readSusp(emptyList(), "getTableIntsProSusp") {
+        it.getTableIntsPro(table, columns, queryOpts)
+    }
+    
+    
+    //  -----------------------------------  S T R I N G  -----------------------------------  \\
+    
+    fun getTableStrings(                                          table: String,
+                                                                columns: Array<StrCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<String>> = read(emptyList(), "getTableStrings") {
+        it.getTableStrings(table, columns, where)
+    }
+    
+    suspend fun getTableStringsSusp(                              table: String,
+                                                                columns: Array<StrCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<String>> = readSusp(emptyList(), "getTableStringsSusp") {
+        it.getTableStrings(table, columns, where)
+    }
+    
+    fun getTableStringsPro(                                          table: String,
+                                                                   columns: Array<StrCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<String>> = read(emptyList(), "getTableStringsPro") {
+        it.getTableStringsPro(table, columns, queryOpts)
+    }
+    
+    suspend fun getTableStringsProSusp(                              table: String,
+                                                                   columns: Array<StrCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<String>> = readSusp(emptyList(), "getTableStringsProSusp") {
+        it.getTableStringsPro(table, columns, queryOpts)
+    }
+    
+    
+    //  ----------------------------------  B O O L E A N  ----------------------------------  \\
+    
+    fun getTableBools(                                            table: String,
+                                                                columns: Array<BoolCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Boolean>> = read(emptyList(), "getTableBools") {
+        it.getTableBools(table, columns, where)
+    }
+    
+    suspend fun getTableBoolsSusp(                                table: String,
+                                                                columns: Array<BoolCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Boolean>> = readSusp(emptyList(), "getTableBoolsSusp") {
+        it.getTableBools(table, columns, where)
+    }
+    
+    fun getTableBoolsPro(                                            table: String,
+                                                                   columns: Array<BoolCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Boolean>> = read(emptyList(), "getTableBoolsPro") {
+        it.getTableBoolsPro(table, columns, queryOpts)
+    }
+    
+    suspend fun getTableBoolsProSusp(                                table: String,
+                                                                   columns: Array<BoolCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Boolean>> = readSusp(emptyList(), "getTableBoolsProSusp") {
+        it.getTableBoolsPro(table, columns, queryOpts)
+    }
+    
+    
+    //  -------------------------------------  L O N G  -------------------------------------  \\
+    
+    fun getTableLongs(                                            table: String,
+                                                                columns: Array<LongCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Long>> = read(emptyList(), "getTableLongs") {
+        it.getTableLongs(table, columns, where)
+    }
+    
+    suspend fun getTableLongsSusp(                                table: String,
+                                                                columns: Array<LongCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Long>> = readSusp(emptyList(), "getTableLongsSusp") {
+        it.getTableLongs(table, columns, where)
+    }
+    
+    fun getTableLongsPro(                                            table: String,
+                                                                   columns: Array<LongCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Long>> = read(emptyList(), "getTableLongsPro") {
+        it.getTableLongsPro(table, columns, queryOpts)
+    }
+    
+    suspend fun getTableLongsProSusp(                                table: String,
+                                                                   columns: Array<LongCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Long>> = readSusp(emptyList(), "getTableLongsProSusp") {
+        it.getTableLongsPro(table, columns, queryOpts)
+    }
+    
+    
+    //  ------------------------------------  F L O A T  ------------------------------------  \\
+    
+    fun getTableFloats(                                           table: String,
+                                                                columns: Array<FloatCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Float>> = read(emptyList(), "getTableFloats") {
+        it.getTableFloats(table, columns, where)
+    }
+    
+    suspend fun getTableFloatsSusp(                               table: String,
+                                                                columns: Array<FloatCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<Float>> = readSusp(emptyList(), "getTableFloatsSusp") {
+        it.getTableFloats(table, columns, where)
+    }
+    
+    fun getTableFloatsPro(                                           table: String,
+                                                                   columns: Array<FloatCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Float>> = read(emptyList(), "getTableFloatsPro") {
+        it.getTableFloatsPro(table, columns, queryOpts)
+    }
+    
+    suspend fun getTableFloatsProSusp(                               table: String,
+                                                                   columns: Array<FloatCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<Float>> = readSusp(emptyList(), "getTableFloatsProSusp") {
+        it.getTableFloatsPro(table, columns, queryOpts)
+    }
+    
+    
+    //  -------------------------------------  B L O B  -------------------------------------  \\
+    
+    fun getTableBlobs(                                            table: String,
+                                                                columns: Array<BlobCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<ByteArray>> = read(emptyList(), "getTableBlobs") {
+        it.getTableBlobs(table, columns, where)
+    }
+    
+    suspend fun getTableBlobsSusp(                                table: String,
+                                                                columns: Array<BlobCol>,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): List<List<ByteArray>> = readSusp(emptyList(), "getTableBlobsSusp") {
+        it.getTableBlobs(table, columns, where)
+    }
+    
+    fun getTableBlobsPro(                                            table: String,
+                                                                   columns: Array<BlobCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<ByteArray>> = read(emptyList(), "getTableBlobsPro") {
+        it.getTableBlobsPro(table, columns, queryOpts)
+    }
+    
+    suspend fun getTableBlobsProSusp(                                table: String,
+                                                                   columns: Array<BlobCol>,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+    ): List<List<ByteArray>> = readSusp(emptyList(), "getTableBlobsProSusp") {
+        it.getTableBlobsPro(table, columns, queryOpts)
+    }
     
     
     

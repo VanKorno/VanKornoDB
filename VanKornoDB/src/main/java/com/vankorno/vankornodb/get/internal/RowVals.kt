@@ -21,6 +21,18 @@ internal inline fun <T> SQLiteDatabase.getRowValsPro(                table: Stri
                                                                    columns: Array<out String>,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
                                                 crossinline getCursorValue: (Cursor, Int)->T,
-): List<T> = baseGetValsPro(table, columns, queryOpts) { cursor, col ->
+): List<T> = baseGetValsPro(table, columns,
+    queryOpts = {
+        applyOpts(queryOpts)
+        limit = 1
+    }
+) { cursor, col ->
     getCursorValue(cursor, col)
 }.flatten()
+
+
+
+
+
+
+
