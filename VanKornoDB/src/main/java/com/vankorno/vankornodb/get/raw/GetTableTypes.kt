@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.get.raw
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.get.getStrNoty
+import com.vankorno.vankornodb.get.noty.getStrNoty
 
 fun SQLiteDatabase.getTableTypesFromInitQuery(                                     table: String
 ): List<String> {

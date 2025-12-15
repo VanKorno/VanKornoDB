@@ -342,7 +342,7 @@ abstract class DbHelperInternal(
     
     
     
-    
+    // TODO Type-safe
     // Multiple values
     
     inline fun <reified T : Any> getMultiRowVals(                    table: String,

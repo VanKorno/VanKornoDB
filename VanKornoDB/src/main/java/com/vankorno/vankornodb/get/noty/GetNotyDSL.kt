@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.get
+package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase

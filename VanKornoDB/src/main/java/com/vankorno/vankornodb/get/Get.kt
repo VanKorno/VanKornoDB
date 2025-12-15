@@ -10,6 +10,12 @@ import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
+import com.vankorno.vankornodb.get.noty.getBlobNoty
+import com.vankorno.vankornodb.get.noty.getBoolNoty
+import com.vankorno.vankornodb.get.noty.getFloatNoty
+import com.vankorno.vankornodb.get.noty.getIntNoty
+import com.vankorno.vankornodb.get.noty.getLongNoty
+import com.vankorno.vankornodb.get.noty.getStrNoty
 
 fun SQLiteDatabase.getInt(table: String, column: IntCol, where: WhereBuilder.()->Unit) = getIntNoty(table, column.name, where)
 fun SQLiteDatabase.getStr(table: String, column: StrCol, where: WhereBuilder.()->Unit) = getStrNoty(table, column.name, where)
