@@ -385,7 +385,7 @@ abstract class DbHelperInternal(
     
     // Simplified conditions
     
-    inline fun <T> getIntNoty(table: String, column: String, whereClause: String, whereArg: T) =
+    /*inline fun <T> getIntNoty(table: String, column: String, whereClause: String, whereArg: T) =
         read(0, "getIntNoty") {
             it.getIntNoty(table, column, whereClause, whereArg)
         }
@@ -505,7 +505,7 @@ abstract class DbHelperInternal(
         readSusp(null, "getBlobSusp") {
             it.getBlobNoty(table, column, where)
         }
-    
+    */
     
     
     
@@ -532,7 +532,7 @@ abstract class DbHelperInternal(
     
     
     
-    // -------------------------------  G E T   O B J E C T S  ------------------------------- \\
+    // ==============================  G E T   O B J E C T S  ============================== \\
     
     
     inline fun <reified T : DbEntity> getObjOrNull(                  table: String,
@@ -693,7 +693,7 @@ abstract class DbHelperInternal(
     
     
     
-    // =====================================   L I S T   ===================================== \\
+    // ==============================   C O L U M N   V A L s   ============================== \\
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
