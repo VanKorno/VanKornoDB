@@ -4,6 +4,8 @@ package com.vankorno.vankornodb.dbManagement.migration
 **/
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.vankorno.vankornodb.add.addObj
+import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformCol
 import com.vankorno.vankornodb.api.createTable
@@ -15,8 +17,6 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.getObjects
-import com.vankorno.vankornodb.set.insertObj
-import com.vankorno.vankornodb.set.insertObjects
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -86,7 +86,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(      table: String,
         Log.d(DbTAG, "migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
     for (entity in migratedEntities) {
-        val result = this.insertObj(table, entity)
+        val result = this.addObj(table, entity)
         // region LOG
             if (result == -1L)
                 Log.w(DbTAG, "migrateMultiStep() FAILED to insert row: $entity")
@@ -355,7 +355,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(                  varar
     for (table in tables) {
         val rows = getObjects(table.entityClass, table.name)
         dropAndCreateEmptyTables(table)
-        insertObjects(table.name, rows)
+        addObjects(table.name, rows)
     }
     // region LOG
         Log.d(DbTAG, "migrateWithoutChange(): Migration complete.")

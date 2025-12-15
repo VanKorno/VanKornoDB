@@ -10,6 +10,7 @@ import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
+import com.vankorno.vankornodb.set.noty.setNoty
 
 fun SQLiteDatabase.setInt(value: Int, table: String, column: IntCol, where: WhereBuilder.()->Unit) = setNoty(value, table, column.name, where)
 fun SQLiteDatabase.setStr(value: String, table: String, column: StrCol, where: WhereBuilder.()->Unit) = setNoty(value, table, column.name, where)

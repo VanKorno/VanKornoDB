@@ -5,6 +5,8 @@ package com.vankorno.vankornodb.dbManagement
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.add.addObj
+import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
@@ -16,6 +18,9 @@ import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.set.*
+import com.vankorno.vankornodb.set.noty.setInAllRows
+import com.vankorno.vankornodb.set.noty.setRowVals
+import com.vankorno.vankornodb.set.noty.setRowValsInAllRows
 import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -193,7 +198,6 @@ abstract class DbHelperInternal(
     // -------------------------------------------------------------------------------------- \\
     
     
-    
     inline fun setInAllRows(                                                value: Any,
                                                                             table: String,
                                                                            column: String,
@@ -224,51 +228,51 @@ abstract class DbHelperInternal(
     
     // ---------------------------------  S E T   R O W S  --------------------------------- \\
     
-    inline fun <T : DbEntity> insertObj(                                    table: String,
+    inline fun <T : DbEntity> addObj(                                       table: String,
                                                                               obj: T,
                                                                             async: Boolean = false,
-    ) = write("insertObj", async) {
-        it.insertObj(table, obj)
+    ) = write("addObj", async) {
+        it.addObj(table, obj)
     }
     
     
-    suspend fun <T : DbEntity> insertObjSusp(                                      table: String,
+    suspend fun <T : DbEntity> addObjSusp(                                         table: String,
                                                                                      obj: T,
-    ): Long = readWriteSusp(-1L, "insertObjSusp") {
-        it.insertObj(table, obj)
+    ): Long = readWriteSusp(-1L, "addObjSusp") {
+        it.addObj(table, obj)
     }
     
     
-    inline fun <T : DbEntity> insertObjects(                                table: String,
+    inline fun <T : DbEntity> addObjects(                                   table: String,
                                                                           objects: List<T>,
                                                                             async: Boolean = false,
-    ) = write("insertObjects", async) {
-        it.insertObjects(table, objects)
+    ) = write("addObjects", async) {
+        it.addObjects(table, objects)
     }
     
     
-    suspend fun <T : DbEntity> insertObjectsSusp(                                  table: String,
+    suspend fun <T : DbEntity> addObjectsSusp(                                     table: String,
                                                                                  objects: List<T>,
-    ): Int = readWriteSusp(0, "insertObjectsSusp") {
-        it.insertObjects(table, objects)
+    ): Int = readWriteSusp(0, "addObjectsSusp") {
+        it.addObjects(table, objects)
     }
     
     
     
-    fun <T : DbEntity> updateObj(                                      table: String,
+    fun <T : DbEntity> setObj(                                         table: String,
                                                                          obj: T,
                                                                        async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
-    ) = write("updateObj", async) {
-        it.updateObj(table, obj, where)
+    ) = write("setObj", async) {
+        it.setObj(table, obj, where)
     }
     
     
-    suspend fun <T : DbEntity> updateObjSusp(                          table: String,
+    suspend fun <T : DbEntity> setObjSusp(                             table: String,
                                                                          obj: T,
                                                                        where: WhereBuilder.()->Unit,
-    ): Int = readWriteSusp(0, "updateObjSusp") {
-        it.updateObj(table, obj, where)
+    ): Int = readWriteSusp(0, "setObjSusp") {
+        it.setObj(table, obj, where)
     }
     
     

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.set.dsl.RowSetter
 import com.vankorno.vankornodb.set.dsl.data.SetOp
+import com.vankorno.vankornodb.set.noty.setNoty
 
 fun SQLiteDatabase.setRowVals(                                         table: String,
                                                                        where: WhereBuilder.()->Unit,

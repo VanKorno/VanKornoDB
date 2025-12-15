@@ -6,7 +6,7 @@ import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.get.getDbFileName
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
-import com.vankorno.vankornodb.set.insertObjects
+import com.vankorno.vankornodb.add.addObjects
 
 fun LocalDbHelper.launchApp() = write("launchApp") { db ->
     
@@ -19,7 +19,7 @@ fun LocalDbHelper.launchApp() = write("launchApp") { db ->
     if (db.isTableEmpty(TestTable)) {
         val testSubjects = List(50) { TestEntity("Name" + it) }
         
-        db.insertObjects(TestTable, testSubjects)
+        db.addObjects(TestTable, testSubjects)
     }
 }
 

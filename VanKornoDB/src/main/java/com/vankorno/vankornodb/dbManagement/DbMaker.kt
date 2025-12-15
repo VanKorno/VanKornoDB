@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.DbProvider.mainDb
@@ -17,7 +18,6 @@ import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.data.SharedCol.shName
-import com.vankorno.vankornodb.set.insertObj
 
 /* 
 * THE LIFECYCLE AT RUNTIME:
@@ -135,7 +135,7 @@ abstract class DbMaker(           context: Context,
     private fun addAllEntityMeta(                                                db: SQLiteDatabase
     ) {
         for (meta in entityMeta) {
-            db.insertObj(
+            db.addObj(
                 TABLE_EntityVersions,
                 VersionEntity(meta.dbRowName, meta.currVersion)
             )
@@ -163,7 +163,7 @@ abstract class DbMaker(           context: Context,
             if (rowExists)
                 continue //\/\/\
             
-            db.insertObj(
+            db.addObj(
                 TABLE_EntityVersions,
                 VersionEntity(dbName, meta.currVersion)
             )

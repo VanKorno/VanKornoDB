@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.api.migrateMultiStep
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.get.noty.getIntNoty
-import com.vankorno.vankornodb.set.setNoty
+import com.vankorno.vankornodb.set.noty.setNoty
 
 abstract class DbMigratorInternal(                                           val db: SQLiteDatabase,
                                               private val allEntityMeta: Collection<BaseEntityMeta>,
