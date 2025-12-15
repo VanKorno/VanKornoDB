@@ -11,9 +11,20 @@ import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
+import com.vankorno.vankornodb.get.internal.getColVals
+import com.vankorno.vankornodb.get.internal.getColValsPro
 import com.vankorno.vankornodb.misc.getBoolean
 
 //  ----------------------------------------  I N T  ----------------------------------------  \\
+
+/**
+ * Retrieves a list of Ints from a single column.
+ */
+fun SQLiteDatabase.getColInts(                                    table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): List<Int> = getColVals(table, column.name, where) { it.getInt(0) }
+
 
 /**
  * Retrieves a list of Ints from a single column.
@@ -26,13 +37,6 @@ fun SQLiteDatabase.getColIntsPro(                                    table: Stri
                                                                  queryOpts: QueryOpts.()->Unit = {},
 ): List<Int> = getColValsPro(table, column.name, queryOpts) { it.getInt(0) }
 
-/**
- * Retrieves a list of Ints from a single column.
- */
-fun SQLiteDatabase.getColInts(                                    table: String,
-                                                                 column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
-): List<Int> = getColVals(table, column.name, where) { it.getInt(0) }
 
 
 
@@ -146,16 +150,6 @@ fun SQLiteDatabase.getColBlobsPro(                                   table: Stri
                                                                     column: BlobCol,
                                                                  queryOpts: QueryOpts.()->Unit = {},
 ): List<ByteArray> = getColValsPro(table, column.name, queryOpts) { it.getBlob(0) }
-
-
-
-
-
-
-
-
-
-
 
 
 

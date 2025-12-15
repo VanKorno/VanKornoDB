@@ -15,6 +15,8 @@ import com.vankorno.vankornodb.delete.deleteLastRow
 import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
+import com.vankorno.vankornodb.get.noty.getColValsNoty
+import com.vankorno.vankornodb.get.noty.getMultiRowValsProNoty
 import com.vankorno.vankornodb.set.*
 import kotlin.reflect.KClass
 
@@ -514,14 +516,14 @@ abstract class DbHelperInternal(
                                                                    columns: Array<out String>,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<List<T?>> = read(emptyList(), "getMultiRowVals") {
-        it.getMultiRowVals(table, columns, queryOpts)
+        it.getMultiRowValsProNoty(table, columns, queryOpts)
     }
     
     suspend inline fun <reified T : Any> getMultiRowValsSusp(        table: String,
                                                                    columns: Array<out String>,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
     ): List<List<T?>> = readSusp(emptyList(), "getMultiRowValsSusp") {
-        it.getMultiRowVals(table, columns, queryOpts)
+        it.getMultiRowValsProNoty(table, columns, queryOpts)
     }
     
     

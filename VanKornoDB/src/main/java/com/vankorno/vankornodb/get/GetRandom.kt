@@ -6,6 +6,7 @@ import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.mapper.toEntity
 import com.vankorno.vankornodb.misc.data.SharedCol.shID
 
