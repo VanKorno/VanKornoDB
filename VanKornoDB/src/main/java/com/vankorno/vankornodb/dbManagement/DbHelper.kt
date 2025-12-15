@@ -1094,74 +1094,74 @@ abstract class DbHelperInternal(
     
     // ===================================   M O D I F Y   =================================== \\
     
-    inline fun addToInt(                                                   addend: Number,
-                                                                               id: Int,
-                                                                            table: String,
-                                                                           column: String,
-                                                                            async: Boolean = false,
+    fun addToInt(                                                addend: Number,
+                                                                  table: String,
+                                                                 column: IntCol,
+                                                                  async: Boolean = false,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = write("addToInt", async) {
-        it.addToInt(addend, id, table, column)
+        it.addToInt(addend, table, column, where)
     }
     
-    suspend fun addToIntSusp(                                                     addend: Number,
-                                                                                      id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
+    suspend fun addToIntSusp(                                    addend: Number,
+                                                                  table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = writeSusp("addToIntSusp") {
-        it.addToInt(addend, id, table, column)
+        it.addToInt(addend, table, column, where)
     }
     
     
-    inline fun addToLong(                                                  addend: Number,
-                                                                               id: Int,
-                                                                            table: String,
-                                                                           column: String,
-                                                                            async: Boolean = false,
+    fun addToLong(                                               addend: Number,
+                                                                  table: String,
+                                                                 column: LongCol,
+                                                                  async: Boolean = false,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = write("addToLong", async) {
-        it.addToLong(addend, id, table, column)
+        it.addToLong(addend, table, column, where)
     }
     
-    suspend fun addToLongSusp(                                                    addend: Number,
-                                                                                      id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
+    suspend fun addToLongSusp(                                   addend: Number,
+                                                                  table: String,
+                                                                 column: LongCol,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = writeSusp("addToLongSusp") {
-        it.addToLong(addend, id, table, column)
+        it.addToLong(addend, table, column, where)
     }
     
     
-    inline fun addToFloat(                                                 addend: Number,
-                                                                               id: Int,
-                                                                            table: String,
-                                                                           column: String,
-                                                                            async: Boolean = false,
+    fun addToFloat(                                              addend: Number,
+                                                                  table: String,
+                                                                 column: FloatCol,
+                                                                  async: Boolean = false,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = write("addToFloat", async) {
-        it.addToFloat(addend, id, table, column)
+        it.addToFloat(addend, table, column, where)
     }
     
-    suspend fun addToFloatSusp(                                                   addend: Number,
-                                                                                      id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
+    suspend fun addToFloatSusp(                                  addend: Number,
+                                                                  table: String,
+                                                                 column: FloatCol,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = writeSusp("addToFloatSusp") {
-        it.addToFloat(addend, id, table, column)
+        it.addToFloat(addend, table, column, where)
     }
     
     
     
-    inline fun toggleBool(                                                     id: Int,
-                                                                            table: String,
-                                                                           column: String,
-                                                                            async: Boolean = false,
+    fun toggleBool(                                               table: String,
+                                                                 column: BoolCol,
+                                                                  async: Boolean = false,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = write("toggleBool", async) {
-        it.toggleBool(id, table, column)
+        it.toggleBool(table, column, where)
     }
     
-    suspend fun toggleBoolSusp(                                                       id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
+    suspend fun toggleBoolSusp(                                   table: String,
+                                                                 column: BoolCol,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = readWriteSusp(Unit, "toggleBoolSusp") {
-        it.toggleBool(id, table, column)
+        it.toggleBool(table, column, where)
     }
 
     

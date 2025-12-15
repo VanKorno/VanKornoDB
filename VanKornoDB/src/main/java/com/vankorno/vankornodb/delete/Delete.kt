@@ -21,7 +21,7 @@ fun SQLiteDatabase.deleteRow(                                          table: St
                                                                        where: WhereBuilder.()->Unit,
 ): Int {
     val builder = WhereBuilder().apply(where)
-    return delete(table, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+    return delete(table, builder.buildStr(), builder.args.toTypedArray())
 }
 
 

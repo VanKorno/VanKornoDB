@@ -1,62 +1,52 @@
 package com.vankorno.vankornodb.set
-
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.core.data.DbConstants.WHERE
+import com.vankorno.vankornodb.dbManagement.data.BoolCol
+import com.vankorno.vankornodb.dbManagement.data.FloatCol
+import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.LongCol
+import com.vankorno.vankornodb.set.internal.baseAddTo
 
-fun SQLiteDatabase.addToInt(                                                      addend: Number,
-                                                                                      id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
+
+fun SQLiteDatabase.addToInt(                                     addend: Number,
+                                                                  table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+) = baseAddTo(addend, table, column, where)
+
+
+fun SQLiteDatabase.addToLong(                                    addend: Number,
+                                                                  table: String,
+                                                                 column: LongCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+) = baseAddTo(addend, table, column, where)
+
+
+fun SQLiteDatabase.addToFloat(                                   addend: Number,
+                                                                  table: String,
+                                                                 column: FloatCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+) = baseAddTo(addend, table, column, where)
+
+
+
+fun SQLiteDatabase.toggleBool(                                    table: String,
+                                                                 column: BoolCol,
+                                                                  where: WhereBuilder.()->Unit = {},
 ) {
-    val iAddend = addend.toInt()
+    val colName = column.name
+    val builder = WhereBuilder().apply(where)
     
-    if (iAddend == 0) return //\/\/\/\/\/\
+    val queryStr1 = "UPDATE $table SET $colName = NOT $colName"
     
-    execSQL(
-        "UPDATE $table SET $column = $column + ? WHERE id = ?",
-        arrayOf(iAddend, id)
-    )
+    val hasWhere = builder.clauses.isNotEmpty()
+    
+    if (hasWhere)
+        execSQL(queryStr1 + WHERE + builder.buildStr(), builder.args.toTypedArray())
+    else
+        execSQL(queryStr1)
 }
-
-
-fun SQLiteDatabase.addToLong(                                                     addend: Number,
-                                                                                      id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
-) {
-    val lAddend = addend.toLong()
-    
-    if (lAddend == 0L) return //\/\/\/\/\/\
-    
-    execSQL(
-        "UPDATE $table SET $column = $column + ? WHERE id = ?",
-        arrayOf<Any>(lAddend, id)
-    )
-}
-
-
-fun SQLiteDatabase.addToFloat(                                                    addend: Number,
-                                                                                      id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
-) {
-    val fAddend = addend.toFloat()
-    
-    if (fAddend == 0f) return //\/\/\/\/\/\
-    
-    execSQL(
-        "UPDATE $table SET $column = $column + ? WHERE id = ?",
-        arrayOf<Any>(fAddend, id)
-    )
-}
-
-
-fun SQLiteDatabase.toggleBool(                                                        id: Int,
-                                                                                   table: String,
-                                                                                  column: String,
-) {
-    execSQL(
-        "UPDATE $table SET $column = NOT $column WHERE id = ?",
-        arrayOf(id)
-    )
-}
-

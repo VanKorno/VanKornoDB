@@ -37,7 +37,7 @@ fun SQLiteDatabase.setNoty(                                            value: An
     val cv = ContentValues()
     cv.putSmart(column, value)
     val builder = WhereBuilder().apply(where)
-    update(table, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+    update(table, cv, builder.buildStr(), builder.args.toTypedArray())
 }
 
 
@@ -49,7 +49,7 @@ fun SQLiteDatabase.setRowVals(                                         table: St
                                                                        where: WhereBuilder.()->Unit,
 ) {
     val builder = WhereBuilder().apply(where)
-    update(table, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+    update(table, cv, builder.buildStr(), builder.args.toTypedArray())
 }
 
 
@@ -65,7 +65,7 @@ fun SQLiteDatabase.setRowVals(                                         table: St
         }
     }
     val builder = WhereBuilder().apply(where)
-    update(table, cv, builder.clauses.joinToString(" "), builder.args.toTypedArray())
+    update(table, cv, builder.buildStr(), builder.args.toTypedArray())
 }
 
 

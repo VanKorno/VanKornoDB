@@ -78,7 +78,7 @@ class WhereBuilder : WhereBuilderInternal() {
     fun group(                                                   whereBuilder: WhereBuilder.()->Unit
     ) {
         val innerBuilder = WhereBuilder().apply(whereBuilder)
-        clauses.add("(" + innerBuilder.clauses.joinToString(" ") + ")")
+        clauses.add("(" + innerBuilder.buildStr() + ")")
         args.addAll(innerBuilder.args)
     }
     
