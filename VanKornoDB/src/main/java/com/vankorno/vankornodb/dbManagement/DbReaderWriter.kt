@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.database.sqlite.transaction
+import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -153,7 +154,7 @@ abstract class DbReaderWriter(
             }
         } catch (e: Exception) {
             // region LOG
-            Log.e("DB", "$funName() failed. Returning the default value. Details: ${e.message}", e)
+            Log.e(DbTAG, "$funName() failed. Returning the default value. Details: ${e.message}", e)
             // endregion
             defaultValue
         }
@@ -173,7 +174,7 @@ abstract class DbReaderWriter(
             }
         } catch (e: Exception) {
             // region LOG
-                Log.e("DB", "$funName() failed. Details: ${e.message}", e)
+                Log.e(DbTAG, "$funName() failed. Details: ${e.message}", e)
             // endregion
         }
     }
@@ -188,7 +189,7 @@ abstract class DbReaderWriter(
             }
         } catch (e: Exception) {
             // region LOG
-            Log.e("DB", "$funName() failed. Returning the default value. Details: ${e.message}", e)
+            Log.e(DbTAG, "$funName() failed. Returning the default value. Details: ${e.message}", e)
             // endregion
             defaultValue
         }

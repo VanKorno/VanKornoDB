@@ -1201,19 +1201,34 @@ abstract class DbHelperInternal(
     
     
     
-    
-    inline fun <reified T> getRandomVal(                          table: String,
-                                                                 column: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
-    ): T? = read(null, "getRandomVal") { db ->
-        db.getRandomVal<T>(table, column, where)
+    fun getRandomInt(                                             table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): Int = read(-1, "getRandomInt") { db ->
+        db.getRandomInt(table, column, where)
     }
     
-    suspend inline fun <reified T> getRandomValSusp(              table: String,
+    suspend fun getRandomIntSusp(                                 table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): Int = readSusp(-1, "getRandomIntSusp") { db ->
+        db.getRandomInt(table, column, where)
+    }
+    
+    
+    
+    inline fun <reified T> getRandomValNoty(                      table: String,
                                                                  column: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
-    ): T? = readSusp(null, "getRandomValSusp") { db ->
-        db.getRandomVal<T>(table, column, where)
+    ): T? = read(null, "getRandomValNoty") { db ->
+        db.getRandomValNoty<T>(table, column, where)
+    }
+    
+    suspend inline fun <reified T> getRandomValNotySusp(          table: String,
+                                                                 column: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T? = readSusp(null, "getRandomValNotySusp") { db ->
+        db.getRandomValNoty<T>(table, column, where)
     }
     
     
