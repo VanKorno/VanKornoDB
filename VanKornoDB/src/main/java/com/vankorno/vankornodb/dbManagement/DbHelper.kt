@@ -156,45 +156,6 @@ abstract class DbHelperInternal(
     
     
     
-    // -------------------- Not type-safe --------------------
-    
-    inline fun <T> setNoty(                                                 value: Any,
-                                                                            table: String,
-                                                                           column: String,
-                                                                            where: String,
-                                                                           equals: T,
-                                                                            async: Boolean = false,
-    ) = write("setNoty", async) {
-        it.setNoty(value, table, column, where, equals)
-    }
-    
-    fun <T> setNoty(                                                   value: Any,
-                                                                       table: String,
-                                                                      column: String,
-                                                                       async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
-    ) = write("setNoty", async) {
-        it.setNoty(value, table, column, where)
-    }
-    
-    
-    suspend fun <T> setNotySusp(                                                   value: Any,
-                                                                                   table: String,
-                                                                                  column: String,
-                                                                                   where: String,
-                                                                                  equals: T,
-    ) = writeSusp("setNotySusp") {
-        it.setNoty(value, table, column, where, equals)
-    }
-    
-    suspend fun <T> setNotySusp(                                       value: Any,
-                                                                       table: String,
-                                                                      column: String,
-                                                                       where: WhereBuilder.()->Unit,
-    ) = writeSusp("setNotySusp") {
-        it.setNoty(value, table, column, where)
-    }
-    
     
     
     // =============================  M U L T I - S E T T E R S  ============================= \\
@@ -379,133 +340,6 @@ abstract class DbHelperInternal(
     
     
     
-    
-    
-    // ======================== NOT TYPE-SAFE
-    
-    // Simplified conditions
-    
-    /*inline fun <T> getIntNoty(table: String, column: String, whereClause: String, whereArg: T) =
-        read(0, "getIntNoty") {
-            it.getIntNoty(table, column, whereClause, whereArg)
-        }
-    suspend fun <T> getIntNotySusp(table: String, column: String, whereClause: String, whereArg: T) =
-        readSusp(0, "getIntNotySusp") {
-            it.getIntNoty(table, column, whereClause, whereArg)
-        }
-    
-    
-    inline fun <T> getStrNoty(table: String, column: String, whereClause: String, whereArg: T): String =
-        read("", "getStrNoty") {
-            it.getStrNoty(table, column, whereClause, whereArg)
-        }
-    suspend fun <T> getStrNotySusp(table: String, column: String, whereClause: String, whereArg: T): String =
-        readSusp("", "getStrNotySusp") {
-            it.getStrNoty(table, column, whereClause, whereArg)
-        }
-    
-    
-    inline fun <T> getBoolNoty(table: String, column: String, whereClause: String, whereArg: T) =
-        read(false, "getBoolNoty") { 
-            it.getBoolNoty(table, column, whereClause, whereArg)
-        }
-    suspend fun <T> getBoolNotySusp(table: String, column: String, whereClause: String, whereArg: T) =
-        readSusp(false, "getBoolNotySusp") {
-            it.getBoolNoty(table, column, whereClause, whereArg)
-        }
-    
-    
-    inline fun <T> getLongNoty(table: String, column: String, whereClause: String, whereArg: T) =
-        read(0L, "getLongNoty") { 
-            it.getLongNoty(table, column, whereClause, whereArg)
-        }
-    suspend fun <T> getLongNotySusp(table: String, column: String, whereClause: String, whereArg: T) =
-        readSusp(0L, "getLongNotySusp") {
-            it.getLongNoty(table, column, whereClause, whereArg)
-        }
-    
-    
-    inline fun <T> getFloatNoty(table: String, column: String, whereClause: String, whereArg: T) =
-        read(0F, "getFloatNoty") { 
-            it.getFloatNoty(table, column, whereClause, whereArg)
-        }
-    suspend fun <T> getFloatNotySusp(table: String, column: String, whereClause: String, whereArg: T) =
-        readSusp(0F, "getFloatNotySusp") {
-            it.getFloatNoty(table, column, whereClause, whereArg)
-        }
-    
-    
-    inline fun <T> getBlobNoty(table: String, column: String, whereClause: String, whereArg: T) =
-        read(null, "getBlobNoty") {
-            it.getBlobNoty(table, column, whereClause, whereArg)
-        }
-    suspend fun <T> getBlobNotySusp(table: String, column: String, whereClause: String, whereArg: T): ByteArray? =
-        readSusp(null, "getBlobNotySusp") {
-            it.getBlobNoty(table, column, whereClause, whereArg)
-        }
-    
-    
-    // DSL
-    
-    fun getIntNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
-        read(0, "getInt") {
-            it.getIntNoty(table, column, where)
-        }
-    suspend fun getIntNotySusp(table: String, column: String, where: WhereBuilder.()->Unit) =
-        readSusp(0, "getIntSusp") {
-            it.getIntNoty(table, column, where)
-        }
-    
-    
-    fun getStrNoty(table: String, column: String, where: WhereBuilder.()->Unit): String =
-        read("", "getStr") {
-            it.getStrNoty(table, column, where)
-        }
-    suspend fun getStrNotySusp(table: String, column: String, where: WhereBuilder.()->Unit): String =
-        readSusp("", "getStrSusp") {
-            it.getStrNoty(table, column, where)
-        }
-    
-    
-    fun getBoolNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
-        read(false, "getBool") {
-            it.getBoolNoty(table, column, where)
-        }
-    suspend fun getBoolNotySusp(table: String, column: String, where: WhereBuilder.()->Unit) =
-        readSusp(false, "getBoolSusp") {
-            it.getBoolNoty(table, column, where)
-        }
-    
-    
-    fun getLongNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
-        read(0L, "getLong") {
-            it.getLongNoty(table, column, where)
-        }
-    suspend fun getLongNotySusp(table: String, column: String, where: WhereBuilder.()->Unit) =
-        readSusp(0L, "getLongSusp") {
-            it.getLongNoty(table, column, where)
-        }
-    
-    
-    fun getFloatNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
-        read(0F, "getFloat") {
-            it.getFloatNoty(table, column, where)
-        }
-    suspend fun getFloatNotySusp(table: String, column: String, where: WhereBuilder.()->Unit) =
-        readSusp(0F, "getFloatSusp") {
-            it.getFloatNoty(table, column, where)
-        }
-    
-    
-    fun getBlobNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
-        read(null, "getBlob") {
-            it.getBlobNoty(table, column, where)
-        }
-    suspend fun getBlobNotySusp(table: String, column: String, where: WhereBuilder.()->Unit): ByteArray? =
-        readSusp(null, "getBlobSusp") {
-            it.getBlobNoty(table, column, where)
-        }
-    */
     
     
     
@@ -1387,22 +1221,6 @@ abstract class DbHelperInternal(
                                                                   where: WhereBuilder.()->Unit = {},
     ): Int = readSusp(-1, "getRandomIntSusp") { db ->
         db.getRandomInt(table, column, where)
-    }
-    
-    
-    
-    inline fun <reified T> getRandomValNoty(                      table: String,
-                                                                 column: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
-    ): T? = read(null, "getRandomValNoty") { db ->
-        db.getRandomValNoty<T>(table, column, where)
-    }
-    
-    suspend inline fun <reified T> getRandomValNotySusp(          table: String,
-                                                                 column: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
-    ): T? = readSusp(null, "getRandomValNotySusp") { db ->
-        db.getRandomValNoty<T>(table, column, where)
     }
     
     
