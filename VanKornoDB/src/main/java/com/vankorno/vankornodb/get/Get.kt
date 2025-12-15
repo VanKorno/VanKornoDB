@@ -19,7 +19,7 @@ fun SQLiteDatabase.getFloat(table: String, column: FloatCol, where: WhereBuilder
 fun SQLiteDatabase.getBlob(table: String, column: BlobCol, where: WhereBuilder.()->Unit) = getBlobNoty(table, column.name, where)
 
 
-
+// TODO Pro versions
 
 
 

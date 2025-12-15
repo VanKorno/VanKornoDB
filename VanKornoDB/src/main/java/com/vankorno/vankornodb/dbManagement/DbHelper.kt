@@ -1176,38 +1176,22 @@ abstract class DbHelperInternal(
     suspend fun getLastPositionSusp(table: String) = readSusp(0, "getLastPositionSusp") { it.getLastPosition(table) }
     
     
-    inline fun <T> getLastPositionBy(                                              table: String,
-                                                                             whereColumn: String,
-                                                                                  equals: T,
-    ) = read(0, "getLastPositionBy") {
-        it.getLastPositionBy(table, whereColumn, equals)
-    }
-    
-    suspend fun <T> getLastPositionBySusp(                                         table: String,
-                                                                             whereColumn: String,
-                                                                                  equals: T,
-    ) = readSusp(0, "getLastPositionBySusp") {
-        it.getLastPositionBy(table, whereColumn, equals)
-    }
     
     
     
     
-    
-    inline fun <T> getLargestInt(                                            table: String,
-                                                                      targetColumn: String,
-                                                                       whereColumn: String? = null,
-                                                                            equals: T? = null,
+    fun getLargestInt(                                            table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = read(0, "getLargestInt") {
-        it.getLargestInt(table, targetColumn, whereColumn, equals)
+        it.getLargestInt(table, column, where)
     }
     
-    suspend fun <T> getLargestIntSusp(                                       table: String,
-                                                                      targetColumn: String,
-                                                                       whereColumn: String? = null,
-                                                                            equals: T? = null,
+    suspend fun getLargestIntSusp(                                table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
     ) = readSusp(0, "getLargestIntSusp") {
-        it.getLargestInt(table, targetColumn, whereColumn, equals)
+        it.getLargestInt(table, column, where)
     }
     
     

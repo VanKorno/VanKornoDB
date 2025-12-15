@@ -4,14 +4,18 @@ package com.vankorno.vankornodb.get
 **/
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.OrderByBuilder
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.misc.data.SharedCol.shID
 import com.vankorno.vankornodb.misc.data.SharedCol.shName
+import com.vankorno.vankornodb.misc.data.SharedCol.shPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.shType
 import java.io.File
 
 
-fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, _ID, null, null)
+fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, shID)
 
 
 fun SQLiteDatabase.getAllIDs(                                   table: String,
@@ -62,35 +66,22 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
 fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
 
-fun SQLiteDatabase.getLastPosition(table: String) = getLargestInt(table, _Position, null, null)
-
-
-fun <T> SQLiteDatabase.getLastPositionBy(                                          table: String,
-                                                                             whereColumn: String,
-                                                                                  equals: T,
-) = getLargestInt(table, _Position, whereColumn, equals)
+fun SQLiteDatabase.getLastPosition(                               table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+) = getLargestInt(table, shPosition, where)
 
 
 
-fun <T> SQLiteDatabase.getLargestInt(                                        table: String,
-                                                                      targetColumn: String,
-                                                                       whereColumn: String? = null,
-                                                                            equals: T? = null,
-): Int {
-    val hasConditions = whereColumn != null && equals != null
-    
-    val queryEnd = if (hasConditions) " WHERE $whereColumn=?" else ""
-    val selectionArgs = if (hasConditions) arrayOf(equals.toString()) else null
-    
-    return rawQuery(
-        "SELECT MAX($targetColumn) FROM $table" + queryEnd, selectionArgs
-    ).use { cursor ->
-        if (cursor.moveToFirst())
-            cursor.getInt(0)
-        else
-            0
-    }
-}
+fun SQLiteDatabase.getLargestInt(                                 table: String,
+                                                                 column: IntCol,
+                                                                  where: WhereBuilder.()->Unit = {},
+): Int = getInt(
+    table,
+    iCol("MAX(${column.name})"),
+    where
+)
+
+
 
 
 fun SQLiteDatabase.getDbFileName(): String = File(path).name
