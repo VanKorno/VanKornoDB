@@ -15,7 +15,6 @@ import com.vankorno.vankornodb.delete.deleteLastRow
 import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
-import com.vankorno.vankornodb.get.noty.getMultiRowValsProNoty
 import com.vankorno.vankornodb.set.*
 import kotlin.reflect.KClass
 
@@ -336,28 +335,6 @@ abstract class DbHelperInternal(
     
     suspend fun getBlobSusp(table: String, column: BlobCol, where: WhereBuilder.()->Unit): ByteArray =
         readSusp(ByteArray(0), "getBlobSusp") { it.getBlob(table, column, where) }
-    
-    
-    
-    
-    
-    
-    // TODO Type-safe
-    // Multiple values
-    
-    inline fun <reified T : Any> getMultiRowVals(                    table: String,
-                                                                   columns: Array<out String>,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-    ): List<List<T?>> = read(emptyList(), "getMultiRowVals") {
-        it.getMultiRowValsProNoty(table, columns, queryOpts)
-    }
-    
-    suspend inline fun <reified T : Any> getMultiRowValsSusp(        table: String,
-                                                                   columns: Array<out String>,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-    ): List<List<T?>> = readSusp(emptyList(), "getMultiRowValsSusp") {
-        it.getMultiRowValsProNoty(table, columns, queryOpts)
-    }
     
     
     
