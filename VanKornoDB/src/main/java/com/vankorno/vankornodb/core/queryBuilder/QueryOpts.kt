@@ -62,19 +62,20 @@ open class QueryOptsInternal {
     
     fun orderBy(vararg strings: String) { query.orderBy = { raw(*strings) } }
     
+    
     fun orderRandomly() = orderBy(RANDOM)
     
     fun orderById() = orderBy(shID)
     fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shID(); and(andOrderBy) }
     
-    
     fun orderByName() = orderBy(shName)
     fun orderByNameAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shName(); and(andOrderBy) }
     
-    fun orderPosition() = orderBy(shPosition)
+    fun orderByPosition() = orderBy(shPosition)
     fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { shPosition(); and(andOrderBy) }
     
     fun orderByFlippedRows() = orderBy(RowID + DESCENDING)
+    
     
     fun IntCol.flip() = DescendingIntCol(this.name)
     fun StrCol.flip() = DescendingStrCol(this.name)
