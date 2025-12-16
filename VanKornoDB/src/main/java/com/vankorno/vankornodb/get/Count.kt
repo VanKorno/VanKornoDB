@@ -5,12 +5,14 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.get.noty.getCursorProNoty
+import com.vankorno.vankornodb.misc.columns
 
 /** Returns the number of rows matching the query conditions. */
 
 fun SQLiteDatabase.getRowCount(                                   table: String,
                                                                   where: WhereBuilder.()->Unit = {},
-): Int = getCursorPro(table, "1") {
+): Int = getCursorProNoty(table, columns("1")) {
     applyOpts(where = where)
 }.use { it.count }
 
@@ -19,7 +21,7 @@ fun SQLiteDatabase.getRowCount(                                   table: String,
 
 fun SQLiteDatabase.getRowCountPro(                                        table: String,
                                                                       queryOpts: QueryOpts.()->Unit,
-): Int = getCursorPro(table, "1") {
+): Int = getCursorProNoty(table, columns("1")) {
     applyOpts(queryOpts)
 }.use { it.count }
 
@@ -31,7 +33,7 @@ fun SQLiteDatabase.getRowCountPro(                                        table:
 
 fun SQLiteDatabase.hasRows(                                       table: String,
                                                                   where: WhereBuilder.()->Unit = {},
-): Boolean = getCursorPro(table, "1") {
+): Boolean = getCursorProNoty(table, columns("1")) {
     this.where = where
     limit = 1
 }.use { it.moveToFirst() }
@@ -41,7 +43,7 @@ fun SQLiteDatabase.hasRows(                                       table: String,
 
 fun SQLiteDatabase.hasRowsPro(                                            table: String,
                                                                       queryOpts: QueryOpts.()->Unit,
-): Boolean = getCursorPro(table, "1") {
+): Boolean = getCursorProNoty(table, columns("1")) {
     applyOpts(queryOpts)
     limit = 1
 }.use { it.moveToFirst() }

@@ -6,6 +6,7 @@ import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.mapper.toEntity
 import com.vankorno.vankornodb.misc.data.SharedCol.shID
@@ -79,7 +80,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
 inline fun <reified T> SQLiteDatabase.getRandomValNoty(           table: String,
                                                                  column: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
-): T? = getCursorPro(table, column) {
+): T? = getCursorProNoty(table, arrayOf(column)) {
     applyOpts(
         where = where,
         limit = 1

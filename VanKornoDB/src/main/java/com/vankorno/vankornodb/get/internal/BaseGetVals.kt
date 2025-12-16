@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.get.getCursorPro
+import com.vankorno.vankornodb.get.noty.getCursorProNoty
 
 
 internal fun <T> SQLiteDatabase.baseGetVals(                      table: String,
@@ -21,7 +21,7 @@ internal fun <T> SQLiteDatabase.baseGetValsPro(                      table: Stri
                                                                    columns: Array<out String>,
                                                                  queryOpts: QueryOpts.()->Unit = {},
                                                             getCursorValue: (Cursor, Int)->T,
-): List<List<T>> = getCursorPro(table, columns) {
+): List<List<T>> = getCursorProNoty(table, columns) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {

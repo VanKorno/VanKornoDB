@@ -32,14 +32,10 @@ fun SQLiteDatabase.setRowVals(                                         table: St
             is SetOp.AddToFloat -> { addToFloat(op.value, table, op.col, where) }
             
             is SetOp.Flip -> { flipBool(table, op.col, where) }
-            else -> {}
+            //else -> {}
         }
     }
 }
-
-
-
-
 
 
 

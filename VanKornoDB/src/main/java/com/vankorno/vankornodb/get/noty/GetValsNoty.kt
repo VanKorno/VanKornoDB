@@ -5,7 +5,6 @@ package com.vankorno.vankornodb.get.noty
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.get.getCursorPro
 import com.vankorno.vankornodb.get.raw.getTypedValAt
 
 /**
@@ -14,7 +13,7 @@ import com.vankorno.vankornodb.get.raw.getTypedValAt
 inline fun <reified T> SQLiteDatabase.getColValsNoty(                table: String,
                                                                 columnName: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-): List<T> = getCursorPro(table, columnName) {
+): List<T> = getCursorProNoty(table, arrayOf(columnName)) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
@@ -57,7 +56,7 @@ inline fun <reified T> SQLiteDatabase.getRowValsProNoty(             table: Stri
 inline fun <reified T> SQLiteDatabase.getMultiRowValsProNoty(        table: String,
                                                                    columns: Array<out String>,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-): List<List<T?>> = getCursorPro(table, columns) {
+): List<List<T?>> = getCursorProNoty(table, columns) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {

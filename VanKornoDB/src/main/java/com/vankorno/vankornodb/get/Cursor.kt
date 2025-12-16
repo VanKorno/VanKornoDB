@@ -7,41 +7,60 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.queryBuilder.getQuery
+import com.vankorno.vankornodb.dbManagement.data.TypedColumn
+import com.vankorno.vankornodb.misc.getColNames
 
 fun SQLiteDatabase.getCursor(                                     table: String,
-                                                                columns: Array<out String>,
                                                                   where: WhereBuilder.()->Unit = {},
 ): Cursor {
-    val (query, args) = getQuery(table, columns) { this.where = where }
+    val (query, args) = getQuery(table, arrayOf("*")) { this.where = where }
     return rawQuery(query, args)
 }
 
 
 fun SQLiteDatabase.getCursor(                                     table: String,
-                                                                 column: String = "*",
+                                                                columns: Array<TypedColumn<*>>,
                                                                   where: WhereBuilder.()->Unit = {},
 ): Cursor {
-    val (query, args) = getQuery(table, arrayOf(column)) { this.where = where }
+    val (query, args) = getQuery(table, getColNames(columns)) { this.where = where }
     return rawQuery(query, args)
 }
+
+
+fun SQLiteDatabase.getCursor(                                     table: String,
+                                                                 column: TypedColumn<*>,
+                                                                  where: WhereBuilder.()->Unit = {},
+): Cursor {
+    val (query, args) = getQuery(table, arrayOf(column.name)) { this.where = where }
+    return rawQuery(query, args)
+}
+
 
 
 
 
 fun SQLiteDatabase.getCursorPro(                                          table: String,
-                                                                        columns: Array<out String>,
                                                                       queryOpts: QueryOpts.()->Unit,
 ): Cursor {
-    val (query, args) = getQuery(table, columns, queryOpts)
+    val (query, args) = getQuery(table, arrayOf("*"), queryOpts)
+    return rawQuery(query, args)
+}
+
+
+fun SQLiteDatabase.getCursorPro(                                       table: String,
+                                                                     columns: Array<TypedColumn<*>>,
+                                                                   queryOpts: QueryOpts.()->Unit,
+): Cursor {
+    val (query, args) = getQuery(table, getColNames(columns), queryOpts)
     return rawQuery(query, args)
 }
 
 
 fun SQLiteDatabase.getCursorPro(                                          table: String,
-                                                                         column: String = "*",
+                                                                         column: TypedColumn<*>,
                                                                       queryOpts: QueryOpts.()->Unit,
 ): Cursor {
-    val (query, args) = getQuery(table, arrayOf(column), queryOpts)
+    val (query, args) = getQuery(table, arrayOf(column.name), queryOpts)
     return rawQuery(query, args)
 }
 
