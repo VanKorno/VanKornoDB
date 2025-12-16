@@ -35,7 +35,7 @@ fun whereId(id: Int): WhereBuilder.()->Unit = { ID = id }
  * A convenience fun to avoid tons of ById fun overloads. Used like this:
  * getInt(TableName, Column, whereName(name))
  */
-internal fun whereName(name: String): WhereBuilder.()->Unit = { Name = name }
+fun whereName(name: String): WhereBuilder.()->Unit = { Name = name }
 
 
 
