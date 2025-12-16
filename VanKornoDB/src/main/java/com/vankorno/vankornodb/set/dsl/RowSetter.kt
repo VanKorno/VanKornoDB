@@ -19,6 +19,9 @@ class RowSetter : BaseSetter () {
     
     infix fun <T> TypedColumn<T>.setTo(value: T) { _ops += SetOp.Set(this, value) }
     
+    infix fun String.setNotyTo(value: Any) { _ops += SetOp.SetNoty(this, value) }
+    
+    
     
     infix fun IntCol.add(value: Number) { _ops += SetOp.AddToInt(this, value) }
     infix fun LongCol.add(value: Number) { _ops += SetOp.AddToLong(this, value) }

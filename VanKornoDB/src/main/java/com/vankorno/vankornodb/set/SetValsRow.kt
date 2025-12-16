@@ -7,6 +7,7 @@ import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.set.dsl.RowSetter
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 import com.vankorno.vankornodb.set.noty.setNoty
+import com.vankorno.vankornodb.set.noty.setRowValsNoty
 
 fun SQLiteDatabase.setRowVals(                                         table: String,
                                                                        where: WhereBuilder.()->Unit,
@@ -19,6 +20,12 @@ fun SQLiteDatabase.setRowVals(                                         table: St
             is SetOp.Set<*> -> {
                 setNoty(op.value as Any, table, op.col.name, where)
             }
+            is SetOp.SetNoty -> {
+                setNoty(op.value, table, op.col, where)
+            }
+            is SetOp.SetCV -> {
+                setRowValsNoty(table, op.cv, where)
+            }
             
             is SetOp.AddToInt -> { addToInt(op.value, table, op.col, where) }
             is SetOp.AddToLong -> { addToLong(op.value, table, op.col, where) }
@@ -29,3 +36,11 @@ fun SQLiteDatabase.setRowVals(                                         table: St
         }
     }
 }
+
+
+
+
+
+
+
+

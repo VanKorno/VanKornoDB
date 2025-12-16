@@ -18,9 +18,10 @@ import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.set.*
+import com.vankorno.vankornodb.set.dsl.RowSetter
 import com.vankorno.vankornodb.set.noty.setInAllRows
-import com.vankorno.vankornodb.set.noty.setRowVals
 import com.vankorno.vankornodb.set.noty.setRowValsInAllRows
+import com.vankorno.vankornodb.set.noty.setRowValsNoty
 import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -165,68 +166,95 @@ abstract class DbHelperInternal(
     // =============================  M U L T I - S E T T E R S  ============================= \\
     
     fun setRowVals(                                                    table: String,
-                                                                          cv: ContentValues,
-                                                                       async: Boolean = false,
                                                                        where: WhereBuilder.()->Unit,
+                                                                       async: Boolean = false,
+                                                                     actions: RowSetter.()->Unit,
     ) = write("setRowVals", async) {
-        it.setRowVals(table, cv, where)
+        it.setRowVals(table, where, actions)
     }
     
     suspend fun setRowValsSusp(                                        table: String,
-                                                                          cv: ContentValues,
                                                                        where: WhereBuilder.()->Unit,
+                                                                     actions: RowSetter.()->Unit,
     ) = writeSusp("setRowValsSusp") {
-        it.setRowVals(table, cv, where)
+        it.setRowVals(table, where, actions)
     }
     
     
-    fun setRowVals(                                                    table: String,
-                                                                       where: WhereBuilder.()->Unit,
+    
+    
+    
+    
+    
+    
+    // Not type-safe TODO Check if needed
+    
+    fun setRowValsNoty(                                                table: String,
+                                                                          cv: ContentValues,
                                                                        async: Boolean = false,
-                                                               vararg values: Pair<String, Any?>,
-    ) = write("setRowVals", async) {
-        it.setRowVals(table, where, *values)
+                                                                       where: WhereBuilder.()->Unit,
+    ) = write("setRowValsNoty", async) {
+        it.setRowValsNoty(table, cv, where)
     }
     
-    suspend fun setRowValsSusp(                                        table: String,
+    suspend fun setRowValsNotySusp(                                    table: String,
+                                                                          cv: ContentValues,
+                                                                       where: WhereBuilder.()->Unit,
+    ) = writeSusp("setRowValsNotySusp") {
+        it.setRowValsNoty(table, cv, where)
+    }
+    
+    
+    fun setRowValsNoty(                                                table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
                                                                vararg values: Pair<String, Any?>,
-    ) = writeSusp("setRowValsSusp") { it.setRowVals(table, where, *values) }
+    ) = write("setRowValsNoty", async) {
+        it.setRowValsNoty(table, where, *values)
+    }
+    
+    suspend fun setRowValsNotySusp(                                    table: String,
+                                                                       where: WhereBuilder.()->Unit,
+                                                                       async: Boolean = false,
+                                                               vararg values: Pair<String, Any?>,
+    ) = writeSusp("setRowValsNotySusp") { it.setRowValsNoty(table, where, *values) }
     
     
     // -------------------------------------------------------------------------------------- \\
     
     
-    inline fun setInAllRows(                                                value: Any,
+    inline fun setInAllRowsNoty(                                            value: Any,
                                                                             table: String,
                                                                            column: String,
                                                                             async: Boolean = false,
-    ) = write("setInAllRows", async) {
+    ) = write("setInAllRowsNoty", async) {
         it.setInAllRows(value, table, column)
     }
-    suspend fun setInAllRowsSusp(                                                  value: Any,
+    suspend fun setInAllRowsNotySusp(                                              value: Any,
                                                                                    table: String,
                                                                                   column: String,
-    ) = writeSusp("setInAllRowsSusp") {
+    ) = writeSusp("setInAllRowsNotySusp") {
         it.setInAllRows(value, table, column)
     }
     
     
-    inline fun setRowValsInAllRows(                                       table: String,
+    inline fun setRowValsInAllRowsNoty(                                   table: String,
                                                                           async: Boolean = false,
                                                                   vararg values: Pair<String, Any?>,
-    ) = write("setRowValsInAllRows", async) {
+    ) = write("setRowValsInAllRowsNoty", async) {
         it.setRowValsInAllRows(table, *values)
     }
-    suspend fun setRowValsInAllRowsSusp(                                  table: String,
+    suspend fun setRowValsInAllRowsNotySusp(                              table: String,
                                                                   vararg values: Pair<String, Any?>,
-    ) = writeSusp("setRowValsInAllRowsSusp") {
+    ) = writeSusp("setRowValsInAllRowsNotySusp") {
         it.setRowValsInAllRows(table, *values)
     }
     
     
-    // ---------------------------------  S E T   R O W S  --------------------------------- \\
+    
+    
+    
+    // -----------------------------------  O B J E C T  ----------------------------------- \\
     
     inline fun <T : DbEntity> addObj(                                       table: String,
                                                                               obj: T,

@@ -86,7 +86,7 @@ fun SQLiteDatabase.setNoty(                                            value: An
 
 // ==============================  M U L T I - S E T T E R S  ============================== \\
 
-fun SQLiteDatabase.setRowVals(                                         table: String,
+fun SQLiteDatabase.setRowValsNoty(                                     table: String,
                                                                           cv: ContentValues,
                                                                        where: WhereBuilder.()->Unit,
 ) {
@@ -95,7 +95,7 @@ fun SQLiteDatabase.setRowVals(                                         table: St
 }
 
 
-fun SQLiteDatabase.setRowVals(                                         table: String,
+fun SQLiteDatabase.setRowValsNoty(                                     table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                vararg values: Pair<String, Any?>,
 ) {

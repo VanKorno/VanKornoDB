@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 sealed class SetOp {
     data class Set<T>(val col: TypedColumn<T>, val value: T): SetOp()
+    data class SetNoty(val col: String, val value: Any): SetOp()
     
     data class SetCV(val cv: ContentValues): SetOp()
     
