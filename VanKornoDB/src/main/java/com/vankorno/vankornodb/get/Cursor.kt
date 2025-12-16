@@ -19,7 +19,7 @@ fun SQLiteDatabase.getCursor(                                     table: String,
 
 
 fun SQLiteDatabase.getCursor(                                     table: String,
-                                                                columns: Array<TypedColumn<*>>,
+                                                                columns: Array<out TypedColumn<*>>,
                                                                   where: WhereBuilder.()->Unit = {},
 ): Cursor {
     val (query, args) = getQuery(table, getColNames(columns)) { this.where = where }
@@ -47,9 +47,9 @@ fun SQLiteDatabase.getCursorPro(                                          table:
 }
 
 
-fun SQLiteDatabase.getCursorPro(                                       table: String,
-                                                                     columns: Array<TypedColumn<*>>,
-                                                                   queryOpts: QueryOpts.()->Unit,
+fun SQLiteDatabase.getCursorPro(                                   table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                               queryOpts: QueryOpts.()->Unit,
 ): Cursor {
     val (query, args) = getQuery(table, getColNames(columns), queryOpts)
     return rawQuery(query, args)
