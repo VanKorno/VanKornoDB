@@ -9,7 +9,7 @@ import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.mapper.toEntity
-import com.vankorno.vankornodb.misc.data.SharedCol.shID
+import com.vankorno.vankornodb.misc.data.SharedCol.cID
 
 fun SQLiteDatabase.getRandomInt(                                  table: String,
                                                                  column: IntCol,
@@ -37,7 +37,7 @@ fun SQLiteDatabase.getRandomInt(                                  table: String,
  */
 fun SQLiteDatabase.getRandomId(                                   table: String,
                                                                   where: WhereBuilder.()->Unit = {},
-): Int = getRandomInt(table, shID, where)
+): Int = getRandomInt(table, cID, where)
 
 
 

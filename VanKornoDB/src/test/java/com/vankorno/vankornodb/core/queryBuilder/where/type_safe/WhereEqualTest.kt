@@ -4,8 +4,8 @@ import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
-import com.vankorno.vankornodb.misc.data.SharedCol.shActive
-import com.vankorno.vankornodb.misc.data.SharedCol.shPosition
+import com.vankorno.vankornodb.misc.data.SharedCol.cActive
+import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -13,10 +13,10 @@ class WhereEqualTest {
     
     @Test
     fun `Equal Int`() {
-        val where: WhereBuilder.()->Unit = { shPosition equal 11 }
+        val where: WhereBuilder.()->Unit = { cPosition equal 11 }
         val whereObj = WhereBuilder().apply(where)
         
-        assertEquals(whereObj.clauses[0], shPosition.name + "=?")
+        assertEquals(whereObj.clauses[0], cPosition.name + "=?")
         assertEquals(whereObj.args[0], "11")
     }
     
@@ -31,12 +31,12 @@ class WhereEqualTest {
     
     @Test
     fun `Equal Bool`() {
-        val whereObj = WhereBuilder().apply { shActive equal true }
+        val whereObj = WhereBuilder().apply { cActive equal true }
         
         assertEquals(whereObj.clauses[0], "active=?")
         assertEquals(whereObj.args[0], "1")
         
-        val whereObj2 = WhereBuilder().apply { shActive equal false }
+        val whereObj2 = WhereBuilder().apply { cActive equal false }
         
         assertEquals(whereObj2.clauses[0], "active=?")
         assertEquals(whereObj2.args[0], "0")

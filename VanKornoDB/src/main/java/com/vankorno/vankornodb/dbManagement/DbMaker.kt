@@ -17,7 +17,7 @@ import com.vankorno.vankornodb.get.getColStringsPro
 import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
-import com.vankorno.vankornodb.misc.data.SharedCol.shName
+import com.vankorno.vankornodb.misc.data.SharedCol.cName
 
 /* 
 * THE LIFECYCLE AT RUNTIME:
@@ -144,7 +144,7 @@ abstract class DbMaker(           context: Context,
     
     private fun cleanupVersionTable(                                             db: SQLiteDatabase
     ) {
-        val allNames = db.getColStringsPro(TABLE_EntityVersions, shName)
+        val allNames = db.getColStringsPro(TABLE_EntityVersions, cName)
         if (allNames.isEmpty()) return //\/\/\/\/\/\
         
         val namesToDelete = allNames.filter { name ->
@@ -159,7 +159,7 @@ abstract class DbMaker(           context: Context,
     ) {
         for (meta in entityMeta) {
             val dbName = meta.dbRowName
-            val rowExists = db.hasRows(TABLE_EntityVersions) { shName equal dbName }
+            val rowExists = db.hasRows(TABLE_EntityVersions) { cName equal dbName }
             if (rowExists)
                 continue //\/\/\
             

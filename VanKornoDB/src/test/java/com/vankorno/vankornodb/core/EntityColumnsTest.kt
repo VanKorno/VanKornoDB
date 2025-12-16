@@ -4,10 +4,10 @@ import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.iListCol
 import com.vankorno.vankornodb.dbManagement.data.sListCol
-import com.vankorno.vankornodb.misc.data.SharedCol.shActive
-import com.vankorno.vankornodb.misc.data.SharedCol.shID
-import com.vankorno.vankornodb.misc.data.SharedCol.shName
-import com.vankorno.vankornodb.misc.data.SharedCol.shRowID
+import com.vankorno.vankornodb.misc.data.SharedCol.cActive
+import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.misc.data.SharedCol.cName
+import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -17,14 +17,14 @@ class EntityColumnsTest {
     fun `Single columns added`() {
         val cols = object : EntityColumns {
             override val columns = buildColList {
-                +shID
-                +shName
+                +cID
+                +cName
             }
         }.columns
 
         assertEquals(2, cols.size)
-        assertEquals(shID, cols[0])
-        assertEquals(shName, cols[1])
+        assertEquals(cID, cols[0])
+        assertEquals(cName, cols[1])
     }
     
     
@@ -50,18 +50,18 @@ class EntityColumnsTest {
     fun `Mixed single and list columns`() {
         val cols = object : EntityColumns {
             override val columns = buildColList {
-                +shRowID
+                +cRowID
                 +sListCol("tag_", 2, "x")
-                +shActive
+                +cActive
             }
         }.columns
 
         assertEquals(4, cols.size)
 
-        assertEquals(shRowID, cols[0])
+        assertEquals(cRowID, cols[0])
         assertEquals("tag_1", cols[1].name)
         assertEquals("tag_2", cols[2].name)
-        assertEquals(shActive, cols[3])
+        assertEquals(cActive, cols[3])
     }
 }
 

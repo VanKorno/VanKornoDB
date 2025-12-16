@@ -11,10 +11,23 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
  * Just some commonly used columns
  */
 object SharedCol {
-    val shID = iCol(_ID, -1)
-    val shRowID = iCol(RowID, -1)
-    val shName = sCol(_Name)
-    val shPosition = iCol(_Position)
-    val shType = sCol(_Type)
-    val shActive = bCol("active")
+    val cID = iCol(_ID, -1)
+    val cRowID by lazy { iCol(RowID, -1) }
+    val cName = sCol(_Name)
+    val cPosition = iCol(_Position)
+    val cType by lazy { sCol(_Type) }
+    
+    val cActive by lazy { bCol("active") }
+    val cEnabled by lazy { bCol("enabled") }
+    
+    val cText by lazy { sCol("text") }
+    val cInfo by lazy { sCol("info") }
+    val cDescr by lazy { sCol("description") }
+    
+    val cInt by lazy { iCol("cInt") }
+    val cStr by lazy { iCol("cStr") }
+    val cBool by lazy { iCol("cBool") }
+    val cLong by lazy { iCol("cLong") }
+    val cFloat by lazy { iCol("cFloat") }
+    
 }

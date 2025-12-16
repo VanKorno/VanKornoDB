@@ -3,11 +3,11 @@ package com.vankorno.vankornodb.core.queryBuilder.where
 import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
-import com.vankorno.vankornodb.misc.data.SharedCol.shActive
-import com.vankorno.vankornodb.misc.data.SharedCol.shID
-import com.vankorno.vankornodb.misc.data.SharedCol.shName
-import com.vankorno.vankornodb.misc.data.SharedCol.shPosition
-import com.vankorno.vankornodb.misc.data.SharedCol.shType
+import com.vankorno.vankornodb.misc.data.SharedCol.cActive
+import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.misc.data.SharedCol.cName
+import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
+import com.vankorno.vankornodb.misc.data.SharedCol.cType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -17,9 +17,9 @@ class WhereInOrderByTest {
     fun `where() assembles CASE with multiple WhenAndOrders and else`() {
         val builder = OrderByBuilder().apply {
             When(
-                orderWhen({ shPosition(); shName.flip() }) { shID equal 1 },
-                orderWhen("RANDOM()") { shName notEqual "NotBob" },
-                Else = { shID() }
+                orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
+                orderWhen("RANDOM()") { cName notEqual "NotBob" },
+                Else = { cID() }
             )
         }
         
@@ -39,10 +39,10 @@ class WhereInOrderByTest {
         
         val builder = OrderByBuilder().apply {
             When(
-                orderWhen({ shPosition(); shName.flip() }) { shID equal 1 },
-                orderWhen({ raw("RANDOM()") }) { shName notEqual "NotBob" },
-                orderWhen({ score(); shID() }) { shActive equal true },
-                Else = { shID() }
+                orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
+                orderWhen({ raw("RANDOM()") }) { cName notEqual "NotBob" },
+                orderWhen({ score(); cID() }) { cActive equal true },
+                Else = { cID() }
             )
         }
         
@@ -61,7 +61,7 @@ class WhereInOrderByTest {
     fun `When with single OrderWhen and no Else`() {
         val builder = OrderByBuilder().apply {
             When(
-                orderWhen({ shPosition() }) { shID equal 42 }
+                orderWhen({ cPosition() }) { cID equal 42 }
             )
         }
         val sql = builder.buildStr()
@@ -76,7 +76,7 @@ class WhereInOrderByTest {
     fun `When with Else only`() {
         val builder = OrderByBuilder().apply {
             When(
-                Else = { shID(); shName() }
+                Else = { cID(); cName() }
             )
         }
         val sql = builder.buildStr()
@@ -91,10 +91,10 @@ class WhereInOrderByTest {
     fun `When with typed column in orderBy`() {
         val builder = OrderByBuilder().apply {
             When(
-                orderWhen(shPosition) { shName equal "NotBob" },
-                orderWhen(shType) { shActive equal true },
-                orderWhen(iCol("yolo")) { shType equal "test" },
-                Else = { shID() }
+                orderWhen(cPosition) { cName equal "NotBob" },
+                orderWhen(cType) { cActive equal true },
+                orderWhen(iCol("yolo")) { cType equal "test" },
+                Else = { cID() }
             )
         }
         val sql = builder.buildStr()
@@ -111,8 +111,8 @@ class WhereInOrderByTest {
     fun `When with raw string orders and multiple conditions`() {
         val builder = OrderByBuilder().apply {
             When(
-                orderWhen("ABS(position)+id DESC") { shActive equal true },
-                orderWhen("RANDOM()") { shType equal "test" },
+                orderWhen("ABS(position)+id DESC") { cActive equal true },
+                orderWhen("RANDOM()") { cType equal "test" },
                 Else = { raw("id*2") }
             )
         }
