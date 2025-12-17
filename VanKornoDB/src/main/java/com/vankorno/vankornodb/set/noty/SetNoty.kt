@@ -53,7 +53,7 @@ fun SQLiteDatabase.setNoty(                                       value: Any,
 
 
 
-private fun getBoolSafeVal(value: Any) = if (value is Boolean)
+internal fun getBoolSafeVal(value: Any) = if (value is Boolean)
                                              if (value) 1 else 0
                                          else
                                              value

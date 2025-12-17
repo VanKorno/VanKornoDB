@@ -10,24 +10,22 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 
-
 class RowSetter : BaseSetter () {
-    
     fun setCV(cv: ContentValues) { _ops += SetOp.SetCV(cv) }
     fun setContentValues(cv: ContentValues) = setCV(cv)
-    
     
     infix fun <T> TypedColumn<T>.setTo(value: T) { _ops += SetOp.Set(this, value) }
     
     infix fun String.setNotyTo(value: Any) { _ops += SetOp.SetNoty(this, value) }
-    
-    
     
     infix fun IntCol.add(value: Number) { _ops += SetOp.AddToInt(this, value) }
     infix fun LongCol.add(value: Number) { _ops += SetOp.AddToLong(this, value) }
     infix fun FloatCol.add(value: Number) { _ops += SetOp.AddToFloat(this, value) }
     
     fun BoolCol.flip() { _ops += SetOp.Flip(this) }
+    
+    fun OFF(col: BoolCol) { _ops += SetOp.Set(col, false) }
+    fun ON(col: BoolCol) { _ops += SetOp.Set(col, true) }
     
     
 }
