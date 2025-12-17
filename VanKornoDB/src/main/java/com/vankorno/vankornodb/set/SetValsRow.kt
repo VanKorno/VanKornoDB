@@ -41,66 +41,48 @@ fun SQLiteDatabase.setRowVals(                                         table: St
         usedCols.clear()
     }
     
+    fun playTogether(                            colName: String,
+                                                     run: (String)->Unit,
+    ) {
+        if (colName in usedCols) flush()
+        run(colName)
+        usedCols += colName
+    }
+    
     ops.forEach { op ->
         when (op) {
             is SetOp.Set<*> -> {
-                val col = op.col.name
-                if (col in usedCols) flush()
-                
-                setParts += "$col = ?"
-                args += getBoolSafeVal(op.value as Any)
-                usedCols += col
+                playTogether(op.col.name) { col ->
+                    setParts += "$col = ?"
+                    args += getBoolSafeVal(op.value as Any)
+                }
             }
             is SetOp.SetNoty -> {
-                val col = op.col
-                if (col in usedCols) flush()
-
-                setParts += "$col = ?"
-                args += getBoolSafeVal(op.value)
-                usedCols += col
+                playTogether(op.col) { col ->
+                    setParts += "$col = ?"
+                    args += getBoolSafeVal(op.value)
+                }
             }
             is SetOp.SetCV -> {
                 flush()
                 setRowValsNoty(table, op.cv, where)
             }
             
-            is SetOp.AddToInt -> {
-                val col = op.col.name
-                if (col in usedCols) flush()
-                
-                setParts += "$col = $col + ?"
-                args += op.value
-                usedCols += col
-            }
-            is SetOp.AddToLong -> {
-                val col = op.col.name
-                if (col in usedCols) flush()
-                
-                setParts += "$col = $col + ?"
-                args += op.value
-                usedCols += col
-            }
-            is SetOp.AddToFloat -> {
-                val col = op.col.name
-                if (col in usedCols) flush()
-                
-                setParts += "$col = $col + ?"
-                args += op.value
-                usedCols += col
-            }
-            
             is SetOp.Flip -> {
-                val col = op.col.name
-                if (col in usedCols) flush()
-                
-                setParts += "$col = NOT $col"
-                usedCols += col
+                playTogether(op.col.name) { col ->
+                    setParts += "$col = NOT $col"
+                }
+            }
+            
+            is SetOp.NumOp -> {
+                playTogether(op.colName) { col ->
+                    setParts += "$col = $col ${op.sqlOp} ?"
+                    args += op.value
+                }
             }
             
             
             
-            
-            //else -> {}
         }
     }
     flush()

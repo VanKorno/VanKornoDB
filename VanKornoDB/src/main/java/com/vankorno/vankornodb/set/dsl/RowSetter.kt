@@ -18,14 +18,26 @@ class RowSetter : BaseSetter () {
     
     infix fun String.setNotyTo(value: Any) { _ops += SetOp.SetNoty(this, value) }
     
-    infix fun IntCol.add(value: Number) { _ops += SetOp.AddToInt(this, value) }
-    infix fun LongCol.add(value: Number) { _ops += SetOp.AddToLong(this, value) }
-    infix fun FloatCol.add(value: Number) { _ops += SetOp.AddToFloat(this, value) }
-    
     fun BoolCol.flip() { _ops += SetOp.Flip(this) }
-    
     fun OFF(col: BoolCol) { _ops += SetOp.Set(col, false) }
     fun ON(col: BoolCol) { _ops += SetOp.Set(col, true) }
+    
+    
+    infix fun IntCol.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
+    infix fun LongCol.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
+    infix fun FloatCol.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
+    
+    infix fun IntCol.sub(value: Number) { add(-value.toInt()) }
+    infix fun LongCol.sub(value: Number) { add(-value.toLong()) }
+    infix fun FloatCol.sub(value: Number) { add(-value.toFloat()) }
+    
+    infix fun IntCol.mult(value: Number) { _ops += SetOp.NumOp(this.name, value, "*") }
+    infix fun LongCol.mult(value: Number) { _ops += SetOp.NumOp(this.name, value, "*") }
+    infix fun FloatCol.mult(value: Number) { _ops += SetOp.NumOp(this.name, value, "*") }
+    
+    
+    
+    
     
     
 }
