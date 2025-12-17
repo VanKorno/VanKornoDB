@@ -52,7 +52,10 @@ class RowSetter : BaseSetter () {
     infix fun LongCol.mult(value: Number) = lMultDiv(this, value, "*")
     infix fun LongCol.div(value: Number) = lMultDiv(this, value, "/")
     
-    private fun lMultDiv(col: LongCol, value: Number, oper: String) {
+    private fun lMultDiv(                                                            col: LongCol,
+                                                                                   value: Number,
+                                                                                    oper: String,
+    ) {
         val v = value.toLong()
         if (v == 1L) return //\/\/\/\/\/\
         
@@ -66,7 +69,10 @@ class RowSetter : BaseSetter () {
     infix fun FloatCol.mult(value: Number) = fMultDiv(this, value, "*")
     infix fun FloatCol.div(value: Number) = fMultDiv(this, value, "/")
     
-    private fun fMultDiv(col: FloatCol, value: Number, oper: String) {
+    private fun fMultDiv(                                                            col: FloatCol,
+                                                                                   value: Number,
+                                                                                    oper: String,
+    ) {
         val v = value.toFloat()
         if (v == 1f) return //\/\/\/\/\/\
         
