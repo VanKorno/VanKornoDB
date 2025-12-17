@@ -16,6 +16,7 @@ sealed class SetOp {
     
     data class NumOp(val colName: String, val value: Number, val sqlOp: String) : SetOp()
     
+    data class Abs(val colName: String) : SetOp()
     
     
     

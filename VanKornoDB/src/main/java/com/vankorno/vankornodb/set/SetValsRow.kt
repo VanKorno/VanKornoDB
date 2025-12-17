@@ -81,6 +81,11 @@ fun SQLiteDatabase.setRowVals(                                         table: St
                 }
             }
             
+            is SetOp.Abs -> {
+                playTogether(op.colName) { col ->
+                    setParts += "$col = ABS($col)"
+                }
+            }
             
             
         }

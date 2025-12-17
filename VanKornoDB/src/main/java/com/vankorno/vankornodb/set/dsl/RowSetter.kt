@@ -35,6 +35,25 @@ class RowSetter : BaseSetter () {
     infix fun IntCol.mult(value: Number) = iMultDiv(this, value, "*")
     infix fun IntCol.div(value: Number) = iMultDiv(this, value, "/")
     
+    infix fun LongCol.mult(value: Number) = lMultDiv(this, value, "*")
+    infix fun LongCol.div(value: Number) = lMultDiv(this, value, "/")
+    
+    infix fun FloatCol.mult(value: Number) = fMultDiv(this, value, "*")
+    infix fun FloatCol.div(value: Number) = fMultDiv(this, value, "/")
+    
+    fun IntCol.abs() { _ops += SetOp.Abs(this.name) }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // TODO Move maybe
+    
     private fun iMultDiv(                                                            col: IntCol,
                                                                                    value: Number,
                                                                                     oper: String,
@@ -47,11 +66,6 @@ class RowSetter : BaseSetter () {
                 else
                     SetOp.NumOp(col.name, v, oper)
     }
-    
-    
-    infix fun LongCol.mult(value: Number) = lMultDiv(this, value, "*")
-    infix fun LongCol.div(value: Number) = lMultDiv(this, value, "/")
-    
     private fun lMultDiv(                                                            col: LongCol,
                                                                                    value: Number,
                                                                                     oper: String,
@@ -64,10 +78,6 @@ class RowSetter : BaseSetter () {
                 else
                     SetOp.NumOp(col.name, v, oper)
     }
-    
-    
-    infix fun FloatCol.mult(value: Number) = fMultDiv(this, value, "*")
-    infix fun FloatCol.div(value: Number) = fMultDiv(this, value, "/")
     
     private fun fMultDiv(                                                            col: FloatCol,
                                                                                    value: Number,
