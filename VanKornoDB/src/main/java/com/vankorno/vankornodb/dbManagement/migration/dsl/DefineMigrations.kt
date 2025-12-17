@@ -96,6 +96,8 @@ abstract class MigrationDefinitionBuilderInternal {
         
         infix fun String.modify(block: TransformColInternal.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
         
+        infix fun TypedColumn<*>.modify(block: TransformColInternal.FieldOverride.()->Unit): ModifyRow = ModifyRow(this.name, block)
+        
         
         fun milestone(
                      vararg modifications: ModifyRow,
