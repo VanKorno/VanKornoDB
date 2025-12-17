@@ -37,7 +37,7 @@ class OrderByBuilder : OrderByBuilderInternal() {
     ) {
         val inner = OrderByBuilder().apply(builder)
         if (inner.orderoids.isNotEmpty()) {
-            orderoids += "(" + inner.orderoids.joinToString(", ") + ")"
+            orderoids += "(" + inner.buildStr() + ")"
             args.addAll(inner.args)
         }
     }

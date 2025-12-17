@@ -1,8 +1,11 @@
 package com.vankorno.vankornodb.get.noty
-
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.misc.getBoolean
@@ -18,6 +21,7 @@ inline fun <R> SQLiteDatabase.getValueNoty(                            table: St
     val builder = WhereBuilder().apply(where)
     val whereClause = builder.clauses.joinToString(" ")
     val whereArgs = builder.args.toTypedArray()
+    
     val whereClauseStr = if (whereClause.isNotBlank()) " WHERE $whereClause" else ""
     
     val sql = "SELECT $column FROM $table $whereClauseStr LIMIT 1"
@@ -28,6 +32,29 @@ inline fun <R> SQLiteDatabase.getValueNoty(                            table: St
         else {
             // region LOG
             Log.e(DbTAG, "$funName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
+            // endregion
+            default
+        }
+    }
+}
+
+
+fun <R> SQLiteDatabase.getValueProNoty(                              table: String,
+                                                                    column: String,
+                                                                   default: R,
+                                                                   funName: String,
+                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                            getCursorValue: (Cursor)->R,
+): R {
+    return getCursorProNoty(table, arrayOf(column)) {
+        applyOpts(queryOpts)
+        limit = 1
+    }.use { cursor ->
+        if (cursor.moveToFirst())
+            getCursorValue(cursor)
+        else {
+            // region LOG
+            Log.e(DbTAG, "$funName() Unable to get value from $table (column: $column). Returning default.")
             // endregion
             default
         }
