@@ -41,11 +41,18 @@ class RowSetter : BaseSetter () {
     infix fun FloatCol.mult(value: Number) = fMultDiv(this, value, "*")
     infix fun FloatCol.div(value: Number) = fMultDiv(this, value, "/")
     
+    
     fun IntCol.abs() { _ops += SetOp.Abs(this.name) }
     
     
+    infix fun IntCol.max(value: Number) { _ops += SetOp.Clamp(this.name, value, true) }
+    infix fun IntCol.min(value: Number) { _ops += SetOp.Clamp(this.name, value, false) }
     
+    infix fun LongCol.max(value: Number) { _ops += SetOp.Clamp(this.name, value, true) }
+    infix fun LongCol.min(value: Number) { _ops += SetOp.Clamp(this.name, value, false) }
     
+    infix fun FloatCol.max(value: Number) { _ops += SetOp.Clamp(this.name, value, true) }
+    infix fun FloatCol.min(value: Number) { _ops += SetOp.Clamp(this.name, value, false) }
     
     
     

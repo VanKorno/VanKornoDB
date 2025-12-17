@@ -87,7 +87,13 @@ fun SQLiteDatabase.setRowVals(                                         table: St
                 }
             }
             
-            
+            is SetOp.Clamp -> {
+                playTogether(op.colName) { col ->
+                    val func = if (op.isMax) "MAX" else "MIN"
+                    setParts += "$col = $func($col, ?)"
+                    args += op.value
+                }
+            }
         }
     }
     flush()
