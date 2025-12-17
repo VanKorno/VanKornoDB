@@ -18,12 +18,13 @@ inline fun <R> SQLiteDatabase.getValueNoty(                            table: St
     val builder = WhereBuilder().apply(where)
     val whereClause = builder.clauses.joinToString(" ")
     val whereArgs = builder.args.toTypedArray()
-
-    return rawQuery(
-        "SELECT $column FROM $table WHERE $whereClause LIMIT 1",
-        whereArgs
-    ).use { cursor ->
-        if (cursor.moveToFirst()) getCursorValue(cursor)
+    val whereClauseStr = if (whereClause.isNotBlank()) " WHERE $whereClause" else ""
+    
+    val sql = "SELECT $column FROM $table $whereClauseStr LIMIT 1"
+    
+    return rawQuery(sql, whereArgs).use { cursor ->
+        if (cursor.moveToFirst())
+            getCursorValue(cursor)
         else {
             // region LOG
             Log.e(DbTAG, "$funName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
