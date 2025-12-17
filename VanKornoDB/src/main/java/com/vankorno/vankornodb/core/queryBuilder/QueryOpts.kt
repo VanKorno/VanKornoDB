@@ -83,6 +83,12 @@ open class QueryOptsInternal {
     fun LongCol.flip() = DescendingLongCol(this.name)
     fun FloatCol.flip() = DescendingFloatCol(this.name)
     
+    fun IntCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
+    fun StrCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
+    fun BoolCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
+    fun LongCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
+    fun FloatCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
+    
     
     
     
