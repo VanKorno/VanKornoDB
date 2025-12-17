@@ -18,7 +18,12 @@ sealed class SetOp {
     
     data class Abs(val colName: String) : SetOp()
     
-    data class Clamp(val colName: String, val value: Number, val isMax: Boolean) : SetOp()
+    data class MinMax(val colName: String, val value: Number, val isMax: Boolean) : SetOp()
+    
+    data class CoerceIn(val colName: String, val min: Number, val max: Number) : SetOp()
+    
+    
+    
     
     
     

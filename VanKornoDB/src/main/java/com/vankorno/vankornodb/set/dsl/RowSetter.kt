@@ -45,17 +45,27 @@ class RowSetter : BaseSetter () {
     fun IntCol.abs() { _ops += SetOp.Abs(this.name) }
     
     
-    infix fun IntCol.max(value: Number) { _ops += SetOp.Clamp(this.name, value, true) }
-    infix fun IntCol.min(value: Number) { _ops += SetOp.Clamp(this.name, value, false) }
+    infix fun IntCol.max(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
+    infix fun IntCol.min(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
     
-    infix fun LongCol.max(value: Number) { _ops += SetOp.Clamp(this.name, value, true) }
-    infix fun LongCol.min(value: Number) { _ops += SetOp.Clamp(this.name, value, false) }
+    infix fun LongCol.max(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
+    infix fun LongCol.min(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
     
-    infix fun FloatCol.max(value: Number) { _ops += SetOp.Clamp(this.name, value, true) }
-    infix fun FloatCol.min(value: Number) { _ops += SetOp.Clamp(this.name, value, false) }
+    infix fun FloatCol.max(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
+    infix fun FloatCol.min(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
     
     
+    infix fun IntCol.coerceIn(range: IntRange) {
+        _ops += SetOp.CoerceIn(this.name, range.first, range.last)
+    }
     
+    infix fun LongCol.coerceIn(range: LongRange) {
+        _ops += SetOp.CoerceIn(this.name, range.first, range.last)
+    }
+    
+    infix fun FloatCol.coerceIn(range: ClosedFloatingPointRange<Float>) {
+        _ops += SetOp.CoerceIn(this.name, range.start, range.endInclusive)
+    }
     
     
     
