@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.MigrationDefinitionBuilder
 import com.vankorno.vankornodb.api.TransformCol
+import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
@@ -115,6 +116,8 @@ abstract class MigrationDefinitionBuilderInternal {
         ) {
             val records = mutableMapOf<String, MutableList<RenameRecord>>()
             
+            
+            infix fun TypedColumn<*>.from(old: String) = PartialRename(this.name, old)
             
             infix fun String.from(old: String) = PartialRename(this, old)
             
