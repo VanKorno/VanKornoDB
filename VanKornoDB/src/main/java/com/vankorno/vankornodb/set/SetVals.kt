@@ -13,9 +13,9 @@ import com.vankorno.vankornodb.set.dsl.data.SetOp
 import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
 
-fun SQLiteDatabase.setVals(                                            table: String,
-                                                                       where: WhereBuilder.()->Unit,
-                                                                     actions: SetBuilder.()->Unit,
+fun SQLiteDatabase.setVals(                                       table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+                                                                actions: SetBuilder.()->Unit,
 ) {
     val ops = SetBuilder().apply(actions).ops
     val builder = WhereBuilder().apply(where)
