@@ -30,7 +30,7 @@ class StartTest() : BaseAndroidTest() {
         
         val target = VersionEntity(
             name = EntityMeta.TestEntt.dbRowName,
-            version = 1,
+            version = 3,
             id = 1
         )
         assertEquals(firstRow.name, target.name)
