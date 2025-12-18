@@ -48,10 +48,10 @@ sealed class SetOp {
     ) : SetOp()
     
     
-    data class FromCol(
+    data class SetAs(
                                 val setCol: String,
                                 val getCol: String,
-                                   val ops: List<SetOp>,
+                                   val ops: List<SetOp> = emptyList(),
     ) : SetOp()
     
     

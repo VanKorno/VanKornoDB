@@ -107,7 +107,7 @@ fun SQLiteDatabase.setRowVals(                                         table: St
                 }
             }
             
-            is SetOp.FromCol -> {
+            is SetOp.SetAs -> {
                 playTogether(op.setCol, listOf(op.getCol)) { setCol ->
                     val localArgs = mutableListOf<Any>()
                     var expr = op.getCol

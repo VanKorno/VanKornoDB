@@ -69,9 +69,34 @@ class RowSetter : BaseSetter () {
     }
     
     
+    // ----------------- col-to-col DSL -----------------
     
+    fun IntCol.setAs(                                                  col: IntCol,
+                                                                     build: RowSetter.()->Unit = {},
+    ) {
+        val innerSetter = RowSetter().apply(build)
+        _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
+    }
     
+    fun LongCol.setAs(                                                 col: LongCol,
+                                                                     build: RowSetter.()->Unit = {},
+    ) {
+        val innerSetter = RowSetter().apply(build)
+        _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
+    }
     
+    fun FloatCol.setAs(                                                col: FloatCol,
+                                                                     build: RowSetter.()->Unit = {},
+    ) {
+        val innerSetter = RowSetter().apply(build)
+        _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
+    }
+    
+    infix fun IntCol.setAs(col: IntCol) { _ops += SetOp.SetAs(this.name, col.name) }
+    infix fun LongCol.setAs(col: LongCol) { _ops += SetOp.SetAs(this.name, col.name) }
+    infix fun FloatCol.setAs(col: FloatCol) { _ops += SetOp.SetAs(this.name, col.name) }
+    
+    infix fun BoolCol.setAs(col: BoolCol) { _ops += SetOp.SetAs(this.name, col.name) }
     
     
     
