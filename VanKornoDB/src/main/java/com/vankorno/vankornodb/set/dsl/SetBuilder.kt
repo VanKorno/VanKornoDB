@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 
-class RowSetter : BaseSetter () {
+class SetBuilder : BaseSetBuilder () {
     fun setCV(cv: ContentValues) { _ops += SetOp.SetCV(cv) }
     fun setContentValues(cv: ContentValues) = setCV(cv)
     
@@ -72,23 +72,23 @@ class RowSetter : BaseSetter () {
     // ----------------- col-to-col DSL -----------------
     
     fun IntCol.setAs(                                                  col: IntCol,
-                                                                     build: RowSetter.()->Unit = {},
+                                                                     build: SetBuilder.()->Unit = {},
     ) {
-        val innerSetter = RowSetter().apply(build)
+        val innerSetter = SetBuilder().apply(build)
         _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
     }
     
     fun LongCol.setAs(                                                 col: LongCol,
-                                                                     build: RowSetter.()->Unit = {},
+                                                                     build: SetBuilder.()->Unit = {},
     ) {
-        val innerSetter = RowSetter().apply(build)
+        val innerSetter = SetBuilder().apply(build)
         _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
     }
     
     fun FloatCol.setAs(                                                col: FloatCol,
-                                                                     build: RowSetter.()->Unit = {},
+                                                                     build: SetBuilder.()->Unit = {},
     ) {
-        val innerSetter = RowSetter().apply(build)
+        val innerSetter = SetBuilder().apply(build)
         _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
     }
     

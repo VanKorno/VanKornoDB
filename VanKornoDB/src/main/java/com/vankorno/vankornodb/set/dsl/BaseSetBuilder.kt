@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.set.dsl
 **/
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 
-open class BaseSetter {
+open class BaseSetBuilder {
     protected val _ops = mutableListOf<SetOp>()
     
     val ops: List<SetOp>

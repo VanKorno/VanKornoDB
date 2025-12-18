@@ -18,7 +18,7 @@ import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.set.*
-import com.vankorno.vankornodb.set.dsl.RowSetter
+import com.vankorno.vankornodb.set.dsl.SetBuilder
 import com.vankorno.vankornodb.set.noty.setInAllRows
 import com.vankorno.vankornodb.set.noty.setRowValsInAllRows
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
@@ -168,16 +168,16 @@ abstract class DbHelperInternal(
     fun setRowVals(                                                    table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
-                                                                     actions: RowSetter.()->Unit,
+                                                                     actions: SetBuilder.()->Unit,
     ) = write("setRowVals", async) {
-        it.setRowVals(table, where, actions)
+        it.setVals(table, where, actions)
     }
     
     suspend fun setRowValsSusp(                                        table: String,
                                                                        where: WhereBuilder.()->Unit,
-                                                                     actions: RowSetter.()->Unit,
+                                                                     actions: SetBuilder.()->Unit,
     ) = writeSusp("setRowValsSusp") {
-        it.setRowVals(table, where, actions)
+        it.setVals(table, where, actions)
     }
     
     

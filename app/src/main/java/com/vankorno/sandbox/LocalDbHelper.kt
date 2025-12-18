@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 
 const val DbName = "DbFile.dp"
-const val DbVersion = 1
+const val DbVersion = 3
 
 var dbFileNameFromDb = "" // useless shit for the demo
 

@@ -35,7 +35,7 @@ enum class EntityMeta(                              override val currVersion: In
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {
-    TestEntt(1, "TestEntity", TestEntity::class, lazy { migrationsTestEntity() }, TestTable),
+    TestEntt(3, "TestEntity", TestEntity::class, lazy { migrationsTestEntity() }, TestTable),
     
 }
 
