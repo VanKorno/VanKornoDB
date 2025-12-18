@@ -55,17 +55,25 @@ class RowSetter : BaseSetter () {
     infix fun FloatCol.min(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
     
     
-    infix fun IntCol.coerceIn(range: IntRange) {
+    infix fun IntCol.coerceIn(                                                     range: IntRange
+    ) {
         _ops += SetOp.CoerceIn(this.name, range.first, range.last)
     }
-    
-    infix fun LongCol.coerceIn(range: LongRange) {
+    infix fun LongCol.coerceIn(                                                    range: LongRange
+    ) {
         _ops += SetOp.CoerceIn(this.name, range.first, range.last)
     }
-    
-    infix fun FloatCol.coerceIn(range: ClosedFloatingPointRange<Float>) {
+    infix fun FloatCol.coerceIn(                              range: ClosedFloatingPointRange<Float>
+    ) {
         _ops += SetOp.CoerceIn(this.name, range.start, range.endInclusive)
     }
+    
+    
+    
+    
+    
+    
+    
     
     
     

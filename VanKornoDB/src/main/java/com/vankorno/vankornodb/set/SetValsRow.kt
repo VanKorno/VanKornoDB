@@ -41,13 +41,17 @@ fun SQLiteDatabase.setRowVals(                                         table: St
         usedCols.clear()
     }
     
-    fun playTogether(                            colName: String,
-                                                     run: (String)->Unit,
+    
+    fun playTogether(                                            setCol: String,
+                                                                getCols: List<String> = emptyList(),
+                                                                    run: (String)->Unit,
     ) {
-        if (colName in usedCols) flush()
-        run(colName)
-        usedCols += colName
+        if (setCol in usedCols || getCols.any { it in usedCols })
+            flush()
+        run(setCol)
+        usedCols += setCol
     }
+    
     
     ops.forEach { op ->
         when (op) {
@@ -102,11 +106,55 @@ fun SQLiteDatabase.setRowVals(                                         table: St
                     args += op.max
                 }
             }
+            
+            is SetOp.FromCol -> {
+                playTogether(op.setCol, listOf(op.getCol)) { setCol ->
+                    val localArgs = mutableListOf<Any>()
+                    var expr = op.getCol
+                    
+                    op.ops.forEach { innerOp ->
+                        val next = buildExpr(expr, innerOp, localArgs)
+                            ?: error("Invalid op inside FromCol: $innerOp")
+                        expr = next
+                    }
+                    setParts += "$setCol = $expr"
+                    args.addAll(localArgs)
+                }
+            }
         }
     }
     flush()
 }
 
+
+private fun buildExpr(                                                    rootCol: String,
+                                                                               op: SetOp,
+                                                                          outArgs: MutableList<Any>,
+): String? =
+    when (op) {
+        is SetOp.NumOp ->
+            "$rootCol ${op.sqlOp} ?".also {
+                outArgs += op.value
+            }
+        
+        is SetOp.Abs ->
+            "ABS($rootCol)"
+        
+        is SetOp.MinMax -> {
+            val func = if (op.isMax) "MAX" else "MIN"
+            "$func($rootCol, ?)".also {
+                outArgs += op.value
+            }
+        }
+        
+        is SetOp.CoerceIn ->
+            "MIN(MAX($rootCol, ?), ?)".also {
+                outArgs += op.min
+                outArgs += op.max
+            }
+        
+        else -> null
+    }
 
 
 
