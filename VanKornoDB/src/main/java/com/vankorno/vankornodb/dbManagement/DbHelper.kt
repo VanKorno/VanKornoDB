@@ -168,18 +168,18 @@ abstract class DbHelperInternal(
     
     // =============================  M U L T I - S E T T E R S  ============================= \\
     
-    fun setRowVals(                                                    table: String,
+    fun setVals(                                                       table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                        async: Boolean = false,
                                                                      actions: SetBuilder.()->Unit,
-    ) = write("setRowVals", async) {
+    ) = write("setVals", async) {
         it.setVals(table, where, actions)
     }
     
-    suspend fun setRowValsSusp(                                        table: String,
+    suspend fun setValsSusp(                                           table: String,
                                                                        where: WhereBuilder.()->Unit,
                                                                      actions: SetBuilder.()->Unit,
-    ) = writeSusp("setRowValsSusp") {
+    ) = writeSusp("setValsSusp") {
         it.setVals(table, where, actions)
     }
     
