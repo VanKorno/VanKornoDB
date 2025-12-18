@@ -19,7 +19,7 @@ class SetBuilder : BaseSetBuilder () {
     
     infix fun <T> TypedColumn<T>.setTo(value: T) { _ops += SetOp.Set(this, value) }
     
-    infix fun String.setNotyTo(value: Any) { _ops += SetOp.SetNoty(this, value) }
+    infix fun String.setTo(value: Any) { _ops += SetOp.SetNoty(this, value) }
     
     fun BoolCol.flip() { _ops += SetOp.Flip(this) }
     fun OFF(col: BoolCol) { _ops += SetOp.Set(col, false) }
@@ -74,22 +74,22 @@ class SetBuilder : BaseSetBuilder () {
     
     // ----------------- col-to-col DSL -----------------
     
-    fun IntCol.setAs(                                                  col: IntCol,
-                                                                     build: SetBuilder.()->Unit = {},
+    fun IntCol.setAs(                                                 col: IntCol,
+                                                                    build: SetBuilder.()->Unit = {},
     ) {
         val innerSetter = SetBuilder().apply(build)
         _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
     }
     
-    fun LongCol.setAs(                                                 col: LongCol,
-                                                                     build: SetBuilder.()->Unit = {},
+    fun LongCol.setAs(                                                col: LongCol,
+                                                                    build: SetBuilder.()->Unit = {},
     ) {
         val innerSetter = SetBuilder().apply(build)
         _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
     }
     
-    fun FloatCol.setAs(                                                col: FloatCol,
-                                                                     build: SetBuilder.()->Unit = {},
+    fun FloatCol.setAs(                                               col: FloatCol,
+                                                                    build: SetBuilder.()->Unit = {},
     ) {
         val innerSetter = SetBuilder().apply(build)
         _ops += SetOp.SetAs(this.name, col.name, innerSetter.ops)
@@ -101,49 +101,6 @@ class SetBuilder : BaseSetBuilder () {
     
     infix fun BoolCol.setAs(col: BoolCol) { _ops += SetOp.SetAs(this.name, col.name) }
     
-    
-    
-    
-    
-    // TODO Move maybe
-    
-    private fun iMultDiv(                                                            col: IntCol,
-                                                                                   value: Number,
-                                                                                    oper: String,
-    ) {
-        val v = value.toInt()
-        if (v == 1) return //\/\/\/\/\/\
-        
-        _ops += if (v == 0)
-                    SetOp.Set(col, 0)
-                else
-                    SetOp.NumOp(col.name, v, oper)
-    }
-    private fun lMultDiv(                                                            col: LongCol,
-                                                                                   value: Number,
-                                                                                    oper: String,
-    ) {
-        val v = value.toLong()
-        if (v == 1L) return //\/\/\/\/\/\
-        
-        _ops += if (v == 0L)
-                    SetOp.Set(col, 0L)
-                else
-                    SetOp.NumOp(col.name, v, oper)
-    }
-    
-    private fun fMultDiv(                                                            col: FloatCol,
-                                                                                   value: Number,
-                                                                                    oper: String,
-    ) {
-        val v = value.toFloat()
-        if (v == 1f) return //\/\/\/\/\/\
-        
-        _ops += if (v == 0f)
-                    SetOp.Set(col, 0f)
-                else
-                    SetOp.NumOp(col.name, v, oper)
-    }
     
     
     

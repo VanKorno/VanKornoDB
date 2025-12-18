@@ -20,8 +20,6 @@ const val LabRat = "Lab rat "
 @MediumTest
 class SetValsTest : BaseAndroidTest() {
     
-    
-    
     @Test
     fun testSetter() {
         dbh.beforeSetValsTest()
@@ -50,6 +48,14 @@ class SetValsTest : BaseAndroidTest() {
         assertEquals(9999999L, obj!!.long1)
         assertEquals(345.67F, obj!!.float1)
     }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
