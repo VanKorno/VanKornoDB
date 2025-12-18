@@ -48,14 +48,14 @@ class SetBuilder : BaseSetBuilder () {
     fun IntCol.abs() { _ops += SetOp.Abs(this.name) }
     
     
-    infix fun IntCol.max(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
-    infix fun IntCol.min(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
+    infix fun IntCol.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
+    infix fun IntCol.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
     
-    infix fun LongCol.max(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
-    infix fun LongCol.min(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
+    infix fun LongCol.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
+    infix fun LongCol.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
     
-    infix fun FloatCol.max(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
-    infix fun FloatCol.min(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
+    infix fun FloatCol.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
+    infix fun FloatCol.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
     
     
     infix fun IntCol.coerceIn(                                                     range: IntRange

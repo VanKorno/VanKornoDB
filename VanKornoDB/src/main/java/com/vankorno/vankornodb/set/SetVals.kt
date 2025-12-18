@@ -45,9 +45,9 @@ fun SQLiteDatabase.setVals(                                       table: String,
     }
     
     
-    fun playTogether(                                            setCol: String,
-                                                                getCols: List<String> = emptyList(),
-                                                                    run: (String)->Unit,
+    fun playTogether(                            setCol: String,
+                                                getCols: List<String> = emptyList(),
+                                                    run: (String)->Unit,
     ) {
         if (setCol in usedCols || getCols.any { it in usedCols })
             flush()
@@ -80,28 +80,24 @@ fun SQLiteDatabase.setVals(                                       table: String,
                     setParts += "$col = NOT $col"
                 }
             }
-            
             is SetOp.NumOp -> {
                 playTogether(op.colName) { col ->
                     setParts += "$col = $col ${op.sqlOp} ?"
                     args += op.value
                 }
             }
-            
             is SetOp.Abs -> {
                 playTogether(op.colName) { col ->
                     setParts += "$col = ABS($col)"
                 }
             }
-            
             is SetOp.MinMax -> {
                 playTogether(op.colName) { col ->
-                    val func = if (op.isMax) "MAX" else "MIN"
+                    val func = if (op.isFloorOp) "MAX" else "MIN"
                     setParts += "$col = $func($col, ?)"
                     args += op.value
                 }
             }
-            
             is SetOp.CoerceIn -> {
                 playTogether(op.colName) { col ->
                     setParts += "$col = MIN(MAX($col, ?), ?)"
@@ -144,7 +140,7 @@ private fun buildExpr(                                                    rootCo
             "ABS($rootCol)"
         
         is SetOp.MinMax -> {
-            val func = if (op.isMax) "MAX" else "MIN"
+            val func = if (op.isFloorOp) "MAX" else "MIN"
             "$func($rootCol, ?)".also {
                 outArgs += op.value
             }

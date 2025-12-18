@@ -40,7 +40,7 @@ sealed class SetOp {
     data class MinMax(
                                val colName: String,
                                  val value: Number,
-                                 val isMax: Boolean,
+                             val isFloorOp: Boolean,
     ) : SetOp()
     
     

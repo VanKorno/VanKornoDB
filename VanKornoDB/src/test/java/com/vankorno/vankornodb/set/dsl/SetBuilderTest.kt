@@ -280,11 +280,11 @@ class SetBuilderTest {
     @Test
     fun `unicorns are capped because infinite unicorns are illegal`() {
         val b = SetBuilder().apply {
-            unicorns max 9999999L
+            unicorns capAt 9999999L
         }
         
         assertEquals(
-            listOf(SetOp.MinMax("unicorns", 9999999L, true)),
+            listOf(SetOp.MinMax("unicorns", 9999999L, false)),
             b.ops
         )
     }
@@ -292,11 +292,11 @@ class SetBuilderTest {
     @Test
     fun `magic is humbled to minimum survivable amount`() {
         val b = SetBuilder().apply {
-            magic min 0.01f
+            magic floorAt 0.01f
         }
         
         assertEquals(
-            listOf(SetOp.MinMax("magic", 0.01f, false)),
+            listOf(SetOp.MinMax("magic", 0.01f, true)),
             b.ops
         )
     }
