@@ -2,6 +2,8 @@ package com.vankorno.sandbox.set
 
 import com.vankorno.sandbox.LocalDbHelper
 import com.vankorno.sandbox.entities.testEntity.TestEntity
+import com.vankorno.sandbox.set.SetValsTest.Companion.LabRat
+import com.vankorno.sandbox.set.SetValsTest.Companion.SetValsTestTable
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.createTable
 

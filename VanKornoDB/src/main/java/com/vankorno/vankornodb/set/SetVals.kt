@@ -13,6 +13,7 @@ import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
 import com.vankorno.vankornodb.set.dsl.data.LongColOp
 import com.vankorno.vankornodb.set.dsl.data.MathOp
+import com.vankorno.vankornodb.set.dsl.data.SetColOp
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
@@ -49,9 +50,9 @@ fun SQLiteDatabase.setVals(                                       table: String,
     }
     
     
-    fun playTogether(                                                       setCol: String,
-                                                                            getCol: String? = null,
-                                                                               run: (String)->Unit,
+    fun playTogether(                                      setCol: String,
+                                                           getCol: String? = null,
+                                                              run: (String)->Unit,
     ) {
         if (setCol in usedCols || (getCol != null && getCol in usedCols))
             flush()
@@ -62,97 +63,83 @@ fun SQLiteDatabase.setVals(                                       table: String,
     
     ops.forEach { op ->
         when (op) {
-            is SetOp.Set<*> -> {
-                playTogether(op.col.name) { col ->
-                    setParts += "$col = ?"
-                    args += getBoolSafeVal(op.value as Any)
-                }
+            is SetOp.Set<*> -> playTogether(op.col.name) { col ->
+                setParts += "$col = ?"
+                args += getBoolSafeVal(op.value as Any)
             }
-            is SetOp.SetNoty -> {
-                playTogether(op.col) { col ->
-                    setParts += "$col = ?"
-                    args += getBoolSafeVal(op.value)
-                }
+            is SetOp.SetNoty -> playTogether(op.col) { col ->
+                setParts += "$col = ?"
+                args += getBoolSafeVal(op.value)
             }
             is SetOp.SetCV -> {
                 flush()
                 setRowValsNoty(table, op.cv, where)
             }
             
-            is SetOp.Flip -> {
-                playTogether(op.col.name) { col ->
-                    setParts += "$col = NOT $col"
-                }
+            is SetOp.Flip -> playTogether(op.col.name) { col ->
+                setParts += "$col = NOT $col"
             }
-            is SetOp.NumOp -> {
-                playTogether(op.colName) { col ->
-                    setParts += "$col = $col ${op.sqlOp} ?"
-                    args += op.value
-                }
+            is SetOp.NumOp -> playTogether(op.colName) { col ->
+                setParts += "$col = $col ${op.sqlOp} ?"
+                args += op.value
             }
-            is SetOp.Abs -> {
-                playTogether(op.colName) { col ->
-                    setParts += "$col = ABS($col)"
-                }
+            is SetOp.Abs -> playTogether(op.colName) { col ->
+                setParts += "$col = ABS($col)"
             }
-            is SetOp.MinMax -> {
-                playTogether(op.colName) { col ->
-                    val func = if (op.isFloorOp) "MAX" else "MIN"
-                    setParts += "$col = $func($col, ?)"
-                    args += op.value
-                }
+            is SetOp.MinMax -> playTogether(op.colName) { col ->
+                val func = if (op.isFloorOp) "MAX" else "MIN"
+                setParts += "$col = $func($col, ?)"
+                args += op.value
             }
-            is SetOp.CoerceIn -> {
-                playTogether(op.colName) { col ->
-                    setParts += "$col = MIN(MAX($col, ?), ?)"
-                    args += op.min
-                    args += op.max
-                }
+            is SetOp.CoerceIn -> playTogether(op.colName) { col ->
+                setParts += "$col = MIN(MAX($col, ?), ?)"
+                args += op.min
+                args += op.max
             }
             
-            is SetOp.SetAs -> { // plain col-to-col
-                playTogether(op.setCol, op.getCol) { setCol ->
-                    setParts += "$setCol = ${op.getCol}"
-                }
+            is SetOp.SetAs -> playTogether(op.setCol, op.getCol) { setCol ->
+                setParts += "$setCol = ${op.getCol}"
             }
-            is SetOp.SetAsModified -> { // col-to-col-with-math
-                playTogether(op.setCol, op.colWithModif.col) { setCol ->
-                    val mathPart = when (val math = op.colWithModif) {
-                        is IntColOp -> when (math.op) {
-                            is MathOp.Add -> "${math.col} + ?".also { args += math.value }
-                            is MathOp.Sub -> "${math.col} - ?".also { args += math.value }
-                            is MathOp.Mult -> "${math.col} * ?".also { args += math.value }
-                            is MathOp.Div -> "${math.col} / ?".also { args += math.value }
-                            is MathOp.CapAt -> "MIN(${math.col}, ?)".also { args += math.op.cap }
-                            is MathOp.FloorAt -> "MAX(${math.col}, ?)".also { args += math.op.floor }
-                            is MathOp.CoerceIn -> "MIN(MAX(${math.col}, ?), ?)".also { args += math.op.min; args += math.op.max }
-                        }
-                        is LongColOp -> when (math.op) {
-                            is MathOp.Add -> "${math.col} + ?".also { args += math.value }
-                            is MathOp.Sub -> "${math.col} - ?".also { args += math.value }
-                            is MathOp.Mult -> "${math.col} * ?".also { args += math.value }
-                            is MathOp.Div -> "${math.col} / ?".also { args += math.value }
-                            is MathOp.CapAt -> "MIN(${math.col}, ?)".also { args += math.op.cap }
-                            is MathOp.FloorAt -> "MAX(${math.col}, ?)".also { args += math.op.floor }
-                            is MathOp.CoerceIn -> "MIN(MAX(${math.col}, ?), ?)".also { args += math.op.min; args += math.op.max }
-                        }
-                        is FloatColOp -> when (math.op) {
-                            is MathOp.Add -> "${math.col} + ?".also { args += math.value }
-                            is MathOp.Sub -> "${math.col} - ?".also { args += math.value }
-                            is MathOp.Mult -> "${math.col} * ?".also { args += math.value }
-                            is MathOp.Div -> "${math.col} / ?".also { args += math.value }
-                            is MathOp.CapAt -> "MIN(${math.col}, ?)".also { args += math.op.cap }
-                            is MathOp.FloorAt -> "MAX(${math.col}, ?)".also { args += math.op.floor }
-                            is MathOp.CoerceIn -> "MIN(MAX(${math.col}, ?), ?)".also { args += math.op.min; args += math.op.max }
-                        }
-                    }
-                    setParts += "$setCol = $mathPart"
-                }
+            is SetOp.SetAsModified -> playTogether(op.setCol, op.colWithModif.col) { setCol ->
+                val mathPart = op.colWithModif.toSqlFragment(args)
+                setParts += "$setCol = $mathPart"
             }
         }
     }
     flush()
 }
+
+
+
+private fun SetColOp.toSqlFragment(                                          args: MutableList<Any>
+): String =
+    when (this) {
+        is IntColOp -> buildMathPart(col, op, value, args)
+        is LongColOp -> buildMathPart(col, op, value, args)
+        is FloatColOp -> buildMathPart(col, op, value, args)
+    }
+
+
+private fun buildMathPart(                                                    col: String,
+                                                                           mathOp: MathOp,
+                                                                            value: Number,
+                                                                             args: MutableList<Any>,
+): String =
+    when (mathOp) {
+        is MathOp.Add -> "$col + ?".also { args += value }
+        is MathOp.Sub -> "$col - ?".also { args += value }
+        is MathOp.Mult -> "$col * ?".also { args += value }
+        is MathOp.Div -> "$col / ?".also { args += value }
+        is MathOp.CapAt -> "MIN($col, ?)".also { args += mathOp.cap }
+        is MathOp.FloorAt -> "MAX($col, ?)".also { args += mathOp.floor }
+        is MathOp.CoerceIn -> "MIN(MAX($col, ?), ?)".also { args += mathOp.min; args += mathOp.max }
+    }
+
+
+
+
+
+
 
 
 

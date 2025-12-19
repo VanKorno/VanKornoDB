@@ -22,11 +22,12 @@ import com.vankorno.vankornodb.misc.whereName
 import org.junit.Assert.*
 import org.junit.Test
 
-const val SetValsTestTable = "SetValsTestTable"
-const val LabRat = "Lab rat "
-
 @MediumTest
 class SetValsTest : BaseAndroidTest() {
+    companion object {
+        const val SetValsTestTable = "SetValsTestTable"
+        const val LabRat = "Lab rat "
+    }
     
     @Test
     fun testSetter() {
