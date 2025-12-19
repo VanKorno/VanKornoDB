@@ -1,7 +1,10 @@
-package com.vankorno.vankornodb.mapper
+// region License
 /** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
+// endregion
+package com.vankorno.vankornodb.mapper
+
 import android.database.Cursor
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.mapper.EntityMapperUtils.defaultInstanceValueOf
