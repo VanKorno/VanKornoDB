@@ -54,10 +54,12 @@ sealed class SetOp {
     data class SetAs(
                                 val setCol: String,
                                 val getCol: String,
-                                   val ops: List<SetOp> = emptyList(),
     ) : SetOp()
     
-    
+    data class SetAsModified(
+                                val setCol: String,
+                          val colWithModif: SetColOp,
+    ) : SetOp()
     
     
 }

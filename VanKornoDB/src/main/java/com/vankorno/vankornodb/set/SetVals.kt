@@ -9,6 +9,10 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.set.dsl.SetBuilder
+import com.vankorno.vankornodb.set.dsl.data.FloatColOp
+import com.vankorno.vankornodb.set.dsl.data.IntColOp
+import com.vankorno.vankornodb.set.dsl.data.LongColOp
+import com.vankorno.vankornodb.set.dsl.data.MathOp
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
@@ -45,11 +49,11 @@ fun SQLiteDatabase.setVals(                                       table: String,
     }
     
     
-    fun playTogether(                            setCol: String,
-                                                getCols: List<String> = emptyList(),
-                                                    run: (String)->Unit,
+    fun playTogether(                                                       setCol: String,
+                                                                            getCol: String? = null,
+                                                                               run: (String)->Unit,
     ) {
-        if (setCol in usedCols || getCols.any { it in usedCols })
+        if (setCol in usedCols || (getCol != null && getCol in usedCols))
             flush()
         run(setCol)
         usedCols += setCol
@@ -106,18 +110,43 @@ fun SQLiteDatabase.setVals(                                       table: String,
                 }
             }
             
-            is SetOp.SetAs -> {
-                playTogether(op.setCol, listOf(op.getCol)) { setCol ->
-                    val localArgs = mutableListOf<Any>()
-                    var expr = op.getCol
-                    
-                    op.ops.forEach { innerOp ->
-                        val next = buildExpr(expr, innerOp, localArgs)
-                            ?: error("Invalid op inside FromCol: $innerOp")
-                        expr = next
+            is SetOp.SetAs -> { // plain col-to-col
+                playTogether(op.setCol, op.getCol) { setCol ->
+                    setParts += "$setCol = ${op.getCol}"
+                }
+            }
+            is SetOp.SetAsModified -> { // col-to-col-with-math
+                playTogether(op.setCol, op.colWithModif.col) { setCol ->
+                    val mathPart = when (val math = op.colWithModif) {
+                        is IntColOp -> when (math.op) {
+                            is MathOp.Add -> "${math.col} + ?".also { args += math.value }
+                            is MathOp.Sub -> "${math.col} - ?".also { args += math.value }
+                            is MathOp.Mult -> "${math.col} * ?".also { args += math.value }
+                            is MathOp.Div -> "${math.col} / ?".also { args += math.value }
+                            is MathOp.CapAt -> "MIN(${math.col}, ?)".also { args += math.op.cap }
+                            is MathOp.FloorAt -> "MAX(${math.col}, ?)".also { args += math.op.floor }
+                            is MathOp.CoerceIn -> "MIN(MAX(${math.col}, ?), ?)".also { args += math.op.min; args += math.op.max }
+                        }
+                        is LongColOp -> when (math.op) {
+                            is MathOp.Add -> "${math.col} + ?".also { args += math.value }
+                            is MathOp.Sub -> "${math.col} - ?".also { args += math.value }
+                            is MathOp.Mult -> "${math.col} * ?".also { args += math.value }
+                            is MathOp.Div -> "${math.col} / ?".also { args += math.value }
+                            is MathOp.CapAt -> "MIN(${math.col}, ?)".also { args += math.op.cap }
+                            is MathOp.FloorAt -> "MAX(${math.col}, ?)".also { args += math.op.floor }
+                            is MathOp.CoerceIn -> "MIN(MAX(${math.col}, ?), ?)".also { args += math.op.min; args += math.op.max }
+                        }
+                        is FloatColOp -> when (math.op) {
+                            is MathOp.Add -> "${math.col} + ?".also { args += math.value }
+                            is MathOp.Sub -> "${math.col} - ?".also { args += math.value }
+                            is MathOp.Mult -> "${math.col} * ?".also { args += math.value }
+                            is MathOp.Div -> "${math.col} / ?".also { args += math.value }
+                            is MathOp.CapAt -> "MIN(${math.col}, ?)".also { args += math.op.cap }
+                            is MathOp.FloorAt -> "MAX(${math.col}, ?)".also { args += math.op.floor }
+                            is MathOp.CoerceIn -> "MIN(MAX(${math.col}, ?), ?)".also { args += math.op.min; args += math.op.max }
+                        }
                     }
-                    setParts += "$setCol = $expr"
-                    args.addAll(localArgs)
+                    setParts += "$setCol = $mathPart"
                 }
             }
         }
@@ -126,34 +155,6 @@ fun SQLiteDatabase.setVals(                                       table: String,
 }
 
 
-private fun buildExpr(                                                    rootCol: String,
-                                                                               op: SetOp,
-                                                                          outArgs: MutableList<Any>,
-): String? =
-    when (op) {
-        is SetOp.NumOp ->
-            "$rootCol ${op.sqlOp} ?".also {
-                outArgs += op.value
-            }
-        
-        is SetOp.Abs ->
-            "ABS($rootCol)"
-        
-        is SetOp.MinMax -> {
-            val func = if (op.isFloorOp) "MAX" else "MIN"
-            "$func($rootCol, ?)".also {
-                outArgs += op.value
-            }
-        }
-        
-        is SetOp.CoerceIn ->
-            "MIN(MAX($rootCol, ?), ?)".also {
-                outArgs += op.min
-                outArgs += op.max
-            }
-        
-        else -> null
-    }
 
 
 

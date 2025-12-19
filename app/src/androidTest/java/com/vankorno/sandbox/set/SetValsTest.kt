@@ -9,9 +9,12 @@ import com.vankorno.sandbox.entities.testEntity.CTest.Bool2
 import com.vankorno.sandbox.entities.testEntity.CTest.Bool3
 import com.vankorno.sandbox.entities.testEntity.CTest.Enabled
 import com.vankorno.sandbox.entities.testEntity.CTest.Float1
+import com.vankorno.sandbox.entities.testEntity.CTest.Float2
 import com.vankorno.sandbox.entities.testEntity.CTest.Int1
 import com.vankorno.sandbox.entities.testEntity.CTest.Int2
+import com.vankorno.sandbox.entities.testEntity.CTest.Int3
 import com.vankorno.sandbox.entities.testEntity.CTest.Long1
+import com.vankorno.sandbox.entities.testEntity.CTest.Long2
 import com.vankorno.sandbox.entities.testEntity.CTest.Position
 import com.vankorno.sandbox.entities.testEntity.CTest.Str1
 import com.vankorno.sandbox.entities.testEntity.TestEntity
@@ -40,7 +43,10 @@ class SetValsTest : BaseAndroidTest() {
         minMaxWorks()
         coerceInWorks()
         setAsSimple()
-        setAsWithMath()
+        setAsIntWithMathWorks()
+        setAsLongWithMathWorks()
+        setAsFloatWithMathWorks()
+        
     }
     
     fun setCvWorks() {
@@ -210,22 +216,62 @@ class SetValsTest : BaseAndroidTest() {
         assertEquals(77, obj!!.int2)
     }
     
-    // TODO
-    fun setAsWithMath() {
-        val rat = LabRat + 10
-        
+    
+    
+    
+    
+    
+    fun setAsIntWithMathWorks() {
+        val rat = LabRat + 11
+    
         dbh.setVals(SetValsTestTable, whereName(rat)) {
-            Int2 setTo 10
-            Int1.setAs(Int2) {
-                Int2 add 5
-                Int2 mult 2
-            }
+            Int1 setAs (Int2 andAdd 5)      // Int1 = 0 + 5 = 5
+            Int2 setAs (Int1 andMult 3)     // Int2 = 5 * 3 = 15
+            Int3 setAs (Int2 andCoerceIn 0..10) // Int3 = 15 coerced to 10
+            Int1 setAs (Int3 andCapAt 100)  // Int1 = min(10, 100) = 10
+            Int2 setAs (Int3 andFloorAt 50) // Int2 = max(10, 50?) = 50
         }
-        
+    
         val obj = dbh.getObjOrNull<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-        
+    
         assertNotEquals(null, obj)
-        assertEquals(30, obj!!.int1)
-        assertEquals(10, obj!!.int2)
+        assertEquals(10, obj!!.int1)
+        assertEquals(50, obj.int2)
+        assertEquals(10, obj.int3)
     }
+    
+    
+    fun setAsLongWithMathWorks() {
+        val rat = LabRat + 12
+    
+        dbh.setVals(SetValsTestTable, whereName(rat)) {
+            Long1 setAs (Long2 andAdd 5000L)  // Long1 = 0 + 5000
+            Long2 setAs (Long1 andMult 3L)    // Long2 = 5000 * 3 = 15000
+        }
+    
+        val obj = dbh.getObjOrNull<TestEntity>(SetValsTestTable) { where = whereName(rat) }
+    
+        assertNotEquals(null, obj)
+        assertEquals(5000L, obj!!.long1)
+        assertEquals(15000L, obj.long2)
+    }
+    
+    
+    fun setAsFloatWithMathWorks() {
+        val rat = LabRat + 13
+    
+        dbh.setVals(SetValsTestTable, whereName(rat)) {
+            Float1 setAs (Float2 andAdd 1.5F) // Float1 = 0 + 1.5 = 1.5
+            Float2 setAs (Float1 andDiv 2F)   // Float2 = 1.5 / 2 = 0.75
+        }
+    
+        val obj = dbh.getObjOrNull<TestEntity>(SetValsTestTable) { where = whereName(rat) }
+    
+        assertNotEquals(null, obj)
+        assertEquals(1.5F, obj!!.float1)
+        assertEquals(0.75F, obj.float2)
+    }
+    
+    
+    
 }

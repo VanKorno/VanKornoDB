@@ -4,6 +4,10 @@ import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
+import com.vankorno.vankornodb.set.dsl.data.FloatColOp
+import com.vankorno.vankornodb.set.dsl.data.IntColOp
+import com.vankorno.vankornodb.set.dsl.data.LongColOp
+import com.vankorno.vankornodb.set.dsl.data.MathOp
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -81,46 +85,6 @@ class SetBuilderTest {
     }
     
     @Test
-    fun `int setAs with math ops`() {
-        val a = IntCol("a")
-        val b = IntCol("b")
-        
-        val ops = SetBuilder().apply {
-            a.setAs(b) {
-                b add 2
-                b mult 3
-            }
-        }.ops
-        
-        val setAs = ops.single() as SetOp.SetAs
-        
-        assertEquals("a", setAs.setCol)
-        assertEquals("b", setAs.getCol)
-        assertEquals(
-            listOf(
-                SetOp.NumOp("b", 2, "+"),
-                SetOp.NumOp("b", 3, "*"),
-            ),
-            setAs.ops
-        )
-    }
-    
-    @Test
-    fun `setAs inner ops do not leak`() {
-        val a = IntCol("a")
-        val b = IntCol("b")
-        
-        val ops = SetBuilder().apply {
-            a.setAs(b) { b add 1 }
-            a add 5
-        }.ops
-        
-        assertEquals(2, ops.size)
-        assertTrue(ops[0] is SetOp.SetAs)
-        assertTrue(ops[1] is SetOp.NumOp)
-    }
-    
-    @Test
     fun `bool setAs`() {
         val a = BoolCol("a")
         val b = BoolCol("b")
@@ -150,6 +114,75 @@ class SetBuilderTest {
             ops
         )
     }
+    
+    
+    
+    @Test
+    fun `col to col with math setAs produces correct ops`() {
+        val a = IntCol("a")
+        val b = IntCol("b")
+        
+        val ops = SetBuilder().apply {
+            a setAs (b andAdd 5)
+            a setAs (b andMult 3)
+            a setAs (b andCoerceIn 0..10)
+            a setAs (b andCapAt 100)
+            a setAs (b andFloorAt 50)
+        }.ops
+        
+        assertEquals(
+            listOf(
+                SetOp.SetAsModified(a.name, IntColOp("b", 5, MathOp.Add)),
+                SetOp.SetAsModified(a.name, IntColOp("b", 3, MathOp.Mult)),
+                SetOp.SetAsModified(a.name, IntColOp("b", 0, MathOp.CoerceIn(0, 10))),
+                SetOp.SetAsModified(a.name, IntColOp("b", 100, MathOp.CapAt(100))),
+                SetOp.SetAsModified(a.name, IntColOp("b", 50, MathOp.FloorAt(50))),
+            ),
+            ops
+        )
+    }
+    
+    @Test
+    fun `long col to col with math setAs produces correct ops`() {
+        val a = LongCol("a")
+        val b = LongCol("b")
+        
+        val ops = SetBuilder().apply {
+            a setAs (b andAdd 5L)
+            a setAs (b andMult 3L)
+        }.ops
+        
+        assertEquals(
+            listOf(
+                SetOp.SetAsModified(a.name, LongColOp("b", 5L, MathOp.Add)),
+                SetOp.SetAsModified(a.name, LongColOp("b", 3L, MathOp.Mult)),
+            ),
+            ops
+        )
+    }
+    
+    @Test
+    fun `float col to col with math setAs produces correct ops`() {
+        val a = FloatCol("a")
+        val b = FloatCol("b")
+        
+        val ops = SetBuilder().apply {
+            a setAs (b andAdd 5.5F)
+            a setAs (b andDiv 2F)
+        }.ops
+        
+        assertEquals(
+            listOf(
+                SetOp.SetAsModified(a.name, FloatColOp("b", 5.5F, MathOp.Add)),
+                SetOp.SetAsModified(a.name, FloatColOp("b", 2F, MathOp.Div)),
+            ),
+            ops
+        )
+    }
+    
+    
+    
+    
     
     
     
