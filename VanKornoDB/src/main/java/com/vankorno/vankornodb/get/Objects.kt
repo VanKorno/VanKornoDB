@@ -13,29 +13,21 @@ import kotlin.reflect.KClass
 
 
 /** 
- * Retrieves a list of entities of type [T] mapped from the specified columns. 
- * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
+ * Retrieves a list of entities of type [T] mapped from the specified columns.
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(              table: String,
                                                              noinline queryOpts: QueryOpts.()->Unit,
-                                                              noinline mapAfter: (T)->T,
 ): List<T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
-                add(mapAfter(cursor.toEntity(T::class)))
+                add(cursor.toEntity(T::class))
             } while (cursor.moveToNext())
         }
     }
 }
-
-// TODO Descr
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(         table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-): List<T> = getObjects(table, queryOpts) { it }
-
 
 
 
@@ -46,24 +38,17 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(         table: Stri
 fun <T : DbEntity> SQLiteDatabase.getObjects(                             clazz: KClass<T>,
                                                                           table: String,
                                                                       queryOpts: QueryOpts.()->Unit,
-                                                                       mapAfter: (T)->T,
 ): List<T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
-                add(mapAfter(cursor.toEntity(clazz)))
+                add(cursor.toEntity(clazz))
             } while (cursor.moveToNext())
         }
     }
 }
-
-// TODO Descr
-fun <T : DbEntity> SQLiteDatabase.getObjects(                        clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<T> = getObjects(clazz, table, queryOpts) { it }
 
 
 
@@ -76,7 +61,6 @@ fun <T : DbEntity> SQLiteDatabase.getObjects(                        clazz: KCla
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(               table: String,
                                                              noinline queryOpts: QueryOpts.()->Unit,
-                                                              noinline mapAfter: (T)->T,
 ): Map<Int, T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
@@ -84,20 +68,12 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(               table:
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
             do {
-                val entity = mapAfter(cursor.toEntity(T::class))
+                val entity = cursor.toEntity(T::class)
                 put(cursor.getInt(idColIdx), entity)
             } while (cursor.moveToNext())
         }
     }
 }
-
-
-// TODO Descr
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(          table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-): Map<Int, T> = getObjMap(table, queryOpts) { it }
-
-
 
 
 
@@ -109,7 +85,6 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(          table: Stri
 fun <T : DbEntity> SQLiteDatabase.getObjMap(                              clazz: KClass<T>,
                                                                           table: String,
                                                                       queryOpts: QueryOpts.()->Unit,
-                                                                       mapAfter: (T)->T,
 ): Map<Int, T> = getCursorPro(table) {
     applyOpts(queryOpts)
 }.use { cursor ->
@@ -117,7 +92,7 @@ fun <T : DbEntity> SQLiteDatabase.getObjMap(                              clazz:
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
             do {
-                val entity = mapAfter(cursor.toEntity(clazz))
+                val entity = cursor.toEntity(clazz)
                 put(cursor.getInt(idColIdx), entity)
             } while (cursor.moveToNext())
         }
@@ -125,11 +100,12 @@ fun <T : DbEntity> SQLiteDatabase.getObjMap(                              clazz:
 }
 
 
-// TODO Descr
-fun <T : DbEntity> SQLiteDatabase.getObjMap(                         clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): Map<Int, T> = getObjMap(clazz, table, queryOpts) { it }
+
+
+
+
+
+
 
 
 
