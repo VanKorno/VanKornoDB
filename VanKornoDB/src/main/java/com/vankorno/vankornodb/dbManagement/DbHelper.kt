@@ -5,7 +5,6 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addObj
@@ -22,9 +21,6 @@ import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.set.*
 import com.vankorno.vankornodb.set.dsl.SetBuilder
-import com.vankorno.vankornodb.set.noty.setInAllRows
-import com.vankorno.vankornodb.set.noty.setRowValsInAllRows
-import com.vankorno.vankornodb.set.noty.setRowValsNoty
 import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -38,7 +34,6 @@ abstract class DbHelperInternal(
 ) : DbReaderWriter(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
     
     // ===================================  S E T T E R S  =================================== \\
-    
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
@@ -168,90 +163,23 @@ abstract class DbHelperInternal(
     
     // =============================  M U L T I - S E T T E R S  ============================= \\
     
-    fun setVals(                                                  table: String,
+    fun set(                                                      table: String,
                                                                   where: WhereBuilder.()->Unit = {},
                                                                   async: Boolean = false,
                                                                 actions: SetBuilder.()->Unit,
-    ) = write("setVals", async) {
-        it.setVals(table, where, actions)
+    ) = write("set", async) {
+        it.set(table, where, actions)
     }
     
-    suspend fun setValsSusp(                                      table: String,
+    suspend fun setSusp(                                          table: String,
                                                                   where: WhereBuilder.()->Unit = {},
                                                                 actions: SetBuilder.()->Unit,
-    ) = writeSusp("setValsSusp") {
-        it.setVals(table, where, actions)
+    ) = writeSusp("setSusp") {
+        it.set(table, where, actions)
     }
     
     
     
-    
-    
-    
-    
-    
-    // Not type-safe TODO Check if needed
-    
-    fun setRowValsNoty(                                                table: String,
-                                                                          cv: ContentValues,
-                                                                       async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
-    ) = write("setRowValsNoty", async) {
-        it.setRowValsNoty(table, cv, where)
-    }
-    
-    suspend fun setRowValsNotySusp(                                    table: String,
-                                                                          cv: ContentValues,
-                                                                       where: WhereBuilder.()->Unit,
-    ) = writeSusp("setRowValsNotySusp") {
-        it.setRowValsNoty(table, cv, where)
-    }
-    
-    
-    fun setRowValsNoty(                                                table: String,
-                                                                       where: WhereBuilder.()->Unit,
-                                                                       async: Boolean = false,
-                                                               vararg values: Pair<String, Any?>,
-    ) = write("setRowValsNoty", async) {
-        it.setRowValsNoty(table, where, *values)
-    }
-    
-    suspend fun setRowValsNotySusp(                                    table: String,
-                                                                       where: WhereBuilder.()->Unit,
-                                                                       async: Boolean = false,
-                                                               vararg values: Pair<String, Any?>,
-    ) = writeSusp("setRowValsNotySusp") { it.setRowValsNoty(table, where, *values) }
-    
-    
-    // -------------------------------------------------------------------------------------- \\
-    
-    
-    inline fun setInAllRowsNoty(                                            value: Any,
-                                                                            table: String,
-                                                                           column: String,
-                                                                            async: Boolean = false,
-    ) = write("setInAllRowsNoty", async) {
-        it.setInAllRows(value, table, column)
-    }
-    suspend fun setInAllRowsNotySusp(                                              value: Any,
-                                                                                   table: String,
-                                                                                  column: String,
-    ) = writeSusp("setInAllRowsNotySusp") {
-        it.setInAllRows(value, table, column)
-    }
-    
-    
-    inline fun setRowValsInAllRowsNoty(                                   table: String,
-                                                                          async: Boolean = false,
-                                                                  vararg values: Pair<String, Any?>,
-    ) = write("setRowValsInAllRowsNoty", async) {
-        it.setRowValsInAllRows(table, *values)
-    }
-    suspend fun setRowValsInAllRowsNotySusp(                              table: String,
-                                                                  vararg values: Pair<String, Any?>,
-    ) = writeSusp("setRowValsInAllRowsNotySusp") {
-        it.setRowValsInAllRows(table, *values)
-    }
     
     
     
@@ -1215,7 +1143,7 @@ abstract class DbHelperInternal(
     
     
     
-    fun toggleBool(                                               table: String,
+    fun flipBool(                                                 table: String,
                                                                  column: BoolCol,
                                                                   async: Boolean = false,
                                                                   where: WhereBuilder.()->Unit = {},

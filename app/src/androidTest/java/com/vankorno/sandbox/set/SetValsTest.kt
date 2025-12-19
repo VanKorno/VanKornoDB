@@ -60,7 +60,7 @@ class SetValsTest : BaseAndroidTest() {
         cv.put(Long1.name, 9999999L)
         cv.put(Float1.name, 345.67F)
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) { setCV(cv) }
+        dbh.set(SetValsTestTable, whereName(rat)) { setCV(cv) }
         
         val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
         
@@ -76,7 +76,7 @@ class SetValsTest : BaseAndroidTest() {
     fun setToSimple() {
         val rat = LabRat + 2
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Int1 setTo 5
             Int2.setTo(5)
         }
@@ -92,7 +92,7 @@ class SetValsTest : BaseAndroidTest() {
     fun setToMixed() {
         val rat = LabRat + 3
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Str1 setTo "lkjlkjlj"
             Enabled setTo true
             Position setTo 69
@@ -115,7 +115,7 @@ class SetValsTest : BaseAndroidTest() {
     fun flipWorks() {
         val rat = LabRat + 4
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Bool1 setTo true
             Bool2.flip()
         }
@@ -130,7 +130,7 @@ class SetValsTest : BaseAndroidTest() {
     fun numOpsWork() {
         val rat = LabRat + 5
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Int1 setTo 10
             Int1 add 5
             Int2 setTo 20
@@ -154,7 +154,7 @@ class SetValsTest : BaseAndroidTest() {
     fun absWorks() {
         val rat = LabRat + 6
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Int1 setTo -42
             Int1.abs()
         }
@@ -169,7 +169,7 @@ class SetValsTest : BaseAndroidTest() {
     fun minMaxWorks() {
         val rat = LabRat + 7
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Int1 setTo 100
             Int1 capAt 50
             Int2 setTo 5
@@ -187,7 +187,7 @@ class SetValsTest : BaseAndroidTest() {
     fun coerceInWorks() {
         val rat = LabRat + 8
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Int1 setTo 999
             Int1 coerceIn 0..100
             Float1 setTo -5F
@@ -205,7 +205,7 @@ class SetValsTest : BaseAndroidTest() {
     fun setAsSimple() {
         val rat = LabRat + 9
         
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Int2 setTo 77
             Int1 setAs Int2
         }
@@ -225,7 +225,7 @@ class SetValsTest : BaseAndroidTest() {
     fun setAsIntWithMathWorks() {
         val rat = LabRat + 11
     
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Int1 setAs (Int2 andAdd 5)      // Int1 = 0 + 5 = 5
             Int2 setAs (Int1 andMult 3)     // Int2 = 5 * 3 = 15
             Int3 setAs (Int2 andCoerceIn 0..10) // Int3 = 15 coerced to 10
@@ -245,7 +245,7 @@ class SetValsTest : BaseAndroidTest() {
     fun setAsLongWithMathWorks() {
         val rat = LabRat + 12
     
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Long1 setAs (Long2 andAdd 5000L)  // Long1 = 0 + 5000
             Long2 setAs (Long1 andMult 3L)    // Long2 = 5000 * 3 = 15000
         }
@@ -261,7 +261,7 @@ class SetValsTest : BaseAndroidTest() {
     fun setAsFloatWithMathWorks() {
         val rat = LabRat + 13
     
-        dbh.setVals(SetValsTestTable, whereName(rat)) {
+        dbh.set(SetValsTestTable, whereName(rat)) {
             Float1 setAs (Float2 andAdd 1.5F) // Float1 = 0 + 1.5 = 1.5
             Float2 setAs (Float1 andDiv 2F)   // Float2 = 1.5 / 2 = 0.75
         }
