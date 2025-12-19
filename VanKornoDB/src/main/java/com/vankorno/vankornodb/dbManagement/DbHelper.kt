@@ -380,34 +380,65 @@ abstract class DbHelperInternal(
     
     // ==============================  G E T   O B J E C T S  ============================== \\
     
+    inline fun <reified T : DbEntity> getObj(                     table: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T? = read(null, "getObj") {
+        it.getObj<T>(table, where)
+    }
     
-    inline fun <reified T : DbEntity> getObjOrNull(                  table: String,
+    
+    suspend inline fun <reified T : DbEntity> getObjSusp(         table: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T? = readSusp(null, "getObjSusp") {
+        it.getObj<T>(table, where)
+    }
+    
+    
+    fun <T : DbEntity> getObj(                                    clazz: KClass<T>,
+                                                                  table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): T? = read(null, "getObj") {
+        it.getObj(clazz, table, where)
+    }
+    
+    
+    suspend fun <T : DbEntity> getObjSusp(                        clazz: KClass<T>,
+                                                                  table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): T? = readSusp(null, "getObjSusp") {
+        it.getObj(clazz, table, where)
+    }
+    
+    
+    // -------------------------------------------------------------------------------------- \\
+    
+    inline fun <reified T : DbEntity> getObjPro(                  table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-    ): T? = read(null, "getObjOrNull") {
-        it.getObjOrNull<T>(table, queryOpts)
+    ): T? = read(null, "getObjPro") {
+        it.getObjPro<T>(table, queryOpts)
     }
     
     
-    suspend inline fun <reified T : DbEntity> getObjOrNullSusp(      table: String,
+    suspend inline fun <reified T : DbEntity> getObjProSusp(      table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
-    ): T? = readSusp(null, "getObjOrNullSusp") {
-        it.getObjOrNull<T>(table, queryOpts)
+    ): T? = readSusp(null, "getObjProSusp") {
+        it.getObjPro<T>(table, queryOpts)
     }
     
     
-    fun <T : DbEntity> getObjOrNull(                                 clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-    ): T? = read(null, "getObjOrNull") {
-        it.getObjOrNull(clazz, table, queryOpts)
+    fun <T : DbEntity> getObjPro(                                         clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+    ): T? = read(null, "getObjPro") {
+        it.getObjPro(clazz, table, queryOpts)
     }
     
     
-    suspend fun <T : DbEntity> getObjOrNullSusp(                     clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-    ): T? = readSusp(null, "getObjOrNullSusp") {
-        it.getObjOrNull(clazz, table, queryOpts)
+    suspend fun <T : DbEntity> getObjProSusp(                             clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
+    ): T? = readSusp(null, "getObjProSusp") {
+        it.getObjPro(clazz, table, queryOpts)
     }
     
     

@@ -8,76 +8,36 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.QueryOpts
+import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.mapper.toEntity
 import kotlin.reflect.KClass
 
-/** Gets one db table row as an object of type [T] by its ID. Throws if no row found.*/
-
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjById(                          id: Int,
-                                                                                   table: String,
-): T = getObj(table) {
-    where { ID = id }
-}
-
-
-
-/** Gets one db table row as an object of type [T] by its ID, or null if not found.*/
-
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNullById(                    id: Int,
-                                                                                   table: String,
-): T? = getObjOrNull(table) {
-    where { ID = id }
-}
+/**
+ * Gets one db table row as an object of type [T] using the WhereBuilder. Returns null if no result found.
+ */
+inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+): T? = getObjPro(table) { this.where = where }
 
 
 
 
 /**
- * Gets one db table row as an object of type [T] from the given [table].
- * Throws if no row is found.
- * Uses reified type parameter and default "*" column selection.
+ * Gets one db table row as an object of [clazz] using using WhereBuilder. Returns null if no result found.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObj(             table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
-): T = getCursorPro(table) {
-    applyOpts(queryOpts)
-    limit = 1
-}.use { cursor ->
-    if (!cursor.moveToFirst()) error("No result for getObj<>()")
-    cursor.toEntity(T::class)
-}
-
-
-
-/**
- * Gets one db table row as an object of type [T] from [table] with explicit type. Throws if no result.
- */
-fun <T : DbEntity> SQLiteDatabase.getObj(                            clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): T = getCursorPro(table) {
-    applyOpts(queryOpts)
-    limit = 1
-}.use { cursor ->
-    if (!cursor.moveToFirst()) error("No result for getObj($clazz)")
-    cursor.toEntity(clazz)
-}
-
-
-
-
-
-
-
+fun <T : DbEntity> SQLiteDatabase.getObj(                         clazz: KClass<T>,
+                                                                  table: String,
+                                                                  where: WhereBuilder.()->Unit = {},
+): T? = getObjPro(clazz, table) { this.where = where }
 
 
 
 
 /**
- * Gets one db table row as an object of type [T] using the usual VanKorno DSL. Returns null if no result found.
+ * Gets one db table row as an object of type [T] using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(       table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(               table: String,
+                                                             noinline queryOpts: QueryOpts.()->Unit,
 ): T? = getCursorPro(table) {
     applyOpts(queryOpts)
     limit = 1
@@ -87,14 +47,12 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjOrNull(       table: Stri
 }
 
 
-
-
 /**
- * Gets one db table row as an object of [clazz] using using the usual VanKorno DSL. Returns null if no result found.
+ * Gets one db table row as an object of [clazz] using using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
  */
-fun <T : DbEntity> SQLiteDatabase.getObjOrNull(                      clazz: KClass<T>,
-                                                                     table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+fun <T : DbEntity> SQLiteDatabase.getObjPro(                              clazz: KClass<T>,
+                                                                          table: String,
+                                                                      queryOpts: QueryOpts.()->Unit,
 ): T? = getCursorPro(table) {
     applyOpts(queryOpts)
     limit = 1
