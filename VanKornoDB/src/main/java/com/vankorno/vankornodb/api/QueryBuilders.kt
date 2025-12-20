@@ -6,11 +6,11 @@
 package com.vankorno.vankornodb.api
 
 import com.vankorno.vankornodb.core.data.OrderWhen
-import com.vankorno.vankornodb.core.queryBuilder.JoinBuilderInternal
-import com.vankorno.vankornodb.core.queryBuilder.OrderByBuilderInternal
-import com.vankorno.vankornodb.core.queryBuilder.QueryOptsInternal
-import com.vankorno.vankornodb.core.queryBuilder.WhereBuilderInternal
-import com.vankorno.vankornodb.core.queryBuilder.getQuery
+import com.vankorno.vankornodb.core.dsl.JoinBuilderInternal
+import com.vankorno.vankornodb.core.dsl.OrderByBuilderInternal
+import com.vankorno.vankornodb.core.dsl.QueryOptsInternal
+import com.vankorno.vankornodb.core.dsl.WhereBuilderInternal
+import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
 import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
 import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal

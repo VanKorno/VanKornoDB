@@ -1,8 +1,8 @@
-package com.vankorno.vankornodb.core.queryBuilder.where
+package com.vankorno.vankornodb.core.dsl.where
 
 import com.vankorno.vankornodb.TestConstants
 import com.vankorno.vankornodb.core.data.DbConstants
-import com.vankorno.vankornodb.core.queryBuilder.getQuery
+import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.misc.columns
 import org.junit.Assert
 import org.junit.Test

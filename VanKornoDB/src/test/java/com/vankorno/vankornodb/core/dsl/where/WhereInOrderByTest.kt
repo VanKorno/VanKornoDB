@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.queryBuilder.where
+package com.vankorno.vankornodb.core.dsl.where
 
 import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.dbManagement.data.fCol

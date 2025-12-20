@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.queryBuilder
+package com.vankorno.vankornodb.core.dsl
 
 import com.vankorno.vankornodb.api.OrderByBuilder
 import com.vankorno.vankornodb.dbManagement.data.bCol

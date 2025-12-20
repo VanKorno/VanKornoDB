@@ -9,7 +9,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.core.queryBuilder.getQuery
+import com.vankorno.vankornodb.core.dsl.getQuery
 
 fun SQLiteDatabase.getCursorNoty(                                 table: String,
                                                                 columns: Array<out String>,

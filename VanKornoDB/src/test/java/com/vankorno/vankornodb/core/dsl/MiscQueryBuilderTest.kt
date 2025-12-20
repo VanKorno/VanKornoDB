@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.queryBuilder
+package com.vankorno.vankornodb.core.dsl
 
 import com.vankorno.vankornodb.TestConstants.*
 import com.vankorno.vankornodb.misc.columns
