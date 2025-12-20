@@ -7,26 +7,26 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.WhereDsl
 
 /**
  * For internal use with the type-safe getRowVals... functions.
  */
 internal inline fun <T> SQLiteDatabase.getRowVals(                table: String,
                                                                 columns: Array<out String>,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
                                              crossinline getCursorValue: (Cursor, Int)->T,
 ): List<T> = getRowValsPro(table, columns, { this.where = where }, getCursorValue)
 
 
 internal inline fun <T> SQLiteDatabase.getRowValsPro(                table: String,
                                                                    columns: Array<out String>,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
                                                 crossinline getCursorValue: (Cursor, Int)->T,
 ): List<T> = baseGetValsPro(table, columns,
-    queryOpts = {
-        applyOpts(queryOpts)
+    fullDsl = {
+        applyDsl(fullDsl)
         limit = 1
     }
 ) { cursor, col ->

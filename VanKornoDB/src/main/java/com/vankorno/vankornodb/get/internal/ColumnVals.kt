@@ -7,13 +7,13 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.WhereDsl
 
 
 internal inline fun <T> SQLiteDatabase.getColVals(                table: String,
                                                                  column: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
                                              crossinline getCursorValue: (Cursor)->T,
 ): List<T> = getColValsPro(table, column, { this.where = where }, getCursorValue)
 
@@ -23,9 +23,9 @@ internal inline fun <T> SQLiteDatabase.getColVals(                table: String,
  */
 internal inline fun <T> SQLiteDatabase.getColValsPro(                table: String,
                                                                     column: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
                                                 crossinline getCursorValue: (Cursor)->T,
-): List<T> = baseGetValsPro(table, arrayOf(column), queryOpts) { cursor, _ ->
+): List<T> = baseGetValsPro(table, arrayOf(column), fullDsl) { cursor, _ ->
     getCursorValue(cursor)
 }.flatten()
 

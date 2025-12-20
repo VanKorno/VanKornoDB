@@ -7,13 +7,13 @@ package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.dsl.getQuery
 
 fun SQLiteDatabase.getCursorNoty(                                 table: String,
                                                                 columns: Array<out String>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): Cursor {
     val (query, args) = getQuery(table, columns) { this.where = where }
     return rawQuery(query, args)
@@ -23,8 +23,8 @@ fun SQLiteDatabase.getCursorNoty(                                 table: String,
 
 fun SQLiteDatabase.getCursorProNoty(                                      table: String,
                                                                         columns: Array<out String>,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
 ): Cursor {
-    val (query, args) = getQuery(table, columns, queryOpts)
+    val (query, args) = getQuery(table, columns, fullDsl)
     return rawQuery(query, args)
 }

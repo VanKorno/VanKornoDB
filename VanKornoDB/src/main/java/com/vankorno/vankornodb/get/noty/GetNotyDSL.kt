@@ -8,8 +8,8 @@ package com.vankorno.vankornodb.get.noty
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.misc.getBoolean
 
@@ -18,10 +18,10 @@ inline fun <R> SQLiteDatabase.getValueNoty(                            table: St
                                                                       column: String,
                                                                      default: R,
                                                                      funName: String,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
                                                   crossinline getCursorValue: (Cursor)->R,
 ): R {
-    val builder = WhereBuilder().apply(where)
+    val builder = WhereDsl().apply(where)
     val whereClause = builder.clauses.joinToString(" ")
     val whereArgs = builder.args.toTypedArray()
     
@@ -46,11 +46,11 @@ fun <R> SQLiteDatabase.getValueProNoty(                              table: Stri
                                                                     column: String,
                                                                    default: R,
                                                                    funName: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
                                                             getCursorValue: (Cursor)->R,
 ): R {
     return getCursorProNoty(table, arrayOf(column)) {
-        applyOpts(queryOpts)
+        applyDsl(fullDsl)
         limit = 1
     }.use { cursor ->
         if (cursor.moveToFirst())
@@ -65,22 +65,22 @@ fun <R> SQLiteDatabase.getValueProNoty(                              table: Stri
 }
 
 
-fun SQLiteDatabase.getIntNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+fun SQLiteDatabase.getIntNoty(table: String, column: String, where: WhereDsl.()->Unit) =
     getValueNoty(table, column, -1, "getInt", where) { it.getInt(0) }
 
-fun SQLiteDatabase.getStrNoty(table: String, column: String, where: WhereBuilder.()->Unit): String =
+fun SQLiteDatabase.getStrNoty(table: String, column: String, where: WhereDsl.()->Unit): String =
     getValueNoty(table, column, "", "getStr", where) { it.getString(0) }
 
-fun SQLiteDatabase.getBoolNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+fun SQLiteDatabase.getBoolNoty(table: String, column: String, where: WhereDsl.()->Unit) =
     getValueNoty(table, column, false, "getBool", where) { it.getBoolean(0) }
 
-fun SQLiteDatabase.getLongNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+fun SQLiteDatabase.getLongNoty(table: String, column: String, where: WhereDsl.()->Unit) =
     getValueNoty(table, column, -1L, "getLong", where) { it.getLong(0) }
 
-fun SQLiteDatabase.getFloatNoty(table: String, column: String, where: WhereBuilder.()->Unit) =
+fun SQLiteDatabase.getFloatNoty(table: String, column: String, where: WhereDsl.()->Unit) =
     getValueNoty(table, column, -1F, "getFloat", where) { it.getFloat(0) }
 
-fun SQLiteDatabase.getBlobNoty(table: String, column: String, where: WhereBuilder.()->Unit): ByteArray =
+fun SQLiteDatabase.getBlobNoty(table: String, column: String, where: WhereDsl.()->Unit): ByteArray =
     getValueNoty(table, column, ByteArray(0), "getBlob", where) { it.getBlob(0) }
 
 

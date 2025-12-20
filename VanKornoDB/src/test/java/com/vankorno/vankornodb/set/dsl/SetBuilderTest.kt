@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.set.dsl
 
-import com.vankorno.vankornodb.api.SetBuilder
+import com.vankorno.vankornodb.api.SetDsl
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
@@ -22,7 +22,7 @@ class SetBuilderTest {
     fun `simple set and add produce correct ops`() {
         val a = IntCol("a")
         
-        val ops = SetBuilder().apply {
+        val ops = SetDsl().apply {
             a setTo 5
             a add 3
         }.ops
@@ -41,7 +41,7 @@ class SetBuilderTest {
     fun `int mult by one produces no op`() {
         val a = IntCol("a")
         
-        val ops = SetBuilder().apply { a mult 1 }.ops
+        val ops = SetDsl().apply { a mult 1 }.ops
         
         assertTrue(ops.isEmpty())
     }
@@ -51,7 +51,7 @@ class SetBuilderTest {
     fun `int mult by zero becomes set to zero`() {
         val a = IntCol("a")
         
-        val ops = SetBuilder().apply { a mult 0 }.ops
+        val ops = SetDsl().apply { a mult 0 }.ops
         
         assertEquals(listOf(SetOp.Set(a, 0)), ops )
     }
@@ -61,7 +61,7 @@ class SetBuilderTest {
         val a = BoolCol("a")
         val b = BoolCol("b")
         
-        val ops = SetBuilder().apply {
+        val ops = SetDsl().apply {
             a.flip()
             a setAs b
         }.ops
@@ -80,7 +80,7 @@ class SetBuilderTest {
         val a = IntCol("a")
         val b = IntCol("b")
         
-        val ops = SetBuilder().apply { a setAs b }.ops
+        val ops = SetDsl().apply { a setAs b }.ops
         
         assertEquals(listOf(SetOp.SetAs("a", "b")), ops)
     }
@@ -90,7 +90,7 @@ class SetBuilderTest {
         val a = BoolCol("a")
         val b = BoolCol("b")
         
-        val ops = SetBuilder().apply { a setAs b }.ops
+        val ops = SetDsl().apply { a setAs b }.ops
         
         assertEquals(listOf(SetOp.SetAs("a", "b")), ops)
     }
@@ -100,7 +100,7 @@ class SetBuilderTest {
         val a = IntCol("a")
         val b = IntCol("b")
         
-        val ops = SetBuilder().apply {
+        val ops = SetDsl().apply {
             a setTo 1
             a setAs b
             a add 3
@@ -123,7 +123,7 @@ class SetBuilderTest {
         val a = IntCol("a")
         val b = IntCol("b")
         
-        val ops = SetBuilder().apply {
+        val ops = SetDsl().apply {
             a setAs (b andAdd 5)
             a setAs (b andMult 3)
             a setAs (b andCoerceIn 0..10)
@@ -148,7 +148,7 @@ class SetBuilderTest {
         val a = LongCol("a")
         val b = LongCol("b")
         
-        val ops = SetBuilder().apply {
+        val ops = SetDsl().apply {
             a setAs (b andAdd 5L)
             a setAs (b andMult 3L)
         }.ops
@@ -167,7 +167,7 @@ class SetBuilderTest {
         val a = FloatCol("a")
         val b = FloatCol("b")
         
-        val ops = SetBuilder().apply {
+        val ops = SetDsl().apply {
             a setAs (b andAdd 5.5F)
             a setAs (b andDiv 2F)
         }.ops
@@ -197,7 +197,7 @@ class SetBuilderTest {
 
     @Test
     fun `string column is set to cursed artifact`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             "mystery_box" setTo "💩42"
         }
         
@@ -209,7 +209,7 @@ class SetBuilderTest {
     
     @Test
     fun `chaos is turned OFF to save the universe`() {
-        val b = SetBuilder().apply { OFF(chaos) }
+        val b = SetDsl().apply { OFF(chaos) }
         
         assertEquals(
             listOf(SetOp.Set(chaos, false)),
@@ -219,7 +219,7 @@ class SetBuilderTest {
     
     @Test
     fun `chaos is turned ON because nobody learned anything`() {
-        val b = SetBuilder().apply { ON(chaos) }
+        val b = SetDsl().apply { ON(chaos) }
         
         assertEquals(
             listOf(SetOp.Set(chaos, true)),
@@ -229,7 +229,7 @@ class SetBuilderTest {
     
     @Test
     fun `bananas are subtracted for diet reasons`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             bananas sub 13
         }
 
@@ -241,7 +241,7 @@ class SetBuilderTest {
 
     @Test
     fun `unicorn population is reduced dramatically`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             unicorns sub 666L
         }
         
@@ -253,7 +253,7 @@ class SetBuilderTest {
     
     @Test
     fun `magic is drained slightly but catastrophically`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             magic sub 3.14f
         }
         
@@ -265,7 +265,7 @@ class SetBuilderTest {
     
     @Test
     fun `unicorns are multiplied beyond safe limits`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             unicorns mult 9001
         }
         
@@ -277,7 +277,7 @@ class SetBuilderTest {
     
     @Test
     fun `magic is multiplied until reality glitches`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             magic mult 1.618f
         }
         
@@ -289,7 +289,7 @@ class SetBuilderTest {
     
     @Test
     fun `bananas become absolute like forced positivity`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             bananas.abs()
         }
         
@@ -301,7 +301,7 @@ class SetBuilderTest {
     
     @Test
     fun `bananas are forced into acceptable social range`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             bananas coerceIn 1..10
         }
         
@@ -313,7 +313,7 @@ class SetBuilderTest {
     
     @Test
     fun `unicorns are capped because infinite unicorns are illegal`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             unicorns capAt 9999999L
         }
         
@@ -325,7 +325,7 @@ class SetBuilderTest {
     
     @Test
     fun `magic is humbled to minimum survivable amount`() {
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             magic floorAt 0.01f
         }
         
@@ -338,7 +338,7 @@ class SetBuilderTest {
     @Test
     fun `unicorns copy values from suspicious source`() {
         val sourceOfTruth = LongCol("source_of_truth")
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             unicorns setAs sourceOfTruth
         }
         
@@ -351,7 +351,7 @@ class SetBuilderTest {
     @Test
     fun `magic steals power from neighbouring wizard`() {
         val neighbourMagic = FloatCol("neighbour_magic")
-        val b = SetBuilder().apply {
+        val b = SetDsl().apply {
             magic setAs neighbourMagic
         }
         

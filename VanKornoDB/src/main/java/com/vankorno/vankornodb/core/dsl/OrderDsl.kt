@@ -9,9 +9,9 @@ import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.*
 
 /**
- *  Internal base — use `OrderByBuilder` from the api package instead
+ *  Internal base — use `OrderDsl` from the api package instead
  */
-open class OrderByBuilderInternal {
+open class OrderDslInternal {
     val orderoids = mutableListOf<String>()
     val args = mutableListOf<String>()
     

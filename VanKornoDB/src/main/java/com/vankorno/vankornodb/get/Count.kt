@@ -6,26 +6,26 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.misc.columns
 
 /** Returns the number of rows matching the query conditions. */
 
 fun SQLiteDatabase.getRowCount(                                   table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): Int = getCursorProNoty(table, columns("1")) {
-    applyOpts(where = where)
+    applyDsl(where = where)
 }.use { it.count }
 
 
 /** Returns the number of rows matching the advanced query conditions. */
 
 fun SQLiteDatabase.getRowCountPro(                                        table: String,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
 ): Int = getCursorProNoty(table, columns("1")) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
 }.use { it.count }
 
 
@@ -35,7 +35,7 @@ fun SQLiteDatabase.getRowCountPro(                                        table:
 /** Returns true if at least one row matches the query conditions. */
 
 fun SQLiteDatabase.hasRows(                                       table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): Boolean = getCursorProNoty(table, columns("1")) {
     this.where = where
     limit = 1
@@ -45,9 +45,9 @@ fun SQLiteDatabase.hasRows(                                       table: String,
 /** Returns true if at least one row matches the advanced query conditions. */
 
 fun SQLiteDatabase.hasRowsPro(                                            table: String,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
 ): Boolean = getCursorProNoty(table, columns("1")) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
     limit = 1
 }.use { it.moveToFirst() }
 

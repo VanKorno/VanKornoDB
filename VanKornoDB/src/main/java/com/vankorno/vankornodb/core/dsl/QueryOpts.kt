@@ -5,35 +5,35 @@
 // endregion
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.JoinBuilder
-import com.vankorno.vankornodb.api.OrderByBuilder
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.JoinDsl
+import com.vankorno.vankornodb.api.OrderDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.core.data.QueryOptsHolder
+import com.vankorno.vankornodb.core.data.FullDslHolder
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 
 /**
- *  Internal base — use `QueryOpts` from the api package instead
+ *  Internal base — use `FullDsl` from the api package instead
  */
 @Suppress("unused")
-open class QueryOptsInternal {
-    val query = QueryOptsHolder()
+open class FullDslInternal {
+    val query = FullDslHolder()
     
     
-    fun joins(builder: JoinBuilder.()->Unit) { query.joins = builder }
+    fun joins(dsl: JoinDsl.()->Unit) { query.joins = dsl }
     
-    var joins: JoinBuilder.() -> Unit
+    var joins: JoinDsl.() -> Unit
         get() = query.joins
         set(value) { query.joins = value }
     
     
     
-    fun where(builder: WhereBuilder.()->Unit) { query.where = builder }
+    fun where(dsl: WhereDsl.()->Unit) { query.where = dsl }
     
-    var where: WhereBuilder.() -> Unit
+    var where: WhereDsl.() -> Unit
         get() = query.where
         set(value) { query.where = value }
     
@@ -56,12 +56,12 @@ open class QueryOptsInternal {
     
     
     
-    var orderBy: OrderByBuilder.()->Unit
+    var orderBy: OrderDsl.()->Unit
         get() = query.orderBy
         set(value) { query.orderBy = value }
     
-    fun orderBy(builder: OrderByBuilder.()->Unit) {
-        query.orderBy = builder
+    fun orderBy(dsl: OrderDsl.()->Unit) {
+        query.orderBy = dsl
     }
     
     fun orderBy(vararg columns: BaseColumn) { query.orderBy = { col(*columns) } }
@@ -72,13 +72,13 @@ open class QueryOptsInternal {
     fun orderRandomly() = orderBy(RANDOM)
     
     fun orderById() = orderBy(cID)
-    fun orderByIdAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { cID(); and(andOrderBy) }
+    fun orderByIdAnd(andOrderBy: OrderDsl.()->Unit) = orderBy { cID(); and(andOrderBy) }
     
     fun orderByName() = orderBy(cName)
-    fun orderByNameAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { cName(); and(andOrderBy) }
+    fun orderByNameAnd(andOrderBy: OrderDsl.()->Unit) = orderBy { cName(); and(andOrderBy) }
     
     fun orderByPosition() = orderBy(cPosition)
-    fun orderByPositionAnd(andOrderBy: OrderByBuilder.()->Unit) = orderBy { cPosition(); and(andOrderBy) }
+    fun orderByPositionAnd(andOrderBy: OrderDsl.()->Unit) = orderBy { cPosition(); and(andOrderBy) }
     
     fun orderByFlippedRows() = orderBy(RowID + DESCENDING)
     
@@ -123,14 +123,14 @@ open class QueryOptsInternal {
     
     
     
-    fun applyOpts(                                              joins: JoinBuilder.()->Unit = {},
-                                                                where: WhereBuilder.()->Unit = {},
-                                                              groupBy: String = "",
-                                                               having: String = "",
-                                                              orderBy: OrderByBuilder.()->Unit = {},
-                                                                limit: Int? = null,
-                                                               offset: Int? = null,
-                                                            customEnd: String = "",
+    fun applyDsl(                                                     joins: JoinDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                    groupBy: String = "",
+                                                                     having: String = "",
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      limit: Int? = null,
+                                                                     offset: Int? = null,
+                                                                  customEnd: String = "",
     ) {
         this.joins(joins)
         this.where(where)

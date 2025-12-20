@@ -6,8 +6,8 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -25,7 +25,7 @@ import com.vankorno.vankornodb.misc.getBoolean
  */
 fun SQLiteDatabase.getColInts(                                    table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Int> = getColVals(table, column.name, where) { it.getInt(0) }
 
 
@@ -33,12 +33,12 @@ fun SQLiteDatabase.getColInts(                                    table: String,
  * Retrieves a list of Ints from a single column.
  * [table] Db table name
  * [column] IntCol object with db column name, type, etc.
- * [queryOpts] DSL with full SQLite query options
+ * [fullDsl] DSL with full SQLite query options
  */
 fun SQLiteDatabase.getColIntsPro(                                    table: String,
                                                                     column: IntCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Int> = getColValsPro(table, column.name, queryOpts) { it.getInt(0) }
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Int> = getColValsPro(table, column.name, fullDsl) { it.getInt(0) }
 
 
 
@@ -52,7 +52,7 @@ fun SQLiteDatabase.getColIntsPro(                                    table: Stri
  */
 fun SQLiteDatabase.getColStrings(                                 table: String,
                                                                  column: StrCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<String> = getColVals(table, column.name, where) { it.getString(0) }
 
 
@@ -61,8 +61,8 @@ fun SQLiteDatabase.getColStrings(                                 table: String,
  */
 fun SQLiteDatabase.getColStringsPro(                                 table: String,
                                                                     column: StrCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<String> = getColValsPro(table, column.name, queryOpts) { it.getString(0) }
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<String> = getColValsPro(table, column.name, fullDsl) { it.getString(0) }
 
 
 
@@ -74,7 +74,7 @@ fun SQLiteDatabase.getColStringsPro(                                 table: Stri
  */
 fun SQLiteDatabase.getColBools(                                   table: String,
                                                                  column: BoolCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Boolean> = getColVals(table, column.name, where) { it.getBoolean(0) }
 
 
@@ -83,8 +83,8 @@ fun SQLiteDatabase.getColBools(                                   table: String,
  */
 fun SQLiteDatabase.getColBoolsPro(                                   table: String,
                                                                     column: BoolCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Boolean> = getColValsPro(table, column.name, queryOpts) { it.getBoolean(0) }
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Boolean> = getColValsPro(table, column.name, fullDsl) { it.getBoolean(0) }
 
 
 
@@ -97,7 +97,7 @@ fun SQLiteDatabase.getColBoolsPro(                                   table: Stri
  */
 fun SQLiteDatabase.getColLongs(                                   table: String,
                                                                  column: LongCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Long> = getColVals(table, column.name, where) { it.getLong(0) }
 
 
@@ -106,8 +106,8 @@ fun SQLiteDatabase.getColLongs(                                   table: String,
  */
 fun SQLiteDatabase.getColLongsPro(                                   table: String,
                                                                     column: LongCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Long> = getColValsPro(table, column.name, queryOpts) { it.getLong(0) }
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Long> = getColValsPro(table, column.name, fullDsl) { it.getLong(0) }
 
 
 
@@ -119,7 +119,7 @@ fun SQLiteDatabase.getColLongsPro(                                   table: Stri
  */
 fun SQLiteDatabase.getColFloats(                                  table: String,
                                                                  column: FloatCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Float> = getColVals(table, column.name, where) { it.getFloat(0) }
 
 
@@ -128,8 +128,8 @@ fun SQLiteDatabase.getColFloats(                                  table: String,
  */
 fun SQLiteDatabase.getColFloatsPro(                                  table: String,
                                                                     column: FloatCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Float> = getColValsPro(table, column.name, queryOpts) { it.getFloat(0) }
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Float> = getColValsPro(table, column.name, fullDsl) { it.getFloat(0) }
 
 
 
@@ -142,7 +142,7 @@ fun SQLiteDatabase.getColFloatsPro(                                  table: Stri
  */
 fun SQLiteDatabase.getColBlobs(                                   table: String,
                                                                  column: BlobCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<ByteArray> = getColVals(table, column.name, where) { it.getBlob(0) }
 
 
@@ -151,8 +151,8 @@ fun SQLiteDatabase.getColBlobs(                                   table: String,
  */
 fun SQLiteDatabase.getColBlobsPro(                                   table: String,
                                                                     column: BlobCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<ByteArray> = getColValsPro(table, column.name, queryOpts) { it.getBlob(0) }
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<ByteArray> = getColValsPro(table, column.name, fullDsl) { it.getBlob(0) }
 
 
 

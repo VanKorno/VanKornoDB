@@ -8,7 +8,7 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import kotlin.reflect.KClass
 
@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
  * Gets one db table row as an object of type [T] using the WhereBuilder. Returns null if no result found.
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(table) { this.where = where }
 
 
@@ -27,7 +27,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
  */
 fun <T : DbEntity> SQLiteDatabase.getObj(                         table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(table, clazz) { this.where = where }
 
 
@@ -35,7 +35,7 @@ fun <T : DbEntity> SQLiteDatabase.getObj(                         table: String,
 
 inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
                                                                 default: T,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
 ): T = getObj<T>(table, where) ?: run {
     // region LOG
         Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
@@ -47,7 +47,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
 fun <T : DbEntity> SQLiteDatabase.getObj(                         table: String,
                                                                   clazz: KClass<T>,
                                                                 default: T,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): T = getObj(table, clazz, where) ?: run {
     // region LOG
         Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")

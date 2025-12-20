@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.where
 
-import com.vankorno.vankornodb.api.OrderByBuilder
+import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
@@ -15,7 +15,7 @@ class WhereInOrderByTest {
     
     @Test
     fun `where() assembles CASE with multiple WhenAndOrders and else`() {
-        val builder = OrderByBuilder().apply {
+        val builder = OrderDsl().apply {
             When(
                 orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
                 orderWhen("RANDOM()") { cName notEqual "NotBob" },
@@ -37,7 +37,7 @@ class WhereInOrderByTest {
     fun `When with multiple OrderWhen entries`() {
         val score = fCol("score", 0f)
         
-        val builder = OrderByBuilder().apply {
+        val builder = OrderDsl().apply {
             When(
                 orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
                 orderWhen({ raw("RANDOM()") }) { cName notEqual "NotBob" },
@@ -59,7 +59,7 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with single OrderWhen and no Else`() {
-        val builder = OrderByBuilder().apply {
+        val builder = OrderDsl().apply {
             When(
                 orderWhen({ cPosition() }) { cID equal 42 }
             )
@@ -74,7 +74,7 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with Else only`() {
-        val builder = OrderByBuilder().apply {
+        val builder = OrderDsl().apply {
             When(
                 Else = { cID(); cName() }
             )
@@ -89,7 +89,7 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with typed column in orderBy`() {
-        val builder = OrderByBuilder().apply {
+        val builder = OrderDsl().apply {
             When(
                 orderWhen(cPosition) { cName equal "NotBob" },
                 orderWhen(cType) { cActive equal true },
@@ -109,7 +109,7 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with raw string orders and multiple conditions`() {
-        val builder = OrderByBuilder().apply {
+        val builder = OrderDsl().apply {
             When(
                 orderWhen("ABS(position)+id DESC") { cActive equal true },
                 orderWhen("RANDOM()") { cType equal "test" },

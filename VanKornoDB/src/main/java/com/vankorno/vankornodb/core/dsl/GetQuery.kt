@@ -5,45 +5,41 @@
 // endregion
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.JoinBuilder
-import com.vankorno.vankornodb.api.OrderByBuilder
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.JoinDsl
+import com.vankorno.vankornodb.api.OrderDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.comma
-import com.vankorno.vankornodb.core.data.QueryOptsHolder
+import com.vankorno.vankornodb.core.data.FullDslHolder
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 
-// TODO better orderBy, to avoid to cover stuff like this: orderBy = Stage+comma + Position + descending
-// TODO interface for builders
+internal fun getQuery(                                      table: String,
+                                                          columns: Array<out String> = arrayOf("*"),
+                                                          fullDsl: FullDsl.()->Unit,
+) = getQuery(table, columns, FullDsl().apply(fullDsl).query)
+
 
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                        queryOpts: QueryOpts.()->Unit,
-) = getQuery(table, columns, QueryOpts().apply(queryOpts).query)
-
-
-
-internal fun getQuery(                                   table: String,
-                                                       columns: Array<out String> = arrayOf("*"),
-                                                       sqlOpts: QueryOptsHolder = QueryOptsHolder(),
+                                                          sqlOpts: FullDslHolder = FullDslHolder(),
 ): QueryWithArgs {
-    val whereBuilder = WhereBuilder().apply(sqlOpts.where)
-    val joinBuilder = JoinBuilder().apply(sqlOpts.joins)
-    val orderByBuilder = OrderByBuilder().apply(sqlOpts.orderBy)
+    val whereDsl = WhereDsl().apply(sqlOpts.where)
+    val joinDsl = JoinDsl().apply(sqlOpts.joins)
+    val orderDsl = OrderDsl().apply(sqlOpts.orderBy)
     
     val query = buildString {
         append("SELECT ")
         append(columns.joinToString(comma))
         append(" FROM ")
         append(table)
-        if (joinBuilder.joins.isNotEmpty()) {
+        if (joinDsl.joins.isNotEmpty()) {
             append(" ")
-            append(joinBuilder.buildStr())
+            append(joinDsl.buildStr())
         }
-        if (whereBuilder.clauses.isNotEmpty()) {
+        if (whereDsl.clauses.isNotEmpty()) {
             append(" WHERE ")
-            append(whereBuilder.buildStr())
+            append(whereDsl.buildStr())
         }
         if (sqlOpts.groupBy.isNotBlank()) {
             append(" GROUP BY ")
@@ -53,9 +49,9 @@ internal fun getQuery(                                   table: String,
             append(" HAVING ")
             append(sqlOpts.having)
         }
-        if (orderByBuilder.orderoids.isNotEmpty()) {
+        if (orderDsl.orderoids.isNotEmpty()) {
             append(" ORDER BY ")
-            append(orderByBuilder.buildStr())
+            append(orderDsl.buildStr())
         }
         if (sqlOpts.limit != null) {
             append(" LIMIT ")
@@ -70,9 +66,9 @@ internal fun getQuery(                                   table: String,
         }
     }
     
-    val args =  joinBuilder.args +
-                whereBuilder.args +
-                orderByBuilder.args
+    val args =  joinDsl.args +
+                whereDsl.args +
+                orderDsl.args
                 // + havingBuilder.args, etc.
     
     return QueryWithArgs(query, args.toTypedArray())

@@ -7,7 +7,7 @@ package com.vankorno.vankornodb.core.dsl
 
 import com.vankorno.vankornodb.core.data.DbConstants.comma
 
-abstract class WhereBuilderBase() {
+abstract class WhereDslBase() {
     val clauses = mutableListOf<String>()
     val args = mutableListOf<String>()
     

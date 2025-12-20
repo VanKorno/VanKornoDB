@@ -7,7 +7,7 @@ package com.vankorno.vankornodb.set.noty
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 
 fun SQLiteDatabase.setNoty(                                                        value: Any,
@@ -26,9 +26,9 @@ fun SQLiteDatabase.setNoty(                                                     
 fun SQLiteDatabase.setNoty(                                       value: Any,
                                                                   table: String,
                                                                  column: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ) {
-    val builder = WhereBuilder().apply(where)
+    val builder = WhereDsl().apply(where)
     val safeValue = getBoolSafeVal(value)
     
     val wherePart: String
@@ -58,15 +58,15 @@ internal fun getBoolSafeVal(value: Any) = if (value is Boolean)
 
 fun SQLiteDatabase.setRowValsNoty(                                     table: String,
                                                                           cv: ContentValues,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
 ) {
-    val builder = WhereBuilder().apply(where)
+    val builder = WhereDsl().apply(where)
     update(table, cv, builder.buildStr(), builder.args.toTypedArray())
 }
 
 
 fun SQLiteDatabase.setRowValsNoty(                                     table: String,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
                                                                vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
@@ -76,7 +76,7 @@ fun SQLiteDatabase.setRowValsNoty(                                     table: St
             putSmart(col, value)
         }
     }
-    val builder = WhereBuilder().apply(where)
+    val builder = WhereDsl().apply(where)
     update(table, cv, builder.buildStr(), builder.args.toTypedArray())
 }
 

@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.add.internal.toContentValues
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 
@@ -34,12 +34,12 @@ fun <T : DbEntity> SQLiteDatabase.setObjById(                                   
 
 inline fun <T : DbEntity> SQLiteDatabase.setObj(                       table: String,
                                                                          obj: T,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
 ): Int {
     val cv = toContentValues(obj)
-    val whereBuilder = WhereBuilder().apply(where)
-    val whereClause = whereBuilder.clauses.joinToString(" ")
-    val whereArgs = whereBuilder.args.toTypedArray()
+    val whereDsl = WhereDsl().apply(where)
+    val whereClause = whereDsl.clauses.joinToString(" ")
+    val whereArgs = whereDsl.args.toTypedArray()
     
     val affected = update(table, cv, whereClause, whereArgs)
     if (affected > 1) {

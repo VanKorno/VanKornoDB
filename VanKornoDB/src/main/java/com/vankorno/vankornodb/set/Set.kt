@@ -6,8 +6,8 @@
 package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.SetBuilder
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.SetDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
@@ -19,11 +19,11 @@ import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
 
 fun SQLiteDatabase.set(                                           table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                actions: SetBuilder.()->Unit,
+                                                                  where: WhereDsl.()->Unit = {},
+                                                                actions: SetDsl.()->Unit,
 ) {
-    val ops = SetBuilder().apply(actions).ops
-    val builder = WhereBuilder().apply(where)
+    val ops = SetDsl().apply(actions).ops
+    val builder = WhereDsl().apply(where)
     
     val setParts = mutableListOf<String>()
     val args = mutableListOf<Any>()

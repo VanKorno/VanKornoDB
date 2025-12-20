@@ -5,9 +5,9 @@
 // endregion
 package com.vankorno.vankornodb.api
 
-import com.vankorno.vankornodb.set.dsl.SetBuilderInternal
+import com.vankorno.vankornodb.set.dsl.SetDslInternal
 
-class SetBuilder : SetBuilderInternal()
+class SetDsl : SetDslInternal()
 
 
 

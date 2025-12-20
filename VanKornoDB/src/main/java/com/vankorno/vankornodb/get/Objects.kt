@@ -2,14 +2,14 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import kotlin.reflect.KClass
 
 /** 
  * Retrieves a list of entities of type [T] mapped from the specified columns.
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(      table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
 ): List<T> = getObjectsPro(table) {
     this.where = where
 }
@@ -22,7 +22,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(      table: String,
  */
 fun <T : DbEntity> SQLiteDatabase.getObjects(                     table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<T> = getObjectsPro(clazz, table) {
     this.where = where
 }
@@ -36,7 +36,7 @@ fun <T : DbEntity> SQLiteDatabase.getObjects(                     table: String,
  * using the `id` column (Int) as the key.
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(       table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
 ): Map<Int, T> = getObjMapPro(table) {
     this.where = where
 }
@@ -50,7 +50,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(       table: String,
  */
 fun <T : DbEntity> SQLiteDatabase.getObjMap(                      table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): Map<Int, T> = getObjMapPro(clazz, table) {
     this.where = where
 }

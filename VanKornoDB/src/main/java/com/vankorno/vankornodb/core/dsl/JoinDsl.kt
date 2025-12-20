@@ -6,10 +6,10 @@
 package com.vankorno.vankornodb.core.dsl
 
 /**
- *  Internal base — use `JoinBuilder` from the api package instead
+ *  Internal base — use `JoinDsl` from the api package instead
  */
 @Suppress("unused")
-open class JoinBuilderInternal {
+open class JoinDslInternal {
     val joins = mutableListOf<String>()
     val args = mutableListOf<String>()
     

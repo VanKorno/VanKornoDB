@@ -8,7 +8,7 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.get.noty.getCursorProNoty
@@ -18,7 +18,7 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cID
 
 fun SQLiteDatabase.getRandomInt(                                  table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): Int {
     val rand = getRandomValNoty<Int>(table, column.name, where) ?: run {
         // region LOG
@@ -41,7 +41,7 @@ fun SQLiteDatabase.getRandomInt(                                  table: String,
  * @return A random ID from the table, or -1 if no rows match.
  */
 fun SQLiteDatabase.getRandomId(                                   table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): Int = getRandomInt(table, cID, where)
 
 
@@ -56,9 +56,9 @@ fun SQLiteDatabase.getRandomId(                                   table: String,
  * @return A random object of type [T] from the table, or null if no rows match.
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
 ): T? = getCursorPro(table) {
-    applyOpts(
+    applyDsl(
         where = where,
         limit = 1
     )
@@ -84,9 +84,9 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
  */
 inline fun <reified T> SQLiteDatabase.getRandomValNoty(           table: String,
                                                                  column: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
 ): T? = getCursorProNoty(table, arrayOf(column)) {
-    applyOpts(
+    applyDsl(
         where = where,
         limit = 1
     )

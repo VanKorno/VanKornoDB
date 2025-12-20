@@ -10,9 +10,9 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.SetBuilder
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.SetDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteFirstRow
@@ -41,7 +41,7 @@ abstract class DbHelperInternal(
                                                                        table: String,
                                                                       column: IntCol,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("setInt", async) {
         it.setInt(value, table, column, where)
     }
@@ -49,7 +49,7 @@ abstract class DbHelperInternal(
     suspend fun setIntSusp(                                            value: Int,
                                                                        table: String,
                                                                       column: IntCol,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = writeSusp("setIntSusp") {
         it.setInt(value, table, column, where)
     }
@@ -61,7 +61,7 @@ abstract class DbHelperInternal(
                                                                        table: String,
                                                                       column: StrCol,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("setStr", async) {
         it.setStr(value, table, column, where)
     }
@@ -69,7 +69,7 @@ abstract class DbHelperInternal(
     suspend fun setStrSusp(                                            value: String,
                                                                        table: String,
                                                                       column: StrCol,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = writeSusp("setStrSusp") {
         it.setStr(value, table, column, where)
     }
@@ -81,7 +81,7 @@ abstract class DbHelperInternal(
                                                                        table: String,
                                                                       column: BoolCol,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("setBool", async) {
         it.setBool(value, table, column, where)
     }
@@ -89,7 +89,7 @@ abstract class DbHelperInternal(
     suspend fun setBoolSusp(                                           value: Boolean,
                                                                        table: String,
                                                                       column: BoolCol,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = writeSusp("setBoolSusp") {
         it.setBool(value, table, column, where)
     }
@@ -101,7 +101,7 @@ abstract class DbHelperInternal(
                                                                        table: String,
                                                                       column: LongCol,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("setLong", async) {
         it.setLong(value, table, column, where)
     }
@@ -109,7 +109,7 @@ abstract class DbHelperInternal(
     suspend fun setLongSusp(                                           value: Long,
                                                                        table: String,
                                                                       column: LongCol,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = writeSusp("setLongSusp") {
         it.setLong(value, table, column, where)
     }
@@ -121,7 +121,7 @@ abstract class DbHelperInternal(
                                                                        table: String,
                                                                       column: FloatCol,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("setFloat", async) {
         it.setFloat(value, table, column, where)
     }
@@ -129,7 +129,7 @@ abstract class DbHelperInternal(
     suspend fun setFloatSusp(                                          value: Float,
                                                                        table: String,
                                                                       column: FloatCol,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = writeSusp("setFloatSusp") {
         it.setFloat(value, table, column, where)
     }
@@ -141,7 +141,7 @@ abstract class DbHelperInternal(
                                                                        table: String,
                                                                       column: BlobCol,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("setBlob", async) {
         it.setBlob(value, table, column, where)
     }
@@ -149,7 +149,7 @@ abstract class DbHelperInternal(
     suspend fun setBlobSusp(                                           value: ByteArray,
                                                                        table: String,
                                                                       column: BlobCol,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = writeSusp("setBlobSusp") {
         it.setBlob(value, table, column, where)
     }
@@ -164,16 +164,16 @@ abstract class DbHelperInternal(
     // =============================  M U L T I - S E T T E R S  ============================= \\
     
     fun set(                                                      table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
                                                                   async: Boolean = false,
-                                                                actions: SetBuilder.()->Unit,
+                                                                actions: SetDsl.()->Unit,
     ) = write("set", async) {
         it.set(table, where, actions)
     }
     
     suspend fun setSusp(                                          table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
-                                                                actions: SetBuilder.()->Unit,
+                                                                  where: WhereDsl.()->Unit = {},
+                                                                actions: SetDsl.()->Unit,
     ) = writeSusp("setSusp") {
         it.set(table, where, actions)
     }
@@ -221,7 +221,7 @@ abstract class DbHelperInternal(
     fun <T : DbEntity> setObj(                                         table: String,
                                                                          obj: T,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("setObj", async) {
         it.setObj(table, obj, where)
     }
@@ -229,7 +229,7 @@ abstract class DbHelperInternal(
     
     suspend fun <T : DbEntity> setObjSusp(                             table: String,
                                                                          obj: T,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ): Int = readWriteSusp(0, "setObjSusp") {
         it.setObj(table, obj, where)
     }
@@ -248,55 +248,55 @@ abstract class DbHelperInternal(
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
-    fun getInt(table: String, column: IntCol, where: WhereBuilder.()->Unit): Int =
+    fun getInt(table: String, column: IntCol, where: WhereDsl.()->Unit): Int =
         read(0, "getInt") { it.getInt(table, column, where) }
     
-    suspend fun getIntSusp(table: String, column: IntCol, where: WhereBuilder.()->Unit): Int =
+    suspend fun getIntSusp(table: String, column: IntCol, where: WhereDsl.()->Unit): Int =
         readSusp(0, "getIntSusp") { it.getInt(table, column, where) }
     
     
     //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
-    fun getStr(table: String, column: StrCol, where: WhereBuilder.()->Unit): String =
+    fun getStr(table: String, column: StrCol, where: WhereDsl.()->Unit): String =
         read("", "getStr") { it.getStr(table, column, where) }
     
-    suspend fun getStrSusp(table: String, column: StrCol, where: WhereBuilder.()->Unit): String =
+    suspend fun getStrSusp(table: String, column: StrCol, where: WhereDsl.()->Unit): String =
         readSusp("", "getStrSusp") { it.getStr(table, column, where) }
     
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
-    fun getBool(table: String, column: BoolCol, where: WhereBuilder.()->Unit): Boolean =
+    fun getBool(table: String, column: BoolCol, where: WhereDsl.()->Unit): Boolean =
         read(false, "getBool") { it.getBool(table, column, where) }
     
-    suspend fun getBoolSusp(table: String, column: BoolCol, where: WhereBuilder.()->Unit): Boolean =
+    suspend fun getBoolSusp(table: String, column: BoolCol, where: WhereDsl.()->Unit): Boolean =
         readSusp(false, "getBoolSusp") { it.getBool(table, column, where) }
     
     
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
-    fun getLong(table: String, column: LongCol, where: WhereBuilder.()->Unit): Long =
+    fun getLong(table: String, column: LongCol, where: WhereDsl.()->Unit): Long =
         read(0L, "getLong") { it.getLong(table, column, where) }
     
-    suspend fun getLongSusp(table: String, column: LongCol, where: WhereBuilder.()->Unit): Long =
+    suspend fun getLongSusp(table: String, column: LongCol, where: WhereDsl.()->Unit): Long =
         readSusp(0L, "getLongSusp") { it.getLong(table, column, where) }
     
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
     
-    fun getFloat(table: String, column: FloatCol, where: WhereBuilder.()->Unit): Float =
+    fun getFloat(table: String, column: FloatCol, where: WhereDsl.()->Unit): Float =
         read(0F, "getFloat") { it.getFloat(table, column, where) }
     
-    suspend fun getFloatSusp(table: String, column: FloatCol, where: WhereBuilder.()->Unit): Float =
+    suspend fun getFloatSusp(table: String, column: FloatCol, where: WhereDsl.()->Unit): Float =
         readSusp(0F, "getFloatSusp") { it.getFloat(table, column, where) }
     
     
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
-    fun getBlob(table: String, column: BlobCol, where: WhereBuilder.()->Unit): ByteArray =
+    fun getBlob(table: String, column: BlobCol, where: WhereDsl.()->Unit): ByteArray =
         read(ByteArray(0), "getBlob") { it.getBlob(table, column, where) }
     
-    suspend fun getBlobSusp(table: String, column: BlobCol, where: WhereBuilder.()->Unit): ByteArray =
+    suspend fun getBlobSusp(table: String, column: BlobCol, where: WhereDsl.()->Unit): ByteArray =
         readSusp(ByteArray(0), "getBlobSusp") { it.getBlob(table, column, where) }
     
     
@@ -309,14 +309,14 @@ abstract class DbHelperInternal(
     // ==============================  G E T   O B J E C T S  ============================== \\
     
     inline fun <reified T : DbEntity> getObj(                     table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getObj") {
         it.getObj<T>(table, where)
     }
     
     
     suspend inline fun <reified T : DbEntity> getObjSusp(         table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getObjSusp") {
         it.getObj<T>(table, where)
     }
@@ -324,7 +324,7 @@ abstract class DbHelperInternal(
     
     fun <T : DbEntity> getObj(                                    table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getObj") {
         it.getObj(table, clazz, where)
     }
@@ -332,7 +332,7 @@ abstract class DbHelperInternal(
     
     suspend fun <T : DbEntity> getObjSusp(                        table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getObjSusp") {
         it.getObj(table, clazz, where)
     }
@@ -341,14 +341,14 @@ abstract class DbHelperInternal(
     
     inline fun <reified T : DbEntity> getObj(                     table: String,
                                                                 default: T,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): T = read(default, "getObj") {
         it.getObj<T>(table, default, where)
     }
     
     suspend inline fun <reified T : DbEntity> getObjSusp(         table: String,
                                                                 default: T,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): T = readSusp(default, "getObjSusp") {
         it.getObj<T>(table, default, where)
     }
@@ -356,7 +356,7 @@ abstract class DbHelperInternal(
     fun <T : DbEntity> getObj(                                    table: String,
                                                                   clazz: KClass<T>,
                                                                 default: T,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): T = read(default, "getObj") {
         it.getObj(table, clazz, default, where)
     }
@@ -364,7 +364,7 @@ abstract class DbHelperInternal(
     suspend fun <T : DbEntity> getObjSusp(                        table: String,
                                                                   clazz: KClass<T>,
                                                                 default: T,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): T = readSusp(default, "getObjSusp") {
         it.getObj(table, clazz, default, where)
     }
@@ -373,32 +373,32 @@ abstract class DbHelperInternal(
     // -------------------------------------------------------------------------------------- \\
     
     inline fun <reified T : DbEntity> getObjPro(                  table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): T? = read(null, "getObjPro") {
-        it.getObjPro<T>(table, queryOpts)
+        it.getObjPro<T>(table, fullDsl)
     }
     
     
     suspend inline fun <reified T : DbEntity> getObjProSusp(         table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): T? = readSusp(null, "getObjProSusp") {
-        it.getObjPro<T>(table, queryOpts)
+        it.getObjPro<T>(table, fullDsl)
     }
     
     
     fun <T : DbEntity> getObjPro(                                         table: String,
                                                                           clazz: KClass<T>,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
     ): T? = read(null, "getObjPro") {
-        it.getObjPro(table, clazz, queryOpts)
+        it.getObjPro(table, clazz, fullDsl)
     }
     
     
     suspend fun <T : DbEntity> getObjProSusp(                             table: String,
                                                                           clazz: KClass<T>,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
     ): T? = readSusp(null, "getObjProSusp") {
-        it.getObjPro(table, clazz, queryOpts)
+        it.getObjPro(table, clazz, fullDsl)
     }
     
     
@@ -406,35 +406,35 @@ abstract class DbHelperInternal(
     
     inline fun <reified T : DbEntity> getObjPro(                     table: String,
                                                                    default: T,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): T = read(default, "getObjPro") {
-        it.getObjPro<T>(table, default, queryOpts)
+        it.getObjPro<T>(table, default, fullDsl)
     }
     
     
     suspend inline fun <reified T : DbEntity> getObjProSusp(         table: String,
                                                                    default: T,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): T = readSusp(default, "getObjProSusp") {
-        it.getObjPro<T>(table, default, queryOpts)
+        it.getObjPro<T>(table, default, fullDsl)
     }
     
     
     fun <T : DbEntity> getObjPro(                                         table: String,
                                                                           clazz: KClass<T>,
                                                                         default: T,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
     ): T = read(default, "getObjPro") {
-        it.getObjPro(table, clazz, default, queryOpts)
+        it.getObjPro(table, clazz, default, fullDsl)
     }
     
     
     suspend fun <T : DbEntity> getObjProSusp(                             table: String,
                                                                           clazz: KClass<T>,
                                                                         default: T,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
     ): T = readSusp(default, "getObjProSusp") {
-        it.getObjPro(table, clazz, default, queryOpts)
+        it.getObjPro(table, clazz, default, fullDsl)
     }
     
     
@@ -450,13 +450,13 @@ abstract class DbHelperInternal(
     // =========================  M U L T I P L E   O B J E C T S  ========================= \\
     
     inline fun <reified T : DbEntity> getObjects(                 table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
         it.getObjects(table, where)
     }
     
     suspend inline fun <reified T : DbEntity> getObjectsSusp(     table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
         it.getObjects(table, where)
     }
@@ -465,14 +465,14 @@ abstract class DbHelperInternal(
     fun <T : DbEntity> getObjects(                                
         clazz: KClass<T>,
                                                                   table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
         it.getObjects(table, clazz, where)
     }
     
     suspend fun <T : DbEntity> getObjectsSusp(                    table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
         it.getObjects(table, clazz, where)
     }
@@ -480,13 +480,13 @@ abstract class DbHelperInternal(
     
     
     inline fun <reified T : DbEntity> getObjMap(                  table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
         it.getObjMap(table, where)
     }
     
     suspend inline fun <reified T : DbEntity> getObjMapSusp(      table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
         it.getObjMap(table, where)
     }
@@ -494,14 +494,14 @@ abstract class DbHelperInternal(
     
     fun <T : DbEntity> getObjMap(                                 table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
         it.getObjMap(table, clazz, where)
     }
     
     suspend fun <T : DbEntity> getObjMapSusp(                     table: String,
                                                                   clazz: KClass<T>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
         it.getObjMap(table, clazz, where)
     }
@@ -515,60 +515,60 @@ abstract class DbHelperInternal(
     
     
     inline fun <reified T : DbEntity> getObjectsPro(                 table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjectsPro") {
-        it.getObjectsPro(table, queryOpts)
+        it.getObjectsPro(table, fullDsl)
     }
     
     suspend inline fun <reified T : DbEntity> getObjectsProSusp(     table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsProSusp") {
-        it.getObjectsPro(table, queryOpts)
+        it.getObjectsPro(table, fullDsl)
     }
     
     
     fun <T : DbEntity> getObjectsPro(                                clazz: KClass<T>,
                                                                      table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjectsPro") {
-        it.getObjectsPro(clazz, table, queryOpts)
+        it.getObjectsPro(clazz, table, fullDsl)
     }
     
     suspend fun <T : DbEntity> getObjectsProSusp(                    clazz: KClass<T>,
                                                                      table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsProSusp") {
-        it.getObjectsPro(clazz, table, queryOpts)
+        it.getObjectsPro(clazz, table, fullDsl)
     }
     
     // -------------------------------------------------------------------------------------- \\
     
     
     inline fun <reified T : DbEntity> getObjMapPro(                  table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMapPro") {
-        it.getObjMapPro(table, queryOpts)
+        it.getObjMapPro(table, fullDsl)
     }
     
     suspend inline fun <reified T : DbEntity> getObjMapProSusp(      table: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapProSusp") {
-        it.getObjMapPro(table, queryOpts)
+        it.getObjMapPro(table, fullDsl)
     }
     
     
     fun <T : DbEntity> getObjMapPro(                                 clazz: KClass<T>,
                                                                      table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMapPro") {
-        it.getObjMapPro(clazz, table, queryOpts)
+        it.getObjMapPro(clazz, table, fullDsl)
     }
     
     suspend fun <T : DbEntity> getObjMapProSusp(                     clazz: KClass<T>,
                                                                      table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapProSusp") {
-        it.getObjMapPro(clazz, table, queryOpts)
+        it.getObjMapPro(clazz, table, fullDsl)
     }
     
     
@@ -591,14 +591,14 @@ abstract class DbHelperInternal(
     
     fun getColInts(                                               table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getColInts") {
         it.getColInts(table, column, where)
     }
     
     suspend fun getColIntsSusp(                                   table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Int> = readSusp(emptyList(), "getColIntsSusp") {
         it.getColInts(table, column, where)
     }
@@ -606,16 +606,16 @@ abstract class DbHelperInternal(
     
     fun getColIntsPro(                                               table: String,
                                                                     column: IntCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getColIntsPro") {
-        it.getColIntsPro(table, column, queryOpts)
+        it.getColIntsPro(table, column, fullDsl)
     }
     
     suspend fun getColIntsProSusp(                                   table: String,
                                                                     column: IntCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Int> = readSusp(emptyList(), "getColIntsProSusp") {
-        it.getColIntsPro(table, column, queryOpts)
+        it.getColIntsPro(table, column, fullDsl)
     }
     
     
@@ -625,14 +625,14 @@ abstract class DbHelperInternal(
     
     fun getColStrings(                                            table: String,
                                                                  column: StrCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<String> = read(emptyList(), "getColStrings") {
         it.getColStrings(table, column, where)
     }
     
     suspend fun getColStringsSusp(                                table: String,
                                                                  column: StrCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<String> = readSusp(emptyList(), "getColStringsSusp") {
         it.getColStrings(table, column, where)
     }
@@ -640,16 +640,16 @@ abstract class DbHelperInternal(
     
     fun getColStringsPro(                                            table: String,
                                                                     column: StrCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<String> = read(emptyList(), "getColStringsPro") {
-        it.getColStringsPro(table, column, queryOpts)
+        it.getColStringsPro(table, column, fullDsl)
     }
     
     suspend fun getColStringsProSusp(                                table: String,
                                                                     column: StrCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<String> = readSusp(emptyList(), "getColStringsProSusp") {
-        it.getColStringsPro(table, column, queryOpts)
+        it.getColStringsPro(table, column, fullDsl)
     }
     
     
@@ -658,14 +658,14 @@ abstract class DbHelperInternal(
     
     fun getColBools(                                              table: String,
                                                                  column: BoolCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getColBools") {
         it.getColBools(table, column, where)
     }
     
     suspend fun getColBoolsSusp(                                  table: String,
                                                                  column: BoolCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Boolean> = readSusp(emptyList(), "getColBoolsSusp") {
         it.getColBools(table, column, where)
     }
@@ -673,16 +673,16 @@ abstract class DbHelperInternal(
     
     fun getColBoolsPro(                                              table: String,
                                                                     column: BoolCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getColBoolsPro") {
-        it.getColBoolsPro(table, column, queryOpts)
+        it.getColBoolsPro(table, column, fullDsl)
     }
     
     suspend fun getColBoolsProSusp(                                  table: String,
                                                                     column: BoolCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Boolean> = readSusp(emptyList(), "getColBoolsProSusp") {
-        it.getColBoolsPro(table, column, queryOpts)
+        it.getColBoolsPro(table, column, fullDsl)
     }
     
     
@@ -691,14 +691,14 @@ abstract class DbHelperInternal(
     
     fun getColLongs(                                              table: String,
                                                                  column: LongCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getColLongs") {
         it.getColLongs(table, column, where)
     }
     
     suspend fun getColLongsSusp(                                  table: String,
                                                                  column: LongCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Long> = readSusp(emptyList(), "getColLongsSusp") {
         it.getColLongs(table, column, where)
     }
@@ -706,16 +706,16 @@ abstract class DbHelperInternal(
     
     fun getColLongsPro(                                              table: String,
                                                                     column: LongCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getColLongsPro") {
-        it.getColLongsPro(table, column, queryOpts)
+        it.getColLongsPro(table, column, fullDsl)
     }
     
     suspend fun getColLongsProSusp(                                  table: String,
                                                                     column: LongCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Long> = readSusp(emptyList(), "getColLongsProSusp") {
-        it.getColLongsPro(table, column, queryOpts)
+        it.getColLongsPro(table, column, fullDsl)
     }
     
     
@@ -724,14 +724,14 @@ abstract class DbHelperInternal(
     
     fun getColFloats(                                             table: String,
                                                                  column: FloatCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Float> = read(emptyList(), "getColFloats") {
         it.getColFloats(table, column, where)
     }
     
     suspend fun getColFloatsSusp(                                 table: String,
                                                                  column: FloatCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Float> = readSusp(emptyList(), "getColFloatsSusp") {
         it.getColFloats(table, column, where)
     }
@@ -740,16 +740,16 @@ abstract class DbHelperInternal(
     
     fun getColFloatsPro(                                             table: String,
                                                                     column: FloatCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Float> = read(emptyList(), "getColFloatsPro") {
-        it.getColFloatsPro(table, column, queryOpts)
+        it.getColFloatsPro(table, column, fullDsl)
     }
     
     suspend fun getColFloatsProSusp(                                 table: String,
                                                                     column: FloatCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Float> = readSusp(emptyList(), "getColFloatsProSusp") {
-        it.getColFloatsPro(table, column, queryOpts)
+        it.getColFloatsPro(table, column, fullDsl)
     }
     
     
@@ -758,14 +758,14 @@ abstract class DbHelperInternal(
     
     fun getColBlobs(                                              table: String,
                                                                  column: BlobCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getColBlobs") {
         it.getColBlobs(table, column, where)
     }
     
     suspend fun getColBlobsSusp(                                  table: String,
                                                                  column: BlobCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<ByteArray> = readSusp(emptyList(), "getColBlobsSusp") {
         it.getColBlobs(table, column, where)
     }
@@ -773,16 +773,16 @@ abstract class DbHelperInternal(
     
     fun getColBlobsPro(                                              table: String,
                                                                     column: BlobCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getColBlobsPro") {
-        it.getColBlobsPro(table, column, queryOpts)
+        it.getColBlobsPro(table, column, fullDsl)
     }
     
     suspend fun getColBlobsProSusp(                                  table: String,
                                                                     column: BlobCol,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<ByteArray> = readSusp(emptyList(), "getColBlobsProSusp") {
-        it.getColBlobsPro(table, column, queryOpts)
+        it.getColBlobsPro(table, column, fullDsl)
     }
     
     
@@ -795,30 +795,30 @@ abstract class DbHelperInternal(
     
     fun getRowInts(                                               table: String,
                                                                 columns: Array<IntCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getRowInts") {
         it.getRowInts(table, columns, where)
     }
     
     suspend fun getRowIntsSusp(                                   table: String,
                                                                 columns: Array<IntCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Int> = readSusp(emptyList(), "getRowIntsSusp") {
         it.getRowInts(table, columns, where)
     }
     
     fun getRowIntsPro(                                               table: String,
                                                                    columns: Array<IntCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getRowIntsPro") {
-        it.getRowIntsPro(table, columns, queryOpts)
+        it.getRowIntsPro(table, columns, fullDsl)
     }
     
     suspend fun getRowIntsProSusp(                                   table: String,
                                                                    columns: Array<IntCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Int> = readSusp(emptyList(), "getRowIntsProSusp") {
-        it.getRowIntsPro(table, columns, queryOpts)
+        it.getRowIntsPro(table, columns, fullDsl)
     }
     
     
@@ -826,30 +826,30 @@ abstract class DbHelperInternal(
     
     fun getRowStrings(                                            table: String,
                                                                 columns: Array<StrCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<String> = read(emptyList(), "getRowStrings") {
         it.getRowStrings(table, columns, where)
     }
     
     suspend fun getRowStringsSusp(                                table: String,
                                                                 columns: Array<StrCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<String> = readSusp(emptyList(), "getRowStringsSusp") {
         it.getRowStrings(table, columns, where)
     }
     
     fun getRowStringsPro(                                            table: String,
                                                                    columns: Array<StrCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<String> = read(emptyList(), "getRowStringsPro") {
-        it.getRowStringsPro(table, columns, queryOpts)
+        it.getRowStringsPro(table, columns, fullDsl)
     }
     
     suspend fun getRowStringsProSusp(                                table: String,
                                                                    columns: Array<StrCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<String> = readSusp(emptyList(), "getRowStringsProSusp") {
-        it.getRowStringsPro(table, columns, queryOpts)
+        it.getRowStringsPro(table, columns, fullDsl)
     }
     
     
@@ -857,30 +857,30 @@ abstract class DbHelperInternal(
     
     fun getRowBools(                                              table: String,
                                                                 columns: Array<BoolCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getRowBools") {
         it.getRowBools(table, columns, where)
     }
     
     suspend fun getRowBoolsSusp(                                  table: String,
                                                                 columns: Array<BoolCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Boolean> = readSusp(emptyList(), "getRowBoolsSusp") {
         it.getRowBools(table, columns, where)
     }
     
     fun getRowBoolsPro(                                              table: String,
                                                                    columns: Array<BoolCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getRowBoolsPro") {
-        it.getRowBoolsPro(table, columns, queryOpts)
+        it.getRowBoolsPro(table, columns, fullDsl)
     }
     
     suspend fun getRowBoolsProSusp(                                  table: String,
                                                                    columns: Array<BoolCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Boolean> = readSusp(emptyList(), "getRowBoolsProSusp") {
-        it.getRowBoolsPro(table, columns, queryOpts)
+        it.getRowBoolsPro(table, columns, fullDsl)
     }
     
     
@@ -888,30 +888,30 @@ abstract class DbHelperInternal(
     
     fun getRowLongs(                                              table: String,
                                                                 columns: Array<LongCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getRowLongs") {
         it.getRowLongs(table, columns, where)
     }
     
     suspend fun getRowLongsSusp(                                  table: String,
                                                                 columns: Array<LongCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Long> = readSusp(emptyList(), "getRowLongsSusp") {
         it.getRowLongs(table, columns, where)
     }
     
     fun getRowLongsPro(                                              table: String,
                                                                    columns: Array<LongCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getRowLongsPro") {
-        it.getRowLongsPro(table, columns, queryOpts)
+        it.getRowLongsPro(table, columns, fullDsl)
     }
     
     suspend fun getRowLongsProSusp(                                  table: String,
                                                                    columns: Array<LongCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Long> = readSusp(emptyList(), "getRowLongsProSusp") {
-        it.getRowLongsPro(table, columns, queryOpts)
+        it.getRowLongsPro(table, columns, fullDsl)
     }
     
     
@@ -919,30 +919,30 @@ abstract class DbHelperInternal(
     
     fun getRowFloats(                                             table: String,
                                                                 columns: Array<FloatCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Float> = read(emptyList(), "getRowFloats") {
         it.getRowFloats(table, columns, where)
     }
     
     suspend fun getRowFloatsSusp(                                 table: String,
                                                                 columns: Array<FloatCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<Float> = readSusp(emptyList(), "getRowFloatsSusp") {
         it.getRowFloats(table, columns, where)
     }
     
     fun getRowFloatsPro(                                             table: String,
                                                                    columns: Array<FloatCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Float> = read(emptyList(), "getRowFloatsPro") {
-        it.getRowFloatsPro(table, columns, queryOpts)
+        it.getRowFloatsPro(table, columns, fullDsl)
     }
     
     suspend fun getRowFloatsProSusp(                                 table: String,
                                                                    columns: Array<FloatCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<Float> = readSusp(emptyList(), "getRowFloatsProSusp") {
-        it.getRowFloatsPro(table, columns, queryOpts)
+        it.getRowFloatsPro(table, columns, fullDsl)
     }
     
     
@@ -950,30 +950,30 @@ abstract class DbHelperInternal(
     
     fun getRowBlobs(                                              table: String,
                                                                 columns: Array<BlobCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getRowBlobs") {
         it.getRowBlobs(table, columns, where)
     }
     
     suspend fun getRowBlobsSusp(                                  table: String,
                                                                 columns: Array<BlobCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<ByteArray> = readSusp(emptyList(), "getRowBlobsSusp") {
         it.getRowBlobs(table, columns, where)
     }
     
     fun getRowBlobsPro(                                              table: String,
                                                                    columns: Array<BlobCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getRowBlobsPro") {
-        it.getRowBlobsPro(table, columns, queryOpts)
+        it.getRowBlobsPro(table, columns, fullDsl)
     }
     
     suspend fun getRowBlobsProSusp(                                  table: String,
                                                                    columns: Array<BlobCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<ByteArray> = readSusp(emptyList(), "getRowBlobsProSusp") {
-        it.getRowBlobsPro(table, columns, queryOpts)
+        it.getRowBlobsPro(table, columns, fullDsl)
     }
     
     
@@ -987,30 +987,30 @@ abstract class DbHelperInternal(
     
     fun getTableInts(                                             table: String,
                                                                 columns: Array<IntCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Int>> = read(emptyList(), "getTableInts") {
         it.getTableInts(table, columns, where)
     }
     
     suspend fun getTableIntsSusp(                                 table: String,
                                                                 columns: Array<IntCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Int>> = readSusp(emptyList(), "getTableIntsSusp") {
         it.getTableInts(table, columns, where)
     }
     
     fun getTableIntsPro(                                             table: String,
                                                                    columns: Array<IntCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Int>> = read(emptyList(), "getTableIntsPro") {
-        it.getTableIntsPro(table, columns, queryOpts)
+        it.getTableIntsPro(table, columns, fullDsl)
     }
     
     suspend fun getTableIntsProSusp(                                 table: String,
                                                                    columns: Array<IntCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Int>> = readSusp(emptyList(), "getTableIntsProSusp") {
-        it.getTableIntsPro(table, columns, queryOpts)
+        it.getTableIntsPro(table, columns, fullDsl)
     }
     
     
@@ -1018,30 +1018,30 @@ abstract class DbHelperInternal(
     
     fun getTableStrings(                                          table: String,
                                                                 columns: Array<StrCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<String>> = read(emptyList(), "getTableStrings") {
         it.getTableStrings(table, columns, where)
     }
     
     suspend fun getTableStringsSusp(                              table: String,
                                                                 columns: Array<StrCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<String>> = readSusp(emptyList(), "getTableStringsSusp") {
         it.getTableStrings(table, columns, where)
     }
     
     fun getTableStringsPro(                                          table: String,
                                                                    columns: Array<StrCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<String>> = read(emptyList(), "getTableStringsPro") {
-        it.getTableStringsPro(table, columns, queryOpts)
+        it.getTableStringsPro(table, columns, fullDsl)
     }
     
     suspend fun getTableStringsProSusp(                              table: String,
                                                                    columns: Array<StrCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<String>> = readSusp(emptyList(), "getTableStringsProSusp") {
-        it.getTableStringsPro(table, columns, queryOpts)
+        it.getTableStringsPro(table, columns, fullDsl)
     }
     
     
@@ -1049,30 +1049,30 @@ abstract class DbHelperInternal(
     
     fun getTableBools(                                            table: String,
                                                                 columns: Array<BoolCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Boolean>> = read(emptyList(), "getTableBools") {
         it.getTableBools(table, columns, where)
     }
     
     suspend fun getTableBoolsSusp(                                table: String,
                                                                 columns: Array<BoolCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Boolean>> = readSusp(emptyList(), "getTableBoolsSusp") {
         it.getTableBools(table, columns, where)
     }
     
     fun getTableBoolsPro(                                            table: String,
                                                                    columns: Array<BoolCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Boolean>> = read(emptyList(), "getTableBoolsPro") {
-        it.getTableBoolsPro(table, columns, queryOpts)
+        it.getTableBoolsPro(table, columns, fullDsl)
     }
     
     suspend fun getTableBoolsProSusp(                                table: String,
                                                                    columns: Array<BoolCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Boolean>> = readSusp(emptyList(), "getTableBoolsProSusp") {
-        it.getTableBoolsPro(table, columns, queryOpts)
+        it.getTableBoolsPro(table, columns, fullDsl)
     }
     
     
@@ -1080,30 +1080,30 @@ abstract class DbHelperInternal(
     
     fun getTableLongs(                                            table: String,
                                                                 columns: Array<LongCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Long>> = read(emptyList(), "getTableLongs") {
         it.getTableLongs(table, columns, where)
     }
     
     suspend fun getTableLongsSusp(                                table: String,
                                                                 columns: Array<LongCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Long>> = readSusp(emptyList(), "getTableLongsSusp") {
         it.getTableLongs(table, columns, where)
     }
     
     fun getTableLongsPro(                                            table: String,
                                                                    columns: Array<LongCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Long>> = read(emptyList(), "getTableLongsPro") {
-        it.getTableLongsPro(table, columns, queryOpts)
+        it.getTableLongsPro(table, columns, fullDsl)
     }
     
     suspend fun getTableLongsProSusp(                                table: String,
                                                                    columns: Array<LongCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Long>> = readSusp(emptyList(), "getTableLongsProSusp") {
-        it.getTableLongsPro(table, columns, queryOpts)
+        it.getTableLongsPro(table, columns, fullDsl)
     }
     
     
@@ -1111,30 +1111,30 @@ abstract class DbHelperInternal(
     
     fun getTableFloats(                                           table: String,
                                                                 columns: Array<FloatCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Float>> = read(emptyList(), "getTableFloats") {
         it.getTableFloats(table, columns, where)
     }
     
     suspend fun getTableFloatsSusp(                               table: String,
                                                                 columns: Array<FloatCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<Float>> = readSusp(emptyList(), "getTableFloatsSusp") {
         it.getTableFloats(table, columns, where)
     }
     
     fun getTableFloatsPro(                                           table: String,
                                                                    columns: Array<FloatCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Float>> = read(emptyList(), "getTableFloatsPro") {
-        it.getTableFloatsPro(table, columns, queryOpts)
+        it.getTableFloatsPro(table, columns, fullDsl)
     }
     
     suspend fun getTableFloatsProSusp(                               table: String,
                                                                    columns: Array<FloatCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<Float>> = readSusp(emptyList(), "getTableFloatsProSusp") {
-        it.getTableFloatsPro(table, columns, queryOpts)
+        it.getTableFloatsPro(table, columns, fullDsl)
     }
     
     
@@ -1142,30 +1142,30 @@ abstract class DbHelperInternal(
     
     fun getTableBlobs(                                            table: String,
                                                                 columns: Array<BlobCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<ByteArray>> = read(emptyList(), "getTableBlobs") {
         it.getTableBlobs(table, columns, where)
     }
     
     suspend fun getTableBlobsSusp(                                table: String,
                                                                 columns: Array<BlobCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): List<List<ByteArray>> = readSusp(emptyList(), "getTableBlobsSusp") {
         it.getTableBlobs(table, columns, where)
     }
     
     fun getTableBlobsPro(                                            table: String,
                                                                    columns: Array<BlobCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<ByteArray>> = read(emptyList(), "getTableBlobsPro") {
-        it.getTableBlobsPro(table, columns, queryOpts)
+        it.getTableBlobsPro(table, columns, fullDsl)
     }
     
     suspend fun getTableBlobsProSusp(                                table: String,
                                                                    columns: Array<BlobCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ): List<List<ByteArray>> = readSusp(emptyList(), "getTableBlobsProSusp") {
-        it.getTableBlobsPro(table, columns, queryOpts)
+        it.getTableBlobsPro(table, columns, fullDsl)
     }
     
     
@@ -1179,7 +1179,7 @@ abstract class DbHelperInternal(
                                                                   table: String,
                                                                  column: IntCol,
                                                                   async: Boolean = false,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = write("addToInt", async) {
         it.addToInt(addend, table, column, where)
     }
@@ -1187,7 +1187,7 @@ abstract class DbHelperInternal(
     suspend fun addToIntSusp(                                    addend: Number,
                                                                   table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = writeSusp("addToIntSusp") {
         it.addToInt(addend, table, column, where)
     }
@@ -1197,7 +1197,7 @@ abstract class DbHelperInternal(
                                                                   table: String,
                                                                  column: LongCol,
                                                                   async: Boolean = false,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = write("addToLong", async) {
         it.addToLong(addend, table, column, where)
     }
@@ -1205,7 +1205,7 @@ abstract class DbHelperInternal(
     suspend fun addToLongSusp(                                   addend: Number,
                                                                   table: String,
                                                                  column: LongCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = writeSusp("addToLongSusp") {
         it.addToLong(addend, table, column, where)
     }
@@ -1215,7 +1215,7 @@ abstract class DbHelperInternal(
                                                                   table: String,
                                                                  column: FloatCol,
                                                                   async: Boolean = false,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = write("addToFloat", async) {
         it.addToFloat(addend, table, column, where)
     }
@@ -1223,7 +1223,7 @@ abstract class DbHelperInternal(
     suspend fun addToFloatSusp(                                  addend: Number,
                                                                   table: String,
                                                                  column: FloatCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = writeSusp("addToFloatSusp") {
         it.addToFloat(addend, table, column, where)
     }
@@ -1233,14 +1233,14 @@ abstract class DbHelperInternal(
     fun flipBool(                                                 table: String,
                                                                  column: BoolCol,
                                                                   async: Boolean = false,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = write("flipBool", async) {
         it.flipBool(table, column, where)
     }
     
     suspend fun flipBoolSusp(                                     table: String,
                                                                  column: BoolCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = readWriteSusp(Unit, "flipBoolSusp") {
         it.flipBool(table, column, where)
     }
@@ -1276,14 +1276,14 @@ abstract class DbHelperInternal(
     
     fun deleteRow(                                                     table: String,
                                                                        async: Boolean = false,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = write("deleteRow", async) {
         it.deleteRow(table, where)
     }
     
     
     suspend fun deleteRowSusp(                                         table: String,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
     ) = writeSusp("deleteRowSusp") {
         it.deleteRow(table, where)
     }
@@ -1338,14 +1338,14 @@ abstract class DbHelperInternal(
     
     /** Returns the number of rows matching the query conditions. */
     fun getRowCount(                                              table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = read(0, "getRowCount") {
         it.getRowCount(table, where)
     }
     
     /** Returns the number of rows matching the query conditions. */
     suspend fun getRowCountSusp(                                  table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = readSusp(0, "getRowCountSusp") {
         it.getRowCount(table, where)
     }
@@ -1353,30 +1353,30 @@ abstract class DbHelperInternal(
     
     /** Returns the number of rows matching the query conditions. */
     fun getRowCountPro(                                              table: String,
-                                                                  queryOpts: QueryOpts.()->Unit = {},
+                                                                  fullDsl: FullDsl.()->Unit = {},
     ) = read(0, "getRowCountPro") {
-        it.getRowCountPro(table, queryOpts)
+        it.getRowCountPro(table, fullDsl)
     }
     
     /** Returns the number of rows matching the query conditions. */
     suspend fun getRowCountProSusp(                                  table: String,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
+                                                                 fullDsl: FullDsl.()->Unit = {},
     ) = readSusp(0, "getRowCountProSusp") {
-        it.getRowCountPro(table, queryOpts)
+        it.getRowCountPro(table, fullDsl)
     }
     
     
     
     /** Returns true if at least one row matches the query conditions. */
     fun hasRows(                                                  table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = read(false, "hasRows") {
         it.hasRows(table, where)
     }
     
     /** Returns true if at least one row matches the query conditions. */
     suspend fun hasRowsSusp(                                      table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = readSusp(false, "hasRowsSusp") {
         it.hasRows(table, where)
     }
@@ -1384,16 +1384,16 @@ abstract class DbHelperInternal(
     
     /** Returns true if at least one row matches the query conditions. */
     fun hasRowsPro(                                                       table: String,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
     ) = read(false, "hasRowsPro") {
-        it.hasRowsPro(table, queryOpts)
+        it.hasRowsPro(table, fullDsl)
     }
     
     /** Returns true if at least one row matches the query conditions. */
     suspend fun hasRowsProSusp(                                           table: String,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
     ) = readSusp(false, "hasRowsProSusp") {
-        it.hasRowsPro(table, queryOpts)
+        it.hasRowsPro(table, fullDsl)
     }
     
     
@@ -1438,14 +1438,14 @@ abstract class DbHelperInternal(
     
     fun getLargestInt(                                            table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = read(0, "getLargestInt") {
         it.getLargestInt(table, column, where)
     }
     
     suspend fun getLargestIntSusp(                                table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ) = readSusp(0, "getLargestIntSusp") {
         it.getLargestInt(table, column, where)
     }
@@ -1459,41 +1459,41 @@ abstract class DbHelperInternal(
     
     fun getRandomInt(                                             table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): Int = read(-1, "getRandomInt") { db ->
         db.getRandomInt(table, column, where)
     }
     
     suspend fun getRandomIntSusp(                                 table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): Int = readSusp(-1, "getRandomIntSusp") { db ->
         db.getRandomInt(table, column, where)
     }
     
     
     fun getRandomId(                                              table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): Int = read(-1, "getRandomId") { db ->
         db.getRandomId(table, where)
     }
     
     suspend fun getRandomIdSusp(                                  table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
     ): Int = readSusp(-1, "getRandomIdSusp") { db ->
         db.getRandomId(table, where)
     }
     
     
     inline fun <reified T : DbEntity> getRandomObj(               table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getRandomObj") { db ->
         db.getRandomObj<T>(table, where)
     }
     
     suspend inline fun <reified T : DbEntity> getRandomObjSusp(
                                                                   table: String,
-                                                         noinline where: WhereBuilder.()->Unit = {},
+                                                         noinline where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getRandomObjSusp") { db ->
         db.getRandomObj<T>(table, where)
     }

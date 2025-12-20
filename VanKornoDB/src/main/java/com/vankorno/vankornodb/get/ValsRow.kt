@@ -6,8 +6,8 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.QueryOpts
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -23,7 +23,7 @@ import com.vankorno.vankornodb.misc.getBoolean
 
 fun SQLiteDatabase.getRowInts(                                    table: String,
                                                                 columns: Array<IntCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Int> = getRowVals(table, columns.map{ it.name }.toTypedArray(), where) { cursor, col ->
     cursor.getInt(col)
 }
@@ -31,8 +31,8 @@ fun SQLiteDatabase.getRowInts(                                    table: String,
 
 fun SQLiteDatabase.getRowIntsPro(                                    table: String,
                                                                    columns: Array<IntCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Int> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), queryOpts) { cursor, col ->
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Int> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), fullDsl) { cursor, col ->
     cursor.getInt(col)
 }
 
@@ -45,7 +45,7 @@ fun SQLiteDatabase.getRowIntsPro(                                    table: Stri
 
 fun SQLiteDatabase.getRowStrings(                                 table: String,
                                                                 columns: Array<StrCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<String> = getRowVals(table, columns.map{ it.name }.toTypedArray(), where) { cursor, col ->
     cursor.getString(col)
 }
@@ -53,8 +53,8 @@ fun SQLiteDatabase.getRowStrings(                                 table: String,
 
 fun SQLiteDatabase.getRowStringsPro(                                 table: String,
                                                                    columns: Array<StrCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<String> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), queryOpts) { cursor, col ->
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<String> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), fullDsl) { cursor, col ->
     cursor.getString(col)
 }
 
@@ -65,7 +65,7 @@ fun SQLiteDatabase.getRowStringsPro(                                 table: Stri
 
 fun SQLiteDatabase.getRowBools(                                   table: String,
                                                                 columns: Array<BoolCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Boolean> = getRowVals(table, columns.map{ it.name }.toTypedArray(), where) { cursor, col ->
     cursor.getBoolean(col)
 }
@@ -73,8 +73,8 @@ fun SQLiteDatabase.getRowBools(                                   table: String,
 
 fun SQLiteDatabase.getRowBoolsPro(                                   table: String,
                                                                    columns: Array<BoolCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Boolean> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), queryOpts) { cursor, col ->
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Boolean> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), fullDsl) { cursor, col ->
     cursor.getBoolean(col)
 }
 
@@ -86,7 +86,7 @@ fun SQLiteDatabase.getRowBoolsPro(                                   table: Stri
 
 fun SQLiteDatabase.getRowLongs(                                   table: String,
                                                                 columns: Array<LongCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Long> = getRowVals(table, columns.map{ it.name }.toTypedArray(), where) { cursor, col ->
     cursor.getLong(col)
 }
@@ -94,8 +94,8 @@ fun SQLiteDatabase.getRowLongs(                                   table: String,
 
 fun SQLiteDatabase.getRowLongsPro(                                   table: String,
                                                                    columns: Array<LongCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Long> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), queryOpts) { cursor, col ->
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Long> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), fullDsl) { cursor, col ->
     cursor.getLong(col)
 }
 
@@ -106,7 +106,7 @@ fun SQLiteDatabase.getRowLongsPro(                                   table: Stri
 
 fun SQLiteDatabase.getRowFloats(                                  table: String,
                                                                 columns: Array<FloatCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<Float> = getRowVals(table, columns.map{ it.name }.toTypedArray(), where) { cursor, col ->
     cursor.getFloat(col)
 }
@@ -114,8 +114,8 @@ fun SQLiteDatabase.getRowFloats(                                  table: String,
 
 fun SQLiteDatabase.getRowFloatsPro(                                  table: String,
                                                                    columns: Array<FloatCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<Float> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), queryOpts) { cursor, col ->
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<Float> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), fullDsl) { cursor, col ->
     cursor.getFloat(col)
 }
 
@@ -127,7 +127,7 @@ fun SQLiteDatabase.getRowFloatsPro(                                  table: Stri
 
 fun SQLiteDatabase.getRowBlobs(                                   table: String,
                                                                 columns: Array<BlobCol>,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): List<ByteArray> = getRowVals(table, columns.map{ it.name }.toTypedArray(), where) { cursor, col ->
     cursor.getBlob(col)
 }
@@ -135,8 +135,8 @@ fun SQLiteDatabase.getRowBlobs(                                   table: String,
 
 fun SQLiteDatabase.getRowBlobsPro(                                   table: String,
                                                                    columns: Array<BlobCol>,
-                                                                 queryOpts: QueryOpts.()->Unit = {},
-): List<ByteArray> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), queryOpts) { cursor, col ->
+                                                                 fullDsl: FullDsl.()->Unit = {},
+): List<ByteArray> = getRowValsPro(table, columns.map{ it.name }.toTypedArray(), fullDsl) { cursor, col ->
     cursor.getBlob(col)
 }
 

@@ -7,7 +7,7 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.QueryOpts
+import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.mapper.toEntity
 import kotlin.reflect.KClass
 
@@ -15,9 +15,9 @@ import kotlin.reflect.KClass
  * Retrieves a list of entities of type [T] mapped from the specified columns.
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjectsPro(           table: String,
-                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                             noinline fullDsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -36,9 +36,9 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjectsPro(           table:
  */
 fun <T : DbEntity> SQLiteDatabase.getObjectsPro(                          clazz: KClass<T>,
                                                                           table: String,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -59,9 +59,9 @@ fun <T : DbEntity> SQLiteDatabase.getObjectsPro(                          clazz:
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObjMapPro(            table: String,
-                                                             noinline queryOpts: QueryOpts.()->Unit,
+                                                             noinline fullDsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
 }.use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
@@ -83,9 +83,9 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMapPro(            table:
  */
 fun <T : DbEntity> SQLiteDatabase.getObjMapPro(                           clazz: KClass<T>,
                                                                           table: String,
-                                                                      queryOpts: QueryOpts.()->Unit,
+                                                                      fullDsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
 }.use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {

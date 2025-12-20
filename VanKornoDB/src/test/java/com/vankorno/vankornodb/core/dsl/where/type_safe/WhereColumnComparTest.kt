@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.where.type_safe
 
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
@@ -13,7 +13,7 @@ class WhereColumnComparTest {
     
     @Test
     fun `Equal columns`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             iCol("intA") equalCol iCol("intB")
             lCol("longA") equalCol lCol("longB")
             fCol("floatA") equalCol fCol("floatB")
@@ -30,7 +30,7 @@ class WhereColumnComparTest {
 
     @Test
     fun `Not equal columns`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             iCol("intA") notEqualCol iCol("intB")
             lCol("longA") notEqualCol lCol("longB")
             fCol("floatA") notEqualCol fCol("floatB")
@@ -47,7 +47,7 @@ class WhereColumnComparTest {
 
     @Test
     fun `Greater, greaterEqual, less, lessEqual columns`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             iCol("i1") greaterCol iCol("i2")
             lCol("l1") greaterCol lCol("l2")
             fCol("f1") greaterCol fCol("f2")

@@ -6,7 +6,7 @@
 package com.vankorno.vankornodb.delete
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 
 fun SQLiteDatabase.deleteRowById(                                                     id: Int,
@@ -21,9 +21,9 @@ fun <T> SQLiteDatabase.deleteRow(                                               
 
 
 fun SQLiteDatabase.deleteRow(                                          table: String,
-                                                                       where: WhereBuilder.()->Unit,
+                                                                       where: WhereDsl.()->Unit,
 ): Int {
-    val builder = WhereBuilder().apply(where)
+    val builder = WhereDsl().apply(where)
     return delete(table, builder.buildStr(), builder.args.toTypedArray())
 }
 

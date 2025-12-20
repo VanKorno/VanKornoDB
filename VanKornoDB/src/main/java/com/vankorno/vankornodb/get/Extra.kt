@@ -6,8 +6,8 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.OrderByBuilder
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.OrderDsl
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
@@ -22,7 +22,7 @@ fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, cID)
 
 
 fun SQLiteDatabase.getAllIDs(                                   table: String,
-                                                              orderBy: OrderByBuilder.()->Unit = {},
+                                                              orderBy: OrderDsl.()->Unit = {},
 ) = getColIntsPro(table, cID) { orderBy(orderBy) }
 
 
@@ -70,14 +70,14 @@ fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
 
 fun SQLiteDatabase.getLastPosition(                               table: String,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ) = getLargestInt(table, cPosition, where)
 
 
 
 fun SQLiteDatabase.getLargestInt(                                 table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ): Int = getInt(
     table,
     iCol("MAX(${column.name})"),

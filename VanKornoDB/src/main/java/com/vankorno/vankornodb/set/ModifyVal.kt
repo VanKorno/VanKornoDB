@@ -6,7 +6,7 @@
 package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -18,31 +18,31 @@ import com.vankorno.vankornodb.set.internal.baseAddTo
 fun SQLiteDatabase.addToInt(                                     addend: Number,
                                                                   table: String,
                                                                  column: IntCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
 fun SQLiteDatabase.addToLong(                                    addend: Number,
                                                                   table: String,
                                                                  column: LongCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
 fun SQLiteDatabase.addToFloat(                                   addend: Number,
                                                                   table: String,
                                                                  column: FloatCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
 
 fun SQLiteDatabase.flipBool(                                      table: String,
                                                                  column: BoolCol,
-                                                                  where: WhereBuilder.()->Unit = {},
+                                                                  where: WhereDsl.()->Unit = {},
 ) {
     val colName = column.name
-    val builder = WhereBuilder().apply(where)
+    val builder = WhereDsl().apply(where)
     
     val queryStr1 = "UPDATE $table SET $colName = NOT $colName"
     

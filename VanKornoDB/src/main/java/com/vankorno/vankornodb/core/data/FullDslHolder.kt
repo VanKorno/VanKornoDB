@@ -5,17 +5,17 @@
 // endregion
 package com.vankorno.vankornodb.core.data
 
-import com.vankorno.vankornodb.api.JoinBuilder
-import com.vankorno.vankornodb.api.OrderByBuilder
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.JoinDsl
+import com.vankorno.vankornodb.api.OrderDsl
+import com.vankorno.vankornodb.api.WhereDsl
 
 
-data class QueryOptsHolder(
-                                 var joins: JoinBuilder.()->Unit = {},
-                                 var where: WhereBuilder.()->Unit = {},
+data class FullDslHolder(
+                                 var joins: JoinDsl.()->Unit = {},
+                                 var where: WhereDsl.()->Unit = {},
                                var groupBy: String = "",
                                 var having: String = "",
-                               var orderBy: OrderByBuilder.()->Unit = {},
+                               var orderBy: OrderDsl.()->Unit = {},
                                  var limit: Int? = null,
                                 var offset: Int? = null,
                              var customEnd: String = "", /* To pass your own string. */

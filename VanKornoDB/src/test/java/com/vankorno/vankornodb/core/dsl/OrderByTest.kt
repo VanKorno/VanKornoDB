@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.OrderByBuilder
+import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
@@ -18,7 +18,7 @@ class OrderByTest {
 
     @Test
     fun `orderBy with single column ascending`() {
-        val order = OrderByBuilder().apply {
+        val order = OrderDsl().apply {
             colInt()
         }.buildStr()
 
@@ -27,7 +27,7 @@ class OrderByTest {
 
     @Test
     fun `orderBy with single column descending`() {
-        val order = OrderByBuilder().apply {
+        val order = OrderDsl().apply {
             colStr.flip()
         }.buildStr()
 
@@ -36,7 +36,7 @@ class OrderByTest {
 
     @Test
     fun `orderBy multiple columns mixed`() {
-        val order = OrderByBuilder().apply {
+        val order = OrderDsl().apply {
             colInt()
             colStr.flip()
             colBool()
@@ -47,7 +47,7 @@ class OrderByTest {
 
     @Test
     fun `orderBy with raw string`() {
-        val order = OrderByBuilder().apply {
+        val order = OrderDsl().apply {
             raw("customCol DESC")
         }.buildStr()
 
@@ -56,7 +56,7 @@ class OrderByTest {
 
     @Test
     fun `orderBy full mix`() {
-        val order = OrderByBuilder().apply {
+        val order = OrderDsl().apply {
             colInt()
             colStr.flip()
             colBool()

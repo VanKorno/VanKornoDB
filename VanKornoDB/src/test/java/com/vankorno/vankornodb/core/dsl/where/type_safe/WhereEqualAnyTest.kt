@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.where.type_safe
 
-import com.vankorno.vankornodb.api.WhereBuilder
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
@@ -13,7 +13,7 @@ class WhereEqualAnyTest {
 
     @Test
     fun `IntCol equalAny and notEqualAny`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             iCol("intCol").equalAny(1, 2, 3)
             iCol("intCol2").notEqualAny(4, 5)
         }
@@ -30,7 +30,7 @@ class WhereEqualAnyTest {
 
     @Test
     fun `StrCol equalAny and notEqualAny`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             sCol("strCol").equalAny("foo", "bar")
             sCol("strCol2").notEqualAny("baz")
         }
@@ -44,7 +44,7 @@ class WhereEqualAnyTest {
 
     @Test
     fun `BoolCol equalAny and notEqualAny`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             bCol("boolCol").equalAny(true, false)
             bCol("boolCol2").notEqualAny(false)
         }
@@ -58,7 +58,7 @@ class WhereEqualAnyTest {
 
     @Test
     fun `LongCol equalAny and notEqualAny`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             lCol("longCol").equalAny(10L, 20L)
             lCol("longCol2").notEqualAny(30L)
         }
@@ -72,7 +72,7 @@ class WhereEqualAnyTest {
 
     @Test
     fun `FloatCol equalAny and notEqualAny`() {
-        val whereObj = WhereBuilder().apply {
+        val whereObj = WhereDsl().apply {
             fCol("floatCol").equalAny(1.1F, 2.2F)
             fCol("floatCol2").notEqualAny(3.3F)
         }

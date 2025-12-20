@@ -19,7 +19,7 @@ import com.vankorno.vankornodb.set.dsl.data.SetOp
 /**
  *  Internal base — use `SetBuilder` from the api package instead
  */
-open class SetBuilderInternal : BaseSetBuilder () {
+open class SetDslInternal : BaseSetDsl () {
     fun setCV(cv: ContentValues) { _ops += SetOp.SetCV(cv) }
     fun setContentValues(cv: ContentValues) = setCV(cv)
     

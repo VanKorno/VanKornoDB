@@ -7,7 +7,7 @@ package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.QueryOpts
+import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.get.raw.getTypedValAt
 
 /**
@@ -15,9 +15,9 @@ import com.vankorno.vankornodb.get.raw.getTypedValAt
  */
 inline fun <reified T> SQLiteDatabase.getColValsNoty(                table: String,
                                                                 columnName: String,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
 ): List<T> = getCursorProNoty(table, arrayOf(columnName)) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -40,9 +40,9 @@ inline fun <reified T> SQLiteDatabase.getColValsNoty(                table: Stri
  */
 inline fun <reified T> SQLiteDatabase.getRowValsProNoty(             table: String,
                                                                    columns: Array<out String>,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
 ): List<T?> = getMultiRowValsProNoty<T>(table, columns) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
     limit = 1
 }.firstOrNull() ?: emptyList()
 
@@ -58,9 +58,9 @@ inline fun <reified T> SQLiteDatabase.getRowValsProNoty(             table: Stri
  */
 inline fun <reified T> SQLiteDatabase.getMultiRowValsProNoty(        table: String,
                                                                    columns: Array<out String>,
-                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+                                                        noinline fullDsl: FullDsl.()->Unit = {},
 ): List<List<T?>> = getCursorProNoty(table, columns) {
-    applyOpts(queryOpts)
+    applyDsl(fullDsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
