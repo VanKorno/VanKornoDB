@@ -28,16 +28,16 @@ interface EntityColumns : EntityColumnsInternal
 
 class OrderDsl : OrderDslInternal() {
     
-    fun and(                                                              builder: OrderDsl.()->Unit
+    fun and(                                                             orderDsl: OrderDsl.()->Unit
     ) {
-        val inner = OrderDsl().apply(builder)
+        val inner = OrderDsl().apply(orderDsl)
         orderoids.addAll(inner.orderoids)
         args.addAll(inner.args)
     }
     
-    fun group(                                                            builder: OrderDsl.()->Unit
+    fun group(                                                           orderDsl: OrderDsl.()->Unit
     ) {
-        val inner = OrderDsl().apply(builder)
+        val inner = OrderDsl().apply(orderDsl)
         if (inner.orderoids.isNotEmpty()) {
             orderoids += "(" + inner.buildStr() + ")"
             args.addAll(inner.args)
@@ -112,9 +112,9 @@ class WhereDsl : WhereDslInternal() {
     
     fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                          fullDsl: FullDsl.()->Unit = {},
+                                                              dsl: FullDsl.()->Unit = {},
     ): String {
-        val innerBuilder = getQuery(table, columns, fullDsl)
+        val innerBuilder = getQuery(table, columns, dsl)
         
         val clause = "(${innerBuilder.query})"
         

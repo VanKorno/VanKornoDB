@@ -23,9 +23,9 @@ fun SQLiteDatabase.getRowCount(                                       table: Str
 /** Returns the number of rows matching the advanced query conditions. */
 
 fun SQLiteDatabase.getRowCountPro(                                          table: String,
-                                                                          fullDsl: FullDsl.()->Unit,
+                                                                              dsl: FullDsl.()->Unit,
 ): Int = getCursorProNoty(table, columns("1")) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
 }.use { it.count }
 
 
@@ -45,9 +45,9 @@ fun SQLiteDatabase.hasRows(                                           table: Str
 /** Returns true if at least one row matches the advanced query conditions. */
 
 fun SQLiteDatabase.hasRowsPro(                                              table: String,
-                                                                          fullDsl: FullDsl.()->Unit,
+                                                                              dsl: FullDsl.()->Unit,
 ): Boolean = getCursorProNoty(table, columns("1")) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
     limit = 1
 }.use { it.moveToFirst() }
 

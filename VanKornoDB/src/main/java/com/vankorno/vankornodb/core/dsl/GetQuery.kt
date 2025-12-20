@@ -15,18 +15,18 @@ import com.vankorno.vankornodb.core.data.QueryWithArgs
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                          fullDsl: FullDsl.()->Unit,
-) = getQuery(table, columns, FullDsl().apply(fullDsl).query)
+                                                              dsl: FullDsl.()->Unit,
+) = getQuery(table, columns, FullDsl().apply(dsl).query)
 
 
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                          sqlOpts: FullDslHolder = FullDslHolder(),
+                                                        dslHolder: FullDslHolder = FullDslHolder(),
 ): QueryWithArgs {
-    val whereDsl = WhereDsl().apply(sqlOpts.where)
-    val joinDsl = JoinDsl().apply(sqlOpts.joins)
-    val orderDsl = OrderDsl().apply(sqlOpts.orderBy)
+    val whereDsl = WhereDsl().apply(dslHolder.where)
+    val joinDsl = JoinDsl().apply(dslHolder.joins)
+    val orderDsl = OrderDsl().apply(dslHolder.orderBy)
     
     val query = buildString {
         append("SELECT ")
@@ -41,28 +41,28 @@ internal fun getQuery(                                      table: String,
             append(" WHERE ")
             append(whereDsl.buildStr())
         }
-        if (sqlOpts.groupBy.isNotBlank()) {
+        if (dslHolder.groupBy.isNotBlank()) {
             append(" GROUP BY ")
-            append(sqlOpts.groupBy)
+            append(dslHolder.groupBy)
         }
-        if (sqlOpts.having.isNotBlank()) {
+        if (dslHolder.having.isNotBlank()) {
             append(" HAVING ")
-            append(sqlOpts.having)
+            append(dslHolder.having)
         }
         if (orderDsl.orderoids.isNotEmpty()) {
             append(" ORDER BY ")
             append(orderDsl.buildStr())
         }
-        if (sqlOpts.limit != null) {
+        if (dslHolder.limit != null) {
             append(" LIMIT ")
-            append(sqlOpts.limit)
+            append(dslHolder.limit)
         }
-        if (sqlOpts.offset != null) {
+        if (dslHolder.offset != null) {
             append(" OFFSET ")
-            append(sqlOpts.offset)
+            append(dslHolder.offset)
         }
-        if (sqlOpts.customEnd.isNotBlank()) {
-            append(sqlOpts.customEnd)
+        if (dslHolder.customEnd.isNotBlank()) {
+            append(dslHolder.customEnd)
         }
     }
     

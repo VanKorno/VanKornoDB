@@ -13,7 +13,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import kotlin.reflect.KClass
 
 /**
- * Gets one db table row as an object of type [T] using the WhereBuilder. Returns null if no result found.
+ * Gets one db table row as an object of type [T] using WhereDsl. Returns null if no result found.
  */
 inline fun <reified T : DbEntity> SQLiteDatabase.getObj(              table: String,
                                                              noinline where: WhereDsl.()->Unit = {},
@@ -23,7 +23,7 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(              table: Str
 
 
 /**
- * Gets one db table row as an object of [clazz] using using WhereBuilder. Returns null if no result found.
+ * Gets one db table row as an object of [clazz] using using WhereDsl. Returns null if no result found.
  */
 fun <T : DbEntity> SQLiteDatabase.getObj(                             table: String,
                                                                       clazz: KClass<T>,
