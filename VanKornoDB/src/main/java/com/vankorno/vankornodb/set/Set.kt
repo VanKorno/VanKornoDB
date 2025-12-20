@@ -18,9 +18,9 @@ import com.vankorno.vankornodb.set.dsl.data.SetOp
 import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
 
-fun SQLiteDatabase.set(                                           table: String,
-                                                                  where: WhereDsl.()->Unit = {},
-                                                                actions: SetDsl.()->Unit,
+fun SQLiteDatabase.set(                                               table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                    actions: SetDsl.()->Unit,
 ) {
     val ops = SetDsl().apply(actions).ops
     val builder = WhereDsl().apply(where)

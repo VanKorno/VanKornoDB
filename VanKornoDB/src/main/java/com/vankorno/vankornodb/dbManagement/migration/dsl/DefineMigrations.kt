@@ -6,7 +6,7 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.MigrationDefinitionBuilder
+import com.vankorno.vankornodb.api.MigrationDsl
 import com.vankorno.vankornodb.api.TransformCol
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
@@ -18,12 +18,11 @@ import kotlin.reflect.KClass
 class ModifyRow(val fieldName: String, val block: TransformColInternal.FieldOverride.()->Unit)
 
 
-internal fun <T: DbEntity> defineMigrationsInternal(
-                                                 latestVersion: Int,
-                                                   latestClass: KClass<T>,
-                                                         block: MigrationDefinitionBuilder.()->Unit,
+internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: Int,
+                                                                 latestClass: KClass<T>,
+                                                                       block: MigrationDsl.()->Unit,
 ): MigrationBundle {
-    val defBuilder = MigrationDefinitionBuilder()
+    val defBuilder = MigrationDsl()
     defBuilder.block()
     
     val latestVersionKlassAbsent = !defBuilder.versionedClasses.containsKey(latestVersion)
@@ -38,7 +37,7 @@ internal fun <T: DbEntity> defineMigrationsInternal(
 }
 
 
-abstract class MigrationDefinitionBuilderInternal {
+abstract class MigrationDslInternal {
     val versionedClasses = mutableMapOf<Int, KClass<out DbEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()

@@ -11,19 +11,19 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.dropAndCreateEmptyTablesInternal
-import com.vankorno.vankornodb.dbManagement.migration.dsl.MigrationDefinitionBuilderInternal
+import com.vankorno.vankornodb.dbManagement.migration.dsl.MigrationDslInternal
 import com.vankorno.vankornodb.dbManagement.migration.dsl.defineMigrationsInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateMultiStepInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeInternal
 import kotlin.reflect.KClass
 
-class MigrationDefinitionBuilder() : MigrationDefinitionBuilderInternal()
+class MigrationDsl() : MigrationDslInternal()
 
 
 
-fun <T: DbEntity> defineMigrations(              latestVersion: Int,
-                                                   latestClass: KClass<T>,
-                                                         block: MigrationDefinitionBuilder.()->Unit,
+fun <T: DbEntity> defineMigrations(                            latestVersion: Int,
+                                                                 latestClass: KClass<T>,
+                                                                       block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(latestVersion, latestClass, block)
 
 
