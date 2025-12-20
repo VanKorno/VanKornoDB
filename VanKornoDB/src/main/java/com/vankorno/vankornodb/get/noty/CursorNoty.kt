@@ -11,9 +11,9 @@ import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.dsl.getQuery
 
-fun SQLiteDatabase.getCursorNoty(                                 table: String,
-                                                                columns: Array<out String>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getCursorNoty(                                     table: String,
+                                                                    columns: Array<out String>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Cursor {
     val (query, args) = getQuery(table, columns) { this.where = where }
     return rawQuery(query, args)
@@ -21,10 +21,10 @@ fun SQLiteDatabase.getCursorNoty(                                 table: String,
 
 
 
-fun SQLiteDatabase.getCursorProNoty(                                      table: String,
-                                                                        columns: Array<out String>,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun SQLiteDatabase.getCursorProNoty(                                       table: String,
+                                                                         columns: Array<out String>,
+                                                                             dsl: FullDsl.()->Unit,
 ): Cursor {
-    val (query, args) = getQuery(table, columns, fullDsl)
+    val (query, args) = getQuery(table, columns, dsl)
     return rawQuery(query, args)
 }

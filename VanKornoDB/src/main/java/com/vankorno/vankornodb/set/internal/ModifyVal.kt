@@ -10,10 +10,10 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
-internal fun SQLiteDatabase.baseAddTo(                           addend: Number,
-                                                                  table: String,
-                                                                 column: TypedColumn<*>,
-                                                                  where: WhereDsl.()->Unit = {},
+internal fun SQLiteDatabase.baseAddTo(                               addend: Number,
+                                                                      table: String,
+                                                                     column: TypedColumn<*>,
+                                                                      where: WhereDsl.()->Unit = {},
 ) {
     val sAddend = addend.toString()
     

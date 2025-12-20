@@ -20,9 +20,9 @@ import com.vankorno.vankornodb.misc.getBoolean
 
 //  ----------------------------------------  I N T  ----------------------------------------  \\
 
-fun SQLiteDatabase.getTableInts(                                  table: String,
-                                                                columns: Array<IntCol>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getTableInts(                                      table: String,
+                                                                    columns: Array<IntCol>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Int>> = baseGetVals(
     table, columns.map{ it.name }.toTypedArray(), where
 ) { cursor, col ->
@@ -30,11 +30,11 @@ fun SQLiteDatabase.getTableInts(                                  table: String,
 }
 
 
-fun SQLiteDatabase.getTableIntsPro(                                  table: String,
-                                                                   columns: Array<IntCol>,
-                                                                 fullDsl: FullDsl.()->Unit = {},
+fun SQLiteDatabase.getTableIntsPro(                                    table: String,
+                                                                     columns: Array<IntCol>,
+                                                                         dsl: FullDsl.()->Unit = {},
 ): List<List<Int>> = baseGetValsPro(
-    table, columns.map{ it.name }.toTypedArray(), fullDsl
+    table, columns.map{ it.name }.toTypedArray(), dsl
 ) { cursor, col ->
     cursor.getInt(col)
 }
@@ -46,9 +46,9 @@ fun SQLiteDatabase.getTableIntsPro(                                  table: Stri
 
 //  -------------------------------------  S T R I N G  -------------------------------------  \\
 
-fun SQLiteDatabase.getTableStrings(                               table: String,
-                                                                columns: Array<StrCol>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getTableStrings(                                   table: String,
+                                                                    columns: Array<StrCol>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<String>> = baseGetVals(
     table, columns.map{ it.name }.toTypedArray(), where
 ) { cursor, col ->
@@ -56,11 +56,11 @@ fun SQLiteDatabase.getTableStrings(                               table: String,
 }
 
 
-fun SQLiteDatabase.getTableStringsPro(                               table: String,
-                                                                   columns: Array<StrCol>,
-                                                                 fullDsl: FullDsl.()->Unit = {},
+fun SQLiteDatabase.getTableStringsPro(                                 table: String,
+                                                                     columns: Array<StrCol>,
+                                                                         dsl: FullDsl.()->Unit = {},
 ): List<List<String>> = baseGetValsPro(
-    table, columns.map{ it.name }.toTypedArray(), fullDsl
+    table, columns.map{ it.name }.toTypedArray(), dsl
 ) { cursor, col ->
     cursor.getString(col)
 }
@@ -70,9 +70,9 @@ fun SQLiteDatabase.getTableStringsPro(                               table: Stri
 
 //  ------------------------------------  B O O L E A N  ------------------------------------  \\
 
-fun SQLiteDatabase.getTableBools(                                 table: String,
-                                                                columns: Array<BoolCol>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getTableBools(                                     table: String,
+                                                                    columns: Array<BoolCol>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Boolean>> = baseGetVals(
     table, columns.map{ it.name }.toTypedArray(), where
 ) { cursor, col ->
@@ -80,11 +80,11 @@ fun SQLiteDatabase.getTableBools(                                 table: String,
 }
 
 
-fun SQLiteDatabase.getTableBoolsPro(                                 table: String,
-                                                                   columns: Array<BoolCol>,
-                                                                 fullDsl: FullDsl.()->Unit = {},
+fun SQLiteDatabase.getTableBoolsPro(                                   table: String,
+                                                                     columns: Array<BoolCol>,
+                                                                         dsl: FullDsl.()->Unit = {},
 ): List<List<Boolean>> = baseGetValsPro(
-    table, columns.map{ it.name }.toTypedArray(), fullDsl
+    table, columns.map{ it.name }.toTypedArray(), dsl
 ) { cursor, col ->
     cursor.getBoolean(col)
 }
@@ -95,9 +95,9 @@ fun SQLiteDatabase.getTableBoolsPro(                                 table: Stri
 
 //  ---------------------------------------  L O N G  ---------------------------------------  \\
 
-fun SQLiteDatabase.getTableLongs(                                 table: String,
-                                                                columns: Array<LongCol>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getTableLongs(                                     table: String,
+                                                                    columns: Array<LongCol>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Long>> = baseGetVals(
     table, columns.map{ it.name }.toTypedArray(), where
 ) { cursor, col ->
@@ -105,11 +105,11 @@ fun SQLiteDatabase.getTableLongs(                                 table: String,
 }
 
 
-fun SQLiteDatabase.getTableLongsPro(                                 table: String,
-                                                                   columns: Array<LongCol>,
-                                                                 fullDsl: FullDsl.()->Unit = {},
+fun SQLiteDatabase.getTableLongsPro(                                   table: String,
+                                                                     columns: Array<LongCol>,
+                                                                         dsl: FullDsl.()->Unit = {},
 ): List<List<Long>> = baseGetValsPro(
-    table, columns.map{ it.name }.toTypedArray(), fullDsl
+    table, columns.map{ it.name }.toTypedArray(), dsl
 ) { cursor, col ->
     cursor.getLong(col)
 }
@@ -119,9 +119,9 @@ fun SQLiteDatabase.getTableLongsPro(                                 table: Stri
 
 //  --------------------------------------  F L O A T  --------------------------------------  \\
 
-fun SQLiteDatabase.getTableFloats(                                table: String,
-                                                                columns: Array<FloatCol>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getTableFloats(                                    table: String,
+                                                                    columns: Array<FloatCol>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Float>> = baseGetVals(
     table, columns.map{ it.name }.toTypedArray(), where
 ) { cursor, col ->
@@ -129,11 +129,11 @@ fun SQLiteDatabase.getTableFloats(                                table: String,
 }
 
 
-fun SQLiteDatabase.getTableFloatsPro(                                table: String,
-                                                                   columns: Array<FloatCol>,
-                                                                 fullDsl: FullDsl.()->Unit = {},
+fun SQLiteDatabase.getTableFloatsPro(                                  table: String,
+                                                                     columns: Array<FloatCol>,
+                                                                         dsl: FullDsl.()->Unit = {},
 ): List<List<Float>> = baseGetValsPro(
-    table, columns.map{ it.name }.toTypedArray(), fullDsl
+    table, columns.map{ it.name }.toTypedArray(), dsl
 ) { cursor, col ->
     cursor.getFloat(col)
 }
@@ -144,9 +144,9 @@ fun SQLiteDatabase.getTableFloatsPro(                                table: Stri
 
 //  ---------------------------------------  B L O B  ---------------------------------------  \\
 
-fun SQLiteDatabase.getTableBlobs(                                 table: String,
-                                                                columns: Array<BlobCol>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getTableBlobs(                                     table: String,
+                                                                    columns: Array<BlobCol>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<ByteArray>> = baseGetVals(
     table, columns.map{ it.name }.toTypedArray(), where
 ) { cursor, col ->
@@ -154,11 +154,11 @@ fun SQLiteDatabase.getTableBlobs(                                 table: String,
 }
 
 
-fun SQLiteDatabase.getTableBlobsPro(                                 table: String,
-                                                                   columns: Array<BlobCol>,
-                                                                 fullDsl: FullDsl.()->Unit = {},
+fun SQLiteDatabase.getTableBlobsPro(                                   table: String,
+                                                                     columns: Array<BlobCol>,
+                                                                         dsl: FullDsl.()->Unit = {},
 ): List<List<ByteArray>> = baseGetValsPro(
-    table, columns.map{ it.name }.toTypedArray(), fullDsl
+    table, columns.map{ it.name }.toTypedArray(), dsl
 ) { cursor, col ->
     cursor.getBlob(col)
 }

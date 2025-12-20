@@ -23,10 +23,10 @@ fun SQLiteDatabase.setNoty(                                                     
 
 
 
-fun SQLiteDatabase.setNoty(                                       value: Any,
-                                                                  table: String,
-                                                                 column: String,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.setNoty(                                           value: Any,
+                                                                      table: String,
+                                                                     column: String,
+                                                                      where: WhereDsl.()->Unit = {},
 ) {
     val builder = WhereDsl().apply(where)
     val safeValue = getBoolSafeVal(value)
@@ -56,18 +56,18 @@ internal fun getBoolSafeVal(value: Any) = if (value is Boolean)
 
 // ==============================  M U L T I - S E T T E R S  ============================== \\
 
-fun SQLiteDatabase.setRowValsNoty(                                     table: String,
-                                                                          cv: ContentValues,
-                                                                       where: WhereDsl.()->Unit,
+fun SQLiteDatabase.setRowValsNoty(                                         table: String,
+                                                                              cv: ContentValues,
+                                                                           where: WhereDsl.()->Unit,
 ) {
     val builder = WhereDsl().apply(where)
     update(table, cv, builder.buildStr(), builder.args.toTypedArray())
 }
 
 
-fun SQLiteDatabase.setRowValsNoty(                                     table: String,
-                                                                       where: WhereDsl.()->Unit,
-                                                               vararg values: Pair<String, Any?>,
+fun SQLiteDatabase.setRowValsNoty(                                        table: String,
+                                                                          where: WhereDsl.()->Unit,
+                                                                  vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\
 

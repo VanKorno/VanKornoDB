@@ -11,7 +11,6 @@ import com.vankorno.vankornodb.dbManagement.DbHelperInternal
 import com.vankorno.vankornodb.dbManagement.createTablesInternal
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
-import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformColInternal
 import kotlin.reflect.KClass
 
 /**
@@ -32,10 +31,6 @@ open class DbHelper(             context: Context,
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbHelperInternal(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade)
 
-
-
-
-class TransformCol() : TransformColInternal()
 
 
 

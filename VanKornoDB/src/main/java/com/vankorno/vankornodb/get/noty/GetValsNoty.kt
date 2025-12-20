@@ -13,11 +13,11 @@ import com.vankorno.vankornodb.get.raw.getTypedValAt
 /**
  * Retrieves a list of values from a single column, cast to the specified type [T].
  */
-inline fun <reified T> SQLiteDatabase.getColValsNoty(                table: String,
-                                                                columnName: String,
-                                                        noinline fullDsl: FullDsl.()->Unit = {},
+inline fun <reified T> SQLiteDatabase.getColValsNoty(                  table: String,
+                                                                  columnName: String,
+                                                                noinline dsl: FullDsl.()->Unit = {},
 ): List<T> = getCursorProNoty(table, arrayOf(columnName)) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -38,11 +38,11 @@ inline fun <reified T> SQLiteDatabase.getColValsNoty(                table: Stri
  * @param columns One or more column names to retrieve.
  * @return A list of column values (nullable) for the first matching row, or an empty list if no rows match.
  */
-inline fun <reified T> SQLiteDatabase.getRowValsProNoty(             table: String,
-                                                                   columns: Array<out String>,
-                                                        noinline fullDsl: FullDsl.()->Unit = {},
+inline fun <reified T> SQLiteDatabase.getRowValsProNoty(               table: String,
+                                                                     columns: Array<out String>,
+                                                                noinline dsl: FullDsl.()->Unit = {},
 ): List<T?> = getMultiRowValsProNoty<T>(table, columns) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
     limit = 1
 }.firstOrNull() ?: emptyList()
 
@@ -56,11 +56,11 @@ inline fun <reified T> SQLiteDatabase.getRowValsProNoty(             table: Stri
  * @param table Name of the table to query.
  * @param columns Array of column names to retrieve.
  */
-inline fun <reified T> SQLiteDatabase.getMultiRowValsProNoty(        table: String,
-                                                                   columns: Array<out String>,
-                                                        noinline fullDsl: FullDsl.()->Unit = {},
+inline fun <reified T> SQLiteDatabase.getMultiRowValsProNoty(          table: String,
+                                                                     columns: Array<out String>,
+                                                                noinline dsl: FullDsl.()->Unit = {},
 ): List<List<T?>> = getCursorProNoty(table, columns) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {

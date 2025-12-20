@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.TransformCol
+import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.*
@@ -64,7 +64,7 @@ class DefineMigrationsTest {
         assertEquals(1, version)
         assertNotNull(milestone.transformColVal)
         
-        val dsl = TransformCol()
+        val dsl = TransformColDsl()
         milestone.transformColVal?.invoke(dsl)
         val override = dsl.getOverride("someField")
         assertNotNull(override)
@@ -153,7 +153,7 @@ class DefineMigrationsTest {
     
     @Test
     fun `transform returns original if no function is set`() {
-        val override = TransformColInternal.FieldOverride()
+        val override = TransformColDslInternal.FieldOverride()
         val result = override.apply(123)
         assertEquals(123, result)
     }
@@ -162,7 +162,7 @@ class DefineMigrationsTest {
     fun `returns original for unknown input types`() {
         data class Unknown(val x: Int)
         
-        val override = TransformColInternal.FieldOverride()
+        val override = TransformColDslInternal.FieldOverride()
         val result = override.apply(Unknown(1))
         assertEquals(Unknown(1), result)
     }

@@ -13,26 +13,26 @@ import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.misc.getColNames
 
-fun SQLiteDatabase.getCursor(                                     table: String,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getCursor(                                         table: String,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Cursor {
     val (query, args) = getQuery(table, arrayOf("*")) { this.where = where }
     return rawQuery(query, args)
 }
 
 
-fun SQLiteDatabase.getCursor(                                     table: String,
-                                                                columns: Array<out TypedColumn<*>>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getCursor(                                      table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                                   where: WhereDsl.()->Unit = {},
 ): Cursor {
     val (query, args) = getQuery(table, getColNames(columns)) { this.where = where }
     return rawQuery(query, args)
 }
 
 
-fun SQLiteDatabase.getCursor(                                     table: String,
-                                                                 column: TypedColumn<*>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getCursor(                                         table: String,
+                                                                     column: TypedColumn<*>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Cursor {
     val (query, args) = getQuery(table, arrayOf(column.name)) { this.where = where }
     return rawQuery(query, args)
@@ -42,28 +42,28 @@ fun SQLiteDatabase.getCursor(                                     table: String,
 
 
 
-fun SQLiteDatabase.getCursorPro(                                          table: String,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun SQLiteDatabase.getCursorPro(                                            table: String,
+                                                                              dsl: FullDsl.()->Unit,
 ): Cursor {
-    val (query, args) = getQuery(table, arrayOf("*"), fullDsl)
+    val (query, args) = getQuery(table, arrayOf("*"), dsl)
     return rawQuery(query, args)
 }
 
 
 fun SQLiteDatabase.getCursorPro(                                   table: String,
                                                                  columns: Array<out TypedColumn<*>>,
-                                                               fullDsl: FullDsl.()->Unit,
+                                                                     dsl: FullDsl.()->Unit,
 ): Cursor {
-    val (query, args) = getQuery(table, getColNames(columns), fullDsl)
+    val (query, args) = getQuery(table, getColNames(columns), dsl)
     return rawQuery(query, args)
 }
 
 
-fun SQLiteDatabase.getCursorPro(                                          table: String,
-                                                                         column: TypedColumn<*>,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun SQLiteDatabase.getCursorPro(                                            table: String,
+                                                                           column: TypedColumn<*>,
+                                                                              dsl: FullDsl.()->Unit,
 ): Cursor {
-    val (query, args) = getQuery(table, arrayOf(column.name), fullDsl)
+    val (query, args) = getQuery(table, arrayOf(column.name), dsl)
     return rawQuery(query, args)
 }
 

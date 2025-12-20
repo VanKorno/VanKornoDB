@@ -14,10 +14,10 @@ import kotlin.reflect.KClass
 /** 
  * Retrieves a list of entities of type [T] mapped from the specified columns.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjectsPro(           table: String,
-                                                             noinline fullDsl: FullDsl.()->Unit,
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjectsPro(             table: String,
+                                                                     noinline dsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -34,11 +34,11 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjectsPro(           table:
  * Retrieves a list of objects of the specified [clazz] mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : DbEntity> SQLiteDatabase.getObjectsPro(                          clazz: KClass<T>,
-                                                                          table: String,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun <T : DbEntity> SQLiteDatabase.getObjectsPro(                            table: String,
+                                                                            clazz: KClass<T>,
+                                                                              dsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -58,10 +58,10 @@ fun <T : DbEntity> SQLiteDatabase.getObjectsPro(                          clazz:
  * using the `id` column (Int) as the key. 
  * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjMapPro(            table: String,
-                                                             noinline fullDsl: FullDsl.()->Unit,
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjMapPro(              table: String,
+                                                                     noinline dsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
 }.use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
@@ -81,11 +81,11 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMapPro(            table:
  * using the `id` column (Int) as the key. 
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : DbEntity> SQLiteDatabase.getObjMapPro(                           clazz: KClass<T>,
-                                                                          table: String,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun <T : DbEntity> SQLiteDatabase.getObjMapPro(                             table: String,
+                                                                            clazz: KClass<T>,
+                                                                              dsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
 }.use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {

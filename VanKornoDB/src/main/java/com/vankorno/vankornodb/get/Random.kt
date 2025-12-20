@@ -16,9 +16,9 @@ import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.mapper.toEntity
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 
-fun SQLiteDatabase.getRandomInt(                                  table: String,
-                                                                 column: IntCol,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getRandomInt(                                      table: String,
+                                                                     column: IntCol,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Int {
     val rand = getRandomValNoty<Int>(table, column.name, where) ?: run {
         // region LOG
@@ -40,8 +40,8 @@ fun SQLiteDatabase.getRandomInt(                                  table: String,
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random ID from the table, or -1 if no rows match.
  */
-fun SQLiteDatabase.getRandomId(                                   table: String,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getRandomId(                                       table: String,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Int = getRandomInt(table, cID, where)
 
 
@@ -55,8 +55,8 @@ fun SQLiteDatabase.getRandomId(                                   table: String,
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or null if no rows match.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
-                                                         noinline where: WhereDsl.()->Unit = {},
+inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(        table: String,
+                                                             noinline where: WhereDsl.()->Unit = {},
 ): T? = getCursorPro(table) {
     applyDsl(
         where = where,
@@ -82,9 +82,9 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(    table: String,
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random value of type [T] from the column, or null if no rows match.
  */
-inline fun <reified T> SQLiteDatabase.getRandomValNoty(           table: String,
-                                                                 column: String,
-                                                         noinline where: WhereDsl.()->Unit = {},
+inline fun <reified T> SQLiteDatabase.getRandomValNoty(               table: String,
+                                                                     column: String,
+                                                             noinline where: WhereDsl.()->Unit = {},
 ): T? = getCursorProNoty(table, arrayOf(column)) {
     applyDsl(
         where = where,

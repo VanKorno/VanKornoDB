@@ -13,8 +13,8 @@ import com.vankorno.vankornodb.misc.columns
 
 /** Returns the number of rows matching the query conditions. */
 
-fun SQLiteDatabase.getRowCount(                                   table: String,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getRowCount(                                       table: String,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Int = getCursorProNoty(table, columns("1")) {
     applyDsl(where = where)
 }.use { it.count }
@@ -22,8 +22,8 @@ fun SQLiteDatabase.getRowCount(                                   table: String,
 
 /** Returns the number of rows matching the advanced query conditions. */
 
-fun SQLiteDatabase.getRowCountPro(                                        table: String,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun SQLiteDatabase.getRowCountPro(                                          table: String,
+                                                                          fullDsl: FullDsl.()->Unit,
 ): Int = getCursorProNoty(table, columns("1")) {
     applyDsl(fullDsl)
 }.use { it.count }
@@ -34,8 +34,8 @@ fun SQLiteDatabase.getRowCountPro(                                        table:
 
 /** Returns true if at least one row matches the query conditions. */
 
-fun SQLiteDatabase.hasRows(                                       table: String,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.hasRows(                                           table: String,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Boolean = getCursorProNoty(table, columns("1")) {
     this.where = where
     limit = 1
@@ -44,8 +44,8 @@ fun SQLiteDatabase.hasRows(                                       table: String,
 
 /** Returns true if at least one row matches the advanced query conditions. */
 
-fun SQLiteDatabase.hasRowsPro(                                            table: String,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun SQLiteDatabase.hasRowsPro(                                              table: String,
+                                                                          fullDsl: FullDsl.()->Unit,
 ): Boolean = getCursorProNoty(table, columns("1")) {
     applyDsl(fullDsl)
     limit = 1

@@ -7,7 +7,7 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
 
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.MigrationDsl
-import com.vankorno.vankornodb.api.TransformCol
+import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
@@ -15,7 +15,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import kotlin.reflect.KClass
 
 
-class ModifyRow(val fieldName: String, val block: TransformColInternal.FieldOverride.()->Unit)
+class ModifyRow(val fieldName: String, val block: TransformColDslInternal.FieldOverride.()->Unit)
 
 
 internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: Int,
@@ -98,16 +98,16 @@ abstract class MigrationDslInternal {
         }
         
         
-        infix fun String.modify(block: TransformColInternal.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
+        infix fun String.modify(block: TransformColDslInternal.FieldOverride.()->Unit): ModifyRow = ModifyRow(this, block)
         
-        infix fun TypedColumn<*>.modify(block: TransformColInternal.FieldOverride.()->Unit): ModifyRow = ModifyRow(this.name, block)
+        infix fun TypedColumn<*>.modify(block: TransformColDslInternal.FieldOverride.()->Unit): ModifyRow = ModifyRow(this.name, block)
         
         
         fun milestone(
                      vararg modifications: ModifyRow,
                           processFinalObj: ((oldObj: DbEntity, newObj: DbEntity)->DbEntity)? = null,
         ) {
-            val overrideBlock: TransformCol.() -> Unit = {
+            val overrideBlock: TransformColDsl.() -> Unit = {
                 modifications.forEach { modify(it.fieldName, it.block) }
             }
             milestone = MilestoneLambdas(

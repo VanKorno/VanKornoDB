@@ -12,6 +12,7 @@ import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.dropAndCreateEmptyTablesInternal
 import com.vankorno.vankornodb.dbManagement.migration.dsl.MigrationDslInternal
+import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformColDslInternal
 import com.vankorno.vankornodb.dbManagement.migration.dsl.defineMigrationsInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateMultiStepInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeInternal
@@ -27,6 +28,7 @@ fun <T: DbEntity> defineMigrations(                            latestVersion: In
 ): MigrationBundle = defineMigrationsInternal(latestVersion, latestClass, block)
 
 
+class TransformColDsl() : TransformColDslInternal()
 
 
 /**

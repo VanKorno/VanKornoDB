@@ -5,9 +5,7 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.data
 
-// TODO use in TypedColumns
-
-enum class ColumnType(                                                           val sql: String
+enum class ColumnTypeSql(                                                           val sql: String
 ) {
     ID(" INTEGER NOT NULL PRIMARY KEY"),
 
@@ -31,9 +29,9 @@ enum class ColumnType(                                                          
 }
 
 
-val IntColNullable  = ColumnType.INT_NULLABLE
-val StrColNullable  = ColumnType.STR_NULLABLE
-val BoolColNullable = ColumnType.BOOL_NULLABLE
-val LongColNullable = ColumnType.LONG_NULLABLE
-val FloatColNullable = ColumnType.FLOAT_NULLABLE
-val BlobColNullable = ColumnType.BLOB_NULLABLE
+val IntColNullable  = ColumnTypeSql.INT_NULLABLE
+val StrColNullable  = ColumnTypeSql.STR_NULLABLE
+val BoolColNullable = ColumnTypeSql.BOOL_NULLABLE
+val LongColNullable = ColumnTypeSql.LONG_NULLABLE
+val FloatColNullable = ColumnTypeSql.FLOAT_NULLABLE
+val BlobColNullable = ColumnTypeSql.BLOB_NULLABLE

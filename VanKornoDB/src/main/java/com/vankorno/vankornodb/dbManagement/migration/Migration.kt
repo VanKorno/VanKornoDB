@@ -10,7 +10,7 @@ import android.util.Log
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.TransformCol
+import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.api.dropAndCreateEmptyTables
@@ -117,17 +117,17 @@ open class MigrationUtils {
      * @param renameSnapshot Maps new properties to their old names.
      * @return A new instance of [newClass] with mapped or defaulted values.
      */
-    internal fun convertEntity(                         oldObject: DbEntity,
-                                                         newClass: KClass<out DbEntity>,
-                                                   renameSnapshot: Map<String, String> = emptyMap(),
-                                                   overrideColVal: (TransformCol.()->Unit)? = null,
+    internal fun convertEntity(                       oldObject: DbEntity,
+                                                       newClass: KClass<out DbEntity>,
+                                                 renameSnapshot: Map<String, String> = emptyMap(),
+                                                 overrideColVal: (TransformColDsl.()->Unit)? = null,
     ): DbEntity {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
         
         val constructor = newClass.primaryConstructor
             ?: error("Target class ${newClass.simpleName} must have a primary constructor")
         
-        val dsl = TransformCol().apply { overrideColVal?.invoke(this) }
+        val dsl = TransformColDsl().apply { overrideColVal?.invoke(this) }
         
         val args = constructor.parameters.associateWith { param ->
             val toName = param.name ?: error("Constructor parameter must have a name")

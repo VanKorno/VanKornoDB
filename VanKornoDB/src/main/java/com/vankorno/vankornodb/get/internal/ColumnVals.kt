@@ -11,21 +11,21 @@ import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.api.WhereDsl
 
 
-internal inline fun <T> SQLiteDatabase.getColVals(                table: String,
-                                                                 column: String,
-                                                         noinline where: WhereDsl.()->Unit = {},
-                                             crossinline getCursorValue: (Cursor)->T,
+internal inline fun <T> SQLiteDatabase.getColVals(                    table: String,
+                                                                     column: String,
+                                                             noinline where: WhereDsl.()->Unit = {},
+                                                 crossinline getCursorValue: (Cursor)->T,
 ): List<T> = getColValsPro(table, column, { this.where = where }, getCursorValue)
 
 
 /**
  * For internal use with the type-safe getColVals... functions.
  */
-internal inline fun <T> SQLiteDatabase.getColValsPro(                table: String,
-                                                                    column: String,
-                                                        noinline fullDsl: FullDsl.()->Unit = {},
-                                                crossinline getCursorValue: (Cursor)->T,
-): List<T> = baseGetValsPro(table, arrayOf(column), fullDsl) { cursor, _ ->
+internal inline fun <T> SQLiteDatabase.getColValsPro(                  table: String,
+                                                                      column: String,
+                                                                noinline dsl: FullDsl.()->Unit = {},
+                                                  crossinline getCursorValue: (Cursor)->T,
+): List<T> = baseGetValsPro(table, arrayOf(column), dsl) { cursor, _ ->
     getCursorValue(cursor)
 }.flatten()
 

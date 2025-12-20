@@ -117,20 +117,20 @@ private object TableBuilderUtils {
     fun getColumnType(                                                     paramName: String?,
                                                                           classifier: KClassifier?,
                                                                           isNullable: Boolean,
-    ): ColumnType? {
+    ): ColumnTypeSql? {
         if (paramName == null) return null
     
         return when (classifier) {
             Int::class ->       if (paramName == "id") {
-                                    ColumnType.ID
+                                    ColumnTypeSql.ID
                                 } else {
-                                    if (isNullable) IntColNullable else ColumnType.INT
+                                    if (isNullable) IntColNullable else ColumnTypeSql.INT
                                 }
-            String::class ->    if (isNullable) StrColNullable else ColumnType.STR
-            Boolean::class ->   if (isNullable) BoolColNullable else ColumnType.BOOL
-            Long::class ->      if (isNullable) LongColNullable else ColumnType.LONG
-            Float::class ->     if (isNullable) FloatColNullable else ColumnType.FLOAT
-            ByteArray::class -> if (isNullable) BlobColNullable else ColumnType.BLOB
+            String::class ->    if (isNullable) StrColNullable else ColumnTypeSql.STR
+            Boolean::class ->   if (isNullable) BoolColNullable else ColumnTypeSql.BOOL
+            Long::class ->      if (isNullable) LongColNullable else ColumnTypeSql.LONG
+            Float::class ->     if (isNullable) FloatColNullable else ColumnTypeSql.FLOAT
+            ByteArray::class -> if (isNullable) BlobColNullable else ColumnTypeSql.BLOB
             else -> null
         }
     }
@@ -148,7 +148,7 @@ private object TableBuilderUtils {
             .firstOrNull { it.name == name }?.getter?.call(defaultsInstance)
         
         // SKIP default clause for AutoId/AutoIdNullable or null default
-        val skipDefault = colType == ColumnType.ID || defaultValue == null
+        val skipDefault = colType == ColumnTypeSql.ID || defaultValue == null
         
         val defaultClause = if (!isNullable  &&  !skipDefault) {
             val defaultSqlValue = when (defaultValue) {

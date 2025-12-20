@@ -13,7 +13,6 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 
-
 /**
  * Updates the row with the specified [id] in the given table with the values from [obj].
  * Converts the entity into ContentValues and performs the SQLite update operation.
@@ -32,9 +31,9 @@ fun <T : DbEntity> SQLiteDatabase.setObjById(                                   
 }
 
 
-inline fun <T : DbEntity> SQLiteDatabase.setObj(                       table: String,
-                                                                         obj: T,
-                                                                       where: WhereDsl.()->Unit,
+inline fun <T : DbEntity> SQLiteDatabase.setObj(                           table: String,
+                                                                             obj: T,
+                                                                           where: WhereDsl.()->Unit,
 ): Int {
     val cv = toContentValues(obj)
     val whereDsl = WhereDsl().apply(where)
@@ -49,3 +48,9 @@ inline fun <T : DbEntity> SQLiteDatabase.setObj(                       table: St
     }
     return affected
 }
+
+
+
+
+
+

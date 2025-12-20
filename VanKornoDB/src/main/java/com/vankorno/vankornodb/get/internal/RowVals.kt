@@ -13,20 +13,20 @@ import com.vankorno.vankornodb.api.WhereDsl
 /**
  * For internal use with the type-safe getRowVals... functions.
  */
-internal inline fun <T> SQLiteDatabase.getRowVals(                table: String,
-                                                                columns: Array<out String>,
-                                                         noinline where: WhereDsl.()->Unit = {},
-                                             crossinline getCursorValue: (Cursor, Int)->T,
+internal inline fun <T> SQLiteDatabase.getRowVals(                    table: String,
+                                                                    columns: Array<out String>,
+                                                             noinline where: WhereDsl.()->Unit = {},
+                                                 crossinline getCursorValue: (Cursor, Int)->T,
 ): List<T> = getRowValsPro(table, columns, { this.where = where }, getCursorValue)
 
 
-internal inline fun <T> SQLiteDatabase.getRowValsPro(                table: String,
-                                                                   columns: Array<out String>,
-                                                        noinline fullDsl: FullDsl.()->Unit = {},
-                                                crossinline getCursorValue: (Cursor, Int)->T,
+internal inline fun <T> SQLiteDatabase.getRowValsPro(                  table: String,
+                                                                     columns: Array<out String>,
+                                                                noinline dsl: FullDsl.()->Unit = {},
+                                                  crossinline getCursorValue: (Cursor, Int)->T,
 ): List<T> = baseGetValsPro(table, columns,
-    fullDsl = {
-        applyDsl(fullDsl)
+    dsl = {
+        applyDsl(dsl)
         limit = 1
     }
 ) { cursor, col ->

@@ -15,31 +15,31 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.set.internal.baseAddTo
 
 
-fun SQLiteDatabase.addToInt(                                     addend: Number,
-                                                                  table: String,
-                                                                 column: IntCol,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.addToInt(                                         addend: Number,
+                                                                      table: String,
+                                                                     column: IntCol,
+                                                                      where: WhereDsl.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
-fun SQLiteDatabase.addToLong(                                    addend: Number,
-                                                                  table: String,
-                                                                 column: LongCol,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.addToLong(                                        addend: Number,
+                                                                      table: String,
+                                                                     column: LongCol,
+                                                                      where: WhereDsl.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
-fun SQLiteDatabase.addToFloat(                                   addend: Number,
-                                                                  table: String,
-                                                                 column: FloatCol,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.addToFloat(                                       addend: Number,
+                                                                      table: String,
+                                                                     column: FloatCol,
+                                                                      where: WhereDsl.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
 
-fun SQLiteDatabase.flipBool(                                      table: String,
-                                                                 column: BoolCol,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.flipBool(                                          table: String,
+                                                                     column: BoolCol,
+                                                                      where: WhereDsl.()->Unit = {},
 ) {
     val colName = column.name
     val builder = WhereDsl().apply(where)
@@ -53,3 +53,12 @@ fun SQLiteDatabase.flipBool(                                      table: String,
     else
         execSQL(queryStr1)
 }
+
+
+
+
+
+
+
+
+

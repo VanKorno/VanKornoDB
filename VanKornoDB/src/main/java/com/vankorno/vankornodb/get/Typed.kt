@@ -26,45 +26,45 @@ fun SQLiteDatabase.getBlob(table: String, column: BlobCol, where: WhereDsl.()->U
 
 
 
-fun SQLiteDatabase.getIntPro(                                        table: String,
-                                                                    column: IntCol,
-                                                                 fullDsl: FullDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, -1, "getIntPro", fullDsl) {
+fun SQLiteDatabase.getIntPro(                                          table: String,
+                                                                      column: IntCol,
+                                                                         dsl: FullDsl.()->Unit = {},
+) = getValueProNoty(table, column.name, -1, "getIntPro", dsl) {
     it.getInt(0)
 }
 
-fun SQLiteDatabase.getStrPro(                                        table: String,
-                                                                    column: StrCol,
-                                                                 fullDsl: FullDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, "", "getStrPro", fullDsl) {
+fun SQLiteDatabase.getStrPro(                                          table: String,
+                                                                      column: StrCol,
+                                                                         dsl: FullDsl.()->Unit = {},
+) = getValueProNoty(table, column.name, "", "getStrPro", dsl) {
     it.getString(0)
 }
 
-fun SQLiteDatabase.getBoolPro(                                       table: String,
-                                                                    column: BoolCol,
-                                                                 fullDsl: FullDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, false, "getBoolPro", fullDsl) {
+fun SQLiteDatabase.getBoolPro(                                         table: String,
+                                                                      column: BoolCol,
+                                                                         dsl: FullDsl.()->Unit = {},
+) = getValueProNoty(table, column.name, false, "getBoolPro", dsl) {
     it.getBoolean(0)
 }
 
-fun SQLiteDatabase.getLongPro(                                       table: String,
-                                                                    column: LongCol,
-                                                                 fullDsl: FullDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, -1L, "getLongPro", fullDsl) {
+fun SQLiteDatabase.getLongPro(                                         table: String,
+                                                                      column: LongCol,
+                                                                         dsl: FullDsl.()->Unit = {},
+) = getValueProNoty(table, column.name, -1L, "getLongPro", dsl) {
     it.getLong(0)
 }
 
-fun SQLiteDatabase.getFloatPro(                                      table: String,
-                                                                    column: FloatCol,
-                                                                 fullDsl: FullDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, -1F, "getFloat", fullDsl) {
+fun SQLiteDatabase.getFloatPro(                                        table: String,
+                                                                      column: FloatCol,
+                                                                         dsl: FullDsl.()->Unit = {},
+) = getValueProNoty(table, column.name, -1F, "getFloat", dsl) {
     it.getFloat(0)
 }
 
-fun SQLiteDatabase.getBlobPro(                                       table: String,
-                                                                    column: BlobCol,
-                                                                 fullDsl: FullDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, ByteArray(0), "getBlob", fullDsl) {
+fun SQLiteDatabase.getBlobPro(                                         table: String,
+                                                                      column: BlobCol,
+                                                                         dsl: FullDsl.()->Unit = {},
+) = getValueProNoty(table, column.name, ByteArray(0), "getBlob", dsl) {
     it.getBlob(0)
 }
 

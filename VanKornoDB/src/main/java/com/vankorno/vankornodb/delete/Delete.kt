@@ -20,8 +20,8 @@ fun <T> SQLiteDatabase.deleteRow(                                               
 ): Int = delete(table, "$where = ?", arrayOf(equals.toString()))
 
 
-fun SQLiteDatabase.deleteRow(                                          table: String,
-                                                                       where: WhereDsl.()->Unit,
+fun SQLiteDatabase.deleteRow(                                              table: String,
+                                                                           where: WhereDsl.()->Unit,
 ): Int {
     val builder = WhereDsl().apply(where)
     return delete(table, builder.buildStr(), builder.args.toTypedArray())

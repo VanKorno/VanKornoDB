@@ -21,8 +21,8 @@ import java.io.File
 fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, cID)
 
 
-fun SQLiteDatabase.getAllIDs(                                   table: String,
-                                                              orderBy: OrderDsl.()->Unit = {},
+fun SQLiteDatabase.getAllIDs(                                         table: String,
+                                                                    orderBy: OrderDsl.()->Unit = {},
 ) = getColIntsPro(table, cID) { orderBy(orderBy) }
 
 
@@ -69,15 +69,15 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
 fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
 
-fun SQLiteDatabase.getLastPosition(                               table: String,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getLastPosition(                                   table: String,
+                                                                      where: WhereDsl.()->Unit = {},
 ) = getLargestInt(table, cPosition, where)
 
 
 
-fun SQLiteDatabase.getLargestInt(                                 table: String,
-                                                                 column: IntCol,
-                                                                  where: WhereDsl.()->Unit = {},
+fun SQLiteDatabase.getLargestInt(                                     table: String,
+                                                                     column: IntCol,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Int = getInt(
     table,
     iCol("MAX(${column.name})"),

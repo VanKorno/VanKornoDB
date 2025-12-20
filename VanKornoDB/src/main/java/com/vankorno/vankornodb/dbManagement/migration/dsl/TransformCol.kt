@@ -5,7 +5,7 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-open class TransformColInternal {
+open class TransformColDslInternal {
     private val overrides = mutableMapOf<String, FieldOverride>()
     
     fun modify(                                                   fieldName: String,

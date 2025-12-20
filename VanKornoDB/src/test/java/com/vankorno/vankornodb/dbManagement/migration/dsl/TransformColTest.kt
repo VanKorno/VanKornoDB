@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.api.TransformCol
+import com.vankorno.vankornodb.api.TransformColDsl
 import org.junit.Assert
 import org.junit.Test
 
@@ -8,7 +8,7 @@ class TransformColTest {
 
     @Test
     fun `onMissing should return fallback`() {
-        val dsl = TransformCol().apply {
+        val dsl = TransformColDsl().apply {
             modify("someField") {
                 fallback = { "fallback" }
             }
@@ -19,7 +19,7 @@ class TransformColTest {
 
     @Test
     fun `onFromInt should override Int`() {
-        val dsl = TransformCol().apply {
+        val dsl = TransformColDsl().apply {
             modify("someField") {
                 fromInt = { it * 2 }
             }
@@ -30,7 +30,7 @@ class TransformColTest {
 
     @Test
     fun `onFromString and finalTransform should work in order`() {
-        val dsl = TransformCol().apply {
+        val dsl = TransformColDsl().apply {
             modify("name") {
                 fromString = { it.uppercase() }
                 finalTransform = { (it as String).reversed() }
@@ -42,7 +42,7 @@ class TransformColTest {
 
     @Test
     fun `onFromOther should catch unknown type`() {
-        val dsl = TransformCol().apply {
+        val dsl = TransformColDsl().apply {
             modify("weird") {
                 fromOther = { "handled: $it" }
             }
@@ -53,7 +53,7 @@ class TransformColTest {
 
     @Test
     fun `no override should just return original`() {
-        val dsl = TransformCol().apply {
+        val dsl = TransformColDsl().apply {
             modify("test") {
                 // no override set
             }

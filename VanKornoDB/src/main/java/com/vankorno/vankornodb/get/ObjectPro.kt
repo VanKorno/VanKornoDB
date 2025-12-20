@@ -12,10 +12,10 @@ import kotlin.reflect.KClass
 /**
  * Gets one db table row as an object of type [T] using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(               table: String,
-                                                             noinline fullDsl: FullDsl.()->Unit,
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(                 table: String,
+                                                                     noinline dsl: FullDsl.()->Unit,
 ): T? = getCursorPro(table) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
     limit = 1
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
@@ -26,11 +26,11 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(               table:
 /**
  * Gets one db table row as an object of [clazz] using using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
  */
-fun <T : DbEntity> SQLiteDatabase.getObjPro(                              table: String,
-                                                                          clazz: KClass<T>,
-                                                                      fullDsl: FullDsl.()->Unit,
+fun <T : DbEntity> SQLiteDatabase.getObjPro(                                table: String,
+                                                                            clazz: KClass<T>,
+                                                                              dsl: FullDsl.()->Unit,
 ): T? = getCursorPro(table) {
-    applyDsl(fullDsl)
+    applyDsl(dsl)
     limit = 1
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
@@ -40,10 +40,10 @@ fun <T : DbEntity> SQLiteDatabase.getObjPro(                              table:
 
 
 
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(               table: String,
-                                                                        default: T,
-                                                             noinline fullDsl: FullDsl.()->Unit,
-): T = getObjPro<T>(table, fullDsl) ?: run {
+inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(                 table: String,
+                                                                          default: T,
+                                                                     noinline dsl: FullDsl.()->Unit,
+): T = getObjPro<T>(table, dsl) ?: run {
     // region LOG
         Log.e(DbTAG, "getObjPro(): The requested row doesn't exist in $table, returning default")
     // endregion
@@ -51,11 +51,11 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(               table:
 }
 
 
-fun <T : DbEntity> SQLiteDatabase.getObjPro(                              table: String,
-                                                                          clazz: KClass<T>,
-                                                                        default: T,
-                                                                      fullDsl: FullDsl.()->Unit,
-): T = getObjPro(table, clazz, fullDsl) ?: run {
+fun <T : DbEntity> SQLiteDatabase.getObjPro(                                table: String,
+                                                                            clazz: KClass<T>,
+                                                                          default: T,
+                                                                              dsl: FullDsl.()->Unit,
+): T = getObjPro(table, clazz, dsl) ?: run {
     // region LOG
         Log.e(DbTAG, "getObjPro(): The requested row doesn't exist in $table, returning default")
     // endregion

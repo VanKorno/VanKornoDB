@@ -15,8 +15,8 @@ import kotlin.reflect.KClass
 /**
  * Gets one db table row as an object of type [T] using the WhereBuilder. Returns null if no result found.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
-                                                         noinline where: WhereDsl.()->Unit = {},
+inline fun <reified T : DbEntity> SQLiteDatabase.getObj(              table: String,
+                                                             noinline where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(table) { this.where = where }
 
 
@@ -25,17 +25,17 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
 /**
  * Gets one db table row as an object of [clazz] using using WhereBuilder. Returns null if no result found.
  */
-fun <T : DbEntity> SQLiteDatabase.getObj(                         table: String,
-                                                                  clazz: KClass<T>,
-                                                                  where: WhereDsl.()->Unit = {},
+fun <T : DbEntity> SQLiteDatabase.getObj(                             table: String,
+                                                                      clazz: KClass<T>,
+                                                                      where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(table, clazz) { this.where = where }
 
 
 
 
-inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
-                                                                default: T,
-                                                         noinline where: WhereDsl.()->Unit = {},
+inline fun <reified T : DbEntity> SQLiteDatabase.getObj(              table: String,
+                                                                    default: T,
+                                                             noinline where: WhereDsl.()->Unit = {},
 ): T = getObj<T>(table, where) ?: run {
     // region LOG
         Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
@@ -44,10 +44,10 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
 }
 
 
-fun <T : DbEntity> SQLiteDatabase.getObj(                         table: String,
-                                                                  clazz: KClass<T>,
-                                                                default: T,
-                                                                  where: WhereDsl.()->Unit = {},
+fun <T : DbEntity> SQLiteDatabase.getObj(                             table: String,
+                                                                      clazz: KClass<T>,
+                                                                    default: T,
+                                                                      where: WhereDsl.()->Unit = {},
 ): T = getObj(table, clazz, where) ?: run {
     // region LOG
         Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")

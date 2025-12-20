@@ -14,12 +14,12 @@ import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.misc.getBoolean
 
 
-inline fun <R> SQLiteDatabase.getValueNoty(                            table: String,
-                                                                      column: String,
-                                                                     default: R,
-                                                                     funName: String,
-                                                                       where: WhereDsl.()->Unit,
-                                                  crossinline getCursorValue: (Cursor)->R,
+inline fun <R> SQLiteDatabase.getValueNoty(                                table: String,
+                                                                          column: String,
+                                                                         default: R,
+                                                                         funName: String,
+                                                                           where: WhereDsl.()->Unit,
+                                                      crossinline getCursorValue: (Cursor)->R,
 ): R {
     val builder = WhereDsl().apply(where)
     val whereClause = builder.clauses.joinToString(" ")
@@ -42,15 +42,15 @@ inline fun <R> SQLiteDatabase.getValueNoty(                            table: St
 }
 
 
-fun <R> SQLiteDatabase.getValueProNoty(                              table: String,
-                                                                    column: String,
-                                                                   default: R,
-                                                                   funName: String,
-                                                                 fullDsl: FullDsl.()->Unit = {},
-                                                            getCursorValue: (Cursor)->R,
+fun <R> SQLiteDatabase.getValueProNoty(                                table: String,
+                                                                      column: String,
+                                                                     default: R,
+                                                                     funName: String,
+                                                                         dsl: FullDsl.()->Unit = {},
+                                                              getCursorValue: (Cursor)->R,
 ): R {
     return getCursorProNoty(table, arrayOf(column)) {
-        applyDsl(fullDsl)
+        applyDsl(dsl)
         limit = 1
     }.use { cursor ->
         if (cursor.moveToFirst())
