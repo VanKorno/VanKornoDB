@@ -20,8 +20,8 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjects(      table: String,
  * Retrieves a list of objects of the specified [clazz] mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : DbEntity> SQLiteDatabase.getObjects(                     clazz: KClass<T>,
-                                                                  table: String,
+fun <T : DbEntity> SQLiteDatabase.getObjects(                     table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
 ): List<T> = getObjectsPro(clazz, table) {
     this.where = where
@@ -48,8 +48,8 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObjMap(       table: String,
  * using the `id` column (Int) as the key. 
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : DbEntity> SQLiteDatabase.getObjMap(                      clazz: KClass<T>,
-                                                                  table: String,
+fun <T : DbEntity> SQLiteDatabase.getObjMap(                      table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
 ): Map<Int, T> = getObjMapPro(clazz, table) {
     this.where = where

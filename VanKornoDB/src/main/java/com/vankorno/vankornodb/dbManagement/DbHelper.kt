@@ -322,19 +322,51 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T : DbEntity> getObj(                                    clazz: KClass<T>,
-                                                                  table: String,
+    fun <T : DbEntity> getObj(                                    table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
     ): T? = read(null, "getObj") {
-        it.getObj(clazz, table, where)
+        it.getObj(table, clazz, where)
     }
     
     
-    suspend fun <T : DbEntity> getObjSusp(                        clazz: KClass<T>,
-                                                                  table: String,
+    suspend fun <T : DbEntity> getObjSusp(                        table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
     ): T? = readSusp(null, "getObjSusp") {
-        it.getObj(clazz, table, where)
+        it.getObj(table, clazz, where)
+    }
+    
+    // With defaults
+    
+    inline fun <reified T : DbEntity> getObj(                     table: String,
+                                                                default: T,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T = read(default, "getObj") {
+        it.getObj<T>(table, default, where)
+    }
+    
+    suspend inline fun <reified T : DbEntity> getObjSusp(         table: String,
+                                                                default: T,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+    ): T = readSusp(default, "getObjSusp") {
+        it.getObj<T>(table, default, where)
+    }
+    
+    fun <T : DbEntity> getObj(                                    table: String,
+                                                                  clazz: KClass<T>,
+                                                                default: T,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): T = read(default, "getObj") {
+        it.getObj(table, clazz, default, where)
+    }
+    
+    suspend fun <T : DbEntity> getObjSusp(                        table: String,
+                                                                  clazz: KClass<T>,
+                                                                default: T,
+                                                                  where: WhereBuilder.()->Unit = {},
+    ): T = readSusp(default, "getObjSusp") {
+        it.getObj(table, clazz, default, where)
     }
     
     
@@ -347,31 +379,75 @@ abstract class DbHelperInternal(
     }
     
     
-    suspend inline fun <reified T : DbEntity> getObjProSusp(      table: String,
+    suspend inline fun <reified T : DbEntity> getObjProSusp(         table: String,
                                                         noinline queryOpts: QueryOpts.()->Unit = {},
     ): T? = readSusp(null, "getObjProSusp") {
         it.getObjPro<T>(table, queryOpts)
     }
     
     
-    fun <T : DbEntity> getObjPro(                                         clazz: KClass<T>,
-                                                                          table: String,
+    fun <T : DbEntity> getObjPro(                                         table: String,
+                                                                          clazz: KClass<T>,
                                                                       queryOpts: QueryOpts.()->Unit,
     ): T? = read(null, "getObjPro") {
-        it.getObjPro(clazz, table, queryOpts)
+        it.getObjPro(table, clazz, queryOpts)
     }
     
     
-    suspend fun <T : DbEntity> getObjProSusp(                             clazz: KClass<T>,
-                                                                          table: String,
+    suspend fun <T : DbEntity> getObjProSusp(                             table: String,
+                                                                          clazz: KClass<T>,
                                                                       queryOpts: QueryOpts.()->Unit,
     ): T? = readSusp(null, "getObjProSusp") {
-        it.getObjPro(clazz, table, queryOpts)
+        it.getObjPro(table, clazz, queryOpts)
+    }
+    
+    
+    // With defaults
+    
+    inline fun <reified T : DbEntity> getObjPro(                     table: String,
+                                                                   default: T,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+    ): T = read(default, "getObjPro") {
+        it.getObjPro<T>(table, default, queryOpts)
+    }
+    
+    
+    suspend inline fun <reified T : DbEntity> getObjProSusp(         table: String,
+                                                                   default: T,
+                                                        noinline queryOpts: QueryOpts.()->Unit = {},
+    ): T = readSusp(default, "getObjProSusp") {
+        it.getObjPro<T>(table, default, queryOpts)
+    }
+    
+    
+    fun <T : DbEntity> getObjPro(                                         table: String,
+                                                                          clazz: KClass<T>,
+                                                                        default: T,
+                                                                      queryOpts: QueryOpts.()->Unit,
+    ): T = read(default, "getObjPro") {
+        it.getObjPro(table, clazz, default, queryOpts)
+    }
+    
+    
+    suspend fun <T : DbEntity> getObjProSusp(                             table: String,
+                                                                          clazz: KClass<T>,
+                                                                        default: T,
+                                                                      queryOpts: QueryOpts.()->Unit,
+    ): T = readSusp(default, "getObjProSusp") {
+        it.getObjPro(table, clazz, default, queryOpts)
     }
     
     
     
-    // -------------------------------------------------------------------------------------- \\
+    
+    
+    
+    
+    
+    
+    
+    
+    // =========================  M U L T I P L E   O B J E C T S  ========================= \\
     
     inline fun <reified T : DbEntity> getObjects(                 table: String,
                                                          noinline where: WhereBuilder.()->Unit = {},
@@ -386,18 +462,19 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T : DbEntity> getObjects(                                clazz: KClass<T>,
+    fun <T : DbEntity> getObjects(                                
+        clazz: KClass<T>,
                                                                   table: String,
                                                                   where: WhereBuilder.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjects(clazz, table, where)
+        it.getObjects(table, clazz, where)
     }
     
-    suspend fun <T : DbEntity> getObjectsSusp(                    clazz: KClass<T>,
-                                                                  table: String,
+    suspend fun <T : DbEntity> getObjectsSusp(                    table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjects(clazz, table, where)
+        it.getObjects(table, clazz, where)
     }
     
     
@@ -415,18 +492,18 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T : DbEntity> getObjMap(                                 clazz: KClass<T>,
-                                                                  table: String,
+    fun <T : DbEntity> getObjMap(                                 table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMap(clazz, table, where)
+        it.getObjMap(table, clazz, where)
     }
     
-    suspend fun <T : DbEntity> getObjMapSusp(                     clazz: KClass<T>,
-                                                                  table: String,
+    suspend fun <T : DbEntity> getObjMapSusp(                     table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMap(clazz, table, where)
+        it.getObjMap(table, clazz, where)
     }
     
     

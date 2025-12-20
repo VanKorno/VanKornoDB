@@ -26,7 +26,7 @@ class StartTest() : BaseAndroidTest() {
     
     @Test
     fun correctVersionVals() {
-        val firstRow = dbh.getObjPro<VersionEntity>(TABLE_EntityVersions) ?: return
+        val firstRow = dbh.getObjPro(TABLE_EntityVersions, default = VersionEntity())
         
         val target = VersionEntity(
             name = EntityMeta.TestEntt.dbRowName,

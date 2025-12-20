@@ -179,7 +179,7 @@ open class MigrationUtils {
         val fromClass = versionedClasses[version]
             ?: error("Missing entity class for version $version")
         
-        val elements = db.getObjects(fromClass, table)
+        val elements = db.getObjects(table, fromClass)
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -356,7 +356,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(                  varar
         Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = getObjects(table.entityClass, table.name)
+        val rows = getObjects(table.name, table.entityClass)
         dropAndCreateEmptyTables(table)
         addObjects(table.name, rows)
     }

@@ -62,14 +62,13 @@ class SetValsTest : BaseAndroidTest() {
         
         dbh.set(SetValsTestTable, whereName(rat)) { setCV(cv) }
         
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        assertNotEquals(null, obj)
-        assertEquals(345, obj!!.int1)
-        assertEquals("super pooper", obj!!.str1)
-        assertEquals(true, obj!!.bool1)
-        assertEquals(9999999L, obj!!.long1)
-        assertEquals(345.67F, obj!!.float1)
+        assertEquals(345, obj.int1)
+        assertEquals("super pooper", obj.str1)
+        assertEquals(true, obj.bool1)
+        assertEquals(9999999L, obj.long1)
+        assertEquals(345.67F, obj.float1)
     }
     
     
@@ -80,12 +79,10 @@ class SetValsTest : BaseAndroidTest() {
             Int1 setTo 5
             Int2.setTo(5)
         }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-        
-        assertNotEquals(null, obj)
-        assertEquals(5, obj!!.int1)
-        assertEquals(5, obj!!.int2)
+        assertEquals(5, obj.int1)
+        assertEquals(5, obj.int2)
     }
     
     
@@ -100,15 +97,14 @@ class SetValsTest : BaseAndroidTest() {
             Float1 setTo 2.4F
             Long1 setTo 9999L
         }
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        assertNotEquals(null, obj)
-        assertEquals("lkjlkjlj", obj!!.str1)
-        assertEquals(true, obj!!.enabled)
-        assertEquals(69, obj!!.position)
-        assertEquals(true, obj!!.bool3)
-        assertEquals(2.4F, obj!!.float1)
-        assertEquals(9999L, obj!!.long1)
+        assertEquals("lkjlkjlj", obj.str1)
+        assertEquals(true, obj.enabled)
+        assertEquals(69, obj.position)
+        assertEquals(true, obj.bool3)
+        assertEquals(2.4F, obj.float1)
+        assertEquals(9999L, obj.long1)
     }
     
     
@@ -119,11 +115,10 @@ class SetValsTest : BaseAndroidTest() {
             Bool1 setTo true
             Bool2.flip()
         }
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        assertNotEquals(null, obj)
-        assertEquals(true, obj!!.bool1)
-        assertEquals(true, obj!!.bool2)
+        assertEquals(true, obj.bool1)
+        assertEquals(true, obj.bool2)
     }
     
     
@@ -140,14 +135,12 @@ class SetValsTest : BaseAndroidTest() {
             Float1 setTo 2F
             Float1 mult 1.5F
         }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-        
-        assertNotEquals(null, obj)
-        assertEquals(15, obj!!.int1)
-        assertEquals(17, obj!!.int2)
-        assertEquals(21L, obj!!.long1)
-        assertEquals(3F, obj!!.float1)
+        assertEquals(15, obj.int1)
+        assertEquals(17, obj.int2)
+        assertEquals(21L, obj.long1)
+        assertEquals(3F, obj.float1)
     }
     
     
@@ -158,11 +151,9 @@ class SetValsTest : BaseAndroidTest() {
             Int1 setTo -42
             Int1.abs()
         }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-        
-        assertNotEquals(null, obj)
-        assertEquals(42, obj!!.int1)
+        assertEquals(42, obj.int1)
     }
     
     
@@ -175,12 +166,10 @@ class SetValsTest : BaseAndroidTest() {
             Int2 setTo 5
             Int2 floorAt 10
         }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-        
-        assertNotEquals(null, obj)
-        assertEquals(50, obj!!.int1)
-        assertEquals(10, obj!!.int2)
+        assertEquals(50, obj.int1)
+        assertEquals(10, obj.int2)
     }
     
     
@@ -193,12 +182,10 @@ class SetValsTest : BaseAndroidTest() {
             Float1 setTo -5F
             Float1.coerceIn(0F..1F)
         }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-        
-        assertNotEquals(null, obj)
-        assertEquals(100, obj!!.int1)
-        assertEquals(0F, obj!!.float1)
+        assertEquals(100, obj.int1)
+        assertEquals(0F, obj.float1)
     }
     
     
@@ -209,12 +196,10 @@ class SetValsTest : BaseAndroidTest() {
             Int2 setTo 77
             Int1 setAs Int2
         }
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
         
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-        
-        assertNotEquals(null, obj)
-        assertEquals(77, obj!!.int1)
-        assertEquals(77, obj!!.int2)
+        assertEquals(77, obj.int1)
+        assertEquals(77, obj.int2)
     }
     
     
@@ -224,7 +209,7 @@ class SetValsTest : BaseAndroidTest() {
     
     fun setAsIntWithMathWorks() {
         val rat = LabRat + 11
-    
+        
         dbh.set(SetValsTestTable, whereName(rat)) {
             Int1 setAs (Int2 andAdd 5)      // Int1 = 0 + 5 = 5
             Int2 setAs (Int1 andMult 3)     // Int2 = 5 * 3 = 15
@@ -232,11 +217,9 @@ class SetValsTest : BaseAndroidTest() {
             Int1 setAs (Int3 andCapAt 100)  // Int1 = min(10, 100) = 10
             Int2 setAs (Int3 andFloorAt 50) // Int2 = max(10, 50?) = 50
         }
-    
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-    
-        assertNotEquals(null, obj)
-        assertEquals(10, obj!!.int1)
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
+        
+        assertEquals(10, obj.int1)
         assertEquals(50, obj.int2)
         assertEquals(10, obj.int3)
     }
@@ -244,34 +227,35 @@ class SetValsTest : BaseAndroidTest() {
     
     fun setAsLongWithMathWorks() {
         val rat = LabRat + 12
-    
+        
         dbh.set(SetValsTestTable, whereName(rat)) {
             Long1 setAs (Long2 andAdd 5000L)  // Long1 = 0 + 5000
             Long2 setAs (Long1 andMult 3L)    // Long2 = 5000 * 3 = 15000
         }
-    
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-    
-        assertNotEquals(null, obj)
-        assertEquals(5000L, obj!!.long1)
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
+        
+        assertEquals(5000L, obj.long1)
         assertEquals(15000L, obj.long2)
     }
     
     
     fun setAsFloatWithMathWorks() {
         val rat = LabRat + 13
-    
+        
         dbh.set(SetValsTestTable, whereName(rat)) {
             Float1 setAs (Float2 andAdd 1.5F) // Float1 = 0 + 1.5 = 1.5
             Float2 setAs (Float1 andDiv 2F)   // Float2 = 1.5 / 2 = 0.75
         }
-    
-        val obj = dbh.getObjPro<TestEntity>(SetValsTestTable) { where = whereName(rat) }
-    
-        assertNotEquals(null, obj)
-        assertEquals(1.5F, obj!!.float1)
+        val obj = dbh.getObj(SetValsTestTable, TestEntity()) { Name = rat }
+        
+        assertEquals(1.5F, obj.float1)
         assertEquals(0.75F, obj.float2)
     }
+    
+    
+    
+    
+    
     
     
     

@@ -6,10 +6,10 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.QueryOpts
 import com.vankorno.vankornodb.api.WhereBuilder
-import com.vankorno.vankornodb.mapper.toEntity
+import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import kotlin.reflect.KClass
 
 /**
@@ -25,41 +25,39 @@ inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
 /**
  * Gets one db table row as an object of [clazz] using using WhereBuilder. Returns null if no result found.
  */
-fun <T : DbEntity> SQLiteDatabase.getObj(                         clazz: KClass<T>,
-                                                                  table: String,
+fun <T : DbEntity> SQLiteDatabase.getObj(                         table: String,
+                                                                  clazz: KClass<T>,
                                                                   where: WhereBuilder.()->Unit = {},
-): T? = getObjPro(clazz, table) { this.where = where }
+): T? = getObjPro(table, clazz) { this.where = where }
 
 
 
 
-/**
- * Gets one db table row as an object of type [T] using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
- */
-inline fun <reified T : DbEntity> SQLiteDatabase.getObjPro(               table: String,
-                                                             noinline queryOpts: QueryOpts.()->Unit,
-): T? = getCursorPro(table) {
-    applyOpts(queryOpts)
-    limit = 1
-}.use { cursor ->
-    if (!cursor.moveToFirst()) return null
-    cursor.toEntity(T::class)
+inline fun <reified T : DbEntity> SQLiteDatabase.getObj(          table: String,
+                                                                default: T,
+                                                         noinline where: WhereBuilder.()->Unit = {},
+): T = getObj<T>(table, where) ?: run {
+    // region LOG
+        Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
+    // endregion
+    default
 }
 
 
-/**
- * Gets one db table row as an object of [clazz] using using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
- */
-fun <T : DbEntity> SQLiteDatabase.getObjPro(                              clazz: KClass<T>,
-                                                                          table: String,
-                                                                      queryOpts: QueryOpts.()->Unit,
-): T? = getCursorPro(table) {
-    applyOpts(queryOpts)
-    limit = 1
-}.use { cursor ->
-    if (!cursor.moveToFirst()) return null
-    cursor.toEntity(clazz)
+fun <T : DbEntity> SQLiteDatabase.getObj(                         table: String,
+                                                                  clazz: KClass<T>,
+                                                                default: T,
+                                                                  where: WhereBuilder.()->Unit = {},
+): T = getObj(table, clazz, where) ?: run {
+    // region LOG
+        Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
+    // endregion
+    default
 }
+
+
+
+
 
 
 
