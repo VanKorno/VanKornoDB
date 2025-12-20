@@ -17,7 +17,7 @@ import com.vankorno.vankornodb.set.dsl.data.SetOp
 /**
  *  Internal base — use `SetBuilder` from the api package instead
  */
-open class BaseSetDsl {
+open class SetDslBase {
     protected val _ops = mutableListOf<SetOp>()
     
     val ops: List<SetOp>

@@ -28,14 +28,14 @@ interface EntityColumns : EntityColumnsInternal
 
 class OrderDsl : OrderDslInternal() {
     
-    fun and(                                                        builder: OrderDsl.()->Unit
+    fun and(                                                              builder: OrderDsl.()->Unit
     ) {
         val inner = OrderDsl().apply(builder)
         orderoids.addAll(inner.orderoids)
         args.addAll(inner.args)
     }
     
-    fun group(                                                      builder: OrderDsl.()->Unit
+    fun group(                                                            builder: OrderDsl.()->Unit
     ) {
         val inner = OrderDsl().apply(builder)
         if (inner.orderoids.isNotEmpty()) {
@@ -53,8 +53,8 @@ class OrderDsl : OrderDslInternal() {
     fun orderWhen(orderBy: String, whens: WhereDsl.()->Unit) = OrderWhen({ raw(orderBy) }, whens)
     
     
-    fun When(                                       vararg orderWhen: OrderWhen,
-                                                                Else: OrderDsl.()->Unit = {},
+    fun When(                                              vararg orderWhen: OrderWhen,
+                                                                       Else: OrderDsl.()->Unit = {},
     ) {
         val assembled = buildString {
             for (wo in orderWhen) {
@@ -112,7 +112,7 @@ class WhereDsl : WhereDslInternal() {
     
     fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                        fullDsl: FullDsl.()->Unit = {},
+                                                          fullDsl: FullDsl.()->Unit = {},
     ): String {
         val innerBuilder = getQuery(table, columns, fullDsl)
         

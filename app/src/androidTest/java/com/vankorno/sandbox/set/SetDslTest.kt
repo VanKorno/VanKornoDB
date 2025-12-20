@@ -23,7 +23,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 @MediumTest
-class SetValsTest : BaseAndroidTest() {
+class SetDslTest : BaseAndroidTest() {
     companion object {
         const val SetValsTestTable = "SetValsTestTable"
         const val LabRat = "Lab rat "
