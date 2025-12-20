@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.set.dsl
 
+import com.vankorno.vankornodb.api.SetBuilder
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol

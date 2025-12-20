@@ -8,6 +8,9 @@ package com.vankorno.vankornodb.core.queryBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.*
 
+/**
+ *  Internal base — use `OrderByBuilder` from the api package instead
+ */
 open class OrderByBuilderInternal {
     val orderoids = mutableListOf<String>()
     val args = mutableListOf<String>()

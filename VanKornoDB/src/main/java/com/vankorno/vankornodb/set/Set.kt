@@ -6,9 +6,9 @@
 package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.SetBuilder
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
-import com.vankorno.vankornodb.set.dsl.SetBuilder
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
 import com.vankorno.vankornodb.set.dsl.data.LongColOp

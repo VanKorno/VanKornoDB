@@ -15,7 +15,6 @@ import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
 import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
 import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal
 
-
 class QueryOpts : QueryOptsInternal() {
     fun applyOpts(opts: QueryOpts.()->Unit) { this.opts() }
 }

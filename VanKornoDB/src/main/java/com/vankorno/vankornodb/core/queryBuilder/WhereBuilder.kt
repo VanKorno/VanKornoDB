@@ -13,7 +13,7 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
 
 /**
- *  Internal base — use `WhereBuilder` instead
+ *  Internal base — use `WhereBuilder` from the api package instead
  */
 @Suppress("unused")
 open class WhereBuilderInternal() : WhereBuilderBase() {

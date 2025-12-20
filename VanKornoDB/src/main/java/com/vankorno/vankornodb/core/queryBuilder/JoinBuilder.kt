@@ -5,6 +5,9 @@
 // endregion
 package com.vankorno.vankornodb.core.queryBuilder
 
+/**
+ *  Internal base — use `JoinBuilder` from the api package instead
+ */
 @Suppress("unused")
 open class JoinBuilderInternal {
     val joins = mutableListOf<String>()

@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.QueryOpts
+import com.vankorno.vankornodb.api.SetBuilder
 import com.vankorno.vankornodb.api.WhereBuilder
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.delete.clearTable
@@ -20,7 +21,6 @@ import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.set.*
-import com.vankorno.vankornodb.set.dsl.SetBuilder
 import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")

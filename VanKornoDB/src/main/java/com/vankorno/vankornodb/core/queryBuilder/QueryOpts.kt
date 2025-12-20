@@ -15,6 +15,9 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 
+/**
+ *  Internal base — use `QueryOpts` from the api package instead
+ */
 @Suppress("unused")
 open class QueryOptsInternal {
     val query = QueryOptsHolder()
