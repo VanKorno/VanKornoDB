@@ -13,15 +13,6 @@ import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import kotlin.reflect.KClass
 
-/**
- * Marker interface for all VanKornoDB entities.
- * 
- * Entities must be data classes and implement this interface
- * to be mappable by VanKornoDB.
- */
-interface DbEntity
-
-
 
 open class DbHelper(             context: Context,
                                   dbName: String,
