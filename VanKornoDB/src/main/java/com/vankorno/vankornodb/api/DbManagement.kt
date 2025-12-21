@@ -9,6 +9,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.DbHelperInternal
 import com.vankorno.vankornodb.dbManagement.createTablesInternal
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import kotlin.reflect.KClass
@@ -30,7 +31,7 @@ open class DbHelper(             context: Context,
 /**
  * Creates a single table in db.
  */
-fun SQLiteDatabase.createTable(table: String, clazz: KClass<out DbEntity>) = createTablesInternal(
+fun SQLiteDatabase.createTable(table: String, clazz: KClass<out BaseEntity>) = createTablesInternal(
     TableInfo(table, clazz)
 )
 

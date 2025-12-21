@@ -5,9 +5,9 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.MigrationDsl
 import com.vankorno.vankornodb.api.TransformColDsl
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
@@ -18,7 +18,7 @@ import kotlin.reflect.KClass
 class ModifyRow(val fieldName: String, val block: TransformColDslInternal.FieldOverride.()->Unit)
 
 
-internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: Int,
+internal fun <T: BaseEntity> defineMigrationsInternal(         latestVersion: Int,
                                                                  latestClass: KClass<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle {
@@ -38,11 +38,11 @@ internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: In
 
 
 abstract class MigrationDslInternal {
-    val versionedClasses = mutableMapOf<Int, KClass<out DbEntity>>()
+    val versionedClasses = mutableMapOf<Int, KClass<out BaseEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
-    fun <T : DbEntity> version(                               version: Int,
+    fun <T : BaseEntity> version(                             version: Int,
                                                                 clazz: KClass<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
@@ -104,8 +104,8 @@ abstract class MigrationDslInternal {
         
         
         fun milestone(
-                     vararg modifications: ModifyRow,
-                          processFinalObj: ((oldObj: DbEntity, newObj: DbEntity)->DbEntity)? = null,
+               vararg modifications: ModifyRow,
+                    processFinalObj: ((oldObj: BaseEntity, newObj: BaseEntity)->BaseEntity)? = null,
         ) {
             val overrideBlock: TransformColDsl.() -> Unit = {
                 modifications.forEach { modify(it.fieldName, it.block) }

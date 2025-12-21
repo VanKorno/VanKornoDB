@@ -6,7 +6,7 @@
 package com.vankorno.vankornodb.mapper
 
 import android.database.Cursor
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.mapper.EntityMapperUtils.defaultInstanceValueOf
 import com.vankorno.vankornodb.mapper.EntityMapperUtils.getListFromCursor
 import com.vankorno.vankornodb.mapper.EntityMapperUtils.getListSizeFromDefault
@@ -52,7 +52,7 @@ import kotlin.reflect.jvm.jvmErasure
  * @return An instance of [T] constructed from the current row of the Cursor.
  * @throws IllegalArgumentException if required fields are missing or types are unsupported.
  */
-fun <T : DbEntity> Cursor.toEntity(                                                clazz: KClass<T>
+fun <T : BaseEntity> Cursor.toEntity(                                              clazz: KClass<T>
 ): T {
     require(clazz.isData) { "Entity must be a data class" }
     

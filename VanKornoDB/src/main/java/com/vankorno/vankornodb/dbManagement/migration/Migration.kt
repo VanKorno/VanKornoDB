@@ -9,12 +9,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
-import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.api.dropAndCreateEmptyTables
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
@@ -48,10 +48,10 @@ import kotlin.reflect.full.starProjectedType
 internal fun SQLiteDatabase.migrateMultiStepInternal(      table: String,
                                                       oldVersion: Int,
                                                       newVersion: Int,
-                                                versionedClasses: Map<Int, KClass<out DbEntity>>,
+                                                versionedClasses: Map<Int, KClass<out BaseEntity>>,
                                                    renameHistory: Map<String, List<RenameRecord>>,
                                                       milestones: List<Pair<Int, MilestoneLambdas>>,
-                                                   onNewDbFilled: (List<DbEntity>)->Unit = {},
+                                                   onNewDbFilled: (List<BaseEntity>)->Unit = {},
 ) {
     if (newVersion <= oldVersion) return //\/\/\/\/\/\
     // region LOG
@@ -117,11 +117,11 @@ open class MigrationUtils {
      * @param renameSnapshot Maps new properties to their old names.
      * @return A new instance of [newClass] with mapped or defaulted values.
      */
-    internal fun convertEntity(                       oldObject: DbEntity,
-                                                       newClass: KClass<out DbEntity>,
+    internal fun convertEntity(                       oldObject: BaseEntity,
+                                                       newClass: KClass<out BaseEntity>,
                                                  renameSnapshot: Map<String, String> = emptyMap(),
                                                  overrideColVal: (TransformColDsl.()->Unit)? = null,
-    ): DbEntity {
+    ): BaseEntity {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
         
         val constructor = newClass.primaryConstructor
@@ -171,8 +171,8 @@ open class MigrationUtils {
     internal fun readEntitiesFromVersion(                        db: SQLiteDatabase,
                                                               table: String,
                                                             version: Int,
-                                                   versionedClasses: Map<Int, KClass<out DbEntity>>,
-    ): List<DbEntity> {
+                                                   versionedClasses: Map<Int, KClass<out BaseEntity>>,
+    ): List<BaseEntity> {
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
         // endregion
@@ -191,13 +191,13 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    internal fun convertThroughSteps(                     original: DbEntity,
-                                                        oldVersion: Int,
-                                                             steps: List<Int>,
-                                                     renameHistory: Map<String, List<RenameRecord>>,
-                                                  versionedClasses: Map<Int, KClass<out DbEntity>>,
-                                                           lambdas: Map<Int, MilestoneLambdas>,
-    ): DbEntity {
+    internal fun convertThroughSteps(                    original: BaseEntity,
+                                                       oldVersion: Int,
+                                                            steps: List<Int>,
+                                                    renameHistory: Map<String, List<RenameRecord>>,
+                                                 versionedClasses: Map<Int, KClass<out BaseEntity>>,
+                                                          lambdas: Map<Int, MilestoneLambdas>,
+    ): BaseEntity {
         var currentObj = original
         var currentVer = oldVersion
         

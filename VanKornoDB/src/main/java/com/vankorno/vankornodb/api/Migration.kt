@@ -6,6 +6,7 @@
 package com.vankorno.vankornodb.api
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
@@ -71,7 +72,7 @@ fun SQLiteDatabase.migrateMultiStep(                             table: String,
                                                             oldVersion: Int,
                                                             newVersion: Int,
                                                        migrationBundle: MigrationBundle,
-                                                         onNewDbFilled: (List<DbEntity>)->Unit = {},
+                                                         onNewDbFilled: (List<BaseEntity>)->Unit = {},
 ) {
     this.migrateMultiStepInternal(
         table = table,

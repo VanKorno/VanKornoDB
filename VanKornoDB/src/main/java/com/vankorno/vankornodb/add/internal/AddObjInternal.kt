@@ -6,21 +6,21 @@
 package com.vankorno.vankornodb.add.internal
 
 import android.content.ContentValues
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 @PublishedApi
-internal fun DbEntity.hasIdField(): Boolean = this::class.memberProperties.any { it.name == "id" }
+internal fun BaseEntity.hasIdField(): Boolean = this::class.memberProperties.any { it.name == "id" }
 
 @PublishedApi
-internal fun DbEntity.getId(): Int = this::class.memberProperties
+internal fun BaseEntity.getId(): Int = this::class.memberProperties
     .firstOrNull { it.name == "id" }
     ?.getter?.call(this) as? Int ?: -1
 
 @PublishedApi
-internal fun <T : DbEntity> T.withId(                                              newId: Int
+internal fun <T : BaseEntity> T.withId(                                              newId: Int
 ): T {
     val kClass = this::class
     val constructor = kClass.primaryConstructor!!
@@ -44,7 +44,7 @@ internal fun <T : DbEntity> T.withId(                                           
  * @throws IllegalArgumentException if list element types are unsupported.
  */
 @PublishedApi
-internal fun <T : DbEntity> toContentValues(                        obj: T,
+internal fun <T : BaseEntity> toContentValues(                      obj: T,
                                                                   clazz: KClass<out T> = obj::class,
 ): ContentValues {
     val cv = ContentValues()

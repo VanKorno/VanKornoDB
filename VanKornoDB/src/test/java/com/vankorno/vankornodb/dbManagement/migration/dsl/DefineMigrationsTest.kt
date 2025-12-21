@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.*
 import org.junit.Test
@@ -75,7 +76,7 @@ class DefineMigrationsTest {
     
     @Test
     fun `stores milestone with processFinalObj`() {
-        val migrationFunc: (oldObj: DbEntity, newObj: DbEntity) -> DbEntity = { old, _ -> old }
+        val migrationFunc: (oldObj: BaseEntity, newObj: BaseEntity) -> BaseEntity = { old, _ -> old }
         
         val bundle = defineMigrations(2, V2::class) {
             version(1, V1::class) {

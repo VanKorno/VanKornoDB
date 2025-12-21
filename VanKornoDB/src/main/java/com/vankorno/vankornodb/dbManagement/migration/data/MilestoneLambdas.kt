@@ -5,12 +5,12 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 
 data class MilestoneLambdas(
     val processFinalObj: MigrProcessFinalObj? = null,
     val transformColVal: (TransformColDsl.()->Unit)? = null,
 )
 
-typealias MigrProcessFinalObj = (oldObj: DbEntity, newObj: DbEntity) -> DbEntity
+typealias MigrProcessFinalObj = (oldObj: BaseEntity, newObj: BaseEntity) -> BaseEntity

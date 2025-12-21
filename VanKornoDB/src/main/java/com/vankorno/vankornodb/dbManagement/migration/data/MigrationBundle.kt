@@ -5,11 +5,11 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import kotlin.reflect.KClass
 
 data class MigrationBundle(
-              val versionedClasses: Map<Int, KClass<out DbEntity>>,
+              val versionedClasses: Map<Int, KClass<out BaseEntity>>,
                  val renameHistory: Map<String, List<RenameRecord>>,
                     val milestones: List<Pair<Int, MilestoneLambdas>>,
 ) {

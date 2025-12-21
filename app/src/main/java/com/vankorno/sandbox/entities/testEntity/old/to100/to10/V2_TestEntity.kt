@@ -1,6 +1,6 @@
 package com.vankorno.sandbox.entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.api.OldEntity
 
 data class V2_TestEntity(
                                     val id: Int = -1,
@@ -22,4 +22,4 @@ data class V2_TestEntity(
                                 val float1: Float = 0F,
                                 val float2: Float = 0F,
                                 val float3: Float = 0F,
-) : DbEntity
+) : OldEntity

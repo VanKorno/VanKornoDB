@@ -6,7 +6,6 @@
 package com.vankorno.vankornodb.dbManagement
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.data.DbConstants.CREATE_TABLE
 import com.vankorno.vankornodb.core.data.DbConstants.DEFAULT
 import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnDefinition
@@ -50,8 +49,8 @@ internal fun SQLiteDatabase.createTablesInternal(                          varar
  * @return A complete `CREATE TABLE` SQL string based on [entityClass].
  */
 
-internal fun newTableQuery(                                             table: String,
-                                                                  entityClass: KClass<out DbEntity>,
+internal fun newTableQuery(                                           table: String,
+                                                                entityClass: KClass<out BaseEntity>,
 ): String {
     val constructor = entityClass.primaryConstructor
         ?: error("Class ${entityClass.simpleName} must have a primary constructor")

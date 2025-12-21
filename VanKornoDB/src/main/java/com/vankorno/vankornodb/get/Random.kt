@@ -7,9 +7,9 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
@@ -55,7 +55,7 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or null if no rows match.
  */
-inline fun <reified T : DbEntity> SQLiteDatabase.getRandomObj(        table: String,
+inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(      table: String,
                                                              noinline where: WhereDsl.()->Unit = {},
 ): T? = getCursorPro(table) {
     applyDsl(

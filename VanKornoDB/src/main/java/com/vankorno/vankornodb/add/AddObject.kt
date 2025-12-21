@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.add.internal.getId
 import com.vankorno.vankornodb.add.internal.hasIdField
 import com.vankorno.vankornodb.add.internal.toContentValues
 import com.vankorno.vankornodb.add.internal.withId
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.get.getLastId
 
 // TODO Maybe: Upsert-like function — insert or update depending on whether the row exists (SQLite supports INSERT OR REPLACE, INSERT ON CONFLICT, etc.)
@@ -41,7 +41,7 @@ import com.vankorno.vankornodb.get.getLastId
  * @param obj The entity object to insert.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-fun <T : DbEntity> SQLiteDatabase.addObj(                                          table: String,
+fun <T : BaseEntity> SQLiteDatabase.addObj(                                        table: String,
                                                                                      obj: T,
 ): Long {
     val modifiedEntity = if (obj.hasIdField() && obj.getId() < 1) {
@@ -61,7 +61,7 @@ fun <T : DbEntity> SQLiteDatabase.addObj(                                       
  * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
  */
-fun <T : DbEntity> SQLiteDatabase.addObjects(                                      table: String,
+fun <T : BaseEntity> SQLiteDatabase.addObjects(                                    table: String,
                                                                                  objects: List<T>,
 ): Int {
     var count = 0
