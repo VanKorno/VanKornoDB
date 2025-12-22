@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.api.defineMigrations
 
 fun migrationsTestEntity() = defineMigrations(
     EntityMeta.TestEntt.currVersion,
-    EntityMeta.TestEntt.currClass
+    EntityMeta.TestEntt.currEntitySpec.clazz
 ) {
     version(1, V1_TestEntity::class)
     version(2, V2_TestEntity::class) { rename { CTest.Bool1 from "boo" to "bool1" } }

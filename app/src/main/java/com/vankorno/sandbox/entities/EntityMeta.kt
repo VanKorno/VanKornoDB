@@ -1,11 +1,10 @@
 package com.vankorno.sandbox.entities
 
-import com.vankorno.sandbox.entities.testEntity.TestEntity
+import com.vankorno.sandbox.entities.testEntity.TestSpec
 import com.vankorno.sandbox.entities.testEntity.migrationsTestEntity
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
-import kotlin.reflect.KClass
 
 /**
  * An example of the enum that contains all entity metadata needed for migrations.
@@ -19,7 +18,7 @@ import kotlin.reflect.KClass
  *
  * @property dbRowName the name under which meta-data for an entity is stored in the db (e.g. in the EntityVersions table).
  *
- * @property currClass the current KClass reference of the entity corresponding to [currVersion].
+ * @property currEntitySpec the current KClass reference of the entity corresponding to [currVersion].
  * This is used for reflection-based mapping, schema generation, and version tracking.
  *
  * @property migrationBundle a lazily-initialized [MigrationBundle] that defines the full set
@@ -31,11 +30,11 @@ import kotlin.reflect.KClass
  */
 enum class EntityMeta(                              override val currVersion: Int,
                                                       override val dbRowName: String,
-                                                      override val currClass: KClass<out DbEntity>,
+                                                 override val currEntitySpec: EntitySpec<*>,
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {
-    TestEntt(3, "TestEntity", TestEntity::class, lazy { migrationsTestEntity() }, TestTable),
+    TestEntt(3, "TestEntity", TestSpec, lazy { migrationsTestEntity() }, TestTable),
     
 }
 

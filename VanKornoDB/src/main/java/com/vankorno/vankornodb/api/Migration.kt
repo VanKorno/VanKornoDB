@@ -23,7 +23,7 @@ class MigrationDsl() : MigrationDslInternal()
 
 
 
-fun <T: DbEntity> defineMigrations(                            latestVersion: Int,
+fun <T: BaseEntity> defineMigrations(                          latestVersion: Int,
                                                                  latestClass: KClass<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(latestVersion, latestClass, block)
