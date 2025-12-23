@@ -17,7 +17,6 @@ import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformColDslInterna
 import com.vankorno.vankornodb.dbManagement.migration.dsl.defineMigrationsInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateMultiStepInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeInternal
-import kotlin.reflect.KClass
 
 class MigrationDsl() : MigrationDslInternal()
 
@@ -26,15 +25,15 @@ fun defineMigrations(                                             entityMeta: Ba
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(
     latestVersion = entityMeta.currVersion,
-    latestClass = entityMeta.currEntitySpec.clazz,
+    latestSpec = entityMeta.currEntitySpec,
     block = block
 )
 
 
 fun <T: BaseEntity> defineMigrations(                          latestVersion: Int,
-                                                                 latestClass: KClass<T>,
+                                                                  latestSpec: EntitySpec<T>,
                                                                        block: MigrationDsl.()->Unit,
-): MigrationBundle = defineMigrationsInternal(latestVersion, latestClass, block)
+): MigrationBundle = defineMigrationsInternal(latestVersion, latestSpec, block)
 
 
 class TransformColDsl() : TransformColDslInternal()
@@ -86,7 +85,7 @@ fun SQLiteDatabase.migrateMultiStep(                             table: String,
         table = table,
         oldVersion = oldVersion,
         newVersion = newVersion,
-        versionedClasses = migrationBundle.versionedClasses,
+        versionedSpecs = migrationBundle.versionedSpecs,
         renameHistory = migrationBundle.renameHistory,
         milestones = migrationBundle.milestones,
         onNewDbFilled = onNewDbFilled,

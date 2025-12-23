@@ -5,13 +5,13 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.data
 
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import kotlin.reflect.KClass
 
 data class MigrationBundle(
-              val versionedClasses: Map<Int, KClass<out BaseEntity>>,
-                 val renameHistory: Map<String, List<RenameRecord>>,
-                    val milestones: List<Pair<Int, MilestoneLambdas>>,
+                        val versionedSpecs: Map<Int, EntitySpec<out BaseEntity>>,
+                         val renameHistory: Map<String, List<RenameRecord>>,
+                            val milestones: List<Pair<Int, MilestoneLambdas>>,
 ) {
     companion object {
         val EMPTY = MigrationBundle(emptyMap(), emptyMap(), emptyList())

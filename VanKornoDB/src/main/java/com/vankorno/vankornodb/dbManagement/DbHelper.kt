@@ -22,7 +22,6 @@ import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.set.*
-import kotlin.reflect.KClass
 
 @Suppress("NOTHING_TO_INLINE", "unused")
 abstract class DbHelperInternal(
@@ -324,18 +323,18 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObj(                                      table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getObj") {
-        it.getObj(table, clazz, where)
+        it.getObj(table, spec, where)
     }
     
     
     suspend fun <T : BaseEntity> getObjSusp(                          table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getObjSusp") {
-        it.getObj(table, clazz, where)
+        it.getObj(table, spec, where)
     }
     
     // With defaults
@@ -355,19 +354,19 @@ abstract class DbHelperInternal(
     }
     
     fun <T : BaseEntity> getObj(                                      table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
     ): T = read(default, "getObj") {
-        it.getObj(table, clazz, default, where)
+        it.getObj(table, spec, default, where)
     }
     
     suspend fun <T : BaseEntity> getObjSusp(                          table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
     ): T = readSusp(default, "getObjSusp") {
-        it.getObj(table, clazz, default, where)
+        it.getObj(table, spec, default, where)
     }
     
     
@@ -388,29 +387,20 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjPro(                                         table: String,
-                                                                            clazz: KClass<T>,
-                                                                              dsl: FullDsl.()->Unit,
-    ): T? = read(null, "getObjPro") {
-        it.getObjPro(table, clazz, dsl)
-    }
-    
-    
-    suspend fun <T : BaseEntity> getObjProSusp(                             table: String,
-                                                                            clazz: KClass<T>,
-                                                                              dsl: FullDsl.()->Unit,
-    ): T? = readSusp(null, "getObjProSusp") {
-        it.getObjPro(table, clazz, dsl)
-    }
-    
-    
-    // NEW
-    
-    fun <T : BaseEntity> getObjPro(                                         table: String,
                                                                              spec: EntitySpec<T>,
                                                                               dsl: FullDsl.()->Unit,
     ): T? = read(null, "getObjPro") {
         it.getObjPro(table, spec, dsl)
     }
+    
+    
+    suspend fun <T : BaseEntity> getObjProSusp(                             table: String,
+                                                                             spec: EntitySpec<T>,
+                                                                              dsl: FullDsl.()->Unit,
+    ): T? = readSusp(null, "getObjProSusp") {
+        it.getObjPro(table, spec, dsl)
+    }
+    
     
     
     
@@ -441,20 +431,20 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjPro(                                         table: String,
-                                                                            clazz: KClass<T>,
+                                                                             spec: EntitySpec<T>,
                                                                           default: T,
                                                                               dsl: FullDsl.()->Unit,
     ): T = read(default, "getObjPro") {
-        it.getObjPro(table, clazz, default, dsl)
+        it.getObjPro(table, spec, default, dsl)
     }
     
     
     suspend fun <T : BaseEntity> getObjProSusp(                             table: String,
-                                                                            clazz: KClass<T>,
+                                                                             spec: EntitySpec<T>,
                                                                           default: T,
                                                                               dsl: FullDsl.()->Unit,
     ): T = readSusp(default, "getObjProSusp") {
-        it.getObjPro(table, clazz, default, dsl)
+        it.getObjPro(table, spec, default, dsl)
     }
     
     
@@ -472,28 +462,28 @@ abstract class DbHelperInternal(
     inline fun <reified T : BaseEntity> getObjects(                   table: String,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjects(table, where)
+        it.getObjectsPro(table) { this.where = where }
     }
     
     suspend inline fun <reified T : BaseEntity> getObjectsSusp(       table: String,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjects(table, where)
+        it.getObjectsPro(table) { this.where = where }
     }
     
     
     fun <T : BaseEntity> getObjects(                                  table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjects(table, clazz, where)
+        it.getObjectsPro(table, spec) { this.where = where }
     }
     
     suspend fun <T : BaseEntity> getObjectsSusp(                      table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjects(table, clazz, where)
+        it.getObjectsPro(table, spec) { this.where = where }
     }
     
     
@@ -501,28 +491,28 @@ abstract class DbHelperInternal(
     inline fun <reified T : BaseEntity> getObjMap(                    table: String,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMap(table, where)
+        it.getObjMapPro(table) { this.where = where }
     }
     
     suspend inline fun <reified T : BaseEntity> getObjMapSusp(        table: String,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMap(table, where)
+        it.getObjMapPro(table) { this.where = where }
     }
     
     
     fun <T : BaseEntity> getObjMap(                                   table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMap(table, clazz, where)
+        it.getObjMapPro(table, spec) { this.where = where }
     }
     
     suspend fun <T : BaseEntity> getObjMapSusp(                       table: String,
-                                                                      clazz: KClass<T>,
+                                                                       spec: EntitySpec<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMap(table, clazz, where)
+        it.getObjMapPro(table, spec) { this.where = where }
     }
     
     
@@ -546,18 +536,18 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T : BaseEntity> getObjectsPro(                                clazz: KClass<T>,
-                                                                       table: String,
+    fun <T : BaseEntity> getObjectsPro(                                table: String,
+                                                                        spec: EntitySpec<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjectsPro") {
-        it.getObjectsPro(table, clazz, dsl)
+        it.getObjectsPro(table, spec, dsl)
     }
     
-    suspend fun <T : BaseEntity> getObjectsProSusp(                    clazz: KClass<T>,
-                                                                       table: String,
+    suspend fun <T : BaseEntity> getObjectsProSusp(                    table: String,
+                                                                        spec: EntitySpec<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsProSusp") {
-        it.getObjectsPro(table, clazz, dsl)
+        it.getObjectsPro(table, spec, dsl)
     }
     
     // -------------------------------------------------------------------------------------- \\
@@ -576,18 +566,18 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T : BaseEntity> getObjMapPro(                                 clazz: KClass<T>,
-                                                                       table: String,
+    fun <T : BaseEntity> getObjMapPro(                                 table: String,
+                                                                        spec: EntitySpec<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMapPro") {
-        it.getObjMapPro(table, clazz, dsl)
+        it.getObjMapPro(table, spec, dsl)
     }
     
-    suspend fun <T : BaseEntity> getObjMapProSusp(                     clazz: KClass<T>,
-                                                                       table: String,
+    suspend fun <T : BaseEntity> getObjMapProSusp(                     table: String,
+                                                                        spec: EntitySpec<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapProSusp") {
-        it.getObjMapPro(table, clazz, dsl)
+        it.getObjMapPro(table, spec, dsl)
     }
     
     

@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
 import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
@@ -12,34 +13,37 @@ class DefineMigrationsTest {
     class V1 : DbEntity
     class V2 : DbEntity
     class V3 : DbEntity
+    object SpecV1 : EntitySpec<V1>(V1::class)
+    object SpecV2 : EntitySpec<V2>(V2::class)
+    object SpecV3 : EntitySpec<V3>(V3::class)
     
     @Test
-    fun `adds versioned classes correctly`() {
-        val bundle = defineMigrations(2, V2::class) {
-            version(1, V1::class)
-            version(2, V2::class)
+    fun `adds versioned specs correctly`() {
+        val bundle = defineMigrations(2, SpecV2) {
+            version(1, SpecV1)
+            version(2, SpecV2)
         }
-        assertEquals(2, bundle.versionedClasses.size)
-        assertEquals(V1::class, bundle.versionedClasses[1])
-        assertEquals(V2::class, bundle.versionedClasses[2])
+        assertEquals(2, bundle.versionedSpecs.size)
+        assertEquals(SpecV1, bundle.versionedSpecs[1])
+        assertEquals(SpecV2, bundle.versionedSpecs[2])
     }
     @Test
-    fun `adds missing latest version and class`() {
-        val bundle = defineMigrations(3, V3::class) {
-            version(1, V1::class)
-            version(2, V2::class)
+    fun `adds missing latest version and spec`() {
+        val bundle = defineMigrations(3, SpecV3) {
+            version(1, SpecV1)
+            version(2, SpecV2)
         }
-        assertEquals(3, bundle.versionedClasses.size)
-        assertEquals(V1::class, bundle.versionedClasses[1])
-        assertEquals(V2::class, bundle.versionedClasses[2])
-        assertEquals(V3::class, bundle.versionedClasses[3])
+        assertEquals(3, bundle.versionedSpecs.size)
+        assertEquals(SpecV1, bundle.versionedSpecs[1])
+        assertEquals(SpecV2, bundle.versionedSpecs[2])
+        assertEquals(SpecV3, bundle.versionedSpecs[3])
     }
     
     
     @Test
     fun `stores rename history correctly`() {
-        val bundle = defineMigrations(2, V2::class) {
-            version(1, V1::class) {
+        val bundle = defineMigrations(2, SpecV2) {
+            version(1, SpecV1) {
                 rename {
                     "latestA" from "firstA" to "renamedToA"
                     "latestB" from "firstB" to "renamedToB"
@@ -53,8 +57,8 @@ class DefineMigrationsTest {
     
     @Test
     fun `stores milestone with column transformation`() {
-        val bundle = defineMigrations(2, V2::class) {
-            version(1, V1::class) {
+        val bundle = defineMigrations(2, SpecV2) {
+            version(1, SpecV1) {
                 milestone("someField".modify {
                     fromInt = { it.toString() }
                 })
@@ -78,8 +82,8 @@ class DefineMigrationsTest {
     fun `stores milestone with processFinalObj`() {
         val migrationFunc: (oldObj: BaseEntity, newObj: BaseEntity) -> BaseEntity = { old, _ -> old }
         
-        val bundle = defineMigrations(2, V2::class) {
-            version(1, V1::class) {
+        val bundle = defineMigrations(2, SpecV2) {
+            version(1, SpecV1) {
                 milestone(processFinalObj = migrationFunc)
             }
         }
@@ -95,9 +99,9 @@ class DefineMigrationsTest {
     
     @Test
     fun `works with only latest version`() {
-        val bundle = defineMigrations(1, V1::class) { }
+        val bundle = defineMigrations(1, SpecV1) { }
     
-        assertEquals(mapOf(1 to V1::class), bundle.versionedClasses)
+        assertEquals(mapOf(1 to SpecV1), bundle.versionedSpecs)
         assertTrue(bundle.renameHistory.isEmpty())
         assertTrue(bundle.milestones.isEmpty())
     }

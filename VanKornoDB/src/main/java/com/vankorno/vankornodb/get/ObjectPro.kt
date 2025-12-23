@@ -12,7 +12,6 @@ import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.mapper.toEntity
-import kotlin.reflect.KClass
 
 
 /**
@@ -29,23 +28,6 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               tabl
 }
 
 
-/**
- * Gets one db table row as an object of [clazz] using using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
- */
-fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
-                                                                            clazz: KClass<T>,
-                                                                              dsl: FullDsl.()->Unit,
-): T? = getCursorPro(table) {
-    applyDsl(dsl)
-    limit = 1
-}.use { cursor ->
-    if (!cursor.moveToFirst()) return null
-    cursor.toEntity(clazz)
-}
-
-
-
-
 inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               table: String,
                                                                           default: T,
                                                                      noinline dsl: FullDsl.()->Unit,
@@ -57,20 +39,27 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               tabl
 }
 
 
+
+
+
+// By Spec
+
 fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
-                                                                            clazz: KClass<T>,
+                                                                             spec: EntitySpec<T>,
                                                                           default: T,
                                                                               dsl: FullDsl.()->Unit,
-): T = getObjPro(table, clazz, dsl) ?: run {
+): T = getObjPro(table, spec, dsl) ?: run {
     // region LOG
         Log.e(DbTAG, "getObjPro(): The requested row doesn't exist in $table, returning default")
     // endregion
     default
 }
 
-
-
-
+/**
+ * Gets one db table row as an object of a class, specified in [spec],
+ * using using the full VanKorno DSL (but limit is always 1).
+ * Returns null if no result found.
+ */
 fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
                                                                              spec: EntitySpec<T>,
                                                                               dsl: FullDsl.()->Unit,

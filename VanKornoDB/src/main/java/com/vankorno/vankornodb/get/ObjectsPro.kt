@@ -6,10 +6,10 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.mapper.toEntity
-import kotlin.reflect.KClass
 
 /** 
  * Retrieves a list of entities of type [T] mapped from the specified columns.
@@ -31,11 +31,11 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjectsPro(           tabl
 
 
 /** 
- * Retrieves a list of objects of the specified [clazz] mapped from the given columns. 
+ * Retrieves a list of objects mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                          table: String,
-                                                                            clazz: KClass<T>,
+                                                                             spec: EntitySpec<T>,
                                                                               dsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
     applyDsl(dsl)
@@ -43,7 +43,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                          tabl
     buildList {
         if (cursor.moveToFirst()) {
             do {
-                add(cursor.toEntity(clazz))
+                add(cursor.toEntity(spec))
             } while (cursor.moveToNext())
         }
     }
@@ -54,9 +54,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                          tabl
 
 
 /** 
- * Retrieves a map of objects of type [T] from the specified table, 
- * using the `id` column (Int) as the key. 
- * Supports joins, filtering, grouping, sorting, pagination, and optional post-mapping. 
+ * Retrieves a map of objects of type [T] from the specified table.
  */
 inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMapPro(            table: String,
                                                                      noinline dsl: FullDsl.()->Unit,
@@ -77,12 +75,11 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMapPro(            tabl
 
 
 /** 
- * Retrieves a map of objects of the specified [clazz] from the given table, 
- * using the `id` column (Int) as the key. 
+ * Retrieves a map of objects from the given table.
  * Similar to the reified version but uses explicit KClass parameter. 
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                           table: String,
-                                                                            clazz: KClass<T>,
+                                                                             spec: EntitySpec<T>,
                                                                               dsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
     applyDsl(dsl)
@@ -91,7 +88,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                           tabl
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
             do {
-                val entity = cursor.toEntity(clazz)
+                val entity = cursor.toEntity(spec)
                 put(cursor.getInt(idColIdx), entity)
             } while (cursor.moveToNext())
         }

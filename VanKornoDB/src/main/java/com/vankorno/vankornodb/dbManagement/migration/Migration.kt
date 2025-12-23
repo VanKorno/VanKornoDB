@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
@@ -38,7 +39,7 @@ import kotlin.reflect.full.starProjectedType
  * @param table The name of the table to migrate.
  * @param oldVersion The version of the entity currently stored in the table.
  * @param newVersion The target version of the entity to migrate to.
- * @param versionedClasses A map of version numbers to their corresponding entity KClass definitions.
+ * @param versionedSpecs A map of version numbers to their corresponding entity KClass definitions.
  * @param renameHistory A map of current property names to their list of historical names and versions.
  * @param milestones A list of intermediate version numbers paired with transformation lambdas to apply during migration.
  * @param onNewDbFilled An optional callback invoked with the list of fully migrated objects after the table has been repopulated.
@@ -48,7 +49,7 @@ import kotlin.reflect.full.starProjectedType
 internal fun SQLiteDatabase.migrateMultiStepInternal(      table: String,
                                                       oldVersion: Int,
                                                       newVersion: Int,
-                                                versionedClasses: Map<Int, KClass<out BaseEntity>>,
+                                                  versionedSpecs: Map<Int, EntitySpec<*>>,
                                                    renameHistory: Map<String, List<RenameRecord>>,
                                                       milestones: List<Pair<Int, MilestoneLambdas>>,
                                                    onNewDbFilled: (List<BaseEntity>)->Unit = {},
@@ -71,14 +72,14 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(      table: String,
     // endregion
     val lambdas = relevantMilestones.toMap()
     
-    val finalClass = versionedClasses[newVersion]
+    val finalClass = versionedSpecs[newVersion]
         ?: error("Missing entity class for version $newVersion")
     
     val utils = MigrationUtils()
-    val oldUnits = utils.readEntitiesFromVersion(this, table, oldVersion, versionedClasses)
+    val oldUnits = utils.readEntitiesFromVersion(this, table, oldVersion, versionedSpecs)
     
     val migratedEntities = oldUnits.map { original ->
-        utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
+        utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedSpecs, lambdas)
     }
     this.deleteTable(table)
     // region LOG
@@ -168,15 +169,15 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    internal fun readEntitiesFromVersion(                        db: SQLiteDatabase,
-                                                              table: String,
-                                                            version: Int,
-                                                   versionedClasses: Map<Int, KClass<out BaseEntity>>,
+    internal fun readEntitiesFromVersion(                  db: SQLiteDatabase,
+                                                        table: String,
+                                                      version: Int,
+                                               versionedSpecs: Map<Int, EntitySpec<out BaseEntity>>,
     ): List<BaseEntity> {
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
         // endregion
-        val fromClass = versionedClasses[version]
+        val fromClass = versionedSpecs[version]
             ?: error("Missing entity class for version $version")
         
         val elements = db.getObjects(table, fromClass)
@@ -191,12 +192,12 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    internal fun convertThroughSteps(                    original: BaseEntity,
-                                                       oldVersion: Int,
-                                                            steps: List<Int>,
-                                                    renameHistory: Map<String, List<RenameRecord>>,
-                                                 versionedClasses: Map<Int, KClass<out BaseEntity>>,
-                                                          lambdas: Map<Int, MilestoneLambdas>,
+    internal fun convertThroughSteps(                original: BaseEntity,
+                                                   oldVersion: Int,
+                                                        steps: List<Int>,
+                                                renameHistory: Map<String, List<RenameRecord>>,
+                                               versionedSpecs: Map<Int, EntitySpec<out BaseEntity>>,
+                                                      lambdas: Map<Int, MilestoneLambdas>,
     ): BaseEntity {
         var currentObj = original
         var currentVer = oldVersion
@@ -204,7 +205,7 @@ open class MigrationUtils {
         for (nextVer in steps) {
             val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory)
             
-            val nextClass = versionedClasses[nextVer] ?: error("Missing entity class for version $nextVer")
+            val nextClass = versionedSpecs[nextVer]?.clazz ?: error("Missing entity class for version $nextVer")
             
             val previousObj = currentObj
             currentObj = convertEntity(currentObj, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
@@ -356,7 +357,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(                  varar
         Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = getObjects(table.name, table.entityClass)
+        val rows = getObjects(table.name, table.spec)
         dropAndCreateEmptyTables(table)
         addObjects(table.name, rows)
     }

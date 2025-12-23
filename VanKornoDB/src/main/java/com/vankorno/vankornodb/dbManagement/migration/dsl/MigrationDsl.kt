@@ -5,6 +5,7 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.MigrationDsl
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
@@ -12,25 +13,24 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
-import kotlin.reflect.KClass
 
 
 class ModifyRow(val fieldName: String, val block: TransformColDslInternal.FieldOverride.()->Unit)
 
 
 internal fun <T: BaseEntity> defineMigrationsInternal(         latestVersion: Int,
-                                                                 latestClass: KClass<T>,
+                                                                  latestSpec: EntitySpec<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle {
     val defBuilder = MigrationDsl()
     defBuilder.block()
     
-    val latestVersionKlassAbsent = !defBuilder.versionedClasses.containsKey(latestVersion)
+    val latestVersionKlassAbsent = !defBuilder.versionedSecs.containsKey(latestVersion)
     if (latestVersionKlassAbsent)
-        defBuilder.versionedClasses[latestVersion] = latestClass
+        defBuilder.versionedSecs[latestVersion] = latestSpec
     
     return MigrationBundle(
-        versionedClasses = defBuilder.versionedClasses,
+        versionedSpecs = defBuilder.versionedSecs,
         renameHistory = defBuilder.renameHistory,
         milestones = defBuilder.milestones
     )
@@ -38,19 +38,19 @@ internal fun <T: BaseEntity> defineMigrationsInternal(         latestVersion: In
 
 
 abstract class MigrationDslInternal {
-    val versionedClasses = mutableMapOf<Int, KClass<out BaseEntity>>()
+    val versionedSecs = mutableMapOf<Int, EntitySpec<out BaseEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
     fun <T : BaseEntity> version(                             version: Int,
-                                                                clazz: KClass<T>,
+                                                                 spec: EntitySpec<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
         verBuilder.block()
         
         // Class
-        versionedClasses[version] = clazz
+        versionedSecs[version] = spec
         
         // Renames
         for (record in verBuilder.pendingRenames) {

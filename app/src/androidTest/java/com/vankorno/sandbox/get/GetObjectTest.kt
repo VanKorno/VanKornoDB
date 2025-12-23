@@ -2,8 +2,8 @@ package com.vankorno.sandbox.get
 
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox.MyApp.Companion.dbh
+import com.vankorno.sandbox.entities.testEntity.SpecTest
 import com.vankorno.sandbox.entities.testEntity.TestEntity
-import com.vankorno.sandbox.entities.testEntity.TestSpec
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.misc.whereId
@@ -37,7 +37,7 @@ class GetObjectTest {
     }
     
     private fun getObjWithGeneratedGetter() {
-        val obj = dbh.getObjPro(GetObjTestTable, TestSpec) { where = whereId(1) }
+        val obj = dbh.getObjPro(GetObjTestTable, SpecTest) { where = whereId(1) }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)

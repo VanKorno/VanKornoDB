@@ -1,8 +1,8 @@
 package com.vankorno.vankornodb.dbManagement.data
 
-import kotlin.reflect.KClass
+import com.vankorno.vankornodb.api.EntitySpec
 
 data class TableInfo (
                                   val name: String,
-                           val entityClass: KClass<out BaseEntity>,
+                                  val spec: EntitySpec<out BaseEntity>,
 )

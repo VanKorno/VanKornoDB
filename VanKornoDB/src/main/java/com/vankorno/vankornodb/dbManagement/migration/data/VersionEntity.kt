@@ -6,7 +6,10 @@
 package com.vankorno.vankornodb.dbManagement.migration.data
 
 import com.vankorno.vankornodb.api.DbEntity
-
+import com.vankorno.vankornodb.api.EntityColumns
+import com.vankorno.vankornodb.api.EntitySpec
+import com.vankorno.vankornodb.dbManagement.data.iCol
+import com.vankorno.vankornodb.dbManagement.data.sCol
 
 data class VersionEntity(
                                   val name: String = "",
@@ -15,3 +18,28 @@ data class VersionEntity(
 
                                     val id: Int = -1,
 ) : DbEntity
+
+
+
+object SpecVersion : EntitySpec<VersionEntity>(
+    clazz = VersionEntity::class,
+    
+    columns = CVersion,
+)
+
+
+
+object CVersion : EntityColumns {
+    val Name = sCol("name", "")
+    val Version = iCol("version", 0)
+    val Notes = sCol("notes", "")
+    val Id = iCol("id", -1)
+
+
+    override val columns = buildColList {
+        +Name
+        +Version
+        +Notes
+        +Id
+    }
+}

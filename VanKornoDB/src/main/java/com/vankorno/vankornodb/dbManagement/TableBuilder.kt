@@ -21,7 +21,7 @@ import kotlin.reflect.full.primaryConstructor
 internal fun SQLiteDatabase.createTablesInternal(                          vararg tables: TableInfo
 ) {
     for (table in tables) {
-        execSQL(newTableQuery(table.name, table.entityClass))
+        execSQL(newTableQuery(table.name, table.spec.clazz)) // TODO without reflection
     }
 }
 
