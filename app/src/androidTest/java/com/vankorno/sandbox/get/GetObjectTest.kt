@@ -10,8 +10,14 @@ import com.vankorno.vankornodb.misc.whereId
 import org.junit.Assert.*
 import org.junit.Test
 
-object TestSpecDummy : EntitySpec<TestEntity>(
+private object TestSpecDummy : EntitySpec<TestEntity>(
     clazz = TestEntity::class
+)
+private object TestSpecWrongGetter : EntitySpec<TestEntity>(
+    clazz = TestEntity::class,
+    getter = { _ ->
+        TestEntity(id = 999, name = "WRONG")
+    }
 )
 
 class GetObjectTest {
@@ -27,6 +33,7 @@ class GetObjectTest {
         
         getObjWithGeneratedGetter()
         getObjWithNullGetter()
+        getterHasPriorityOverReflection()
     }
     
     private fun getObjWithGeneratedGetter() {
@@ -44,6 +51,15 @@ class GetObjectTest {
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)
         assertEquals(LabRat + 1, obj.name)
+    }
+    
+    @Test
+    fun getterHasPriorityOverReflection() {
+        val obj = dbh.getObjPro(GetObjTestTable, TestSpecWrongGetter) { where = whereId(1) }
+        
+        assertNotNull(obj)
+        assertEquals(999, obj!!.id)
+        assertEquals("WRONG", obj.name)
     }
     
 }
