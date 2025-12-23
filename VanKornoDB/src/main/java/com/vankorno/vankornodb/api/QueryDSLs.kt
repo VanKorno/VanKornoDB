@@ -13,7 +13,6 @@ import com.vankorno.vankornodb.core.dsl.WhereDslInternal
 import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
 import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
-import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal
 
 class FullDsl : FullDslInternal() {
     fun applyDsl(opts: FullDsl.()->Unit) { this.opts() }
@@ -23,7 +22,6 @@ class FullDsl : FullDslInternal() {
 class JoinDsl : JoinDslInternal()
 
 
-interface EntityColumns : EntityColumnsInternal
 
 
 class OrderDsl : OrderDslInternal() {

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.api.SetDsl
 import com.vankorno.vankornodb.api.WhereDsl
@@ -400,6 +401,25 @@ abstract class DbHelperInternal(
     ): T? = readSusp(null, "getObjProSusp") {
         it.getObjPro(table, clazz, dsl)
     }
+    
+    
+    // NEW
+    
+    fun <T : BaseEntity> getObjPro(                                         table: String,
+                                                                             spec: EntitySpec<T>,
+                                                                              dsl: FullDsl.()->Unit,
+    ): T? = read(null, "getObjPro") {
+        it.getObjPro(table, spec, dsl)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     // With defaults

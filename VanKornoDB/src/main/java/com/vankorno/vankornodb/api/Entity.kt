@@ -1,8 +1,14 @@
+// region License
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
+// endregion
 package com.vankorno.vankornodb.api
 
 import android.content.ContentValues
 import android.database.Cursor
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal
 import kotlin.reflect.KClass
 
 /**
@@ -25,15 +31,15 @@ interface LiteEntity : BaseEntity
 
 
 
-interface EntitySpec<T : BaseEntity> {
-    val clazz: KClass<out T>
-    val columns: EntityColumns
-    val getter: ((Cursor) -> T)?
-    val setter: ((T, ContentValues) -> Unit)?
-    val createTableSql: String?
-}
+open class EntitySpec<T : BaseEntity>(                val clazz: KClass<out T>,
+                                                    val columns: EntityColumns? = null,
+                                                     val getter: ((Cursor)->T)? = null,
+                                                     val setter: ((T, ContentValues)->Unit)? = null,
+                                             val createTableSql: String? = null,
+)
 
 
+interface EntityColumns : EntityColumnsInternal
 
 
 

@@ -7,6 +7,7 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
@@ -66,3 +67,18 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              tabl
     // endregion
     default
 }
+
+
+
+
+fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
+                                                                             spec: EntitySpec<T>,
+                                                                              dsl: FullDsl.()->Unit,
+): T? = getCursorPro(table) {
+    applyDsl(dsl)
+    limit = 1
+}.use { cursor ->
+    if (!cursor.moveToFirst()) return null
+    cursor.toEntity(spec)
+}
+

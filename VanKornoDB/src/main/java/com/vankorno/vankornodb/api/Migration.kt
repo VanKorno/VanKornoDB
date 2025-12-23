@@ -22,6 +22,14 @@ import kotlin.reflect.KClass
 class MigrationDsl() : MigrationDslInternal()
 
 
+fun defineMigrations(                                             entityMeta: BaseEntityMeta,
+                                                                       block: MigrationDsl.()->Unit,
+): MigrationBundle = defineMigrationsInternal(
+    latestVersion = entityMeta.currVersion,
+    latestClass = entityMeta.currEntitySpec.clazz,
+    block = block
+)
+
 
 fun <T: BaseEntity> defineMigrations(                          latestVersion: Int,
                                                                  latestClass: KClass<T>,

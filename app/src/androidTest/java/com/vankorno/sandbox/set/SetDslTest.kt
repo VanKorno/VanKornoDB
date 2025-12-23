@@ -3,6 +3,7 @@ package com.vankorno.sandbox.set
 import android.content.ContentValues
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
+import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox.MyApp.Companion.dbh
 import com.vankorno.sandbox.entities.testEntity.CTest.Bool1
 import com.vankorno.sandbox.entities.testEntity.CTest.Bool2
@@ -18,6 +19,7 @@ import com.vankorno.sandbox.entities.testEntity.CTest.Long2
 import com.vankorno.sandbox.entities.testEntity.CTest.Position
 import com.vankorno.sandbox.entities.testEntity.CTest.Str1
 import com.vankorno.sandbox.entities.testEntity.TestEntity
+import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.misc.whereName
 import org.junit.Assert.*
 import org.junit.Test
@@ -26,12 +28,11 @@ import org.junit.Test
 class SetDslTest : BaseAndroidTest() {
     companion object {
         const val SetValsTestTable = "SetValsTestTable"
-        const val LabRat = "Lab rat "
     }
     
     @Test
     fun testSetter() {
-        dbh.beforeSetValsTest()
+        dbh.getLabRats(SetValsTestTable)
         assertTrue(dbh.tableExists(SetValsTestTable))
         assertFalse(dbh.isTableEmpty(SetValsTestTable))
         
