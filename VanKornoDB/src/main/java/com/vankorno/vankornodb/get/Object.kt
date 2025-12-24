@@ -26,9 +26,9 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObj(            table: Str
  * Gets one db table row as an object of [clazz] using using WhereDsl. Returns null if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                                       spec: BaseOrmBundle<T>,
+                                                                  ormBundle: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjPro(table, spec) { this.where = where }
+): T? = getObjPro(table, ormBundle) { this.where = where }
 
 
 
@@ -45,10 +45,10 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObj(            table: Str
 
 
 fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                                       spec: BaseOrmBundle<T>,
+                                                                  ormBundle: BaseOrmBundle<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-): T = getObj(table, spec, where) ?: run {
+): T = getObj(table, ormBundle, where) ?: run {
     // region LOG
         Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
     // endregion

@@ -42,13 +42,12 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               tabl
 
 
 
-// By Spec
 
-fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table: String,
-                                                                            spec: BaseOrmBundle<T>,
-                                                                         default: T,
-                                                                             dsl: FullDsl.()->Unit,
-): T = getObjPro(table, spec, dsl) ?: run {
+fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
+                                                                        ormBundle: BaseOrmBundle<T>,
+                                                                          default: T,
+                                                                              dsl: FullDsl.()->Unit,
+): T = getObjPro(table, ormBundle, dsl) ?: run {
     // region LOG
         Log.e(DbTAG, "getObjPro(): The requested row doesn't exist in $table, returning default")
     // endregion
@@ -56,18 +55,18 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table
 }
 
 /**
- * Gets one db table row as an object of a class, specified in [spec],
+ * Gets one db table row as an object of a class, specified in [ormBundle],
  * using using the full VanKorno DSL (but limit is always 1).
  * Returns null if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table: String,
-                                                                            spec: BaseOrmBundle<T>,
-                                                                             dsl: FullDsl.()->Unit,
+fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
+                                                                        ormBundle: BaseOrmBundle<T>,
+                                                                              dsl: FullDsl.()->Unit,
 ): T? = getCursorPro(table) {
     applyDsl(dsl)
     limit = 1
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
-    cursor.toEntity(spec)
+    cursor.toEntity(ormBundle)
 }
 

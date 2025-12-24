@@ -36,14 +36,14 @@ open class CurrOrmBundle<T : CurrEntity>(
 
 
 
-open class OldOrmBundle<T : OldEntity>(                  override val clazz: KClass<out T>,
+open class OldOrmBundle<T : OldEntity>(                   override val clazz: KClass<out T>,
                                                          override val getter: ((Cursor)->T)? = null,
 ) : NormalOrmBundle<T>
 
 
 
 
-open class LiteOrmBundle<T : LiteEntity>(                override val clazz: KClass<out T>,
+open class LiteOrmBundle<T : LiteEntity>(                 override val clazz: KClass<out T>,
                                                          override val getter: ((Cursor)->T)? = null,
                                                                  val columns: EntityColumns? = null,
 ) : BaseOrmBundle<T>
