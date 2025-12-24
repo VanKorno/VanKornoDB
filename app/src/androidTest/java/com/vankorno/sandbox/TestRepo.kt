@@ -1,6 +1,6 @@
 package com.vankorno.sandbox
 
-import com.vankorno.sandbox.entities.testEntity.SpecTest
+import com.vankorno.sandbox.entities.testEntity.OrmTest
 import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.createTable
@@ -9,7 +9,7 @@ const val LabRat = "Lab rat "
 
 fun LocalDbHelper.getLabRats(                                                      table: String
 ) = write("launchApp", async = false) { db ->
-    db.createTable(table, SpecTest)
+    db.createTable(table, OrmTest)
     
     val testSubjects = List(50) {
         TestEntity(name = LabRat + (it + 1), position = it + 1)
