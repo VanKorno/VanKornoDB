@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
 
 /** 
  * Retrieves a map of objects from the given table.
@@ -20,7 +20,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjects(        table: Str
  * Retrieves a map of objects from the given table.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjects(                       table: String,
-                                                                      spec: BaseEntitySpec<T>,
+                                                                      spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
 ): List<T> = getObjectsPro(table, spec) {
     this.where = where
@@ -45,7 +45,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMap(         table: Str
  * Retrieves a map of objects from the given table.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjMap(                        table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
 ): Map<Int, T> = getObjMapPro(table, spec) {
     this.where = where

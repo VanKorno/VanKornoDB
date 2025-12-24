@@ -17,7 +17,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.NormalEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.NormalOrmBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
@@ -88,7 +88,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() $table table is dropped. Recreating...")
     // endregion
-    this.createTable(table, entityMeta.currEntitySpec)
+    this.createTable(table, entityMeta.currOrmBundle)
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
@@ -175,7 +175,7 @@ open class MigrationUtils {
     internal fun readEntitiesFromVersion(          db: SQLiteDatabase,
                                                 table: String,
                                               version: Int,
-                                       versionedSpecs: Map<Int, NormalEntitySpec<out NormalEntity>>,
+                                       versionedSpecs: Map<Int, NormalOrmBundle<out NormalEntity>>,
     ): List<NormalEntity> {
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
@@ -199,7 +199,7 @@ open class MigrationUtils {
                                                    oldVersion: Int,
                                                         steps: List<Int>,
                                                 renameHistory: Map<String, List<RenameRecord>>,
-                                               versionedSpecs: Map<Int, NormalEntitySpec<out NormalEntity>>,
+                                               versionedSpecs: Map<Int, NormalOrmBundle<out NormalEntity>>,
                                                       lambdas: Map<Int, MilestoneLambdas>,
     ): BaseEntity {
         var currentObj = original

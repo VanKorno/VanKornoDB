@@ -322,7 +322,7 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObj(                                      table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getObj") {
         it.getObj(table, spec, where)
@@ -330,7 +330,7 @@ abstract class DbHelperInternal(
     
     
     suspend fun <T : BaseEntity> getObjSusp(                          table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getObjSusp") {
         it.getObj(table, spec, where)
@@ -353,7 +353,7 @@ abstract class DbHelperInternal(
     }
     
     fun <T : BaseEntity> getObj(                                      table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
     ): T = read(default, "getObj") {
@@ -361,7 +361,7 @@ abstract class DbHelperInternal(
     }
     
     suspend fun <T : BaseEntity> getObjSusp(                          table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
     ): T = readSusp(default, "getObjSusp") {
@@ -386,7 +386,7 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjPro(                                         table: String,
-                                                                             spec: BaseEntitySpec<T>,
+                                                                             spec: BaseOrmBundle<T>,
                                                                               dsl: FullDsl.()->Unit,
     ): T? = read(null, "getObjPro") {
         it.getObjPro(table, spec, dsl)
@@ -394,7 +394,7 @@ abstract class DbHelperInternal(
     
     
     suspend fun <T : BaseEntity> getObjProSusp(                             table: String,
-                                                                             spec: BaseEntitySpec<T>,
+                                                                             spec: BaseOrmBundle<T>,
                                                                               dsl: FullDsl.()->Unit,
     ): T? = readSusp(null, "getObjProSusp") {
         it.getObjPro(table, spec, dsl)
@@ -430,7 +430,7 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjPro(                                        table: String,
-                                                                            spec: BaseEntitySpec<T>,
+                                                                            spec: BaseOrmBundle<T>,
                                                                          default: T,
                                                                              dsl: FullDsl.()->Unit,
     ): T = read(default, "getObjPro") {
@@ -439,7 +439,7 @@ abstract class DbHelperInternal(
     
     
     suspend fun <T : BaseEntity> getObjProSusp(                            table: String,
-                                                                            spec: BaseEntitySpec<T>,
+                                                                            spec: BaseOrmBundle<T>,
                                                                          default: T,
                                                                              dsl: FullDsl.()->Unit,
     ): T = readSusp(default, "getObjProSusp") {
@@ -472,14 +472,14 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjects(                                  table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
         it.getObjectsPro(table, spec) { this.where = where }
     }
     
     suspend fun <T : BaseEntity> getObjectsSusp(                      table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
         it.getObjectsPro(table, spec) { this.where = where }
@@ -501,14 +501,14 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjMap(                                   table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
         it.getObjMapPro(table, spec) { this.where = where }
     }
     
     suspend fun <T : BaseEntity> getObjMapSusp(                       table: String,
-                                                                       spec: BaseEntitySpec<T>,
+                                                                       spec: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
         it.getObjMapPro(table, spec) { this.where = where }
@@ -536,14 +536,14 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjectsPro(                                table: String,
-                                                                        spec: BaseEntitySpec<T>,
+                                                                        spec: BaseOrmBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjectsPro") {
         it.getObjectsPro(table, spec, dsl)
     }
     
     suspend fun <T : BaseEntity> getObjectsProSusp(                    table: String,
-                                                                        spec: BaseEntitySpec<T>,
+                                                                        spec: BaseOrmBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsProSusp") {
         it.getObjectsPro(table, spec, dsl)
@@ -566,14 +566,14 @@ abstract class DbHelperInternal(
     
     
     fun <T : BaseEntity> getObjMapPro(                                 table: String,
-                                                                        spec: BaseEntitySpec<T>,
+                                                                        spec: BaseOrmBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMapPro") {
         it.getObjMapPro(table, spec, dsl)
     }
     
     suspend fun <T : BaseEntity> getObjMapProSusp(                     table: String,
-                                                                        spec: BaseEntitySpec<T>,
+                                                                        spec: BaseOrmBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapProSusp") {
         it.getObjMapPro(table, spec, dsl)

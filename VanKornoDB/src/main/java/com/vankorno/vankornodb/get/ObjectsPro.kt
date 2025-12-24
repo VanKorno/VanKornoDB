@@ -8,7 +8,7 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
 import com.vankorno.vankornodb.mapper.toEntity
 
 /** 
@@ -35,7 +35,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjectsPro(           tabl
  * Similar to the reified version but uses explicit KClass parameter.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                         table: String,
-                                                                            spec: BaseEntitySpec<T>,
+                                                                            spec: BaseOrmBundle<T>,
                                                                              dsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
     applyDsl(dsl)
@@ -79,7 +79,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMapPro(            tabl
  * Similar to the reified version but uses explicit KClass parameter. 
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                          table: String,
-                                                                            spec: BaseEntitySpec<T>,
+                                                                            spec: BaseOrmBundle<T>,
                                                                              dsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
     applyDsl(dsl)

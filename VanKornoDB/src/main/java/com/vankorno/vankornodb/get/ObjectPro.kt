@@ -10,7 +10,7 @@ import android.util.Log
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
 import com.vankorno.vankornodb.mapper.toEntity
 
 
@@ -45,7 +45,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               tabl
 // By Spec
 
 fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table: String,
-                                                                            spec: BaseEntitySpec<T>,
+                                                                            spec: BaseOrmBundle<T>,
                                                                          default: T,
                                                                              dsl: FullDsl.()->Unit,
 ): T = getObjPro(table, spec, dsl) ?: run {
@@ -61,7 +61,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table
  * Returns null if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table: String,
-                                                                            spec: BaseEntitySpec<T>,
+                                                                            spec: BaseOrmBundle<T>,
                                                                              dsl: FullDsl.()->Unit,
 ): T? = getCursorPro(table) {
     applyDsl(dsl)

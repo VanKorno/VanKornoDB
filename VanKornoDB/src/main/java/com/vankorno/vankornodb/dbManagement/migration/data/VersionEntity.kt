@@ -7,7 +7,7 @@ package com.vankorno.vankornodb.dbManagement.migration.data
 
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.EntityColumns
-import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.CurrOrmBundle
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
 
@@ -21,7 +21,7 @@ data class VersionEntity(
 
 
 
-object SpecVersion : CurrEntitySpec<VersionEntity>(
+object SpecVersion : CurrOrmBundle<VersionEntity>(
     clazz = VersionEntity::class,
     
     columns = CVersion,

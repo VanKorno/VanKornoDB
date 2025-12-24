@@ -14,39 +14,39 @@ import com.vankorno.vankornodb.api.OldEntity
 import kotlin.reflect.KClass
 
 
-sealed interface BaseEntitySpec<T : BaseEntity> {
+sealed interface BaseOrmBundle<T : BaseEntity> {
     val clazz: KClass<out T>
     val getter: ((Cursor) -> T)?
 }
 
 
-sealed interface NormalEntitySpec<T : NormalEntity>
-    : BaseEntitySpec<T>
+sealed interface NormalOrmBundle<T : NormalEntity>
+    : BaseOrmBundle<T>
 
 
 
-open class CurrEntitySpec<T : CurrEntity>(
+open class CurrOrmBundle<T : CurrEntity>(
                                              override val clazz: KClass<out T>,
                                             override val getter: ((Cursor)->T)? = null,
                                                      val setter: ((T, ContentValues)->Unit)? = null,
                                                     val columns: EntityColumns? = null,
                                              val createTableSql: String? = null,
-) : NormalEntitySpec<T>
+) : NormalOrmBundle<T>
 
 
 
 
-open class OldEntitySpec<T : OldEntity>(                  override val clazz: KClass<out T>,
+open class OldOrmBundle<T : OldEntity>(                  override val clazz: KClass<out T>,
                                                          override val getter: ((Cursor)->T)? = null,
-) : NormalEntitySpec<T>
+) : NormalOrmBundle<T>
 
 
 
 
-open class LiteEntitySpec<T : LiteEntity>(                override val clazz: KClass<out T>,
+open class LiteOrmBundle<T : LiteEntity>(                override val clazz: KClass<out T>,
                                                          override val getter: ((Cursor)->T)? = null,
                                                                  val columns: EntityColumns? = null,
-) : BaseEntitySpec<T>
+) : BaseOrmBundle<T>
 
 
 

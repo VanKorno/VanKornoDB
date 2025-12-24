@@ -8,7 +8,7 @@ package com.vankorno.vankornodb.api
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.CurrOrmBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
@@ -26,15 +26,15 @@ fun defineMigrations(                                             entityMeta: Ba
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(
     latestVersion = entityMeta.currVersion,
-    latestSpec = entityMeta.currEntitySpec,
+    latestOrmBundle = entityMeta.currOrmBundle,
     block = block
 )
 
 
 fun <T: CurrEntity> defineMigrations(                          latestVersion: Int,
-                                                                  latestSpec: CurrEntitySpec<T>,
+                                                             latestOrmBundle: CurrOrmBundle<T>,
                                                                        block: MigrationDsl.()->Unit,
-): MigrationBundle = defineMigrationsInternal(latestVersion, latestSpec, block)
+): MigrationBundle = defineMigrationsInternal(latestVersion, latestOrmBundle, block)
 
 
 class TransformColDsl() : TransformColDslInternal()

@@ -8,9 +8,9 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.MigrationDsl
 import com.vankorno.vankornodb.api.TransformColDsl
-import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.CurrOrmBundle
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.NormalEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.NormalOrmBundle
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
@@ -21,7 +21,7 @@ class ModifyRow(val fieldName: String, val block: TransformColDslInternal.FieldO
 
 
 internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: Int,
-                                                                  latestSpec: CurrEntitySpec<T>,
+                                                             latestOrmBundle: CurrOrmBundle<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle {
     val defBuilder = MigrationDsl()
@@ -29,7 +29,7 @@ internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: In
     
     val latestVersionKlassAbsent = !defBuilder.versionedSpecs.containsKey(latestVersion)
     if (latestVersionKlassAbsent)
-        defBuilder.versionedSpecs[latestVersion] = latestSpec
+        defBuilder.versionedSpecs[latestVersion] = latestOrmBundle
     
     return MigrationBundle(
         versionedSpecs = defBuilder.versionedSpecs,
@@ -40,12 +40,12 @@ internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: In
 
 
 abstract class MigrationDslInternal {
-    val versionedSpecs = mutableMapOf<Int, NormalEntitySpec<out NormalEntity>>()
+    val versionedSpecs = mutableMapOf<Int, NormalOrmBundle<out NormalEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
     fun <T : NormalEntity> version(                           version: Int,
-                                                                 spec: NormalEntitySpec<T>,
+                                                                 spec: NormalOrmBundle<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
