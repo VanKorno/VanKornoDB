@@ -5,10 +5,12 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.api.EntitySpec
+import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.MigrationDsl
 import com.vankorno.vankornodb.api.TransformColDsl
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.NormalEntitySpec
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
@@ -18,19 +20,19 @@ import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 class ModifyRow(val fieldName: String, val block: TransformColDslInternal.FieldOverride.()->Unit)
 
 
-internal fun <T: BaseEntity> defineMigrationsInternal(         latestVersion: Int,
-                                                                  latestSpec: EntitySpec<T>,
+internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: Int,
+                                                                  latestSpec: CurrEntitySpec<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle {
     val defBuilder = MigrationDsl()
     defBuilder.block()
     
-    val latestVersionKlassAbsent = !defBuilder.versionedSecs.containsKey(latestVersion)
+    val latestVersionKlassAbsent = !defBuilder.versionedSpecs.containsKey(latestVersion)
     if (latestVersionKlassAbsent)
-        defBuilder.versionedSecs[latestVersion] = latestSpec
+        defBuilder.versionedSpecs[latestVersion] = latestSpec
     
     return MigrationBundle(
-        versionedSpecs = defBuilder.versionedSecs,
+        versionedSpecs = defBuilder.versionedSpecs,
         renameHistory = defBuilder.renameHistory,
         milestones = defBuilder.milestones
     )
@@ -38,19 +40,19 @@ internal fun <T: BaseEntity> defineMigrationsInternal(         latestVersion: In
 
 
 abstract class MigrationDslInternal {
-    val versionedSecs = mutableMapOf<Int, EntitySpec<out BaseEntity>>()
+    val versionedSpecs = mutableMapOf<Int, NormalEntitySpec<out NormalEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
-    fun <T : BaseEntity> version(                             version: Int,
-                                                                 spec: EntitySpec<T>,
+    fun <T : NormalEntity> version(                           version: Int,
+                                                                 spec: NormalEntitySpec<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
         verBuilder.block()
         
         // Class
-        versionedSecs[version] = spec
+        versionedSpecs[version] = spec
         
         // Renames
         for (record in verBuilder.pendingRenames) {
@@ -105,7 +107,7 @@ abstract class MigrationDslInternal {
         
         fun milestone(
                vararg modifications: ModifyRow,
-                    processFinalObj: ((oldObj: BaseEntity, newObj: BaseEntity)->BaseEntity)? = null,
+                    processFinalObj: ((oldObj: NormalEntity, newObj: NormalEntity)->NormalEntity)? = null,
         ) {
             val overrideBlock: TransformColDsl.() -> Unit = {
                 modifications.forEach { modify(it.fieldName, it.block) }

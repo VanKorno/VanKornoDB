@@ -5,15 +5,15 @@ import com.vankorno.sandbox.MyApp.Companion.dbh
 import com.vankorno.sandbox.entities.testEntity.SpecTest
 import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.sandbox.getLabRats
-import com.vankorno.vankornodb.api.EntitySpec
+import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
 import com.vankorno.vankornodb.misc.whereId
 import org.junit.Assert.*
 import org.junit.Test
 
-private object TestSpecDummy : EntitySpec<TestEntity>(
+private object TestSpecDummy : CurrEntitySpec<TestEntity>(
     clazz = TestEntity::class
 )
-private object TestSpecWrongGetter : EntitySpec<TestEntity>(
+private object TestSpecWrongGetter : CurrEntitySpec<TestEntity>(
     clazz = TestEntity::class,
     getter = { _ ->
         TestEntity(id = 999, name = "WRONG")

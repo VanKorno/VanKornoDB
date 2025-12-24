@@ -6,9 +6,9 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.BaseEntitySpec
 import com.vankorno.vankornodb.mapper.toEntity
 
 /** 
@@ -34,9 +34,9 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjectsPro(           tabl
  * Retrieves a list of objects mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                          table: String,
-                                                                             spec: EntitySpec<T>,
-                                                                              dsl: FullDsl.()->Unit,
+fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                         table: String,
+                                                                            spec: BaseEntitySpec<T>,
+                                                                             dsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
     applyDsl(dsl)
 }.use { cursor ->
@@ -78,9 +78,9 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMapPro(            tabl
  * Retrieves a map of objects from the given table.
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                           table: String,
-                                                                             spec: EntitySpec<T>,
-                                                                              dsl: FullDsl.()->Unit,
+fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                          table: String,
+                                                                            spec: BaseEntitySpec<T>,
+                                                                             dsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
     applyDsl(dsl)
 }.use { cursor ->

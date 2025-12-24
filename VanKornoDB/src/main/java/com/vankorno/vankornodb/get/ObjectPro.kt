@@ -7,10 +7,10 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.BaseEntitySpec
 import com.vankorno.vankornodb.mapper.toEntity
 
 
@@ -44,10 +44,10 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               tabl
 
 // By Spec
 
-fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
-                                                                             spec: EntitySpec<T>,
-                                                                          default: T,
-                                                                              dsl: FullDsl.()->Unit,
+fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table: String,
+                                                                            spec: BaseEntitySpec<T>,
+                                                                         default: T,
+                                                                             dsl: FullDsl.()->Unit,
 ): T = getObjPro(table, spec, dsl) ?: run {
     // region LOG
         Log.e(DbTAG, "getObjPro(): The requested row doesn't exist in $table, returning default")
@@ -60,9 +60,9 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              tabl
  * using using the full VanKorno DSL (but limit is always 1).
  * Returns null if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
-                                                                             spec: EntitySpec<T>,
-                                                                              dsl: FullDsl.()->Unit,
+fun <T : BaseEntity> SQLiteDatabase.getObjPro(                             table: String,
+                                                                            spec: BaseEntitySpec<T>,
+                                                                             dsl: FullDsl.()->Unit,
 ): T? = getCursorPro(table) {
     applyDsl(dsl)
     limit = 1

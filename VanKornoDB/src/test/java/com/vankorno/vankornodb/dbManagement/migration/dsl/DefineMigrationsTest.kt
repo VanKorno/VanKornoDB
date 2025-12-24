@@ -1,48 +1,51 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.api.EntitySpec
+import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.OldEntity
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.OldEntitySpec
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.*
 import org.junit.Test
 
 class DefineMigrationsTest {
-    class V1 : DbEntity
-    class V2 : DbEntity
-    class V3 : DbEntity
-    object SpecV1 : EntitySpec<V1>(V1::class)
-    object SpecV2 : EntitySpec<V2>(V2::class)
-    object SpecV3 : EntitySpec<V3>(V3::class)
+    class V1 : OldEntity
+    object SpecV1 : OldEntitySpec<V1>(V1::class)
+    class V2 : OldEntity
+    object SpecV2 : OldEntitySpec<V2>(V2::class)
+    
+    class CurrV : CurrEntity
+    object SpecCurr: CurrEntitySpec<CurrV>(CurrV::class)
+    
     
     @Test
     fun `adds versioned specs correctly`() {
-        val bundle = defineMigrations(2, SpecV2) {
+        val bundle = defineMigrations(2, SpecCurr) {
             version(1, SpecV1)
-            version(2, SpecV2)
+            version(2, SpecCurr)
         }
         assertEquals(2, bundle.versionedSpecs.size)
         assertEquals(SpecV1, bundle.versionedSpecs[1])
-        assertEquals(SpecV2, bundle.versionedSpecs[2])
+        assertEquals(SpecCurr, bundle.versionedSpecs[2])
     }
     @Test
     fun `adds missing latest version and spec`() {
-        val bundle = defineMigrations(3, SpecV3) {
+        val bundle = defineMigrations(3, SpecCurr) {
             version(1, SpecV1)
             version(2, SpecV2)
         }
         assertEquals(3, bundle.versionedSpecs.size)
         assertEquals(SpecV1, bundle.versionedSpecs[1])
         assertEquals(SpecV2, bundle.versionedSpecs[2])
-        assertEquals(SpecV3, bundle.versionedSpecs[3])
+        assertEquals(SpecCurr, bundle.versionedSpecs[3])
     }
-    
     
     @Test
     fun `stores rename history correctly`() {
-        val bundle = defineMigrations(2, SpecV2) {
+        val bundle = defineMigrations(2, SpecCurr) {
             version(1, SpecV1) {
                 rename {
                     "latestA" from "firstA" to "renamedToA"
@@ -57,7 +60,7 @@ class DefineMigrationsTest {
     
     @Test
     fun `stores milestone with column transformation`() {
-        val bundle = defineMigrations(2, SpecV2) {
+        val bundle = defineMigrations(2, SpecCurr) {
             version(1, SpecV1) {
                 milestone("someField".modify {
                     fromInt = { it.toString() }
@@ -76,13 +79,13 @@ class DefineMigrationsTest {
         assertEquals("123", override?.fromInt?.invoke(123))
     }
     
-    data class Dummy(val value: String) : DbEntity
+    data class Dummy(val value: String) : CurrEntity
     
     @Test
     fun `stores milestone with processFinalObj`() {
-        val migrationFunc: (oldObj: BaseEntity, newObj: BaseEntity) -> BaseEntity = { old, _ -> old }
+        val migrationFunc: (oldObj: NormalEntity, newObj: NormalEntity) -> NormalEntity = { old, _ -> old }
         
-        val bundle = defineMigrations(2, SpecV2) {
+        val bundle = defineMigrations(2, SpecCurr) {
             version(1, SpecV1) {
                 milestone(processFinalObj = migrationFunc)
             }
@@ -99,59 +102,12 @@ class DefineMigrationsTest {
     
     @Test
     fun `works with only latest version`() {
-        val bundle = defineMigrations(1, SpecV1) { }
+        val bundle = defineMigrations(1, SpecCurr) { }
     
-        assertEquals(mapOf(1 to SpecV1), bundle.versionedSpecs)
+        assertEquals(mapOf(1 to SpecCurr), bundle.versionedSpecs)
         assertTrue(bundle.renameHistory.isEmpty())
         assertTrue(bundle.milestones.isEmpty())
     }
-    
-    
-    /* TODO Check the following tests
-    @Test
-    fun `throws error on duplicate rename for same field in same version`() {
-        val exception = assertFailsWith<IllegalStateException> {
-            defineMigrations(2, V2::class) {
-                version(1, V1::class) {
-                    rename {
-                        "newest" from "putin" to "hujlo"
-                        "newest" from "putin" to "motherfucker" // duplicate in same version
-                    }
-                }
-            }
-        }
-        assertTrue("Duplicate rename for field" in (exception.message ?: ""))
-    }
-    @Test
-    fun `throws error on duplicate rename for different fields with same FROM in same version`() {
-        val exception = assertFailsWith<IllegalStateException> {
-            defineMigrations(2, V2::class) {
-                version(1, V1::class) {
-                    rename {
-                        "newest" from "putin" to "hujlo"
-                        "differentNewest" from "putin" to "motherfucker"
-                    }
-                }
-            }
-        }
-        assertTrue("Duplicate rename for field" in (exception.message ?: ""))
-    }
-    @Test
-    fun `throws error on duplicate rename for different fields with same TO in same version`() {
-        val exception = assertFailsWith<IllegalStateException> {
-            defineMigrations(2, V2::class) {
-                version(1, V1::class) {
-                    rename {
-                        "newest" from "putin" to "motherfucker"
-                        "differentNewest" from "TuckerCarlson" to "motherfucker"
-                    }
-                }
-            }
-        }
-        assertTrue("Duplicate rename for field" in (exception.message ?: ""))
-    }
-    */
-    
     
     
     

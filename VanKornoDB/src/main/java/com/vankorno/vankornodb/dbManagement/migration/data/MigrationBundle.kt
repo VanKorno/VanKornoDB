@@ -5,11 +5,11 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.api.EntitySpec
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.NormalEntitySpec
 
 data class MigrationBundle(
-                        val versionedSpecs: Map<Int, EntitySpec<out BaseEntity>>,
+                        val versionedSpecs: Map<Int, NormalEntitySpec<out NormalEntity>>,
                          val renameHistory: Map<String, List<RenameRecord>>,
                             val milestones: List<Pair<Int, MilestoneLambdas>>,
 ) {

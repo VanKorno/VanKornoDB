@@ -5,11 +5,9 @@
 // endregion
 package com.vankorno.vankornodb.api
 
-import android.content.ContentValues
-import android.database.Cursor
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.EntityColumnsInternal
-import kotlin.reflect.KClass
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 
 /**
  * Marker interface for all VanKornoDB entities.
@@ -17,10 +15,10 @@ import kotlin.reflect.KClass
  * Entities must be data classes and implement this interface
  * to be mappable by VanKornoDB.
  */
-interface DbEntity : BaseEntity
+interface CurrEntity : NormalEntity
 
 
-interface OldEntity : BaseEntity
+interface OldEntity : NormalEntity
 
 
 /**
@@ -31,12 +29,7 @@ interface LiteEntity : BaseEntity
 
 
 
-open class EntitySpec<T : BaseEntity>(                val clazz: KClass<out T>,
-                                                    val columns: EntityColumns? = null,
-                                                     val getter: ((Cursor)->T)? = null,
-                                                     val setter: ((T, ContentValues)->Unit)? = null,
-                                             val createTableSql: String? = null,
-)
+
 
 
 interface EntityColumns : EntityColumnsInternal

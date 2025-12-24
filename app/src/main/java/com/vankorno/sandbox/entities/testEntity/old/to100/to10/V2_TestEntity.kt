@@ -1,7 +1,7 @@
 package com.vankorno.sandbox.entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.OldEntity
+import com.vankorno.vankornodb.dbManagement.data.OldEntitySpec
 
 data class V2_TestEntity(
                                     val id: Int = -1,
@@ -27,6 +27,6 @@ data class V2_TestEntity(
 
 
 
-object SpecV2_Test : EntitySpec<V2_TestEntity>(
+object SpecV2_Test : OldEntitySpec<V2_TestEntity>(
     clazz = V2_TestEntity::class
 )

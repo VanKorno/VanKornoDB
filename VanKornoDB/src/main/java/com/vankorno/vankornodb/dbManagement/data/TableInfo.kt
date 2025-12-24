@@ -1,8 +1,8 @@
 package com.vankorno.vankornodb.dbManagement.data
 
-import com.vankorno.vankornodb.api.EntitySpec
+import com.vankorno.vankornodb.api.CurrEntity
 
 data class TableInfo (
                                   val name: String,
-                                  val spec: EntitySpec<out BaseEntity>,
+                                  val spec: CurrEntitySpec<out CurrEntity>,
 )

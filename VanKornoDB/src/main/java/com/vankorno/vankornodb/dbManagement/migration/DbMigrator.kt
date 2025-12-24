@@ -35,21 +35,17 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
      * Migrate one entity limited to a single table.
      * (with a non-null [BaseEntityMeta.limitedToTable]).
      */
-    fun migrateSingleTableEntity(                                            entity: BaseEntityMeta
+    fun migrateSingleTableEntity(                                        entityMeta: BaseEntityMeta
     ) {
-        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, _Name, entity.dbRowName)
-        val newVer = entity.currVersion
-        val tableName = entity.limitedToTable ?: return //\/\/\
+        val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, _Name, entityMeta.dbRowName)
+        val newVer = entityMeta.currVersion
+        val table = entityMeta.limitedToTable ?: return //\/\/\
         // region LOG
-            Log.d(DbTAG, "migrateSingleTableEntity() table = $tableName, oldVer = $oldVer, newVer = $newVer")
+            Log.d(DbTAG, "migrateSingleTableEntity() table = $table, oldVer = $oldVer, newVer = $newVer")
         // endregion
-        db.migrateMultiStep(
-            table = tableName,
-            oldVersion = oldVer,
-            newVersion = newVer,
-            migrationBundle = entity.migrationBundle.value
-        )
-        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, _Name, entity.dbRowName)
+        db.migrateMultiStep(table, oldVer, entityMeta)
+        
+        db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, _Name, entityMeta.dbRowName)
     }
     
     
@@ -83,9 +79,7 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
                                                                     entityMeta: BaseEntityMeta,
                                                               doAfterEachTable: (String)->Unit = {},
     ) {
-        val newVer = entityMeta.currVersion
-        
-        db.migrateMultiStep(table, oldVer, newVer, entityMeta.migrationBundle.value)
+        db.migrateMultiStep(table, oldVer, entityMeta)
         
         doAfterEachTable(table)
     }

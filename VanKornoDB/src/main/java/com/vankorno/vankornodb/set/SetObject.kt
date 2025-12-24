@@ -8,7 +8,7 @@ package com.vankorno.vankornodb.set
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.add.internal.toContentValues
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.data.DbConstants._ID
@@ -22,7 +22,7 @@ import com.vankorno.vankornodb.core.data.DbConstants._ID
  * @param obj The entity object with updated data.
  * @return The number of rows affected.
  */
-fun <T : DbEntity> SQLiteDatabase.setObjById(                                         id: Int,
+fun <T : CurrEntity> SQLiteDatabase.setObjById(                                         id: Int,
                                                                                    table: String,
                                                                                      obj: T,
 ): Int {
@@ -31,7 +31,7 @@ fun <T : DbEntity> SQLiteDatabase.setObjById(                                   
 }
 
 
-inline fun <T : DbEntity> SQLiteDatabase.setObj(                           table: String,
+inline fun <T : CurrEntity> SQLiteDatabase.setObj(                           table: String,
                                                                              obj: T,
                                                                            where: WhereDsl.()->Unit,
 ): Int {

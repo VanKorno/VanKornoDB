@@ -5,9 +5,9 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.api.DbEntity
+import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.EntityColumns
-import com.vankorno.vankornodb.api.EntitySpec
+import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
 
@@ -17,11 +17,11 @@ data class VersionEntity(
                                  val notes: String = "",
 
                                     val id: Int = -1,
-) : DbEntity
+) : CurrEntity
 
 
 
-object SpecVersion : EntitySpec<VersionEntity>(
+object SpecVersion : CurrEntitySpec<VersionEntity>(
     clazz = VersionEntity::class,
     
     columns = CVersion,

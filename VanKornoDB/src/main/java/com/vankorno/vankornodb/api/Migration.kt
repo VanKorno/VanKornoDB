@@ -8,6 +8,7 @@ package com.vankorno.vankornodb.api
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
@@ -30,8 +31,8 @@ fun defineMigrations(                                             entityMeta: Ba
 )
 
 
-fun <T: BaseEntity> defineMigrations(                          latestVersion: Int,
-                                                                  latestSpec: EntitySpec<T>,
+fun <T: CurrEntity> defineMigrations(                          latestVersion: Int,
+                                                                  latestSpec: CurrEntitySpec<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(latestVersion, latestSpec, block)
 
@@ -60,7 +61,7 @@ open class DbMigrator(                                               db: SQLiteD
 
 
 
-/**
+/** TODO update
  * Migrates the contents of a table through multiple versioned entity definitions and optional transformation lambdas.
  *
  * This function performs step-by-step data migration from [oldVersion] to [newVersion], converting each entity instance
@@ -75,19 +76,15 @@ open class DbMigrator(                                               db: SQLiteD
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
  */
-fun SQLiteDatabase.migrateMultiStep(                             table: String,
-                                                            oldVersion: Int,
-                                                            newVersion: Int,
-                                                       migrationBundle: MigrationBundle,
-                                                         onNewDbFilled: (List<BaseEntity>)->Unit = {},
+fun SQLiteDatabase.migrateMultiStep(                           table: String,
+                                                          oldVersion: Int,
+                                                          entityMeta: BaseEntityMeta,
+                                                       onNewDbFilled: (List<BaseEntity>)->Unit = {},
 ) {
     this.migrateMultiStepInternal(
         table = table,
         oldVersion = oldVersion,
-        newVersion = newVersion,
-        versionedSpecs = migrationBundle.versionedSpecs,
-        renameHistory = migrationBundle.renameHistory,
-        milestones = migrationBundle.milestones,
+        entityMeta = entityMeta,
         onNewDbFilled = onNewDbFilled,
     )
 }

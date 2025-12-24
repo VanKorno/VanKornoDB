@@ -7,10 +7,10 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.BaseEntitySpec
 
 /**
  * Gets one db table row as an object of type [T] using WhereDsl. Returns null if no result found.
@@ -26,7 +26,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObj(            table: Str
  * Gets one db table row as an object of [clazz] using using WhereDsl. Returns null if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                                       spec: EntitySpec<T>,
+                                                                       spec: BaseEntitySpec<T>,
                                                                       where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(table, spec) { this.where = where }
 
@@ -45,7 +45,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObj(            table: Str
 
 
 fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                                       spec: EntitySpec<T>,
+                                                                       spec: BaseEntitySpec<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
 ): T = getObj(table, spec, where) ?: run {

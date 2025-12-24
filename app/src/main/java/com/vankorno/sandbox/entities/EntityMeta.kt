@@ -2,8 +2,8 @@ package com.vankorno.sandbox.entities
 
 import com.vankorno.sandbox.entities.testEntity.SpecTest
 import com.vankorno.sandbox.entities.testEntity.migrationsTestEntity
-import com.vankorno.vankornodb.api.EntitySpec
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.data.CurrEntitySpec
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 
 /**
@@ -30,7 +30,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
  */
 enum class EntityMeta(                              override val currVersion: Int,
                                                       override val dbRowName: String,
-                                                 override val currEntitySpec: EntitySpec<*>,
+                                                 override val currEntitySpec: CurrEntitySpec<*>,
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {
