@@ -21,7 +21,7 @@ data class VersionEntity(
 
 
 
-object SpecVersion : CurrOrmBundle<VersionEntity>(
+object OrmVersion : CurrOrmBundle<VersionEntity>(
     clazz = VersionEntity::class,
     
     columns = CVersion,

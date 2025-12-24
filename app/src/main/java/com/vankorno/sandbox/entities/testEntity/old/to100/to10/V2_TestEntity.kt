@@ -27,6 +27,6 @@ data class V2_TestEntity(
 
 
 
-object SpecV2_Test : OldOrmBundle<V2_TestEntity>(
+object OrmV2_Test : OldOrmBundle<V2_TestEntity>(
     clazz = V2_TestEntity::class
 )
