@@ -22,7 +22,7 @@ import com.vankorno.vankornodb.core.data.DbConstants._ID
  * @param obj The entity object with updated data.
  * @return The number of rows affected.
  */
-fun <T : CurrEntity> SQLiteDatabase.setObjById(                                         id: Int,
+fun <T : CurrEntity> SQLiteDatabase.setObjById(                                       id: Int,
                                                                                    table: String,
                                                                                      obj: T,
 ): Int {
@@ -31,7 +31,7 @@ fun <T : CurrEntity> SQLiteDatabase.setObjById(                                 
 }
 
 
-inline fun <T : CurrEntity> SQLiteDatabase.setObj(                           table: String,
+inline fun <T : CurrEntity> SQLiteDatabase.setObj(                         table: String,
                                                                              obj: T,
                                                                            where: WhereDsl.()->Unit,
 ): Int {

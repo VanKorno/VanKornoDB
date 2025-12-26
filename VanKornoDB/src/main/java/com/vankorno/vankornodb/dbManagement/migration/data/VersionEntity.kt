@@ -28,7 +28,6 @@ object OrmVersion : CurrOrmBundle<VersionEntity>(
 
     columns = CVersion,
 
-
     getter = { cursor ->
         var idx = 0
 
@@ -39,7 +38,6 @@ object OrmVersion : CurrOrmBundle<VersionEntity>(
             id = cursor.getInt(idx++)
         )
     },
-
 
     setter = { e, cv ->
         cv.put("name", e.name)
@@ -58,7 +56,6 @@ object CVersion : EntityColumns {
     val Version = iCol("version", 0)
     val Notes = sCol("notes", "")
     val Id = iCol("id", -1)
-
 
     override val columns = buildColList {
         +Name

@@ -46,7 +46,6 @@ object OrmTest : CurrOrmBundle<TestEntity>(
 
     columns = CTest,
 
-
     getter = { cursor ->
         var idx = 0
 
@@ -72,7 +71,6 @@ object OrmTest : CurrOrmBundle<TestEntity>(
             float3 = cursor.getFloat(idx++)
         )
     },
-
 
     setter = { e, cv ->
         cv.put("id", e.id)
@@ -121,7 +119,6 @@ object CTest : EntityColumns {
     val Float1 = fCol("float1", 0F)
     val Float2 = fCol("float2", 0F)
     val Float3 = fCol("float3", 0F)
-
 
     override val columns = buildColList {
         +Id
