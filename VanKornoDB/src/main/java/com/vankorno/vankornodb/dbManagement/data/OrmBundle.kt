@@ -30,7 +30,6 @@ open class CurrOrmBundle<T : CurrEntity>(
                                             override val getter: ((Cursor)->T)? = null,
                                                      val setter: ((T, ContentValues)->Unit)? = null,
                                                     val columns: EntityColumns? = null,
-                                             val createTableSql: String? = null,
 ) : NormalOrmBundle<T>
 
 

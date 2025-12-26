@@ -21,11 +21,35 @@ data class VersionEntity(
 
 
 
+
+
 object OrmVersion : CurrOrmBundle<VersionEntity>(
     clazz = VersionEntity::class,
-    
+
     columns = CVersion,
+
+
+    getter = { cursor ->
+        var idx = 0
+
+        VersionEntity(
+            name = cursor.getString(idx++),
+            version = cursor.getInt(idx++),
+            notes = cursor.getString(idx++),
+            id = cursor.getInt(idx++)
+        )
+    },
+
+
+    setter = { e, cv ->
+        cv.put("name", e.name)
+        cv.put("version", e.version)
+        cv.put("notes", e.notes)
+        cv.put("id", e.id)
+    },
 )
+
+
 
 
 
