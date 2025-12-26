@@ -44,6 +44,7 @@ object OrmVersion : CurrOrmBundle<VersionEntity>(
         cv.put("version", e.version)
         cv.put("notes", e.notes)
         cv.put("id", e.id)
+        cv
     },
 )
 

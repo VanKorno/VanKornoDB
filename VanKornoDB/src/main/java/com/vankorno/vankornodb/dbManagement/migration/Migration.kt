@@ -201,7 +201,7 @@ open class MigrationUtils {
                                                 renameHistory: Map<String, List<RenameRecord>>,
                                                versionedSpecs: Map<Int, NormalOrmBundle<out NormalEntity>>,
                                                       lambdas: Map<Int, MilestoneLambdas>,
-    ): BaseEntity {
+    ): NormalEntity {
         var currentObj = original
         var currentVer = oldVersion
         

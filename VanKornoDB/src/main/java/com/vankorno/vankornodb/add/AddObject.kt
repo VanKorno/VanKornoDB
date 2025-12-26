@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.internal.getId
 import com.vankorno.vankornodb.add.internal.hasIdField
 import com.vankorno.vankornodb.add.internal.withId
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.get.getLastId
 import com.vankorno.vankornodb.mapper.toContentValues
 
@@ -41,13 +41,13 @@ import com.vankorno.vankornodb.mapper.toContentValues
  * @param obj The entity object to insert.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-fun <T : BaseEntity> SQLiteDatabase.addObj(                                        table: String,
+fun <T : NormalEntity> SQLiteDatabase.addObj(                                      table: String,
                                                                                      obj: T,
 ): Long {
     val modifiedEntity = if (obj.hasIdField() && obj.getId() < 1) {
         obj.withId(getLastId(table) + 1)
     } else obj
-
+    
     val cv = toContentValues(modifiedEntity)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(table, null, cv)
@@ -61,7 +61,7 @@ fun <T : BaseEntity> SQLiteDatabase.addObj(                                     
  * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
  */
-fun <T : BaseEntity> SQLiteDatabase.addObjects(                                    table: String,
+fun <T : NormalEntity> SQLiteDatabase.addObjects(                                  table: String,
                                                                                  objects: List<T>,
 ): Int {
     var count = 0
@@ -72,39 +72,6 @@ fun <T : BaseEntity> SQLiteDatabase.addObjects(                                 
     return count
 }
 
-
-// TODO Check if needed
-/*
-inline fun <reified T : DbEntity> SQLiteDatabase.insertObjectsWithAutoIds(         table: String,
-                                                                                 objects: List<T>,
-): Int {
-    if (objects.isEmpty()) return 0
-
-    val kClass = T::class
-    val hasId = kClass.memberProperties.any { it.name == _ID }
-    val idProp = kClass.memberProperties.firstOrNull { it.name == _ID }
-    val ctor = kClass.primaryConstructor!!
-
-    var nextId = getLastId(table) + 1
-    var count = 0
-
-    for (obj in objects) {
-        val currentId = idProp?.getter?.call(obj) as? Int ?: -1
-        val modified = if (hasId && currentId < 1) {
-            val args = ctor.parameters.associateWith { param ->
-                if (param.name == _ID) nextId++
-                else kClass.memberProperties.first { it.name == param.name }.getter.call(obj)
-            }
-            ctor.callBy(args)
-        } else obj
-
-        val cv = toContentValues(modified)
-        if (cv.size() != 0 && insert(table, null, cv) != -1L) {
-            count++
-        }
-    }
-    return count
-}*/
 
 
 

@@ -92,6 +92,7 @@ object OrmTest : CurrOrmBundle<TestEntity>(
         cv.put("float1", e.float1)
         cv.put("float2", e.float2)
         cv.put("float3", e.float3)
+        cv
     },
 )
 

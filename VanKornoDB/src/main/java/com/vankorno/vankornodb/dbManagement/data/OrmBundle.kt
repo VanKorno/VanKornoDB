@@ -20,23 +20,26 @@ sealed interface BaseOrmBundle<T : BaseEntity> {
 }
 
 
-sealed interface NormalOrmBundle<T : NormalEntity>
-    : BaseOrmBundle<T>
+sealed interface NormalOrmBundle<T : NormalEntity> : BaseOrmBundle<T> {
+    val setter: ((T, ContentValues) -> ContentValues)?
+}
 
 
 
 open class CurrOrmBundle<T : CurrEntity>(
-                                             override val clazz: KClass<out T>,
-                                            override val getter: ((Cursor)->T)? = null,
-                                                     val setter: ((T, ContentValues)->Unit)? = null,
-                                                    val columns: EntityColumns? = null,
+                                    override val clazz: KClass<out T>,
+                                           val columns: EntityColumns? = null,
+                                   override val getter: ((Cursor)->T)? = null,
+                                   override val setter: ((T, ContentValues)->ContentValues)? = null,
 ) : NormalOrmBundle<T>
 
 
 
 
-open class OldOrmBundle<T : OldEntity>(                   override val clazz: KClass<out T>,
-                                                         override val getter: ((Cursor)->T)? = null,
+open class OldOrmBundle<T : OldEntity>(
+                                    override val clazz: KClass<out T>,
+                                   override val getter: ((Cursor)->T)? = null,
+                                   override val setter: ((T, ContentValues)->ContentValues)? = null,
 ) : NormalOrmBundle<T>
 
 
