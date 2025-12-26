@@ -8,10 +8,10 @@ package com.vankorno.vankornodb.add
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.internal.getId
 import com.vankorno.vankornodb.add.internal.hasIdField
-import com.vankorno.vankornodb.add.internal.toContentValues
 import com.vankorno.vankornodb.add.internal.withId
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.get.getLastId
+import com.vankorno.vankornodb.mapper.toContentValues
 
 // TODO Maybe: Upsert-like function — insert or update depending on whether the row exists (SQLite supports INSERT OR REPLACE, INSERT ON CONFLICT, etc.)
 

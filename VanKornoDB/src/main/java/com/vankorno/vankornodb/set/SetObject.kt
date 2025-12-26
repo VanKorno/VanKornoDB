@@ -7,11 +7,11 @@ package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.vankorno.vankornodb.add.internal.toContentValues
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.data.DbConstants._ID
+import com.vankorno.vankornodb.mapper.toContentValues
 
 /**
  * Updates the row with the specified [id] in the given table with the values from [obj].
