@@ -45,14 +45,14 @@ abstract class MigrationDslInternal {
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
     fun <T : NormalEntity> version(                           version: Int,
-                                                                 spec: NormalOrmBundle<T>,
+                                                            ormBundle: NormalOrmBundle<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
         verBuilder.block()
         
         // Class
-        versionedSpecs[version] = spec
+        versionedSpecs[version] = ormBundle
         
         // Renames
         for (record in verBuilder.pendingRenames) {
