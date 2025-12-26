@@ -2,6 +2,7 @@ package com.vankorno.sandbox.entities.testEntity.old.to100.to10
 
 import com.vankorno.vankornodb.api.OldEntity
 import com.vankorno.vankornodb.dbManagement.data.OldOrmBundle
+import com.vankorno.vankornodb.misc.getBoolean
 
 data class V1_TestEntity(
                                   val name: String = "",
@@ -15,6 +16,22 @@ data class V1_TestEntity(
 
 
 
+
+
 object OrmV1_Test : OldOrmBundle<V1_TestEntity>(
-    clazz = V1_TestEntity::class
+    clazz = V1_TestEntity::class,
+
+    getter = { cursor ->
+        var idx = 0
+
+        V1_TestEntity(
+            name = cursor.getString(idx++),
+            boo = cursor.getBoolean(idx++),
+            int1 = cursor.getInt(idx++),
+            str1 = cursor.getString(idx++),
+            long1 = cursor.getLong(idx++),
+            float1 = cursor.getFloat(idx++),
+            id = cursor.getInt(idx++)
+        )
+    },
 )
