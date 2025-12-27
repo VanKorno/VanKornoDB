@@ -17,12 +17,12 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.get.noty.*
 import com.vankorno.vankornodb.misc.getBoolean
 
-fun SQLiteDatabase.getInt(table: String, column: IntCol, where: WhereDsl.()->Unit) = getIntNoty(table, column.name, where)
-fun SQLiteDatabase.getStr(table: String, column: StrCol, where: WhereDsl.()->Unit) = getStrNoty(table, column.name, where)
-fun SQLiteDatabase.getBool(table: String, column: BoolCol, where: WhereDsl.()->Unit) = getBoolNoty(table, column.name, where)
-fun SQLiteDatabase.getLong(table: String, column: LongCol, where: WhereDsl.()->Unit) = getLongNoty(table, column.name, where)
-fun SQLiteDatabase.getFloat(table: String, column: FloatCol, where: WhereDsl.()->Unit) = getFloatNoty(table, column.name, where)
-fun SQLiteDatabase.getBlob(table: String, column: BlobCol, where: WhereDsl.()->Unit) = getBlobNoty(table, column.name, where)
+fun SQLiteDatabase.getInt(table: String, column: IntCol, where: WhereDsl.()->Unit = {}) = getIntNoty(table, column.name, where)
+fun SQLiteDatabase.getStr(table: String, column: StrCol, where: WhereDsl.()->Unit = {}) = getStrNoty(table, column.name, where)
+fun SQLiteDatabase.getBool(table: String, column: BoolCol, where: WhereDsl.()->Unit = {}) = getBoolNoty(table, column.name, where)
+fun SQLiteDatabase.getLong(table: String, column: LongCol, where: WhereDsl.()->Unit = {}) = getLongNoty(table, column.name, where)
+fun SQLiteDatabase.getFloat(table: String, column: FloatCol, where: WhereDsl.()->Unit = {}) = getFloatNoty(table, column.name, where)
+fun SQLiteDatabase.getBlob(table: String, column: BlobCol, where: WhereDsl.()->Unit = {}) = getBlobNoty(table, column.name, where)
 
 
 
