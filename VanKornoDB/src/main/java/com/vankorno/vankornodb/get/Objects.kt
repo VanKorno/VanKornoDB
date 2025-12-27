@@ -1,3 +1,8 @@
+// region License
+/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+**/
+// endregion
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
@@ -8,36 +13,14 @@ import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
 /** 
  * Retrieves a map of objects from the given table.
  */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObjects(        table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-): List<T> = getObjectsPro(table) {
-    this.where = where
-}
-
-
-
-/** 
- * Retrieves a map of objects from the given table.
- */
 fun <T : BaseEntity> SQLiteDatabase.getObjects(                       table: String,
-                                                                      spec: BaseOrmBundle<T>,
+                                                                  ormBundle: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
-): List<T> = getObjectsPro(table, spec) {
+): List<T> = getObjectsPro(table, ormBundle) {
     this.where = where
 }
 
 
-
-
-
-/** 
- * Retrieves a map of objects of type [T] from the given table.
- */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMap(         table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-): Map<Int, T> = getObjMapPro(table) {
-    this.where = where
-}
 
 
 
@@ -45,9 +28,9 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMap(         table: Str
  * Retrieves a map of objects from the given table.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjMap(                        table: String,
-                                                                       spec: BaseOrmBundle<T>,
+                                                                  ormBundle: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
-): Map<Int, T> = getObjMapPro(table, spec) {
+): Map<Int, T> = getObjMapPro(table, ormBundle) {
     this.where = where
 }
 

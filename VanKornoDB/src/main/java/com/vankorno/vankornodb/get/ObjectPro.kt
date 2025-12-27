@@ -8,41 +8,16 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
-import com.vankorno.vankornodb.mapper.toEntity
-
 
 /**
- * Gets one db table row as an object of type [T] using the full VanKorno DSL (but limit is always 1). Returns null if no result found.
+ * Gets one db table row as an object of a class, specified in [ormBundle],
+ * using using the full VanKorno DSL (but limit is always 1).
+ * Returns [default] if no result found.
  */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               table: String,
-                                                                     noinline dsl: FullDsl.()->Unit,
-): T? = getCursorPro(table) {
-    applyDsl(dsl)
-    limit = 1
-}.use { cursor ->
-    if (!cursor.moveToFirst()) return null
-    cursor.toEntity(T::class)
-}
-
-
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObjPro(               table: String,
-                                                                          default: T,
-                                                                     noinline dsl: FullDsl.()->Unit,
-): T = getObjPro<T>(table, dsl) ?: run {
-    // region LOG
-        Log.e(DbTAG, "getObjPro(): The requested row doesn't exist in $table, returning default")
-    // endregion
-    default
-}
-
-
-
-
-
-
 fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              table: String,
                                                                         ormBundle: BaseOrmBundle<T>,
                                                                           default: T,
@@ -53,6 +28,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              tabl
     // endregion
     default
 }
+
 
 /**
  * Gets one db table row as an object of a class, specified in [ormBundle],
@@ -69,4 +45,9 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                              tabl
     if (!cursor.moveToFirst()) return null
     cursor.toEntity(ormBundle)
 }
+
+
+
+
+
 

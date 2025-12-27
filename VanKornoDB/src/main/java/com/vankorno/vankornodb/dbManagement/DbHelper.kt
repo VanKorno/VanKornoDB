@@ -186,51 +186,57 @@ abstract class DbHelperInternal(
     
     // -----------------------------------  O B J E C T  ----------------------------------- \\
     
-    inline fun <T : CurrEntity> addObj(                                       table: String,
-                                                                              obj: T,
-                                                                            async: Boolean = false,
+    inline fun <T : CurrEntity> addObj(                           table: String,
+                                                                    obj: T,
+                                                              ormBundle: NormalOrmBundle<T>? = null,
+                                                                  async: Boolean = false,
     ) = write("addObj", async) {
-        it.addObj(table, obj)
+        it.addObj(table, obj, ormBundle)
     }
     
     
-    suspend fun <T : CurrEntity> addObjSusp(                                         table: String,
-                                                                                     obj: T,
+    suspend fun <T : CurrEntity> addObjSusp(                      table: String,
+                                                                    obj: T,
+                                                              ormBundle: NormalOrmBundle<T>? = null,
     ): Long = readWriteSusp(-1L, "addObjSusp") {
-        it.addObj(table, obj)
+        it.addObj(table, obj, ormBundle)
     }
     
     
-    inline fun <T : CurrEntity> addObjects(                                   table: String,
-                                                                          objects: List<T>,
-                                                                            async: Boolean = false,
+    inline fun <T : CurrEntity> addObjects(                       table: String,
+                                                                objects: List<T>,
+                                                              ormBundle: NormalOrmBundle<T>? = null,
+                                                                  async: Boolean = false,
     ) = write("addObjects", async) {
-        it.addObjects(table, objects)
+        it.addObjects(table, objects, ormBundle)
     }
     
     
-    suspend fun <T : CurrEntity> addObjectsSusp(                                     table: String,
-                                                                                 objects: List<T>,
+    suspend fun <T : CurrEntity> addObjectsSusp(                  table: String,
+                                                                objects: List<T>,
+                                                              ormBundle: NormalOrmBundle<T>? = null,
     ): Int = readWriteSusp(0, "addObjectsSusp") {
-        it.addObjects(table, objects)
+        it.addObjects(table, objects, ormBundle)
     }
     
     
     
-    fun <T : CurrEntity> setObj(                                             table: String,
-                                                                             obj: T,
-                                                                           async: Boolean = false,
-                                                                           where: WhereDsl.()->Unit,
+    fun <T : CurrEntity> setObj(                                  table: String,
+                                                                    obj: T,
+                                                              ormBundle: NormalOrmBundle<T>? = null,
+                                                                  async: Boolean = false,
+                                                                  where: WhereDsl.()->Unit,
     ) = write("setObj", async) {
-        it.setObj(table, obj, where)
+        it.setObj(table, obj, ormBundle, where)
     }
     
     
-    suspend fun <T : CurrEntity> setObjSusp(                                 table: String,
-                                                                             obj: T,
-                                                                           where: WhereDsl.()->Unit,
+    suspend fun <T : CurrEntity> setObjSusp(                      table: String,
+                                                                    obj: T,
+                                                              ormBundle: NormalOrmBundle<T>? = null,
+                                                                  where: WhereDsl.()->Unit,
     ): Int = readWriteSusp(0, "setObjSusp") {
-        it.setObj(table, obj, where)
+        it.setObj(table, obj, ormBundle, where)
     }
     
     
@@ -307,20 +313,6 @@ abstract class DbHelperInternal(
     
     // ==============================  G E T   O B J E C T S  ============================== \\
     
-    inline fun <reified T : BaseEntity> getObj(                       table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): T? = read(null, "getObj") {
-        it.getObj<T>(table, where)
-    }
-    
-    
-    suspend inline fun <reified T : BaseEntity> getObjSusp(           table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): T? = readSusp(null, "getObjSusp") {
-        it.getObj<T>(table, where)
-    }
-    
-    
     fun <T : BaseEntity> getObj(                                      table: String,
                                                                   ormBundle: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -337,20 +329,6 @@ abstract class DbHelperInternal(
     }
     
     // With defaults
-    
-    inline fun <reified T : BaseEntity> getObj(                       table: String,
-                                                                    default: T,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): T = read(default, "getObj") {
-        it.getObj<T>(table, default, where)
-    }
-    
-    suspend inline fun <reified T : BaseEntity> getObjSusp(           table: String,
-                                                                    default: T,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): T = readSusp(default, "getObjSusp") {
-        it.getObj<T>(table, default, where)
-    }
     
     fun <T : BaseEntity> getObj(                                      table: String,
                                                                   ormBundle: BaseOrmBundle<T>,
@@ -371,20 +349,6 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
-    inline fun <reified T : BaseEntity> getObjPro(                     table: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): T? = read(null, "getObjPro") {
-        it.getObjPro<T>(table, dsl)
-    }
-    
-    
-    suspend inline fun <reified T : BaseEntity> getObjProSusp(         table: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): T? = readSusp(null, "getObjProSusp") {
-        it.getObjPro<T>(table, dsl)
-    }
-    
-    
     fun <T : BaseEntity> getObjPro(                                         table: String,
                                                                         ormBundle: BaseOrmBundle<T>,
                                                                               dsl: FullDsl.()->Unit,
@@ -401,33 +365,7 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     // With defaults
-    
-    inline fun <reified T : BaseEntity> getObjPro(                     table: String,
-                                                                     default: T,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): T = read(default, "getObjPro") {
-        it.getObjPro<T>(table, default, dsl)
-    }
-    
-    
-    suspend inline fun <reified T : BaseEntity> getObjProSusp(         table: String,
-                                                                     default: T,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): T = readSusp(default, "getObjProSusp") {
-        it.getObjPro<T>(table, default, dsl)
-    }
-    
     
     fun <T : BaseEntity> getObjPro(                                         table: String,
                                                                         ormBundle: BaseOrmBundle<T>,
@@ -458,19 +396,6 @@ abstract class DbHelperInternal(
     
     // =========================  M U L T I P L E   O B J E C T S  ========================= \\
     
-    inline fun <reified T : BaseEntity> getObjects(                   table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjectsPro(table) { this.where = where }
-    }
-    
-    suspend inline fun <reified T : BaseEntity> getObjectsSusp(       table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjectsPro(table) { this.where = where }
-    }
-    
-    
     fun <T : BaseEntity> getObjects(                                  table: String,
                                                                   ormBundle: BaseOrmBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -485,19 +410,6 @@ abstract class DbHelperInternal(
         it.getObjectsPro(table, ormBundle) { this.where = where }
     }
     
-    
-    
-    inline fun <reified T : BaseEntity> getObjMap(                    table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): Map<Int, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMapPro(table) { this.where = where }
-    }
-    
-    suspend inline fun <reified T : BaseEntity> getObjMapSusp(        table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMapPro(table) { this.where = where }
-    }
     
     
     fun <T : BaseEntity> getObjMap(                                   table: String,
@@ -521,20 +433,6 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
-    
-    inline fun <reified T : BaseEntity> getObjectsPro(                 table: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): List<T> = read(emptyList(), "getObjectsPro") {
-        it.getObjectsPro(table, dsl)
-    }
-    
-    suspend inline fun <reified T : BaseEntity> getObjectsProSusp(     table: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): List<T> = readSusp(emptyList(), "getObjectsProSusp") {
-        it.getObjectsPro(table, dsl)
-    }
-    
-    
     fun <T : BaseEntity> getObjectsPro(                                table: String,
                                                                    ormBundle: BaseOrmBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -550,20 +448,6 @@ abstract class DbHelperInternal(
     }
     
     // -------------------------------------------------------------------------------------- \\
-    
-    
-    inline fun <reified T : BaseEntity> getObjMapPro(                  table: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): Map<Int, T> = read(emptyMap(), "getObjMapPro") {
-        it.getObjMapPro(table, dsl)
-    }
-    
-    suspend inline fun <reified T : BaseEntity> getObjMapProSusp(      table: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-    ): Map<Int, T> = readSusp(emptyMap(), "getObjMapProSusp") {
-        it.getObjMapPro(table, dsl)
-    }
-    
     
     fun <T : BaseEntity> getObjMapPro(                                 table: String,
                                                                    ormBundle: BaseOrmBundle<T>,
@@ -1494,15 +1378,17 @@ abstract class DbHelperInternal(
     
     
     inline fun <reified T : BaseEntity> getRandomObj(                 table: String,
+                                                                  ormBundle: BaseOrmBundle<T>,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getRandomObj") { db ->
-        db.getRandomObj<T>(table, where)
+        db.getRandomObj<T>(table, ormBundle, where)
     }
     
     suspend inline fun <reified T : BaseEntity> getRandomObjSusp(     table: String,
+                                                                  ormBundle: BaseOrmBundle<T>,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getRandomObjSusp") { db ->
-        db.getRandomObj<T>(table, where)
+        db.getRandomObj<T>(table, ormBundle, where)
     }
     
     

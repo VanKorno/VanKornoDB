@@ -7,70 +7,30 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
-import com.vankorno.vankornodb.mapper.toEntity
-
-/** 
- * Retrieves a list of entities of type [T] mapped from the specified columns.
- */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObjectsPro(           table: String,
-                                                                     noinline dsl: FullDsl.()->Unit,
-): List<T> = getCursorPro(table) {
-    applyDsl(dsl)
-}.use { cursor ->
-    buildList {
-        if (cursor.moveToFirst()) {
-            do {
-                add(cursor.toEntity(T::class))
-            } while (cursor.moveToNext())
-        }
-    }
-}
-
-
 
 /** 
  * Retrieves a list of objects mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                         table: String,
-                                                                            spec: BaseOrmBundle<T>,
-                                                                             dsl: FullDsl.()->Unit,
+fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                          table: String,
+                                                                        ormBundle: BaseOrmBundle<T>,
+                                                                              dsl: FullDsl.()->Unit,
 ): List<T> = getCursorPro(table) {
     applyDsl(dsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
-                add(cursor.toEntity(spec))
+                add(cursor.toEntity(ormBundle))
             } while (cursor.moveToNext())
         }
     }
 }
 
 
-
-
-
-/** 
- * Retrieves a map of objects of type [T] from the specified table.
- */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMapPro(            table: String,
-                                                                     noinline dsl: FullDsl.()->Unit,
-): Map<Int, T> = getCursorPro(table) {
-    applyDsl(dsl)
-}.use { cursor ->
-    buildMap {
-        if (cursor.moveToFirst()) {
-            val idColIdx = cursor.getColumnIndexOrThrow("id")
-            do {
-                val entity = cursor.toEntity(T::class)
-                put(cursor.getInt(idColIdx), entity)
-            } while (cursor.moveToNext())
-        }
-    }
-}
 
 
 
@@ -78,9 +38,9 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getObjMapPro(            tabl
  * Retrieves a map of objects from the given table.
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                          table: String,
-                                                                            spec: BaseOrmBundle<T>,
-                                                                             dsl: FullDsl.()->Unit,
+fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                           table: String,
+                                                                        ormBundle: BaseOrmBundle<T>,
+                                                                              dsl: FullDsl.()->Unit,
 ): Map<Int, T> = getCursorPro(table) {
     applyDsl(dsl)
 }.use { cursor ->
@@ -88,7 +48,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                          table
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
             do {
-                val entity = cursor.toEntity(spec)
+                val entity = cursor.toEntity(ormBundle)
                 put(cursor.getInt(idColIdx), entity)
             } while (cursor.moveToNext())
         }

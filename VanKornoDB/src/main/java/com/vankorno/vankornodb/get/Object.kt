@@ -12,15 +12,6 @@ import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
 
-/**
- * Gets one db table row as an object of type [T] using WhereDsl. Returns null if no result found.
- */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObj(            table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-): T? = getObjPro(table) { this.where = where }
-
-
-
 
 /**
  * Gets one db table row as an object of [clazz] using using WhereDsl. Returns null if no result found.
@@ -30,18 +21,6 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: Str
                                                                       where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(table, ormBundle) { this.where = where }
 
-
-
-
-inline fun <reified T : BaseEntity> SQLiteDatabase.getObj(            table: String,
-                                                                    default: T,
-                                                             noinline where: WhereDsl.()->Unit = {},
-): T = getObj<T>(table, where) ?: run {
-    // region LOG
-        Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
-    // endregion
-    default
-}
 
 
 fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
