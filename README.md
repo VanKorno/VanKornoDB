@@ -67,19 +67,19 @@ db.getCursorPro(SomeTable, columns(Name, Position)) { // If simple 'where' DSL i
 getObj() - gets the whole db table row as an object of the entity data class
 
 ```kotlin
-db.getObj(RoundTable, OrmKnight) { SirKnight notEqual drunk }
+db.getObj(table = RoundTable, ormBundle = OrmKnight) { KnightState notEqual drunk }
 ```
 
 getObjects() or getObjMap() - for getting multiple objects from a db table.
 
 ```kotlin
-db.getObjects(RoundTable, OrmKnight) { SirKnight less hammered }
+db.getObjects(RoundTable, OrmKnight) { KnightState less hammered }
 ```
 
 getInt() (same for other types) - for getting single values from a particular cell.
 
 ```kotlin
-val aggressionLvl = db.getInt(RoundTable, Aggression) { Name equal Arthur }
+val aggressionLvl = db.getInt(RoundTable, column = Aggression) { Name equal Arthur }
 ```
 
 
