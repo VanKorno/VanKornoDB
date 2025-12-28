@@ -39,7 +39,7 @@ for (i in 1..1000) { db.createTable(ShopTable + i, OrmShop) } // OrmBundle (OrmS
 - List params of an entity class are automatically expanded, mapping the list elements to individual columns, which enables more logic to be done at the SQL-query level, without parsing strings or multiple connected tables.
 For example, with VanKornoDB you can even generate a thousand of tables with a thousand of columns via 2 lines of code:
 ```kotlin
-data class Shop(val someList: List<Int> = List(1000) { 0 } ) : DbEntity  // all those list elements become individual columns
+data class Shop(val someList: List<Int> = List(1000) { 0 } ) : CurrEntity  // all those list elements become individual columns
 
 for (i in 1..1000) { db.createTable(ShopTable + i, Shop::class) }
 ```
@@ -146,32 +146,6 @@ db.set(RoundKnightTable, whereName(Dudley)) {
 ```
 
 
-Other examples (these examples are not updated yet):
-
-```kotlin
-db.createTables(
-    TableInfo(TableName,     DataClass::class),
-    TableInfo(SettingsTable, SettingsEntity::class),
-    TableInfo(TabTable,      TabEntity::class)
-)
-
-db.insertRow<SettingsEntity>(SettingsTable, new)
-cursor.mapToEntity(SettingsEntity::class)
-
-db.getRowById<UserEntity>(TableName, where = { Mood equal bad })
-db.getRows<UserEntity>(TableName, where = { Mood equal good })
-
-db.set("new value", TableName, ColumnName, where = { Mood greater normal })
-
-db.setRowVals(
-    TableName,
-    where = { Mood notEqual bad },
-    Column1 to 1,
-    Column2 to 2,
-    Column3 to 3
-)
-```
-
 ## Installation
 All you need is one dependency in build.gradle.kts (App):
 ```kotlin
@@ -261,19 +235,20 @@ Another unique feature of VanKornoDB is how it handles lists of the entity data 
 Now you don't have to write every entity column manually, you can just define sets of columns as lists and easily have +500 columns with just one line of code ;)
 But there are some rules for lists:
 ```
-1. Lists must always be declared at the END of the constructor parameter list.
-
-2. List parameters must be named with the "List" suffix (e.g., `dayList`).
+1. List parameters must be named with the "List" suffix (e.g., `dayList`).
    Corresponding DB column names must match the base name (e.g., `day`)
    followed by a 1-based index suffix: `day1`, `day2`, ..., etc.
 
-3. Lists must be non-nullable and must have default values with a fixed number of elements
+2. Lists must be non-nullable and must have default values with a fixed number of elements
    (used to infer the column count for each list).
 
-4. All list elements must be of the same type, limited to a supported primitive type
+3. All list elements must be of the same type, limited to a supported primitive type
    (Boolean, Int, Long, Float, or String).
 
-5. Nested lists or complex types (e.g., data classes) inside lists are NOT SUPPORTED.
+4. Nested lists or complex types (e.g., data classes) inside lists are NOT SUPPORTED.
+
+5. Lists must be declared at the END of the constructor parameter list, if using the legacy reflection-based mappers.
+
 ```
 
 
