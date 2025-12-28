@@ -19,13 +19,13 @@ fun SQLiteDatabase.reorder(                                                 tabl
                                                                                id: Int,
                                                                      moveUpOrBack: Boolean,
                                                                   makeFirstOrLast: Boolean = false,
-) {
+): Boolean {
     // region LOG
     Log.d(DbTAG, "reorder(table = $table, id = $id, moveUpOrBack = $moveUpOrBack, makeFirstOrLast = $makeFirstOrLast")
     // endregion
     if (makeFirstOrLast) {
-        reorderToStartEnd(table, id, moveUpOrBack)
-        return //\/\/\/\/\/\
+        val successful = reorderToStartEnd(table, id, moveUpOrBack)
+        return successful //\/\/\/\/\/\
     }
     val position = getInt(table, cPosition) { ID = id }
     
@@ -39,7 +39,8 @@ fun SQLiteDatabase.reorder(                                                 tabl
         orderBy(if (moveUpOrBack) cPosition.flip() else cPosition)
         limit = 1
     }.use { cursor ->
-        if (!cursor.moveToFirst())  return  //\/\/\/\/\/\
+        if (!cursor.moveToFirst())
+            return false //\/\/\/\/\/\
         
         val neighbourID = cursor.getInt(0)
         val neighbourPosition = cursor.getInt(1)
@@ -47,25 +48,32 @@ fun SQLiteDatabase.reorder(                                                 tabl
         setInt(neighbourPosition, table, cPosition) { ID = id }
         setInt(position, table, cPosition) { ID = neighbourID }
     }
+    return true
 }
 
 
 private fun SQLiteDatabase.reorderToStartEnd(                                      table: String,
                                                                                       id: Int,
                                                                             moveUpOrBack: Boolean,
-) {
+): Boolean {
+    val position = getInt(table, cPosition) { ID = id }
+    
     if (!moveUpOrBack) {
-        val newPosition = getLastPosition(table) + 1
+        val last = getLastPosition(table)
+        if (position == last) return false //\/\/\/\/\/\
+        
+        val newPosition = last + 1
         setInt(newPosition, table, cPosition) { ID = id }
     }
     else {
-        val position = getInt(table, cPosition) { ID = id }
+        if (position < 2) return false
         
         set(table, where = { cPosition less position }) {
             cPosition add 1
         }
         setInt(1, table, cPosition) { ID = id }
     }
+    return true
 }
 
 

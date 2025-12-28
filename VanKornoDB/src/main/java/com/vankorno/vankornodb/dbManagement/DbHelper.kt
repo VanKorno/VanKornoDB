@@ -1400,8 +1400,7 @@ abstract class DbHelperInternal(
                                                                                id: Int,
                                                                      moveUpOrBack: Boolean,
                                                                   makeFirstOrLast: Boolean = false,
-                                                                            async: Boolean = false,
-    ) = write("reorder", async) {
+    ): Boolean = readWrite(false, "reorder") {
         it.reorder(table, id, moveUpOrBack, makeFirstOrLast)
     }
     
@@ -1409,7 +1408,7 @@ abstract class DbHelperInternal(
                                                                                id: Int,
                                                                      moveUpOrBack: Boolean,
                                                                   makeFirstOrLast: Boolean = false,
-    ) = writeSusp("reorderSusp") {
+    ): Boolean = readWriteSusp(false, "reorderSusp") {
         it.reorder(table, id, moveUpOrBack, makeFirstOrLast)
     }
     
@@ -1431,8 +1430,6 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    
     inline fun createTables(                                        vararg tables: TableInfo,
                                                                             async: Boolean = false,
     ) = write("createTables", async) {
@@ -1443,6 +1440,12 @@ abstract class DbHelperInternal(
     ) = writeSusp("createTablesSusp") {
         it.createTables(*tables)
     }
+    
+    
+    
+    
+    
+    
     
     
 }
