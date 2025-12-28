@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.dbManagement
 
 import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.newTable.newTableQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

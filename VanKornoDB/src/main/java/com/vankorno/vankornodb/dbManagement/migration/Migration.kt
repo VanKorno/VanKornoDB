@@ -360,7 +360,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(                  varar
         Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = getObjects(table.name, table.spec)
+        val rows = getObjects(table.name, table.ormBundle)
         dropAndCreateEmptyTables(table)
         addObjects(table.name, rows)
     }

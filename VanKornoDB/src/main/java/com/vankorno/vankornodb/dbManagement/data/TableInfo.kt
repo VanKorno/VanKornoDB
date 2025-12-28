@@ -4,5 +4,5 @@ import com.vankorno.vankornodb.api.CurrEntity
 
 data class TableInfo (
                                   val name: String,
-                                  val spec: CurrOrmBundle<out CurrEntity>,
+                             val ormBundle: CurrOrmBundle<out CurrEntity>,
 )

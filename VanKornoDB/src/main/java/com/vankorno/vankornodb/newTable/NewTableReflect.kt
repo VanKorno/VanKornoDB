@@ -3,29 +3,18 @@
  *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
 **/
 // endregion
-package com.vankorno.vankornodb.dbManagement
+package com.vankorno.vankornodb.newTable
 
-import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.core.data.DbConstants.CREATE_TABLE
 import com.vankorno.vankornodb.core.data.DbConstants.DEFAULT
-import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnDefinition
-import com.vankorno.vankornodb.dbManagement.TableBuilderUtils.getColumnType
 import com.vankorno.vankornodb.dbManagement.data.*
+import com.vankorno.vankornodb.newTable.TableBuilderUtils.getColumnDefinition
+import com.vankorno.vankornodb.newTable.TableBuilderUtils.getColumnType
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-
-
-internal fun SQLiteDatabase.createTablesInternal(                          vararg tables: TableInfo
-) {
-    for (table in tables) {
-        execSQL(newTableQuery(table.name, table.spec.clazz)) // TODO without reflection
-    }
-}
-
-
 
 
 /**
