@@ -39,7 +39,7 @@ fun SQLiteDatabase.reorder(                                                 tabl
         orderBy(if (moveUpOrBack) cPosition.flip() else cPosition)
         limit = 1
     }.use { cursor ->
-        if (cursor.moveToFirst())  return  //\/\/\/\/\/\
+        if (!cursor.moveToFirst())  return  //\/\/\/\/\/\
         
         val neighbourID = cursor.getInt(0)
         val neighbourPosition = cursor.getInt(1)
