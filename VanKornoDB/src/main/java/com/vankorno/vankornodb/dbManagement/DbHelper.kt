@@ -13,6 +13,8 @@ import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.api.SetDsl
 import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.api.createTable
+import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteFirstRow
@@ -1415,7 +1417,32 @@ abstract class DbHelperInternal(
     
     
     
+    inline fun createTable(                                    table: String,
+                                                           ormBundle: CurrOrmBundle<out CurrEntity>,
+                                                               async: Boolean = false,
+    ) = write("createTable", async) {
+        it.createTable(table, ormBundle)
+    }
     
+    suspend inline fun createTableSusp(                        table: String,
+                                                           ormBundle: CurrOrmBundle<out CurrEntity>,
+    ) = writeSusp("createTableSusp") {
+        it.createTable(table, ormBundle)
+    }
+    
+    
+    
+    
+    inline fun createTables(                                        vararg tables: TableInfo,
+                                                                            async: Boolean = false,
+    ) = write("createTables", async) {
+        it.createTables(*tables)
+    }
+    
+    suspend inline fun createTablesSusp(                                   vararg tables: TableInfo
+    ) = writeSusp("createTablesSusp") {
+        it.createTables(*tables)
+    }
     
     
 }
