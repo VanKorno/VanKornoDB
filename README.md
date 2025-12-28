@@ -26,12 +26,7 @@ Designed primarily for Android, but with potential to support other platforms in
 - Full db management system, working out of the box.
 - Convenient, efficient and reliable multi-step migration system with its own DSL that minimizes boilerplate code.
 - Designed for full control over your database logic.
-- With VanKornoDB you can even generate a thousand of tables with a thousand of columns via 2 lines of code:
-```kotlin
-data class Shop(val someList: List<Int> = List(1000) { 0 } ) : DbEntity  // all those list elements become individual columns
 
-for (i in 1..1000) { db.createTable(ShopTable + i, Shop::class) }
-```
 
 ## Extremely unique features
 
@@ -42,7 +37,12 @@ for (i in 1..1000) { db.createTable(ShopTable + i, OrmShop) } // OrmBundle (OrmS
 ```
 
 - List params of an entity class are automatically expanded, mapping the list elements to individual columns, which enables more logic to be done at the SQL-query level, without parsing strings or multiple connected tables.
+For example, with VanKornoDB you can even generate a thousand of tables with a thousand of columns via 2 lines of code:
+```kotlin
+data class Shop(val someList: List<Int> = List(1000) { 0 } ) : DbEntity  // all those list elements become individual columns
 
+for (i in 1..1000) { db.createTable(ShopTable + i, Shop::class) }
+```
 
 
 ## Examples
