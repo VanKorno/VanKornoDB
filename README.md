@@ -33,47 +33,65 @@ data class Shop(val someList: List<Int> = List(1000) { 0 } ) : DbEntity  // all 
 for (i in 1..1000) { db.createTable(ShopTable + i, Shop::class) }
 ```
 
+## Extremely unique features
+
+- Entities are not limited to single tables. You can generate multiple db tables from the same entity and vice versa (use multiple different entities with the same db table).
+- Dynamic table creation.
+```kotlin
+for (i in 1..1000) { db.createTable(ShopTable + i, OrmShop) } // OrmBundle (OrmShop in this example) is a plugin-generated thing that has your entity class and other code, here it's just used to pass an entity
+```
+
+- List params of an entity class are automatically expanded, mapping the list elements to individual columns, which enables more logic to be done at the SQL-query level, without parsing strings or multiple connected tables.
 
 
 
-## Examples (Examples are outdated, will be updated when I finish remaking everything)
+## Examples
 
-getCursor(), getList(), getObj(), getObjects(), getObjMap, getRowCount(), updateObj(), deleteRow(), etc.
-Multiple convenient functions that use params with the same DSL-functionality:
+getCursor() - a function that's often used by other unctions under the hood. It can also be useful when you want do do some things with the cursor directly:
 
 ```kotlin
-db.getCursor(SomeTable, where = { Name equal userName })
+db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals to value 'userName' 
 
-db.getCursor(
-    table = RoundTable,
-    column = Name,
-    where = {
+db.getCursorPro(SomeTable, columns(Name, Position)) { // If simple 'where' DSL isn't enough, you can use extended DSL (functions that use it have 'Pro' suffix)
+    where {
         ID notEqual 1
         and { Order equal 1 } // condition clause and value in one place
         and { Volume greater 1.1F }
         or  { Time less 1L }
     }
-)
+    orderByPosition()
+    limit = 10
+}
+```
+
+getObj() - gets the whole db table row as an object of the entity data class
+
+```kotlin
+db.getObj(RoundTable, OrmKnight) { SirKnight notEqual drunk }
+```
+
+getObjects() or getObjMap() - for getting multiple objects from a db table.
+
+```kotlin
+db.getObjects(RoundTable, OrmKnight) { SirKnight less hammered }
+```
+
+getInt() (same for other types) - for getting single values from a particular cell.
+
+```kotlin
+val aggressionLvl = db.getInt(RoundTable, Aggression) { Name equal Arthur }
 ```
 
 
-From simple one-liners:
-```kotlin
-db.getObj(SomeTable, where = { Name equal userName })
-
-db.getObjById(id, SomeTable)
-```
-
-...to more complex things, like nested queries:
+Of course, those one-liner fun examples don't show you what you're able to achieve with VanKornoDB DSL in more complex scenarios...
+Here's some of that:
 
 ```kotlin
-db.getCursor(
-    table = Users,
-    columns = arrayOf(Name, Address, Phone),
-    where = {
+db.getCursorPro(Users, columns(Name, Address, Phone)) {
+    where {
         subquery( // subqueries
             table = Posts,
-            columns = arrayOf(countAll), // COUNT(*)
+            columns = columns(countAll), // COUNT(*)
             where = {
                 (Posts dot user_id)  equal  (Users dot ID)
             }
@@ -92,10 +110,43 @@ db.getCursor(
             }
         }
     }
-)
+    
+    orderBy { // even orderBy has its own DSL that allows you to do some crazy nested things...
+        SomeColumn()
+        AnotherColumn.flip()
+        When(
+            orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
+            orderWhen(RANDOM) { cName notEqual "NotBob" },
+            Else = { cID() }
+        )
+    }
+}
 ```
 
-Other examples:
+There are multiple setter functions as well. Single value setters, like setInt(), setString(), object setters, like setObj(), different convenience functions like addToInt(), flipBool()...
+
+set() - is a universal value setter function that uses its own DSL to modify multiple values, perform different operations, joining them all in a single db query under the hood, optimizing performance.
+
+```kotlin
+db.set(RoundKnightTable, whereName(Dudley)) {
+    Int1 setTo 5
+    Enabled setTo true
+    Bool2.flip()
+    Int2 add 5
+    Long1 mult 3
+    Int3.abs()
+    Int4 capAt 50
+    Int5 floorAt 10
+    Float1.coerceIn(0F..1F)
+    OneCol setAs AnotherCol
+    Int2 setAs (Int1 andAdd 3)
+    Int3 setAs (Int2 andCoerceIn 0..10)
+    setContentValues(someCV) // don't know who would use ContentValues, when you have this amasing DSL, but still, you can pass CV as well here, along with the other ops
+}
+```
+
+
+Other examples (these examples are not updated yet):
 
 ```kotlin
 db.createTables(

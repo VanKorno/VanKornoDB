@@ -147,15 +147,15 @@ open class MigrationUtils {
             
             val areSameTypeLists = fromType != null && isSameListType(fromType, toType)
             
-            val areDbPrimitives = !areSameTypeLists
-                                    && fromType != null
-                                    && isPrimitive(fromType)
-                                    && isPrimitive(toType)
+            val areDbTypes = !areSameTypeLists
+                            && fromType != null
+                            && isDbPrimitive(fromType)
+                            && isDbPrimitive(toType)
             
             val result = when {
                 areSameTypeLists -> rawValue
                 
-                areDbPrimitives -> {
+                areDbTypes -> {
                     if (fromType.isSubtypeOf(toType)) rawValue
                     else tryAutoConvertValue(rawValue, toType)
                 }
@@ -172,18 +172,18 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    internal fun readEntitiesFromVersion(          db: SQLiteDatabase,
-                                                table: String,
-                                              version: Int,
-                                       versionedSpecs: Map<Int, NormalOrmBundle<out NormalEntity>>,
+    internal fun readEntitiesFromVersion(           db: SQLiteDatabase,
+                                                 table: String,
+                                               version: Int,
+                                          versionedOrm: Map<Int, NormalOrmBundle<out NormalEntity>>,
     ): List<NormalEntity> {
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
         // endregion
-        val fromClass = versionedSpecs[version]
-            ?: error("Missing entity class for version $version")
+        val fromOrm = versionedOrm[version]
+            ?: error("Missing OrmBundle for version $version")
         
-        val elements = db.getObjects(table, fromClass)
+        val elements = db.getObjects(table, fromOrm)
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -195,12 +195,12 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    internal fun convertThroughSteps(                original: NormalEntity,
-                                                   oldVersion: Int,
-                                                        steps: List<Int>,
-                                                renameHistory: Map<String, List<RenameRecord>>,
-                                               versionedSpecs: Map<Int, NormalOrmBundle<out NormalEntity>>,
-                                                      lambdas: Map<Int, MilestoneLambdas>,
+    internal fun convertThroughSteps(         original: NormalEntity,
+                                            oldVersion: Int,
+                                                 steps: List<Int>,
+                                         renameHistory: Map<String, List<RenameRecord>>,
+                                         versionedOrms: Map<Int, NormalOrmBundle<out NormalEntity>>,
+                                               lambdas: Map<Int, MilestoneLambdas>,
     ): NormalEntity {
         var currentObj = original
         var currentVer = oldVersion
@@ -208,7 +208,7 @@ open class MigrationUtils {
         for (nextVer in steps) {
             val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory)
             
-            val nextClass = versionedSpecs[nextVer]?.clazz ?: error("Missing entity class for version $nextVer")
+            val nextClass = versionedOrms[nextVer]?.clazz ?: error("Missing entity class for version $nextVer")
             
             val previousObj = currentObj
             currentObj = convertEntity(currentObj, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
@@ -265,7 +265,7 @@ open class MigrationUtils {
     }
     
     
-    internal fun isPrimitive(                                                       type: KType
+    internal fun isDbPrimitive(                                                     type: KType
     ): Boolean = type.classifier in setOf(
         Int::class, Long::class, Float::class, Double::class, Boolean::class, String::class
     )
