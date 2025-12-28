@@ -1,11 +1,10 @@
-package com.vankorno.vankornodb.dbManagement
+package com.vankorno.vankornodb.newTable
 
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.newTable.newTableQuery
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class DbTableBuilderTest {
+class NewTableReflectTest {
     
     data class SimpleEntity(
         val id: Int = 0,
