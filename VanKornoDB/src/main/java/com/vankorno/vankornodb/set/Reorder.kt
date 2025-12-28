@@ -11,7 +11,6 @@ import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.get.getCursorPro
 import com.vankorno.vankornodb.get.getInt
 import com.vankorno.vankornodb.get.getLastPosition
-import com.vankorno.vankornodb.get.getTableIntsPro
 import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
@@ -67,18 +66,10 @@ private fun SQLiteDatabase.reorderToStartEnd(                                   
     else {
         val position = getInt(table, cPosition) { ID = id }
         
-        val precedingTaskIDsPositions = getTableIntsPro(table, arrayOf(cID, cPosition)) {
-            where { cPosition less position }
-            orderByPosition()
+        set(table, where = { cPosition less position }) {
+            cPosition add 1
         }
-        
         setInt(1, table, cPosition) { ID = id }
-        
-        for (idPosition in precedingTaskIDsPositions) {
-            val taskID = idPosition[0]
-            val newPosition = idPosition[1] + 1
-            setInt(newPosition, table, cPosition) { ID = taskID }
-        }
     }
 }
 
