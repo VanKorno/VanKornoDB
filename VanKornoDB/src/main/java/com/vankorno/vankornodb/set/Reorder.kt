@@ -36,15 +36,10 @@ fun SQLiteDatabase.reorder(                                                 tabl
             else
                 cPosition greater position
         }
-        orderByPosition()
+        orderBy(if (moveUpOrBack) cPosition.flip() else cPosition)
         limit = 1
     }.use { cursor ->
-        if (cursor.count < 1)  return  //\/\/\/\/\/\
-        
-        if (moveUpOrBack)
-            cursor.moveToLast()
-        else
-            cursor.moveToFirst()
+        if (cursor.moveToFirst())  return  //\/\/\/\/\/\
         
         val neighbourID = cursor.getInt(0)
         val neighbourPosition = cursor.getInt(1)
