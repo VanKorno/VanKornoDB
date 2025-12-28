@@ -1394,6 +1394,27 @@ abstract class DbHelperInternal(
     
     
     
+    inline fun reorder(                                                     table: String,
+                                                                               id: Int,
+                                                                     moveUpOrBack: Boolean,
+                                                                  makeFirstOrLast: Boolean = false,
+                                                                            async: Boolean = false,
+    ) = write("reorder", async) {
+        it.reorder(table, id, moveUpOrBack, makeFirstOrLast)
+    }
+    
+    suspend inline fun reorderSusp(                                         table: String,
+                                                                               id: Int,
+                                                                     moveUpOrBack: Boolean,
+                                                                  makeFirstOrLast: Boolean = false,
+    ) = writeSusp("reorderSusp") {
+        it.reorder(table, id, moveUpOrBack, makeFirstOrLast)
+    }
+    
+    
+    
+    
+    
     
     
     
