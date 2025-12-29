@@ -12,7 +12,6 @@ import android.util.Log
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.dbManagement.DbProvider.mainDb
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.OrmVersion
 import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
@@ -23,38 +22,64 @@ import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 
-/* 
-* THE LIFECYCLE AT RUNTIME:
-* DbMaker() is instantiated → init block runs:
-* DbProvider.init(writableDatabase) opens or creates the DB.
-* handleVersionTable(mainDb) runs immediately afterward.
-* If it’s a fresh database:
-* SQLite calls onCreate().
-*    That creates the EntityVersions table.
-*    Then init’s handleVersionTable() runs, sees the empty table, and fills it.
-* On subsequent launches:
-*    onCreate() is skipped (DB already exists).
-*    handleVersionTable() still runs (to ensure consistency).
-*/
-
 /**
- * Creates the db file, initializes DbProvider, handles the entity version table, onCreate and onUpdate.
+ * Manages the lifecycle and access of a single SQLite database instance.
+ *
+ * This class is responsible for creating or opening the database file, initializing
+ * the entity version table, applying migrations, and providing safe, synchronized
+ * access to the database for reading and writing.
+ *
+ * Lifecycle overview:
+ * - When an instance of [DbManager] is created, the database is opened or created
+ *   via [writableDatabase] and assigned to [currDb].
+ * - The entity version table is immediately checked and initialized if empty.
+ * - If the database is fresh, [onCreate] is called, creating the version table
+ *   and executing any custom creation logic provided via [runOnCreate].
+ * - On subsequent launches, [onCreate] is skipped, but [handleVersionTable]
+ *   ensures entity version consistency and applies any missing metadata.
+ * - [onUpgrade] handles database upgrades between schema versions and runs
+ *   custom logic provided via [runOnUpgrade], wrapped in a transaction.
+ * - The database can be closed via [closeDb], after which [currDb] becomes inaccessible.
+ *
+ * Thread-safety:
+ * All database access should be synchronized on [dbLock]. Use [currDb] within
+ * synchronized blocks or through the higher-level read/write functions in [DbReaderWriter].
+ *
+ * Entity metadata:
+ * The [entityMeta] collection defines all entities tracked for versioning and
+ * migrations. The system automatically:
+ * - Adds missing entities to the version table
+ * - Cleans up entities no longer present
+ * - Ensures the version table is consistent with the current schema definitions
+ *
+ * @property dbLock a mutex used to synchronize access to the database instance.
+ * @property entityMeta the collection of all entity metadata used for version tracking
+ *   and automatic migration.
+ * @property runOnCreate a lambda that runs custom logic when the database is created.
+ * @property runOnUpgrade a lambda that runs custom logic when the database is upgraded.
  */
-abstract class DbMaker(           context: Context,
-                                   dbName: String,
-                                dbVersion: Int,
-                           val entityMeta: Collection<BaseEntityMeta>,
-                          val runOnCreate: (SQLiteDatabase)->Unit = {},
-                         val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> }
-
+abstract class DbManager(        context: Context,
+                                  dbName: String,
+                               dbVersion: Int,
+                          val entityMeta: Collection<BaseEntityMeta>,
+                         val runOnCreate: (SQLiteDatabase)->Unit = {},
+                        val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
+    
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
     
     val dbLock = Any()
     
+    private var db: SQLiteDatabase? = null
+    
+    @PublishedApi
+    internal val currDb: SQLiteDatabase
+        get() = db ?: error("Database not initialized")
+    
+    
     init {
-        initDbProvider()
+        db = writableDatabase
         synchronized(dbLock) {
-            handleVersionTable(mainDb)
+            handleVersionTable(currDb)
         }
     }
     
@@ -97,11 +122,14 @@ abstract class DbMaker(           context: Context,
     }
     
     
-    private fun initDbProvider() {
+    protected fun closeDb() {
         // region LOG
-            Log.d(DbTAG, "initDbProvider() runs")
+            Log.d(DbTAG, "closeDb()")
         // endregion
-        DbProvider.init(writableDatabase)
+        synchronized(dbLock) {
+            db?.close()
+            db = null
+        }
     }
     
     

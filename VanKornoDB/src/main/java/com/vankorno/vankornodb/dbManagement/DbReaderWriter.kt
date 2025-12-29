@@ -24,7 +24,7 @@ abstract class DbReaderWriter(
                               entityMeta: Collection<BaseEntityMeta>,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-) : DbMaker(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
+) : DbManager(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
     
     /**
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
@@ -155,7 +155,7 @@ abstract class DbReaderWriter(
     ): T {
         return try {
             synchronized(dbLock) {
-                run(DbProvider.mainDb)
+                run(currDb)
             }
         } catch (e: Exception) {
             // region LOG
@@ -175,7 +175,7 @@ abstract class DbReaderWriter(
     ) {
         try {
             synchronized(dbLock) {
-                DbProvider.mainDb.transaction { run(this) }
+                currDb.transaction { run(this) }
             }
         } catch (e: Exception) {
             // region LOG
@@ -190,7 +190,7 @@ abstract class DbReaderWriter(
     ): T {
         return try {
             synchronized(dbLock) {
-                DbProvider.mainDb.transaction { run(this) }
+                currDb.transaction { run(this) }
             }
         } catch (e: Exception) {
             // region LOG
