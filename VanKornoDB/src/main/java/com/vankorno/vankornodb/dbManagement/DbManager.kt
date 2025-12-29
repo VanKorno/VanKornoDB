@@ -122,7 +122,7 @@ abstract class DbManager(        context: Context,
     }
     
     
-    protected fun closeDb() {
+    fun closeDb() {
         // region LOG
             Log.d(DbTAG, "closeDb()")
         // endregion
