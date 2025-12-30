@@ -1,6 +1,6 @@
 package com.vankorno.sandbox.entities
 
-import com.vankorno.sandbox.entities.testEntity.OrmTest
+import com.vankorno.sandbox.entities.testEntity.SbTest
 import com.vankorno.sandbox.entities.testEntity.migrationsTestEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
@@ -34,7 +34,7 @@ enum class EntityMeta(                              override val currVersion: In
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {
-    TestEntt(3, "TestEntity", OrmTest, lazy { migrationsTestEntity() }, TestTable),
+    TestEntt(3, "TestEntity", SbTest, lazy { migrationsTestEntity() }, TestTable),
     
 }
 

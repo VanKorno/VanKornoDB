@@ -3,7 +3,7 @@ package com.vankorno.sandbox.set
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox.MyApp.Companion.dbh
-import com.vankorno.sandbox.entities.testEntity.OrmTest
+import com.vankorno.sandbox.entities.testEntity.SbTest
 import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.whereId
@@ -28,7 +28,7 @@ class ReorderTest : BaseAndroidTest() {
     private fun prep() {
         for (idx in 1..6) {
             val table = RoundKnightTable + idx
-            dbh.createTable(table, OrmTest)
+            dbh.createTable(table, SbTest)
             
             val objects = List(10) {
                 TestEntity(
@@ -37,7 +37,7 @@ class ReorderTest : BaseAndroidTest() {
                     position = it + 1,
                 )
             }
-            dbh.addObjects(table, objects, OrmTest)
+            dbh.addObjects(table, objects, SbTest)
         }
         // sanity
         assertTrue(dbh.tableExists(RoundKnightTable + 1))

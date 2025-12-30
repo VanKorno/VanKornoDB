@@ -41,7 +41,7 @@ data class TestEntity(
 
 
 
-object OrmTest : CurrSchemaBundle<TestEntity>(
+object SbTest : CurrSchemaBundle<TestEntity>(
     clazz = TestEntity::class,
 
     columns = CTest,

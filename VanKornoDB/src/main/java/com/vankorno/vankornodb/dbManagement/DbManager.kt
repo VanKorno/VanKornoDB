@@ -13,7 +13,7 @@ import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.migration.data.OrmVersion
+import com.vankorno.vankornodb.dbManagement.migration.data.SbVersion
 import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
 import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.get.getColStringsPro
@@ -90,7 +90,7 @@ abstract class DbManager(        context: Context,
             Log.d(DbTAG, "onCreate runs")
         // endregion
         synchronized(dbLock) {
-            db.createTable(TABLE_EntityVersions, OrmVersion)
+            db.createTable(TABLE_EntityVersions, SbVersion)
             runOnCreate(db)
         }
     }
@@ -160,7 +160,7 @@ abstract class DbManager(        context: Context,
     private fun ensureEnttVerTableExists(                                        db: SQLiteDatabase
     ) {
         if (!db.tableExists(TABLE_EntityVersions)) {
-            db.createTable(TABLE_EntityVersions, OrmVersion)
+            db.createTable(TABLE_EntityVersions, SbVersion)
         }
     }
     

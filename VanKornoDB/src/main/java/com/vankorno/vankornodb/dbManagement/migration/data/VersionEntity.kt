@@ -23,7 +23,7 @@ data class VersionEntity(
 
 
 
-object OrmVersion : CurrSchemaBundle<VersionEntity>(
+object SbVersion : CurrSchemaBundle<VersionEntity>(
     clazz = VersionEntity::class,
 
     columns = CVersion,
