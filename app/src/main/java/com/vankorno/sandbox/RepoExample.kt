@@ -1,8 +1,8 @@
 package com.vankorno.sandbox
 
 import com.vankorno.sandbox.entities.TestTable
-import com.vankorno.sandbox.entities.testEntity.SbTest
 import com.vankorno.sandbox.entities.testEntity.TestEntity
+import com.vankorno.sandbox.entities.testEntity._Test
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.get.getDbFileName
@@ -15,7 +15,7 @@ fun LocalDbHelper.launchApp() = write("launchApp") { db ->
     
     
     if (!db.tableExists(TestTable)) {
-        db.createTable(TestTable, SbTest)
+        db.createTable(TestTable, _Test)
     }
     if (db.isTableEmpty(TestTable)) {
         val testSubjects = List(50) {

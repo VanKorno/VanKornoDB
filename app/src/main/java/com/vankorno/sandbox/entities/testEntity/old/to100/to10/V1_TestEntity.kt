@@ -18,7 +18,7 @@ data class V1_TestEntity(
 
 
 
-object SbV1_Test : OldSchemaBundle<V1_TestEntity>(
+object _V1_Test : OldSchemaBundle<V1_TestEntity>(
     clazz = V1_TestEntity::class,
 
     getter = { cursor ->

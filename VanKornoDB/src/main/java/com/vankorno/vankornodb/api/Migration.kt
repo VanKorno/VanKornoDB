@@ -26,7 +26,7 @@ fun defineMigrations(                                             entityMeta: Ba
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(
     latestVersion = entityMeta.currVersion,
-    latestSchemaBundle = entityMeta.shemaBundle,
+    latestSchemaBundle = entityMeta.schemaBundle,
     block = block
 )
 

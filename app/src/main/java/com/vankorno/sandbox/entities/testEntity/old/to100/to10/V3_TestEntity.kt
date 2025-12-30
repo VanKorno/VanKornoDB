@@ -30,7 +30,7 @@ data class V3_TestEntity(
 
 
 
-object OrmV3_Test : OldSchemaBundle<V3_TestEntity>(
+object _V3_Test : OldSchemaBundle<V3_TestEntity>(
     clazz = V3_TestEntity::class,
 
     getter = { cursor ->

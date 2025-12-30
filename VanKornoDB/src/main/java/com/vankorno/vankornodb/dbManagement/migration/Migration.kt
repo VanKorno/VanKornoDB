@@ -88,7 +88,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() $table table is dropped. Recreating...")
     // endregion
-    this.createTable(table, entityMeta.shemaBundle)
+    this.createTable(table, entityMeta.schemaBundle)
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion

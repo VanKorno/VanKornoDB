@@ -3,7 +3,7 @@ package com.vankorno.sandbox
 import android.content.Context
 import com.vankorno.sandbox.entities.EntityMeta
 import com.vankorno.sandbox.entities.TestTable
-import com.vankorno.sandbox.entities.testEntity.SbTest
+import com.vankorno.sandbox.entities.testEntity._Test
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.createTables
@@ -29,7 +29,7 @@ class LocalDbHelper(                                                      contex
 ): DbHelper(context, dbName, dbVersion, EntityMeta.entries,
     onCreate = { db ->
         db.createTables(
-            TableInfo(TestTable, SbTest)
+            TableInfo(TestTable, _Test)
             
         )
     },

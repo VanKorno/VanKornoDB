@@ -13,8 +13,8 @@ import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.migration.data.SbVersion
-import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
+import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
+import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
 import com.vankorno.vankornodb.delete.deleteRow
 import com.vankorno.vankornodb.get.getColStringsPro
 import com.vankorno.vankornodb.get.hasRows
@@ -90,7 +90,7 @@ abstract class DbManager(        context: Context,
             Log.d(DbTAG, "onCreate runs")
         // endregion
         synchronized(dbLock) {
-            db.createTable(TABLE_EntityVersions, SbVersion)
+            db.createTable(TABLE_EntityVersions, _EntityVersion)
             runOnCreate(db)
         }
     }
@@ -160,7 +160,7 @@ abstract class DbManager(        context: Context,
     private fun ensureEnttVerTableExists(                                        db: SQLiteDatabase
     ) {
         if (!db.tableExists(TABLE_EntityVersions)) {
-            db.createTable(TABLE_EntityVersions, SbVersion)
+            db.createTable(TABLE_EntityVersions, _EntityVersion)
         }
     }
     
@@ -169,7 +169,7 @@ abstract class DbManager(        context: Context,
         for (meta in entityMeta) {
             db.addObj(
                 TABLE_EntityVersions,
-                VersionEntity(meta.dbRowName, meta.currVersion)
+                EntityVersion(meta.dbRowName, meta.currVersion)
             )
         }
     }
@@ -197,7 +197,7 @@ abstract class DbManager(        context: Context,
             
             db.addObj(
                 TABLE_EntityVersions,
-                VersionEntity(dbName, meta.currVersion)
+                EntityVersion(dbName, meta.currVersion)
             )
         }
     }

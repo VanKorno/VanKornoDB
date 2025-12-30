@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
 
-data class VersionEntity(
+data class EntityVersion(
                                   val name: String = "",
                                val version: Int = 0,
                                  val notes: String = "",
@@ -23,15 +23,15 @@ data class VersionEntity(
 
 
 
-object SbVersion : CurrSchemaBundle<VersionEntity>(
-    clazz = VersionEntity::class,
+object _EntityVersion : CurrSchemaBundle<EntityVersion>(
+    clazz = EntityVersion::class,
 
-    columns = CVersion,
+    columns = CEntityVersion,
 
     getter = { cursor ->
         var idx = 0
 
-        VersionEntity(
+        EntityVersion(
             name = cursor.getString(idx++),
             version = cursor.getInt(idx++),
             notes = cursor.getString(idx++),
@@ -52,7 +52,7 @@ object SbVersion : CurrSchemaBundle<VersionEntity>(
 
 
 
-object CVersion : EntityColumns {
+object CEntityVersion : EntityColumns {
     val Name = sCol("name", "")
     val Version = iCol("version", 0)
     val Notes = sCol("notes", "")

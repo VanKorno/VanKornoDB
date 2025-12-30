@@ -5,8 +5,8 @@ import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox.MyApp.Companion.dbh
 import com.vankorno.sandbox.entities.EntityMeta
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
-import com.vankorno.vankornodb.dbManagement.migration.data.SbVersion
-import com.vankorno.vankornodb.dbManagement.migration.data.VersionEntity
+import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
+import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -21,15 +21,15 @@ class StartTest() : BaseAndroidTest() {
     
     @Test
     fun rowCreated() {
-        val firstRow = dbh.getObj(TABLE_EntityVersions, SbVersion)
+        val firstRow = dbh.getObj(TABLE_EntityVersions, _EntityVersion)
         assertTrue(firstRow != null)
     }
     
     @Test
     fun correctVersionVals() {
-        val firstRow = dbh.getObj(TABLE_EntityVersions, SbVersion, default = VersionEntity())
+        val firstRow = dbh.getObj(TABLE_EntityVersions, _EntityVersion, default = EntityVersion())
         
-        val target = VersionEntity(
+        val target = EntityVersion(
             name = EntityMeta.TestEntt.dbRowName,
             version = 3,
             id = 1
