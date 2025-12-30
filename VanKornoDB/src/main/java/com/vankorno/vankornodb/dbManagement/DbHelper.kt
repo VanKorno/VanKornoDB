@@ -188,57 +188,57 @@ abstract class DbHelperInternal(
     
     // -----------------------------------  O B J E C T  ----------------------------------- \\
     
-    inline fun <T : CurrEntity> addObj(                           table: String,
-                                                                    obj: T,
-                                                              ormBundle: NormalOrmBundle<T>? = null,
-                                                                  async: Boolean = false,
+    inline fun <T : CurrEntity> addObj(                        table: String,
+                                                                 obj: T,
+                                                        schemaBundle: NormalSchemaBundle<T>? = null,
+                                                               async: Boolean = false,
     ) = write("addObj", async) {
-        it.addObj(table, obj, ormBundle)
+        it.addObj(table, obj, schemaBundle)
     }
     
     
-    suspend fun <T : CurrEntity> addObjSusp(                      table: String,
-                                                                    obj: T,
-                                                              ormBundle: NormalOrmBundle<T>? = null,
+    suspend fun <T : CurrEntity> addObjSusp(                   table: String,
+                                                                 obj: T,
+                                                        schemaBundle: NormalSchemaBundle<T>? = null,
     ): Long = readWriteSusp(-1L, "addObjSusp") {
-        it.addObj(table, obj, ormBundle)
+        it.addObj(table, obj, schemaBundle)
     }
     
     
-    inline fun <T : CurrEntity> addObjects(                       table: String,
-                                                                objects: List<T>,
-                                                              ormBundle: NormalOrmBundle<T>? = null,
-                                                                  async: Boolean = false,
+    inline fun <T : CurrEntity> addObjects(                    table: String,
+                                                             objects: List<T>,
+                                                        schemaBundle: NormalSchemaBundle<T>? = null,
+                                                               async: Boolean = false,
     ) = write("addObjects", async) {
-        it.addObjects(table, objects, ormBundle)
+        it.addObjects(table, objects, schemaBundle)
     }
     
     
-    suspend fun <T : CurrEntity> addObjectsSusp(                  table: String,
-                                                                objects: List<T>,
-                                                              ormBundle: NormalOrmBundle<T>? = null,
+    suspend fun <T : CurrEntity> addObjectsSusp(               table: String,
+                                                             objects: List<T>,
+                                                        schemaBundle: NormalSchemaBundle<T>? = null,
     ): Int = readWriteSusp(0, "addObjectsSusp") {
-        it.addObjects(table, objects, ormBundle)
+        it.addObjects(table, objects, schemaBundle)
     }
     
     
     
-    fun <T : CurrEntity> setObj(                                  table: String,
-                                                                    obj: T,
-                                                              ormBundle: NormalOrmBundle<T>? = null,
-                                                                  async: Boolean = false,
-                                                                  where: WhereDsl.()->Unit,
+    fun <T : CurrEntity> setObj(                               table: String,
+                                                                 obj: T,
+                                                        schemaBundle: NormalSchemaBundle<T>? = null,
+                                                               async: Boolean = false,
+                                                               where: WhereDsl.()->Unit,
     ) = write("setObj", async) {
-        it.setObj(table, obj, ormBundle, where)
+        it.setObj(table, obj, schemaBundle, where)
     }
     
     
-    suspend fun <T : CurrEntity> setObjSusp(                      table: String,
-                                                                    obj: T,
-                                                              ormBundle: NormalOrmBundle<T>? = null,
-                                                                  where: WhereDsl.()->Unit,
+    suspend fun <T : CurrEntity> setObjSusp(                   table: String,
+                                                                 obj: T,
+                                                        schemaBundle: NormalSchemaBundle<T>? = null,
+                                                               where: WhereDsl.()->Unit,
     ): Int = readWriteSusp(0, "setObjSusp") {
-        it.setObj(table, obj, ormBundle, where)
+        it.setObj(table, obj, schemaBundle, where)
     }
     
     
@@ -316,74 +316,74 @@ abstract class DbHelperInternal(
     // ==============================  G E T   O B J E C T S  ============================== \\
     
     fun <T : BaseEntity> getObj(                                      table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getObj") {
-        it.getObj(table, ormBundle, where)
+        it.getObj(table, schemaBundle, where)
     }
     
     
     suspend fun <T : BaseEntity> getObjSusp(                          table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getObjSusp") {
-        it.getObj(table, ormBundle, where)
+        it.getObj(table, schemaBundle, where)
     }
     
     // With defaults
     
     fun <T : BaseEntity> getObj(                                      table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
     ): T = read(default, "getObj") {
-        it.getObj(table, ormBundle, default, where)
+        it.getObj(table, schemaBundle, default, where)
     }
     
     suspend fun <T : BaseEntity> getObjSusp(                          table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
     ): T = readSusp(default, "getObjSusp") {
-        it.getObj(table, ormBundle, default, where)
+        it.getObj(table, schemaBundle, default, where)
     }
     
     
     // -------------------------------------------------------------------------------------- \\
     
-    fun <T : BaseEntity> getObjPro(                                         table: String,
-                                                                        ormBundle: BaseOrmBundle<T>,
-                                                                              dsl: FullDsl.()->Unit,
+    fun <T : BaseEntity> getObjPro(                                      table: String,
+                                                                  schemaBundle: BaseSchemaBundle<T>,
+                                                                           dsl: FullDsl.()->Unit,
     ): T? = read(null, "getObjPro") {
-        it.getObjPro(table, ormBundle, dsl)
+        it.getObjPro(table, schemaBundle, dsl)
     }
     
     
-    suspend fun <T : BaseEntity> getObjProSusp(                             table: String,
-                                                                        ormBundle: BaseOrmBundle<T>,
-                                                                              dsl: FullDsl.()->Unit,
+    suspend fun <T : BaseEntity> getObjProSusp(                          table: String,
+                                                                  schemaBundle: BaseSchemaBundle<T>,
+                                                                           dsl: FullDsl.()->Unit,
     ): T? = readSusp(null, "getObjProSusp") {
-        it.getObjPro(table, ormBundle, dsl)
+        it.getObjPro(table, schemaBundle, dsl)
     }
     
     
     // With defaults
     
-    fun <T : BaseEntity> getObjPro(                                         table: String,
-                                                                        ormBundle: BaseOrmBundle<T>,
-                                                                          default: T,
-                                                                              dsl: FullDsl.()->Unit,
+    fun <T : BaseEntity> getObjPro(                                      table: String,
+                                                                  schemaBundle: BaseSchemaBundle<T>,
+                                                                       default: T,
+                                                                           dsl: FullDsl.()->Unit,
     ): T = read(default, "getObjPro") {
-        it.getObjPro(table, ormBundle, default, dsl)
+        it.getObjPro(table, schemaBundle, default, dsl)
     }
     
     
-    suspend fun <T : BaseEntity> getObjProSusp(                             table: String,
-                                                                        ormBundle: BaseOrmBundle<T>,
-                                                                          default: T,
-                                                                              dsl: FullDsl.()->Unit,
+    suspend fun <T : BaseEntity> getObjProSusp(                          table: String,
+                                                                  schemaBundle: BaseSchemaBundle<T>,
+                                                                       default: T,
+                                                                           dsl: FullDsl.()->Unit,
     ): T = readSusp(default, "getObjProSusp") {
-        it.getObjPro(table, ormBundle, default, dsl)
+        it.getObjPro(table, schemaBundle, default, dsl)
     }
     
     
@@ -399,33 +399,33 @@ abstract class DbHelperInternal(
     // =========================  M U L T I P L E   O B J E C T S  ========================= \\
     
     fun <T : BaseEntity> getObjects(                                  table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjectsPro(table, ormBundle) { this.where = where }
+        it.getObjectsPro(table, schemaBundle) { this.where = where }
     }
     
     suspend fun <T : BaseEntity> getObjectsSusp(                      table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsSusp") {
-        it.getObjectsPro(table, ormBundle) { this.where = where }
+        it.getObjectsPro(table, schemaBundle) { this.where = where }
     }
     
     
     
     fun <T : BaseEntity> getObjMap(                                   table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMapPro(table, ormBundle) { this.where = where }
+        it.getObjMapPro(table, schemaBundle) { this.where = where }
     }
     
     suspend fun <T : BaseEntity> getObjMapSusp(                       table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapSusp") {
-        it.getObjMapPro(table, ormBundle) { this.where = where }
+        it.getObjMapPro(table, schemaBundle) { this.where = where }
     }
     
     
@@ -436,33 +436,33 @@ abstract class DbHelperInternal(
     // -------------------------------------------------------------------------------------- \\
     
     fun <T : BaseEntity> getObjectsPro(                                table: String,
-                                                                   ormBundle: BaseOrmBundle<T>,
+                                                                schemaBundle: BaseSchemaBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjectsPro") {
-        it.getObjectsPro(table, ormBundle, dsl)
+        it.getObjectsPro(table, schemaBundle, dsl)
     }
     
     suspend fun <T : BaseEntity> getObjectsProSusp(                    table: String,
-                                                                   ormBundle: BaseOrmBundle<T>,
+                                                                schemaBundle: BaseSchemaBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): List<T> = readSusp(emptyList(), "getObjectsProSusp") {
-        it.getObjectsPro(table, ormBundle, dsl)
+        it.getObjectsPro(table, schemaBundle, dsl)
     }
     
     // -------------------------------------------------------------------------------------- \\
     
     fun <T : BaseEntity> getObjMapPro(                                 table: String,
-                                                                   ormBundle: BaseOrmBundle<T>,
+                                                                schemaBundle: BaseSchemaBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = read(emptyMap(), "getObjMapPro") {
-        it.getObjMapPro(table, ormBundle, dsl)
+        it.getObjMapPro(table, schemaBundle, dsl)
     }
     
     suspend fun <T : BaseEntity> getObjMapProSusp(                     table: String,
-                                                                   ormBundle: BaseOrmBundle<T>,
+                                                                schemaBundle: BaseSchemaBundle<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): Map<Int, T> = readSusp(emptyMap(), "getObjMapProSusp") {
-        it.getObjMapPro(table, ormBundle, dsl)
+        it.getObjMapPro(table, schemaBundle, dsl)
     }
     
     
@@ -1380,17 +1380,17 @@ abstract class DbHelperInternal(
     
     
     inline fun <reified T : BaseEntity> getRandomObj(                 table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getRandomObj") { db ->
-        db.getRandomObj<T>(table, ormBundle, where)
+        db.getRandomObj<T>(table, schemaBundle, where)
     }
     
     suspend inline fun <reified T : BaseEntity> getRandomObjSusp(     table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): T? = readSusp(null, "getRandomObjSusp") { db ->
-        db.getRandomObj<T>(table, ormBundle, where)
+        db.getRandomObj<T>(table, schemaBundle, where)
     }
     
     
@@ -1416,17 +1416,17 @@ abstract class DbHelperInternal(
     
     
     
-    inline fun createTable(                                    table: String,
-                                                           ormBundle: CurrOrmBundle<out CurrEntity>,
-                                                               async: Boolean = false,
+    inline fun createTable(                                 table: String,
+                                                     schemaBundle: CurrSchemaBundle<out CurrEntity>,
+                                                            async: Boolean = false,
     ) = write("createTable", async) {
-        it.createTable(table, ormBundle)
+        it.createTable(table, schemaBundle)
     }
     
-    suspend inline fun createTableSusp(                        table: String,
-                                                           ormBundle: CurrOrmBundle<out CurrEntity>,
+    suspend inline fun createTableSusp(                     table: String,
+                                                     schemaBundle: CurrSchemaBundle<out CurrEntity>,
     ) = writeSusp("createTableSusp") {
-        it.createTable(table, ormBundle)
+        it.createTable(table, schemaBundle)
     }
     
     

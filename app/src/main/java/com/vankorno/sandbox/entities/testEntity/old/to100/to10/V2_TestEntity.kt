@@ -1,7 +1,7 @@
 package com.vankorno.sandbox.entities.testEntity.old.to100.to10
 
 import com.vankorno.vankornodb.api.OldEntity
-import com.vankorno.vankornodb.dbManagement.data.OldOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class V2_TestEntity(
@@ -30,7 +30,7 @@ data class V2_TestEntity(
 
 
 
-object OrmV2_Test : OldOrmBundle<V2_TestEntity>(
+object OrmV2_Test : OldSchemaBundle<V2_TestEntity>(
     clazz = V2_TestEntity::class,
 
     getter = { cursor ->

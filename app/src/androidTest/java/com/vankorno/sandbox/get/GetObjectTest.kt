@@ -5,15 +5,15 @@ import com.vankorno.sandbox.MyApp.Companion.dbh
 import com.vankorno.sandbox.entities.testEntity.OrmTest
 import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.sandbox.getLabRats
-import com.vankorno.vankornodb.dbManagement.data.CurrOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.misc.whereId
 import org.junit.Assert.*
 import org.junit.Test
 
-private object OrmTestDummy : CurrOrmBundle<TestEntity>(
+private object OrmTestDummy : CurrSchemaBundle<TestEntity>(
     clazz = TestEntity::class
 )
-private object OrmTestWrongGetter : CurrOrmBundle<TestEntity>(
+private object OrmTestWrongGetter : CurrSchemaBundle<TestEntity>(
     clazz = TestEntity::class,
     getter = { _ ->
         TestEntity(id = 999, name = "WRONG")

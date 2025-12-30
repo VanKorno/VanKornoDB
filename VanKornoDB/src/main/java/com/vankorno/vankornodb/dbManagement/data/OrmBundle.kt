@@ -14,41 +14,41 @@ import com.vankorno.vankornodb.api.OldEntity
 import kotlin.reflect.KClass
 
 
-sealed interface BaseOrmBundle<T : BaseEntity> {
+sealed interface BaseSchemaBundle<T : BaseEntity> {
     val clazz: KClass<out T>
     val getter: ((Cursor) -> T)?
 }
 
 
-sealed interface NormalOrmBundle<T : NormalEntity> : BaseOrmBundle<T> {
+sealed interface NormalSchemaBundle<T : NormalEntity> : BaseSchemaBundle<T> {
     val setter: ((T, ContentValues) -> ContentValues)?
 }
 
 
 
-open class CurrOrmBundle<T : CurrEntity>(
+open class CurrSchemaBundle<T : CurrEntity>(
                                     override val clazz: KClass<out T>,
                                            val columns: EntityColumns? = null,
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
-) : NormalOrmBundle<T>
+) : NormalSchemaBundle<T>
 
 
 
 
-open class OldOrmBundle<T : OldEntity>(
+open class OldSchemaBundle<T : OldEntity>(
                                     override val clazz: KClass<out T>,
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
-) : NormalOrmBundle<T>
+) : NormalSchemaBundle<T>
 
 
 
 
-open class LiteOrmBundle<T : LiteEntity>(                 override val clazz: KClass<out T>,
+open class LiteSchemaBundle<T : LiteEntity>(              override val clazz: KClass<out T>,
                                                          override val getter: ((Cursor)->T)? = null,
                                                                  val columns: EntityColumns? = null,
-) : BaseOrmBundle<T>
+) : BaseSchemaBundle<T>
 
 
 

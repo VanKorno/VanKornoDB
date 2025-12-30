@@ -6,10 +6,10 @@
 package com.vankorno.vankornodb.dbManagement.migration.data
 
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.NormalOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.NormalSchemaBundle
 
 data class MigrationBundle(
-                        val versionedSpecs: Map<Int, NormalOrmBundle<out NormalEntity>>,
+                        val versionedSpecs: Map<Int, NormalSchemaBundle<out NormalEntity>>,
                          val renameHistory: Map<String, List<RenameRecord>>,
                             val milestones: List<Pair<Int, MilestoneLambdas>>,
 ) {

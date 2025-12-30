@@ -17,7 +17,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.NormalOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.NormalSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
@@ -88,7 +88,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() $table table is dropped. Recreating...")
     // endregion
-    this.createTable(table, entityMeta.currOrmBundle)
+    this.createTable(table, entityMeta.shemaBundle)
     // region LOG
         Log.d(DbTAG, "migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
@@ -172,18 +172,18 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    internal fun readEntitiesFromVersion(           db: SQLiteDatabase,
-                                                 table: String,
-                                               version: Int,
-                                          versionedOrm: Map<Int, NormalOrmBundle<out NormalEntity>>,
+    internal fun readEntitiesFromVersion(        db: SQLiteDatabase,
+                                              table: String,
+                                            version: Int,
+                                      schemaBundles: Map<Int, NormalSchemaBundle<out NormalEntity>>,
     ): List<NormalEntity> {
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
         // endregion
-        val fromOrm = versionedOrm[version]
-            ?: error("Missing OrmBundle for version $version")
+        val fromBundle = schemaBundles[version]
+            ?: error("Missing schemaBundle for version $version")
         
-        val elements = db.getObjects(table, fromOrm)
+        val elements = db.getObjects(table, fromBundle)
         // region LOG
             Log.d(DbTAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -195,12 +195,12 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    internal fun convertThroughSteps(         original: NormalEntity,
-                                            oldVersion: Int,
-                                                 steps: List<Int>,
-                                         renameHistory: Map<String, List<RenameRecord>>,
-                                         versionedOrms: Map<Int, NormalOrmBundle<out NormalEntity>>,
-                                               lambdas: Map<Int, MilestoneLambdas>,
+    internal fun convertThroughSteps(      original: NormalEntity,
+                                         oldVersion: Int,
+                                              steps: List<Int>,
+                                      renameHistory: Map<String, List<RenameRecord>>,
+                                      schemaBundles: Map<Int, NormalSchemaBundle<out NormalEntity>>,
+                                            lambdas: Map<Int, MilestoneLambdas>,
     ): NormalEntity {
         var currentObj = original
         var currentVer = oldVersion
@@ -208,7 +208,7 @@ open class MigrationUtils {
         for (nextVer in steps) {
             val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory)
             
-            val nextClass = versionedOrms[nextVer]?.clazz ?: error("Missing entity class for version $nextVer")
+            val nextClass = schemaBundles[nextVer]?.clazz ?: error("Missing entity class for version $nextVer")
             
             val previousObj = currentObj
             currentObj = convertEntity(currentObj, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
@@ -360,7 +360,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(                  varar
         Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = getObjects(table.name, table.ormBundle)
+        val rows = getObjects(table.name, table.schemaBundle)
         dropAndCreateEmptyTables(table)
         addObjects(table.name, rows)
     }

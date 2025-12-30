@@ -4,21 +4,21 @@ import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.OldEntity
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
-import com.vankorno.vankornodb.dbManagement.data.CurrOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.OldOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.*
 import org.junit.Test
 
 class DefineMigrationsTest {
     class V1 : OldEntity
-    object OrmV1 : OldOrmBundle<V1>(V1::class)
+    object OrmV1 : OldSchemaBundle<V1>(V1::class)
     class V2 : OldEntity
-    object OrmV2 : OldOrmBundle<V2>(V2::class)
+    object OrmV2 : OldSchemaBundle<V2>(V2::class)
     
     class CurrV : CurrEntity
-    object OrmCurr: CurrOrmBundle<CurrV>(CurrV::class)
+    object OrmCurr: CurrSchemaBundle<CurrV>(CurrV::class)
     
     
     @Test

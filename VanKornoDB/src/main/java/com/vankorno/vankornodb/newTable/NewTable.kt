@@ -26,7 +26,7 @@ import com.vankorno.vankornodb.dbManagement.data.*
 internal fun SQLiteDatabase.createTablesInternal(                          vararg tables: TableInfo
 ) {
     for (table in tables) {
-        val orm = table.ormBundle
+        val orm = table.schemaBundle
         val hasColList = orm.columns != null  &&  orm.columns.columns.isNotEmpty()
         
         val queryStr =  if (hasColList)

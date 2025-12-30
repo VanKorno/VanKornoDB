@@ -2,7 +2,7 @@ package com.vankorno.sandbox.entities.testEntity
 
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.EntityColumns
-import com.vankorno.vankornodb.dbManagement.data.CurrOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
@@ -41,7 +41,7 @@ data class TestEntity(
 
 
 
-object OrmTest : CurrOrmBundle<TestEntity>(
+object OrmTest : CurrSchemaBundle<TestEntity>(
     clazz = TestEntity::class,
 
     columns = CTest,

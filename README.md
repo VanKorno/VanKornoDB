@@ -2,7 +2,7 @@
 
 VanKorno DB is a lightweight, expressive SQLite query builder and database management system written in Kotlin.
 It gives developers more control over database operations than traditional ORMs, letting you retrieve exactly the data you need — no more, no less.
-It let's y do more on the SQLite level without sacrificing convenience of the ORM approach.
+It lets you do more on the SQLite level without sacrificing convenience of the ORM approach.
 Use the full power of SQLite in a safe and convenient way!
 
 ### The main idea is this:
@@ -33,7 +33,7 @@ Designed primarily for Android, but with potential to support other platforms in
 - Entities are not limited to single tables. You can generate multiple db tables from the same entity and vice versa (use multiple different entities with the same db table).
 - Dynamic table creation.
 ```kotlin
-for (i in 1..1000) { db.createTable(ShopTable + i, OrmShop) } // OrmBundle (OrmShop in this example) is a plugin-generated thing that has your entity class and other code, here it's just used to pass an entity
+for (i in 1..1000) { db.createTable(ShopTable + i, SbShop) }
 ```
 
 - List params of an entity class are automatically expanded, mapping the list elements to individual columns, which enables more logic to be done at the SQL-query level, without parsing strings or multiple connected tables.
@@ -67,13 +67,13 @@ db.getCursorPro(SomeTable, columns(Name, Position)) { // If simple 'where' DSL i
 getObj() - gets the whole db table row as an object of the entity data class
 
 ```kotlin
-db.getObj(table = RoundTable, ormBundle = OrmKnight) { KnightState notEqual drunk }
+db.getObj(table = RoundTable, schemaBundle = SbKnight) { KnightState notEqual drunk }
 ```
 
 getObjects() or getObjMap() - for getting multiple objects from a db table.
 
 ```kotlin
-db.getObjects(RoundTable, OrmKnight) { KnightState less hammered }
+db.getObjects(RoundTable, SbKnight) { KnightState less hammered }
 ```
 
 getInt() (same for other types) - for getting single values from a particular cell.

@@ -3,7 +3,7 @@ package com.vankorno.sandbox.entities
 import com.vankorno.sandbox.entities.testEntity.OrmTest
 import com.vankorno.sandbox.entities.testEntity.migrationsTestEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.CurrOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 
 /**
@@ -18,7 +18,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
  *
  * @property dbRowName the name under which meta-data for an entity is stored in the db (e.g. in the EntityVersions table).
  *
- * @property currOrmBundle the current KClass reference of the entity corresponding to [currVersion].
+ * @property shemaBundle the current KClass reference of the entity corresponding to [currVersion].
  * This is used for reflection-based mapping, schema generation, and version tracking.
  *
  * @property migrationBundle a lazily-initialized [MigrationBundle] that defines the full set
@@ -30,7 +30,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
  */
 enum class EntityMeta(                              override val currVersion: Int,
                                                       override val dbRowName: String,
-                                                 override val currOrmBundle: CurrOrmBundle<*>,
+                                                    override val shemaBundle: CurrSchemaBundle<*>,
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {

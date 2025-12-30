@@ -10,24 +10,24 @@ import android.util.Log
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseOrmBundle
+import com.vankorno.vankornodb.dbManagement.data.BaseSchemaBundle
 
 
 /**
  * Gets one db table row as an object of [clazz] using using WhereDsl. Returns null if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjPro(table, ormBundle) { this.where = where }
+): T? = getObjPro(table, schemaBundle) { this.where = where }
 
 
 
 fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                                  ormBundle: BaseOrmBundle<T>,
+                                                               schemaBundle: BaseSchemaBundle<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-): T = getObj(table, ormBundle, where) ?: run {
+): T = getObj(table, schemaBundle, where) ?: run {
     // region LOG
         Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
     // endregion
