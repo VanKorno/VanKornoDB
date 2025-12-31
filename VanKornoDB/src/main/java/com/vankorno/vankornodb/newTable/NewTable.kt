@@ -6,8 +6,12 @@
 package com.vankorno.vankornodb.newTable
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.dbManagement.data.*
+import android.util.Log
+import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
+import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.using
 
 /**
  * Creates database tables.
@@ -40,63 +44,20 @@ internal fun SQLiteDatabase.createTablesInternal(
 
 
 /**
- * Generates a SQL `CREATE TABLE` statement for the specified [table], using a pre-defined
- * list of [TypedColumn] definitions.
- *
- * Behavior:
- * - Each entry in [columns] represents a single database column.
- * - Column names, types, and default values are taken directly from the provided
- *   [TypedColumn] instances.
- * - List-based fields are already expanded before reaching this function, so no
- *   special handling or reflection is required here.
- * - Default values are included in the SQL definition when applicable.
- * - Unsupported or invalid column definitions are skipped.
- *
- * This function performs no reflection and relies entirely on the structure produced
- * by the EntityColumns / ColumnsBuilder DSL.
- *
- * @param table The name of the SQLite table to create.
- * @param columns The list of fully-defined columns used to build the table schema.
- * @return A complete `CREATE TABLE` SQL string.
+ * Creates tables for all single-table entities, that have EntityMeta.limitedToTable value set.
  */
-internal fun newTableQuery(                                             table: String,
-                                                                      columns: List<TypedColumn<*>>,
-): String {
-    val defs = columns.mapNotNull { col ->
-        val name = col.name
-        
-        val (typeSql, defaultSql) = when (col) {
-            is IntCol -> {
-                if (name == _ID)
-                    ColumnTypeSql.ID.sql to null
-                else
-                    ColumnTypeSql.INT.sql to col.defaultVal.toString()
-            }
-            is StrCol -> ColumnTypeSql.STR.sql to "'${col.defaultVal}'"
-            
-            is BoolCol -> ColumnTypeSql.BOOL.sql to (if (col.defaultVal) "1" else "0")
-            
-            is LongCol -> ColumnTypeSql.LONG.sql to col.defaultVal.toString()
-            
-            is FloatCol -> ColumnTypeSql.FLOAT.sql to col.defaultVal.toString()
-            
-            is BlobCol -> ColumnTypeSql.BLOB.sql to null
-        }
-        
-        val defaultClause = if (defaultSql != null)
-                                DEFAULT + defaultSql
-                            else
-                                ""
-        
-        name + typeSql + defaultClause
+internal fun SQLiteDatabase.createExclusiveTablesInternal(
+                                                           allEntityMeta: Collection<BaseEntityMeta>
+) {
+    // region LOG
+        Log.d(DbTAG, "createExclusiveTables() runs")
+    // endregion
+    for (entity in allEntityMeta) {
+        val table = entity.limitedToTable
+        if (table != null)
+            createTablesInternal(table using entity.schemaBundle)
     }
-    
-    return CREATE_TABLE + table + " (" + defs.joinToString(", ") + ")"
 }
-
-
-
-
 
 
 

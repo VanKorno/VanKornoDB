@@ -30,9 +30,18 @@ abstract class DbHelperInternal(
                                   dbName: String,
                                dbVersion: Int,
                               entityMeta: Collection<BaseEntityMeta>,
+                   createExclusiveTables: Boolean = true,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-) : DbReaderWriter(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
+) : DbReaderWriter(
+    context = context,
+    dbName = dbName,
+    dbVersion = dbVersion,
+    entityMeta = entityMeta,
+    createExclusiveTables = createExclusiveTables,
+    onCreate = onCreate,
+    onUpgrade = onUpgrade,
+) {
     
     // ===================================  S E T T E R S  =================================== \\
     

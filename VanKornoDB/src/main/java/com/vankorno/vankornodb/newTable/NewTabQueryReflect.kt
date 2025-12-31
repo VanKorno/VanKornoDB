@@ -16,7 +16,6 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
-
 /**
  * Generates a SQL `CREATE TABLE` statement for the specified [table], based on the structure of
  * the given data class [entityClass].

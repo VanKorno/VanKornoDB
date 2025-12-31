@@ -21,6 +21,7 @@ import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
+import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 
 /**
  * Manages the lifecycle and access of a single SQLite database instance.
@@ -55,6 +56,9 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cName
  * @property dbLock a mutex used to synchronize access to the database instance.
  * @property entityMeta the collection of all entity metadata used for version tracking
  *   and automatic migration.
+ * @property createExclusiveTables determines if onCreate automatically creates tables
+ * of entities that have only one table (stated in [entityMeta]). If true, it runs function
+ * createExclusiveTables() with the provided [entityMeta].
  * @property runOnCreate a lambda that runs custom logic when the database is created.
  * @property runOnUpgrade a lambda that runs custom logic when the database is upgraded.
  */
@@ -62,9 +66,9 @@ abstract class DbManager(        context: Context,
                                   dbName: String,
                                dbVersion: Int,
                           val entityMeta: Collection<BaseEntityMeta>,
+               val createExclusiveTables: Boolean = true,
                          val runOnCreate: (SQLiteDatabase)->Unit = {},
                         val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-    
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
     
     val dbLock = Any()
@@ -91,6 +95,10 @@ abstract class DbManager(        context: Context,
         // endregion
         synchronized(dbLock) {
             db.createTable(TTTEntityVersion)
+            
+            if (createExclusiveTables)
+                db.createExclusiveTablesInternal(entityMeta)
+            
             runOnCreate(db)
         }
     }

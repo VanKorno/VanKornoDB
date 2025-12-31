@@ -22,9 +22,18 @@ abstract class DbReaderWriter(
                                   dbName: String,
                                dbVersion: Int,
                               entityMeta: Collection<BaseEntityMeta>,
+                   createExclusiveTables: Boolean = true,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-) : DbManager(context, dbName, dbVersion, entityMeta, onCreate, onUpgrade) {
+) : DbManager(
+    context = context,
+    dbName = dbName,
+    dbVersion = dbVersion,
+    entityMeta = entityMeta,
+    createExclusiveTables = createExclusiveTables,
+    runOnCreate = onCreate,
+    runOnUpgrade = onUpgrade,
+) {
     
     /**
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
