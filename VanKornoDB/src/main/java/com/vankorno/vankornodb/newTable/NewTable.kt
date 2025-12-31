@@ -81,8 +81,6 @@ internal fun newTableQuery(                                             table: S
             is FloatCol -> ColumnTypeSql.FLOAT.sql to col.defaultVal.toString()
             
             is BlobCol -> ColumnTypeSql.BLOB.sql to null
-            
-            else -> return@mapNotNull null
         }
         
         val defaultClause = if (defaultSql != null)

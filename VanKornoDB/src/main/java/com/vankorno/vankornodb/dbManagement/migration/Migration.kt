@@ -80,7 +80,6 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     val utils = MigrationUtils()
     
     val oldObjects = utils.getObjectsByVersion(this, table, oldVersion, versionedBundles)
-    val oldBundles = versionedBundles[oldVersion]
     
     val migratedObjects = oldObjects.map { original ->
         utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedBundles, lambdas)

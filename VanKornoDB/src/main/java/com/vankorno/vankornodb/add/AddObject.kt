@@ -39,7 +39,7 @@ import com.vankorno.vankornodb.get.getLastId
 /**
  * Inserts the given object into the specified database table.
  * Converts the entity into ContentValues and performs the SQLite insert operation.
- * If [schemaBundle] isn't passed or if it doesn't have a setter - reflection-based mapping is used.
+ * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param obj The entity object to insert.
@@ -57,11 +57,11 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                     tableInfo: Tab
     return insert(tableInfo.name, null, cv)
 }
 
-/** TODO fix
+/**
  * Inserts multiple objects into the specified database table.
  * Converts each entity into ContentValues and performs the SQLite insert operation for each.
- * If [schemaBundle] isn't passed or if it doesn't have a setter - reflection-based mapping is used.
- *
+ * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
+ *  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
