@@ -4,7 +4,10 @@ import com.vankorno.sandbox.entities.testEntity._Test
 import com.vankorno.sandbox.entities.testEntity.migrationsTestEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
+
+const val DbVersion = 3
 
 /**
  * An example of the enum that contains all entity metadata needed for migrations.
@@ -40,3 +43,4 @@ enum class EntityMeta(                              override val currVersion: In
 
 
 const val TestTable = "TestTable"
+val _TestTable = TestTable using _Test

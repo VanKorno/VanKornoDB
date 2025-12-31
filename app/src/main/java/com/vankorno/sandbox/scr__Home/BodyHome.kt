@@ -19,9 +19,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.vankorno.sandbox.DbVersion
+import com.vankorno.sandbox.MyApp.Companion.dbFileNameFromDb
 import com.vankorno.sandbox.MyApp.Companion.dbh
-import com.vankorno.sandbox.dbFileNameFromDb
+import com.vankorno.sandbox.entities.DbVersion
 import com.vankorno.sandbox.entities.EntityMeta
 import com.vankorno.sandbox.navig.ScrDbBrowser
 import com.vankorno.sandbox.navig.ScrPlayground
