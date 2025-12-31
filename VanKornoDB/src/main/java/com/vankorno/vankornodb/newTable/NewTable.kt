@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.*
 
 /**
- * Creates database tables for the given [TableInfo] definitions.
+ * Creates database tables.
  *
  * For each table:
  * - If an explicit column list is provided via `EntityColumns`, the table schema
@@ -23,16 +23,17 @@ import com.vankorno.vankornodb.dbManagement.data.*
  * @param tables One or more table descriptors containing table name and schema source.
  */
 
-internal fun SQLiteDatabase.createTablesInternal(                          vararg tables: TableInfo
+internal fun SQLiteDatabase.createTablesInternal(
+                                                    vararg tables: TableInfoNormal<out NormalEntity>
 ) {
     for (table in tables) {
-        val orm = table.schemaBundle
-        val hasColList = orm.columns != null  &&  orm.columns.columns.isNotEmpty()
+        val schemaBundle = table.schema
+        val hasColList = schemaBundle.columns != null  &&  schemaBundle.columns!!.columns.isNotEmpty()
         
         val queryStr =  if (hasColList)
-                            newTableQuery(table.name, orm.columns.columns)
+                            newTableQuery(table.name, schemaBundle.columns!!.columns)
                         else
-                            newTableQuery(table.name, orm.clazz)
+                            newTableQuery(table.name, schemaBundle.clazz)
         execSQL(queryStr)
     }
 }

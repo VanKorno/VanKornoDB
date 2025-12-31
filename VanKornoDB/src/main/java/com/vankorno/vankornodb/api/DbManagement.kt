@@ -9,8 +9,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.DbHelperInternal
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.TableInfo
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.newTable.createTablesInternal
 
 
@@ -30,16 +30,13 @@ open class DbHelper(             context: Context,
 /**
  * Creates a single table in db.
  */
-fun SQLiteDatabase.createTable(                             table: String,
-                                                     schemaBundle: CurrSchemaBundle<out CurrEntity>,
-) = createTablesInternal(
-    TableInfo(table, schemaBundle)
-)
+fun SQLiteDatabase.createTable(tableInfo: TableInfoNormal<out NormalEntity>) = createTablesInternal(tableInfo)
+
 
 /**
  * Creates multiple tables in the database given vararg TableInfo.
  */
-fun SQLiteDatabase.createTables(vararg tables: TableInfo) = createTablesInternal(*tables)
+fun SQLiteDatabase.createTables(vararg tables: TableInfoNormal<out NormalEntity>) = createTablesInternal(*tables)
 
 
 

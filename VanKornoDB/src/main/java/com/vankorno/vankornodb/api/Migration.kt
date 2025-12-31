@@ -9,7 +9,8 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.TableInfo
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.dropAndCreateEmptyTablesInternal
@@ -65,17 +66,17 @@ open class DbMigrator(                                               db: SQLiteD
 
 
 
-/** TODO update
+/**
  * Migrates the contents of a table through multiple versioned entity definitions and optional transformation lambdas.
  *
- * This function performs step-by-step data migration from [oldVersion] to [newVersion], converting each entity instance
- * according to the provided versioned classes, rename history, and transformation lambdas. The table is dropped,
- * recreated using the structure of the final version class, and repopulated with the migrated data.
+ * This function performs step-by-step data migration from [oldVersion] to the current version, stated in [entityMeta],
+ * converting each entity instance according to the provided versioned classes, rename history,
+ * and transformation lambdas. The table is dropped, recreated using the structure
+ * of the final version class, and repopulated with the migrated data.
  *
  * @param table The name of the table to migrate.
  * @param oldVersion The version of the entity currently stored in the table.
- * @param newVersion The target version of the entity to migrate to.
- * @param migrationBundle A bundle of versioned classes, rename history and milestone lambdas.
+ * @param entityMeta Cross-version entity data.
  * @param onNewDbFilled An optional callback invoked with the list of fully migrated objects after the table has been repopulated.
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
@@ -102,7 +103,8 @@ fun SQLiteDatabase.migrateMultiStep(                           table: String,
  * 
  * @param tables A list of table names and entity data classes
  */
-fun SQLiteDatabase.dropAndCreateEmptyTables(vararg tables: TableInfo) = this.dropAndCreateEmptyTablesInternal(*tables)
+fun SQLiteDatabase.dropAndCreateEmptyTables(        vararg tables: TableInfoNormal<out NormalEntity>
+) = this.dropAndCreateEmptyTablesInternal(*tables)
 
 
 /**
@@ -111,7 +113,8 @@ fun SQLiteDatabase.dropAndCreateEmptyTables(vararg tables: TableInfo) = this.dro
  * 
  * @param tables A list of table names and entity data classes
  */
-fun SQLiteDatabase.migrateWithoutChange(vararg tables: TableInfo) = this.migrateWithoutChangeInternal(*tables)
+fun SQLiteDatabase.migrateWithoutChange(            vararg tables: TableInfoNormal<out NormalEntity>
+) = this.migrateWithoutChangeInternal(*tables)
 
 
 

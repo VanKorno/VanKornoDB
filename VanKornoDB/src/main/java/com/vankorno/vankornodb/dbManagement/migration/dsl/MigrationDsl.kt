@@ -32,7 +32,7 @@ internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: In
         defBuilder.versionedSpecs[latestVersion] = latestSchemaBundle
     
     return MigrationBundle(
-        versionedSpecs = defBuilder.versionedSpecs,
+        versionedSchemaBundles = defBuilder.versionedSpecs,
         renameHistory = defBuilder.renameHistory,
         milestones = defBuilder.milestones
     )

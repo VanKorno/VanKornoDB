@@ -10,26 +10,28 @@ import android.util.Log
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseSchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 
 
 /**
- * Gets one db table row as an object of [clazz] using using WhereDsl. Returns null if no result found.
+ * Gets one db table row as an object of an entity class using WhereDsl.
+ * Returns null if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                               schemaBundle: BaseSchemaBundle<T>,
+fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjPro(table, schemaBundle) { this.where = where }
+): T? = getObjPro(tableInfo) { this.where = where }
 
 
-
-fun <T : BaseEntity> SQLiteDatabase.getObj(                           table: String,
-                                                               schemaBundle: BaseSchemaBundle<T>,
+/**
+ * Gets one db table row as an object of an entity class using WhereDsl.
+ * Returns [default] if no result found.
+ */
+fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: TableInfoBase<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-): T = getObj(table, schemaBundle, where) ?: run {
+): T = getObj(tableInfo, where) ?: run {
     // region LOG
-        Log.e(DbTAG, "getObj(): The requested row doesn't exist in $table, returning default")
+        Log.e(DbTAG, "getObj(): The requested row doesn't exist in ${tableInfo.name}, returning default")
     // endregion
     default
 }

@@ -5,6 +5,7 @@
 // endregion
 package com.vankorno.vankornodb.dbManagement.data
 
+import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 
 /**
@@ -31,7 +32,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 interface BaseEntityMeta {
     val currVersion: Int
     val dbRowName: String
-    val schemaBundle: CurrSchemaBundle<*>
+    val schemaBundle: CurrSchemaBundle<out CurrEntity>
     val migrationBundle: Lazy<MigrationBundle>
     val limitedToTable: String? get() = null
 }

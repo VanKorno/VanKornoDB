@@ -5,6 +5,7 @@ import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox.MyApp.Companion.dbh
 import com.vankorno.sandbox.entities.testEntity.TestEntity
 import com.vankorno.sandbox.entities.testEntity._Test
+import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.whereId
 import org.junit.Assert.*
@@ -28,7 +29,7 @@ class ReorderTest : BaseAndroidTest() {
     private fun prep() {
         for (idx in 1..6) {
             val table = RoundKnightTable + idx
-            dbh.createTable(table, _Test)
+            dbh.createTable(table using _Test)
             
             val objects = List(10) {
                 TestEntity(
@@ -37,7 +38,7 @@ class ReorderTest : BaseAndroidTest() {
                     position = it + 1,
                 )
             }
-            dbh.addObjects(table, objects, _Test)
+            dbh.addObjects(table using _Test, objects)
         }
         // sanity
         assertTrue(dbh.tableExists(RoundKnightTable + 1))

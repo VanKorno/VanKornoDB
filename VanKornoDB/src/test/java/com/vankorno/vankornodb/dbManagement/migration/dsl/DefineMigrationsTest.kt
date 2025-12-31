@@ -27,9 +27,9 @@ class DefineMigrationsTest {
             version(1, OrmV1)
             version(2, OrmCurr)
         }
-        assertEquals(2, bundle.versionedSpecs.size)
-        assertEquals(OrmV1, bundle.versionedSpecs[1])
-        assertEquals(OrmCurr, bundle.versionedSpecs[2])
+        assertEquals(2, bundle.versionedSchemaBundles.size)
+        assertEquals(OrmV1, bundle.versionedSchemaBundles[1])
+        assertEquals(OrmCurr, bundle.versionedSchemaBundles[2])
     }
     @Test
     fun `adds missing latest version and orm bundle`() {
@@ -37,10 +37,10 @@ class DefineMigrationsTest {
             version(1, OrmV1)
             version(2, OrmV2)
         }
-        assertEquals(3, bundle.versionedSpecs.size)
-        assertEquals(OrmV1, bundle.versionedSpecs[1])
-        assertEquals(OrmV2, bundle.versionedSpecs[2])
-        assertEquals(OrmCurr, bundle.versionedSpecs[3])
+        assertEquals(3, bundle.versionedSchemaBundles.size)
+        assertEquals(OrmV1, bundle.versionedSchemaBundles[1])
+        assertEquals(OrmV2, bundle.versionedSchemaBundles[2])
+        assertEquals(OrmCurr, bundle.versionedSchemaBundles[3])
     }
     
     @Test
@@ -104,7 +104,7 @@ class DefineMigrationsTest {
     fun `works with only latest version`() {
         val bundle = defineMigrations(1, OrmCurr) { }
     
-        assertEquals(mapOf(1 to OrmCurr), bundle.versionedSpecs)
+        assertEquals(mapOf(1 to OrmCurr), bundle.versionedSchemaBundles)
         assertTrue(bundle.renameHistory.isEmpty())
         assertTrue(bundle.milestones.isEmpty())
     }

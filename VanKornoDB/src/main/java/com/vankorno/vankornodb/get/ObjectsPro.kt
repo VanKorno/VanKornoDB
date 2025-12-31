@@ -9,22 +9,21 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseSchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 
 /** 
  * Retrieves a list of objects mapped from the given columns. 
  * Similar to the reified version but uses explicit KClass parameter.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                       table: String,
-                                                                  schemaBundle: BaseSchemaBundle<T>,
-                                                                           dsl: FullDsl.()->Unit,
-): List<T> = getCursorPro(table) {
+fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                      tableInfo: TableInfoBase<T>,
+                                                                              dsl: FullDsl.()->Unit,
+): List<T> = getCursorPro(tableInfo.name) {
     applyDsl(dsl)
 }.use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
-                add(cursor.toEntity(schemaBundle))
+                add(cursor.toEntity(tableInfo.schema))
             } while (cursor.moveToNext())
         }
     }
@@ -38,17 +37,16 @@ fun <T : BaseEntity> SQLiteDatabase.getObjectsPro(                       table: 
  * Retrieves a map of objects from the given table.
  * Similar to the reified version but uses explicit KClass parameter. 
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                        table: String,
-                                                                  schemaBundle: BaseSchemaBundle<T>,
-                                                                           dsl: FullDsl.()->Unit,
-): Map<Int, T> = getCursorPro(table) {
+fun <T : BaseEntity> SQLiteDatabase.getObjMapPro(                       tableInfo: TableInfoBase<T>,
+                                                                              dsl: FullDsl.()->Unit,
+): Map<Int, T> = getCursorPro(tableInfo.name) {
     applyDsl(dsl)
 }.use { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
             do {
-                val entity = cursor.toEntity(schemaBundle)
+                val entity = cursor.toEntity(tableInfo.schema)
                 put(cursor.getInt(idColIdx), entity)
             } while (cursor.moveToNext())
         }

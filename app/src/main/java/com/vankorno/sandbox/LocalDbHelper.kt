@@ -7,7 +7,7 @@ import com.vankorno.sandbox.entities.testEntity._Test
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.createTables
-import com.vankorno.vankornodb.dbManagement.data.TableInfo
+import com.vankorno.vankornodb.dbManagement.data.using
 
 const val DbName = "DbFile.dp"
 const val DbVersion = 3
@@ -29,7 +29,7 @@ class LocalDbHelper(                                                      contex
 ): DbHelper(context, dbName, dbVersion, EntityMeta.entries,
     onCreate = { db ->
         db.createTables(
-            TableInfo(TestTable, _Test)
+            TestTable using _Test
             
         )
     },

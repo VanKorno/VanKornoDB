@@ -11,8 +11,8 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -57,18 +57,16 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or null if no rows match.
  */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(      table: String,
-                                                               schemaBundle: BaseSchemaBundle<T>,
+inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
+                                                                  tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getCursorPro(table) {
-    applyDsl(
-        where = where,
-        limit = 1
-    )
+): T? = getCursorPro(tableInfo.name) {
+    this.where = where
+    limit = 1
     orderRandomly()
 }.use { cursor ->
     if (!cursor.moveToFirst()) return null
-    cursor.toEntity(schemaBundle)
+    cursor.toEntity(tableInfo.schema)
 }
 
 
@@ -89,10 +87,8 @@ inline fun <reified T> SQLiteDatabase.getRandomValNoty(               table: Str
                                                                      column: String,
                                                              noinline where: WhereDsl.()->Unit = {},
 ): T? = getCursorProNoty(table, arrayOf(column)) {
-    applyDsl(
-        where = where,
-        limit = 1
-    )
+    this.where = where
+    limit = 1
     orderRandomly()
 }.use { cursor ->
     if (cursor.moveToFirst())
