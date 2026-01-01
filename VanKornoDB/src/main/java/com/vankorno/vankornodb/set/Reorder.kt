@@ -40,7 +40,7 @@ fun SQLiteDatabase.reorder(                                           table: Str
             
             andGroup(where)
         }
-        orderBy(if (moveUpOrBack) cPosition.flip() else cPosition)
+        orderBy(cPosition.flipIf(moveUpOrBack))
         limit = 1
     }.use { cursor ->
         if (!cursor.moveToFirst())
