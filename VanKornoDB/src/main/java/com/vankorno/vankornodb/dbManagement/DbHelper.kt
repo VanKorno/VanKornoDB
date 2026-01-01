@@ -1382,20 +1382,22 @@ abstract class DbHelperInternal(
     
     
     
-    inline fun reorder(                                                     table: String,
-                                                                               id: Int,
-                                                                     moveUpOrBack: Boolean,
-                                                                  makeFirstOrLast: Boolean = false,
+    fun reorder(                                                      table: String,
+                                                                         id: Int,
+                                                               moveUpOrBack: Boolean,
+                                                            makeFirstOrLast: Boolean = false,
+                                                                      where: WhereDsl.()->Unit = {},
     ): Boolean = readWrite(false, "reorder") {
-        it.reorder(table, id, moveUpOrBack, makeFirstOrLast)
+        it.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
     }
     
-    suspend inline fun reorderSusp(                                         table: String,
-                                                                               id: Int,
-                                                                     moveUpOrBack: Boolean,
-                                                                  makeFirstOrLast: Boolean = false,
+    suspend fun reorderSusp(                                          table: String,
+                                                                         id: Int,
+                                                               moveUpOrBack: Boolean,
+                                                            makeFirstOrLast: Boolean = false,
+                                                                      where: WhereDsl.()->Unit = {},
     ): Boolean = readWriteSusp(false, "reorderSusp") {
-        it.reorder(table, id, moveUpOrBack, makeFirstOrLast)
+        it.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
     }
     
     

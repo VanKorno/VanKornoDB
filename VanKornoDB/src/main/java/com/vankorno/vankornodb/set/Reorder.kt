@@ -7,6 +7,7 @@ package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.get.getCursorPro
 import com.vankorno.vankornodb.get.getInt
@@ -15,10 +16,11 @@ import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 
-fun SQLiteDatabase.reorder(                                                 table: String,
-                                                                               id: Int,
-                                                                     moveUpOrBack: Boolean,
-                                                                  makeFirstOrLast: Boolean = false,
+fun SQLiteDatabase.reorder(                                           table: String,
+                                                                         id: Int,
+                                                               moveUpOrBack: Boolean,
+                                                            makeFirstOrLast: Boolean = false,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Boolean {
     // region LOG
     Log.d(DbTAG, "reorder(table = $table, id = $id, moveUpOrBack = $moveUpOrBack, makeFirstOrLast = $makeFirstOrLast")
@@ -35,6 +37,8 @@ fun SQLiteDatabase.reorder(                                                 tabl
                 cPosition less position
             else
                 cPosition greater position
+            
+            andGroup(where)
         }
         orderBy(if (moveUpOrBack) cPosition.flip() else cPosition)
         limit = 1
@@ -52,14 +56,15 @@ fun SQLiteDatabase.reorder(                                                 tabl
 }
 
 
-private fun SQLiteDatabase.reorderToStartEnd(                                      table: String,
-                                                                                      id: Int,
-                                                                            moveUpOrBack: Boolean,
+private fun SQLiteDatabase.reorderToStartEnd(                         table: String,
+                                                                         id: Int,
+                                                               moveUpOrBack: Boolean,
+                                                                      where: WhereDsl.()->Unit = {},
 ): Boolean {
     val position = getInt(table, cPosition) { ID = id }
     
     if (!moveUpOrBack) {
-        val last = getLastPosition(table)
+        val last = getLastPosition(table, where)
         if (position == last) return false //\/\/\/\/\/\
         
         val newPosition = last + 1
@@ -68,7 +73,13 @@ private fun SQLiteDatabase.reorderToStartEnd(                                   
     else {
         if (position < 2) return false
         
-        set(table, where = { cPosition less position }) {
+        set(
+            table,
+            where = {
+                cPosition less position
+                andGroup(where)
+            }
+        ) {
             cPosition add 1
         }
         setInt(1, table, cPosition) { ID = id }

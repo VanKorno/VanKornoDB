@@ -75,37 +75,55 @@ class OrderDsl : OrderDslInternal() {
 
 
 class WhereDsl : WhereDslInternal() {
-    fun group(                                                           whereDsl: WhereDsl.()->Unit
+    fun group(                                                              where: WhereDsl.()->Unit
     ) {
-        val innerBuilder = WhereDsl().apply(whereDsl)
+        val innerBuilder = WhereDsl().apply(where)
+        if (innerBuilder.clauses.isEmpty())
+            return //\/\/\/\/\/\
+        
         clauses.add("(" + innerBuilder.buildStr() + ")")
         args.addAll(innerBuilder.args)
     }
     
-    fun and(                                                             whereDsl: WhereDsl.()->Unit
+    fun and(                                                                where: WhereDsl.()->Unit
     ) {
+        val innerBuilder = WhereDsl().apply(where)
+        if (innerBuilder.clauses.isEmpty())
+            return //\/\/\/\/\/\
+        
         clauses.add("AND")
-        val innerBuilder = WhereDsl().apply(whereDsl)
         clauses.addAll(innerBuilder.clauses)
         args.addAll(innerBuilder.args)
     }
-    fun andGroup(                                                        whereDsl: WhereDsl.()->Unit
+    fun andGroup(                                                           where: WhereDsl.()->Unit
     ) {
+        val innerBuilder = WhereDsl().apply(where)
+        if (innerBuilder.clauses.isEmpty())
+            return //\/\/\/\/\/\
+        
         clauses.add("AND")
-        group(whereDsl)
+        group(where)
     }
     
-    fun or(                                                              whereDsl: WhereDsl.()->Unit
+    fun or(                                                                 where: WhereDsl.()->Unit
     ) {
+        val innerBuilder = WhereDsl().apply(where)
+        if (innerBuilder.clauses.isEmpty())
+            return //\/\/\/\/\/\
+        
         clauses.add("OR")
-        val innerBuilder = WhereDsl().apply(whereDsl)
         clauses.addAll(innerBuilder.clauses)
         args.addAll(innerBuilder.args)
     }
-    fun orGroup(                                                         whereDsl: WhereDsl.()->Unit
+    
+    fun orGroup(                                                            where: WhereDsl.()->Unit
     ) {
+        val innerBuilder = WhereDsl().apply(where)
+        if (innerBuilder.clauses.isEmpty())
+            return //\/\/\/\/\/\
+        
         clauses.add("OR")
-        group(whereDsl)
+        group(where)
     }
     
     fun subquery(                                           table: String,
