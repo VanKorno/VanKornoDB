@@ -1,14 +1,18 @@
 # VanKorno DB
 
-VanKorno DB is a lightweight, expressive SQLite query builder and database management system written in Kotlin.
-It gives developers more control over database operations than traditional ORMs, letting you retrieve exactly the data you need — no more, no less.
-It lets you do more on the SQLite level without sacrificing convenience of the ORM approach.
-Use the full power of SQLite in a safe and convenient way!
+VanKorno DB is a pretty unique system for working with SQLite databases for native Android development (It'll probably get multiplatform in the future). It's not an ORM, but it can do the same things: create and manage db tables based on a data class as a single source of truth, get db rows as objects of that class, add/update rows from objects, etc. 
+It is kinda like an ORM, but not really... Entity classes in VanKorno DB are used as instructions/contracts or data holders, but not a 1:1 representation of a db table. You can create multiple db tables from the same entity class or use multiple entity classes with the same db table. That's a completely different workflow where, for example, each TODO list has its own db table with TODO elements, instead of having one huge table for all lists (how it's usually done in ORMs). When such a list gets deleted, you simply drop the table, instead of finding and deleting elements one-by-one from the shared table... With this approach the whole db structure better reflects the actuall app structure. It's like sorting folders on your PC by topic vs putting all files of the same type in one folder (traditional ORM-approach). It means better encapsulation (could be useful for many things, including security), easier filtering, reordering, id-management, and much more.
+That approach enables countless possibilities for dynamic generation of tables/columns etc. For example, with traditional ORM you would have to type every single column in it's entity definition, but with VanKornoDB you can easily use loops or just lists in entity definitions.
 
-### The main idea is this:
+
+Another key feature is a convenient, modern DSL that lets you do even the craziest nested things with the db, and keep your code readable and pleasant to deal with at the same time. It makes writing queries more safe and convenient, without limiting what you can do with SQLite. It's like Jetpack Compose, but for databases ;)
+You can write queries in DSL (even if you're not good at SQL), their parts, db migration instructions, db operation sequences... all in convenient DSL.
+
+
+
+VanKorno DB lets you retrieve exactly the data you need — no more, no less, be it a single value, multiple values or the whole objects.
+It lets you do more on the SQLite level without sacrificing convenience of the ORM-like mapping.
 If you want more control - you can have it. If you want more automation - you can have it as well. You choose the amount of control/automation you want!
-
-Designed primarily for Android, but with potential to support other platforms in the future.
 
 
 ### It's still a work in progress and until the 1.0 release, recommended only for people who don't mind experimenting, don't mind everything changing all the time. Until v1.0 I'll be working on it almost as if I'm the only user, so, don't try it at home :)
@@ -47,7 +51,7 @@ for (i in 1..1000) { db.createTable(ShopTable + i, Shop::class) }
 
 ## Examples
 
-getCursor() - a function that's often used by other unctions under the hood. It can also be useful when you want do do some things with the cursor directly:
+getCursor() - a function that's often used by other functions under the hood. It can also be useful when you want do do some things with the cursor directly:
 
 ```kotlin
 db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals to value 'userName' 
