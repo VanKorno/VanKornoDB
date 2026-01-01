@@ -1,13 +1,17 @@
 # VanKorno DB
 
-VanKorno DB is a pretty unique system for working with SQLite databases for native Android development (It'll probably get multiplatform in the future). It's not an ORM, but it can do the same things: create and manage db tables based on a data class as a single source of truth, get db rows as objects of that class, add/update rows from objects, etc. 
-It is kinda like an ORM, but not really... Entity classes in VanKorno DB are used as instructions/contracts or data holders, but not a 1:1 representation of a db table. You can create multiple db tables from the same entity class or use multiple entity classes with the same db table. That's a completely different workflow where, for example, each TODO list has its own db table with TODO elements, instead of having one huge table for all lists (how it's usually done in ORMs). When such a list gets deleted, you simply drop the table, instead of finding and deleting elements one-by-one from the shared table... With this approach the whole db structure better reflects the actuall app structure. It's like sorting folders on your PC by topic vs putting all files of the same type in one folder (traditional ORM-approach). It means better encapsulation (could be useful for many things, including security), easier filtering, reordering, id-management, and much more.
+VanKorno DB is a unique system for working with SQLite databases in native Android development (it may become multiplatform in the future). It’s not an ORM, but it can do many of the same things: create and manage db tables based on a data class as a single source of truth, get db rows as objects of that class, add/update rows from objects and much more. 
+It is kinda like an ORM, but not really... Instead of forcing a strict 1:1 mapping between entities and database tables, VanKorno DB treats entity classes more like instructions or contracts, rather than fixed table representations.
+You can create multiple tables from the same entity class, or use multiple entity classes for the same table.
+
+This enables a very different workflow. For example, instead of storing all TODO items in one huge table, each TODO list can have its own table. When a list is deleted, the entire table is dropped — no need to delete rows one by one.
+This approach results in better encapsulation, simpler logic, easier ID management, and often better performance.
+It’s similar to organizing files by folders instead of dumping everything into one directory. The database structure better reflects the actual structure of an app.
 That approach enables countless possibilities for dynamic generation of tables/columns etc. For example, with traditional ORM you would have to type every single column in it's entity definition, but with VanKornoDB you can easily use loops or just lists in entity definitions.
 
 
-Another key feature is a convenient, modern DSL that lets you do even the craziest nested things with the db, and keep your code readable and pleasant to deal with at the same time. It makes writing queries more safe and convenient, without limiting what you can do with SQLite. It's like Jetpack Compose, but for databases ;)
+Another key feature is a convenient, modern DSL that lets you do even the craziest nested things with the db, and keep your code readable and pleasant to deal with at the same time. It makes writing queries safer and more convenient, without limiting what you can do with SQLite. It's like Jetpack Compose, but for databases ;)
 You can write queries in DSL (even if you're not good at SQL), their parts, db migration instructions, db operation sequences... all in convenient DSL.
-
 
 
 VanKorno DB lets you retrieve exactly the data you need — no more, no less, be it a single value, multiple values or the whole objects.
@@ -20,33 +24,40 @@ If you want more control - you can have it. If you want more automation - you ca
 
 ## Features
 
-- Concise and readable SQL query builder (build queries with DSL and constants — no hardcoded strings)
-- Structured and intuitive query DSL (supports nested subqueries, joins, etc.)
-- Safe query construction without raw SQL
-- Same familiar param sets with the same DSL shared by most functions. Understand it once - and use it to get, set, create, delete everything. Although there are some alternative functions with even simpler param sets for convenience there as well.
-- Declarative condition DSL with clean separation of conditions and arguments, and the ability to see them in one place, side-by-side
-- Zero annotation processing
-- Can be used with more diverse architecture types than the usual Android ORMs.
-- Full db management system, working out of the box.
-- Convenient, efficient and reliable multi-step migration system with its own DSL that minimizes boilerplate code.
-- Designed for full control over your database logic.
+- Concise and readable SQL DSL (no raw SQL strings)
+- Strongly typed query construction
+- Nested queries and joins
+- Shared DSL for reading, writing, updating, and deleting
+- No annotation processing
+- Works with unconventional or highly dynamic schemas
+- Can be used with more diverse architecture types than the usual Android ORMs, for example, heavier db-layer logic, etc.
+- Built-in database lifecycle and migration system
 
 
 ## Extremely unique features
 
-- Entities are not limited to single tables. You can generate multiple db tables from the same entity and vice versa (use multiple different entities with the same db table).
-- Dynamic table creation.
+### Multiple tables per entity (and vice versa)
+You can freely map entities to tables in any configuration.
+You can dynamically create tables:
 ```kotlin
-for (i in 1..1000) { db.createTable(ShopTable + i, SbShop) }
+for (i in 1..1000) {
+    db.createTable(ShopTable + i, ShopSchema)
+}
 ```
 
-- List params of an entity class are automatically expanded, mapping the list elements to individual columns, which enables more logic to be done at the SQL-query level, without parsing strings or multiple connected tables.
-For example, with VanKornoDB you can even generate a thousand of tables with a thousand of columns via 2 lines of code:
+### List expansion into columns
+List properties are automatically expanded into multiple columns.
 ```kotlin
-data class Shop(val someList: List<Int> = List(1000) { 0 } ) : CurrEntity  // all those list elements become individual columns
-
-for (i in 1..1000) { db.createTable(ShopTable + i, Shop::class) }
+data class Shop(
+    val someList: List<Int> = List(1000) { 0 }
+)
 ```
+This results in 1000 columns generated automatically.
+
+This enables:
+Fast filtering and sorting
+Zero join overhead
+No string parsing or JSON blobs
 
 
 ## Examples
@@ -157,8 +168,7 @@ dependencies {
     implementation("com.github.VanKorno:VanKornoDB:VersionNumber")
 }
 ```
-
-And make sure you have a setup that lets you use JitPack libraries:
+For now the lib is published on JitPack for easier updating/dev workflow. When the lib is "done", it'll probably be available on Maven, but until then, make sure you're able to use JitPack libraries in your project:
 Add the JitPack repository to your build file settings.gradle.kts
 ```kotlin
 dependencyResolutionManagement {
@@ -170,16 +180,17 @@ dependencyResolutionManagement {
 }
 ```
 
+
 ## R8
 If you're using the R8 optimization, put this into your app's proguard-rules.pro:
 ```
 # Keep all classes implementing DbEntity and their primary constructors
--keep class * implements com.vankorno.vankornodb.api.DbEntity {
+-keep class * implements com.vankorno.vankornodb.dbManagement.data.BaseEntity {
     <init>(...);
 }
 
 # Keep all fields and methods (needed for defaultInstanceValueOf and reflection)
--keepclassmembers class * implements com.vankorno.vankornodb.api.DbEntity {
+-keepclassmembers class * implements com.vankorno.vankornodb.dbManagement.data.BaseEntity {
     <fields>;
     <methods>;
 }
@@ -188,14 +199,13 @@ If you're using the R8 optimization, put this into your app's proguard-rules.pro
 -keepattributes RuntimeVisibleParameterAnnotations,ParameterNames
 
 ```
-It is needed because VanKornoDB maps db column name directly to a class param name and we don't want
-R8 to shrink those names and break the mapping.
+It is needed because VanKornoDB uses reflection as a "plan-B" if some data in schema bundles is missing. It maps db column name directly to a class param name and we don't want R8 to shrink those names and break the mapping.
 
 
 
 ## Migrations
 You keep in your files and provide the migration system with the current entity class and the previous classes.
-It automatically chooses from which to which class to migrate. , and which intermediate steps to do (milestones).
+It automatically chooses from which to which class to migrate, and which intermediate steps to do (milestones).
 It automatically removes deleted rows and adds new ones. You don't have to state that anywhere.
 For things like renaming you'll have to keep the a convenient DSL-record, like this example from a real project:
 
@@ -230,12 +240,12 @@ fun migrationsTaskoid() = defineMigrations(
     version(8, V8_Taskoid::class) { rename { Position from "priority" to "position" } }
 }
 ```
-Normal migrations get skipped, their differences are handled automatically. There's no need to migrate through each of them. The system is more smart: calculates the differences based on the data you keep, then migrates to the latest class it can.
+Normal migrations get skipped, their differences are handled automatically. There's no need to migrate through each of them. The system is smarter: calculates the differences based on the data you keep, then migrates to the latest class it can.
 You define milestones when you want to make the migration non-skippable, it'll became a step in the migration chain, at which you can run more advanced data transformations using the DSL for popular actions or provide your own lambda to modify data the way you want.
 
 
 ## Lists
-Another unique feature of VanKornoDB is how it handles lists of the entity data class - it expands the elements to individual columns which makes look-up, sorting/filtering operations extremely efficient.
+As already stated, a unique feature of VanKornoDB is how it handles lists of an entity data class - it expands the elements to individual columns which makes look-up, sorting/filtering operations extremely efficient.
 Now you don't have to write every entity column manually, you can just define sets of columns as lists and easily have +500 columns with just one line of code ;)
 But there are some rules for lists:
 ```
