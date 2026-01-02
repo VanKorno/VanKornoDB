@@ -1,9 +1,9 @@
 package com.vankorno.sandbox.get
 
+import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox.LabRat
-import com.vankorno.sandbox.MyApp.Companion.dbh
-import com.vankorno.sandbox.entities.testEntity.TestEntity
-import com.vankorno.sandbox.entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity.TestEntity
+import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.using

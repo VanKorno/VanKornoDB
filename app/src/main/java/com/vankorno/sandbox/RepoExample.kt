@@ -1,9 +1,9 @@
 package com.vankorno.sandbox
 
-import com.vankorno.sandbox.MyApp.Companion.dbFileNameFromDb
-import com.vankorno.sandbox.entities.TestTable
-import com.vankorno.sandbox.entities._TestTable
-import com.vankorno.sandbox.entities.testEntity.TestEntity
+import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbFileNameFromDb
+import com.vankorno.sandbox._entities.TestTable
+import com.vankorno.sandbox._entities._TestTable
+import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.createTable

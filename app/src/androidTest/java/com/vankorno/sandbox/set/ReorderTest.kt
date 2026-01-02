@@ -1,10 +1,10 @@
 package com.vankorno.sandbox.set
 
 import androidx.test.filters.MediumTest
+import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox.BaseAndroidTest
-import com.vankorno.sandbox.MyApp.Companion.dbh
-import com.vankorno.sandbox.entities.testEntity.TestEntity
-import com.vankorno.sandbox.entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity.TestEntity
+import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.whereId

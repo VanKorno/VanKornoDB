@@ -1,7 +1,7 @@
 package com.vankorno.sandbox
 
-import com.vankorno.sandbox.entities.testEntity.TestEntity
-import com.vankorno.sandbox.entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity.TestEntity
+import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.createTable
