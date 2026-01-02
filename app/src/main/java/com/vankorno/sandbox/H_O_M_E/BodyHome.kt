@@ -15,12 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbFileNameFromDb
-import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
+import com.vankorno.sandbox._navig.Navig
 import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._navig.ScrPlayground
-import com.vankorno.sandbox._navig.goTo
 import com.vankorno.sandbox._ui.LargeBtn
 import com.vankorno.vankornocompose.composables.Spa_______________cer
 import com.vankorno.vankornocompose.dp3
@@ -54,7 +53,7 @@ private fun NavBtn(                                                      targetS
                                                                               text: String,
                                                                        accentColor: LibAccentColor,
 ) {
-    LargeBtn(text, accentColor) { dbh.goTo(targetScr) }
+    LargeBtn(text, accentColor) { Navig().goTo(targetScr) }
 }
 
 

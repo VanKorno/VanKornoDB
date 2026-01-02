@@ -40,14 +40,29 @@ fun SQLiteDatabase.deleteLastRow(                                               
 }
 
 
-fun SQLiteDatabase.clearTable(                                                     table: String,
-                                                                       //resetAutoID: Boolean = true
-) {
-    execSQL("DELETE FROM " + table)
-    //if (resetAutoID)
-    //    execSQL("DELETE FROM sqlite_sequence WHERE name = '$tableName'")
-}
+fun SQLiteDatabase.clearTable(table: String) { execSQL("DELETE FROM " + table) }
+
+fun SQLiteDatabase.clearTables(vararg tables: String) = tables.forEach { clearTable(it) }
+
+fun SQLiteDatabase.clearTables(tables: List<String>) = tables.forEach { clearTable(it) }
 
 
 
 fun SQLiteDatabase.deleteTable(table: String) { execSQL("DROP TABLE IF EXISTS " + table) }
+
+fun SQLiteDatabase.deleteTables(vararg tables: String) = tables.forEach { deleteTable(it) }
+
+fun SQLiteDatabase.deleteTables(tables: List<String>) = tables.forEach { deleteTable(it) }
+
+
+
+
+
+
+
+
+
+
+
+
+

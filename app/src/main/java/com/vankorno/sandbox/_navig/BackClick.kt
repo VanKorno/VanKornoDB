@@ -1,6 +1,5 @@
 package com.vankorno.sandbox._navig
 
-import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornocompose.LibMainActivity.Companion.libVm
 import com.vankorno.vankornocompose.navig.PopStateOFF
 import com.vankorno.vankornocompose.navig.ScrHome
@@ -12,7 +11,7 @@ import com.vankorno.vankornohelpers.values.minimizeApp
 
 private const val TAG = "BackClick"
 
-class BackClick(db1: SQLiteDatabase) : Navig(db1) {
+class BackClick() : Navig() {
     
     fun goBack() {
         // region LOG

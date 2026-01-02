@@ -16,12 +16,10 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.dbManagement.data.*
-import com.vankorno.vankornodb.delete.clearTable
-import com.vankorno.vankornodb.delete.deleteFirstRow
-import com.vankorno.vankornodb.delete.deleteLastRow
-import com.vankorno.vankornodb.delete.deleteRow
-import com.vankorno.vankornodb.delete.deleteTable
+import com.vankorno.vankornodb.delete.*
 import com.vankorno.vankornodb.get.*
+import com.vankorno.vankornodb.get.raw.data.RawTableStr
+import com.vankorno.vankornodb.get.raw.getRawTableStr
 import com.vankorno.vankornodb.set.*
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -258,56 +256,104 @@ abstract class DbHelperInternal(
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
-    fun getInt(table: String, column: IntCol, where: WhereDsl.()->Unit): Int =
-        read(0, "getInt") { it.getInt(table, column, where) }
+    fun getInt(                                                            table: String,
+                                                                          column: IntCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Int = read(0, "getInt") {
+        it.getInt(table, column, where)
+    }
     
-    suspend fun getIntSusp(table: String, column: IntCol, where: WhereDsl.()->Unit): Int =
-        readSusp(0, "getIntSusp") { it.getInt(table, column, where) }
+    suspend fun getIntSusp(                                                table: String,
+                                                                          column: IntCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Int = readSusp(0, "getIntSusp") {
+        it.getInt(table, column, where)
+    }
     
     
     //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
-    fun getStr(table: String, column: StrCol, where: WhereDsl.()->Unit): String =
-        read("", "getStr") { it.getStr(table, column, where) }
+    fun getStr(                                                            table: String,
+                                                                          column: StrCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): String = read("", "getStr") {
+        it.getStr(table, column, where)
+    }
     
-    suspend fun getStrSusp(table: String, column: StrCol, where: WhereDsl.()->Unit): String =
-        readSusp("", "getStrSusp") { it.getStr(table, column, where) }
+    suspend fun getStrSusp(                                                table: String,
+                                                                          column: StrCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): String = readSusp("", "getStrSusp") {
+        it.getStr(table, column, where)
+    }
     
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
-    fun getBool(table: String, column: BoolCol, where: WhereDsl.()->Unit): Boolean =
-        read(false, "getBool") { it.getBool(table, column, where) }
+    fun getBool(                                                           table: String,
+                                                                          column: BoolCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Boolean = read(false, "getBool") {
+        it.getBool(table, column, where)
+    }
     
-    suspend fun getBoolSusp(table: String, column: BoolCol, where: WhereDsl.()->Unit): Boolean =
-        readSusp(false, "getBoolSusp") { it.getBool(table, column, where) }
+    suspend fun getBoolSusp(                                               table: String,
+                                                                          column: BoolCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Boolean = readSusp(false, "getBoolSusp") {
+        it.getBool(table, column, where)
+    }
     
     
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
-    fun getLong(table: String, column: LongCol, where: WhereDsl.()->Unit): Long =
-        read(0L, "getLong") { it.getLong(table, column, where) }
+    fun getLong(                                                           table: String,
+                                                                          column: LongCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Long = read(0L, "getLong") {
+        it.getLong(table, column, where)
+    }
     
-    suspend fun getLongSusp(table: String, column: LongCol, where: WhereDsl.()->Unit): Long =
-        readSusp(0L, "getLongSusp") { it.getLong(table, column, where) }
+    suspend fun getLongSusp(                                               table: String,
+                                                                          column: LongCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Long = readSusp(0L, "getLongSusp") {
+        it.getLong(table, column, where)
+    }
     
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
     
-    fun getFloat(table: String, column: FloatCol, where: WhereDsl.()->Unit): Float =
-        read(0F, "getFloat") { it.getFloat(table, column, where) }
+    fun getFloat(                                                          table: String,
+                                                                          column: FloatCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Float = read(0F, "getFloat") {
+        it.getFloat(table, column, where)
+    }
     
-    suspend fun getFloatSusp(table: String, column: FloatCol, where: WhereDsl.()->Unit): Float =
-        readSusp(0F, "getFloatSusp") { it.getFloat(table, column, where) }
+    suspend fun getFloatSusp(                                              table: String,
+                                                                          column: FloatCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): Float = readSusp(0F, "getFloatSusp") {
+        it.getFloat(table, column, where)
+    }
     
     
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
-    fun getBlob(table: String, column: BlobCol, where: WhereDsl.()->Unit): ByteArray =
-        read(ByteArray(0), "getBlob") { it.getBlob(table, column, where) }
+    fun getBlob(                                                           table: String,
+                                                                          column: BlobCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): ByteArray = read(ByteArray(0), "getBlob") {
+        it.getBlob(table, column, where)
+    }
     
-    suspend fun getBlobSusp(table: String, column: BlobCol, where: WhereDsl.()->Unit): ByteArray =
-        readSusp(ByteArray(0), "getBlobSusp") { it.getBlob(table, column, where) }
+    suspend fun getBlobSusp(                                               table: String,
+                                                                          column: BlobCol,
+                                                                           where: WhereDsl.()->Unit,
+    ): ByteArray = readSusp(ByteArray(0), "getBlobSusp") {
+        it.getBlob(table, column, where)
+    }
     
     
     
@@ -1170,8 +1216,7 @@ abstract class DbHelperInternal(
     }
     
     
-    
-    
+    // -------------------------------------------------------------------------------------- \\
     
     inline fun deleteFirstRow(                                              table: String,
                                                                             async: Boolean = false,
@@ -1197,6 +1242,8 @@ abstract class DbHelperInternal(
     }
     
     
+    // -------------------------------------------------------------------------------------- \\
+    
     inline fun clearTable(                                                  table: String,
                                                                             async: Boolean = false,
     ) = write("clearTable", async) { it.clearTable(table) }
@@ -1204,12 +1251,48 @@ abstract class DbHelperInternal(
     suspend fun clearTableSusp(table: String) = writeSusp("clearTableSusp") { it.clearTable(table) }
     
     
+    inline fun clearTables(                                        vararg tables: String,
+                                                                            async: Boolean = false,
+    ) = write("clearTables", async) { it.clearTables(*tables) }
+    
+    suspend fun clearTablesSusp(                                          vararg tables: String
+    ) = writeSusp("clearTablesSusp") { it.clearTables(*tables) }
+    
+    
+    inline fun clearTables(                                               tables: List<String>,
+                                                                            async: Boolean = false,
+    ) = write("clearTables", async) { it.clearTables(tables) }
+    
+    suspend fun clearTablesSusp(                                              tables: List<String>
+    ) = writeSusp("clearTablesSusp") { it.clearTables(tables) }
+    
+    
+    // -------------------------------------------------------------------------------------- \\
+    
     inline fun deleteTable(                                                 table: String,
                                                                             async: Boolean = false,
     ) = write("deleteTable", async) { it.deleteTable(table) }
     
-    suspend fun deleteTableSusp(table: String) = writeSusp("deleteTableSusp") { it.deleteTable(table) }
+    suspend fun deleteTableSusp(                                                   table: String
+    ) = writeSusp("deleteTableSusp") {
+        it.deleteTable(table)
+    }
     
+    
+    inline fun deleteTables(                                        vararg tables: String,
+                                                                            async: Boolean = false,
+    ) = write("deleteTables", async) { it.deleteTables(*tables) }
+    
+    suspend fun deleteTablesSusp(                                          vararg tables: String
+    ) = writeSusp("deleteTablesSusp") { it.deleteTables(*tables) }
+    
+    
+    inline fun deleteTables(                                               tables: List<String>,
+                                                                            async: Boolean = false,
+    ) = write("deleteTables", async) { it.deleteTables(tables) }
+    
+    suspend fun deleteTablesSusp(                                              tables: List<String>
+    ) = writeSusp("deleteTablesSusp") { it.deleteTables(tables) }
     
     
     
@@ -1286,36 +1369,88 @@ abstract class DbHelperInternal(
     
     // ====================================  O T H E R  ==================================== \\
     
-    inline fun getLastId(table: String) = read(0, "getLastId") { it.getLastId(table) }
-    suspend fun getLastIdSusp(table: String) = readSusp(0, "getLastIdSusp") { it.getLastId(table) }
+    inline fun getLastId(                                                          table: String
+    ): Int = read(0, "getLastId") {
+        it.getLastId(table)
+    }
+    suspend fun getLastIdSusp(                                                     table: String
+    ): Int = readSusp(0, "getLastIdSusp") {
+        it.getLastId(table)
+    }
     
     
-    inline fun getAllIDs(table: String) = read(emptyList(), "getAllIDs") { it.getAllIDs(table) }
-    suspend fun getAllIDsSusp(table: String) = readSusp(emptyList(), "getAllIDsSusp") { it.getAllIDs(table) }
+    inline fun getAllIDs(                                                          table: String
+    ): List<Int> = read(emptyList(), "getAllIDs") {
+        it.getAllIDs(table)
+    }
+    suspend fun getAllIDsSusp(                                                     table: String
+    ): List<Int> = readSusp(emptyList(), "getAllIDsSusp") {
+        it.getAllIDs(table)
+    }
     
     
-    inline fun tableExists(table: String) = read(false, "tableExists") { it.tableExists(table) }
-    suspend fun tableExistsSusp(table: String) = readSusp(false, "tableExistsSusp") { it.tableExists(table) }
+    // -------------------------------------------------------------------------------------- \\
+    
+    inline fun tableExists(                                                        table: String
+    ): Boolean = read(false, "tableExists") {
+        it.tableExists(table)
+    }
+    suspend fun tableExistsSusp(                                                   table: String
+    ): Boolean = readSusp(false, "tableExistsSusp") {
+        it.tableExists(table)
+    }
     
     
-    inline fun isTableEmpty(table: String) = read(true, "isTableEmpty") { it.isTableEmpty(table) }
-    suspend fun isTableEmptySusp(table: String) = readSusp(true, "isTableEmptySusp") { it.isTableEmpty(table) }
+    inline fun isTableEmpty(                                                       table: String
+    ): Boolean = read(true, "isTableEmpty") {
+        it.isTableEmpty(table)
+    }
+    suspend fun isTableEmptySusp(                                                  table: String
+    ): Boolean = readSusp(true, "isTableEmptySusp") {
+        it.isTableEmpty(table)
+    }
     
     
-    inline fun getAppTableNames() = read(false, "getAppTableNames") { it.getAppTableNames() }
-    suspend fun getAppTableNamesSusp() = readSusp(false, "getAppTableNamesSusp") { it.getAppTableNames() }
+    // -------------------------------------------------------------------------------------- \\
     
-    inline fun getInternalTableNames() = read(false, "getInternalTableNames") { it.getInternalTableNames() }
-    suspend fun getInternalTableNamesSusp() = readSusp(false, "getInternalTableNamesSusp") { it.getInternalTableNames() }
+    inline fun getAppTableNames(): List<String> = read(emptyList(), "getAppTableNames") {
+        it.getAppTableNames()
+    }
+    suspend fun getAppTableNamesSusp(): List<String> = readSusp(emptyList(), "getAppTableNamesSusp") {
+        it.getAppTableNames()
+    }
+    
+    inline fun getInternalTableNames(): List<String> = read(emptyList(), "getInternalTableNames") {
+        it.getInternalTableNames()
+    }
+    suspend fun getInternalTableNamesSusp(): List<String> = readSusp(emptyList(), "getInternalTableNamesSusp") {
+        it.getInternalTableNames()
+    }
     
     
-    inline fun getLastPosition(table: String) = read(0, "getLastPosition") { it.getLastPosition(table) }
-    suspend fun getLastPositionSusp(table: String) = readSusp(0, "getLastPositionSusp") { it.getLastPosition(table) }
+    inline fun getRawTableStr(                                                     table: String
+    ): RawTableStr = read(RawTableStr(), "getRawTableStr") {
+        it.getRawTableStr(table)
+    }
+    suspend fun getRawTableStrSusp(                                                table: String
+    ): RawTableStr = readSusp(RawTableStr(), "getRawTableStrSusp") {
+        it.getRawTableStr(table)
+    }
     
     
+    // -------------------------------------------------------------------------------------- \\
+    
+    inline fun getLastPosition(                                                    table: String
+    ): Int = read(0, "getLastPosition") {
+        it.getLastPosition(table)
+    }
+    suspend fun getLastPositionSusp(                                               table: String
+    ): Int = readSusp(0, "getLastPositionSusp") {
+        it.getLastPosition(table)
+    }
     
     
-    
+    // -------------------------------------------------------------------------------------- \\
     
     fun getLargestInt(                                                table: String,
                                                                      column: IntCol,
@@ -1336,7 +1471,7 @@ abstract class DbHelperInternal(
     suspend fun getDbFileNameSusp() = readSusp("", "getDbFileNameSusp") { it.getDbFileName() }
     
     
-    
+    // -------------------------------------------------------------------------------------- \\
     
     fun getRandomInt(                                                 table: String,
                                                                      column: IntCol,
@@ -1381,6 +1516,7 @@ abstract class DbHelperInternal(
     
     
     
+    // -------------------------------------------------------------------------------------- \\
     
     fun reorder(                                                      table: String,
                                                                          id: Int,
@@ -1403,6 +1539,7 @@ abstract class DbHelperInternal(
     
     
     
+    // -------------------------------------------------------------------------------------- \\
     
     inline fun createTable(                            tableInfo: TableInfoNormal<out NormalEntity>,
                                                            async: Boolean = false,

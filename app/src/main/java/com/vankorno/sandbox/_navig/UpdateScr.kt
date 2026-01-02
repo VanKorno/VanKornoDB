@@ -1,15 +1,14 @@
 package com.vankorno.sandbox._navig
 
-import android.database.sqlite.SQLiteDatabase
+import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.values.LibGlobals2.currScr
-import com.vankorno.vankornodb.get.getAppTableNames
 import com.vankorno.vankornohelpers.dLog
 
 private const val TAG = "UpdateScr"
 
-class UpdateScr(val db: SQLiteDatabase) {
+class UpdateScr() {
     
     fun updateEveryMinute() {
         updateScr()
@@ -42,7 +41,7 @@ class UpdateScr(val db: SQLiteDatabase) {
     }
     
     private fun updateDbBrowser() {
-        vm.appTables = db.getAppTableNames()
+        vm.appTables = dbh.getAppTableNames()
     }
     
     
