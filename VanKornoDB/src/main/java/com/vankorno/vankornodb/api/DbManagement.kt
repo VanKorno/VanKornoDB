@@ -44,9 +44,17 @@ fun SQLiteDatabase.createTable(tableInfo: TableInfoNormal<out NormalEntity>) = c
 
 
 /**
- * Creates multiple tables in the database given vararg TableInfo.
+ * Creates multiple tables in the database given vararg TableInfo (table name + schema bundle).
  */
-fun SQLiteDatabase.createTables(vararg tables: TableInfoNormal<out NormalEntity>) = createTablesInternal(*tables)
+fun SQLiteDatabase.createTables(                    vararg tables: TableInfoNormal<out NormalEntity>
+) = createTablesInternal(*tables)
+
+/**
+ * Creates multiple tables in the database given a list of TableInfo (table name + schema bundle).
+ */
+fun SQLiteDatabase.createTables(                     tables: List<TableInfoNormal<out NormalEntity>>
+) = createTablesInternal(*tables.toTypedArray())
+
 
 
 /**

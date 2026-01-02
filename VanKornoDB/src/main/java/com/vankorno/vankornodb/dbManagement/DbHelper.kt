@@ -1251,7 +1251,7 @@ abstract class DbHelperInternal(
     suspend fun clearTableSusp(table: String) = writeSusp("clearTableSusp") { it.clearTable(table) }
     
     
-    inline fun clearTables(                                        vararg tables: String,
+    inline fun clearTables(                                         vararg tables: String,
                                                                             async: Boolean = false,
     ) = write("clearTables", async) { it.clearTables(*tables) }
     
@@ -1259,7 +1259,7 @@ abstract class DbHelperInternal(
     ) = writeSusp("clearTablesSusp") { it.clearTables(*tables) }
     
     
-    inline fun clearTables(                                               tables: List<String>,
+    inline fun clearTables(                                                tables: List<String>,
                                                                             async: Boolean = false,
     ) = write("clearTables", async) { it.clearTables(tables) }
     
@@ -1564,6 +1564,17 @@ abstract class DbHelperInternal(
         it.createTables(*tables)
     }
     
+    
+    inline fun createTables(                        tables: List<TableInfoNormal<out NormalEntity>>,
+                                                     async: Boolean = false,
+    ) = write("createTables", async) {
+        it.createTables(tables)
+    }
+    
+    suspend inline fun createTablesSusp(             tables: List<TableInfoNormal<out NormalEntity>>
+    ) = writeSusp("createTablesSusp") {
+        it.createTables(tables)
+    }
     
     
     
