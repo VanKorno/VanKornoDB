@@ -32,6 +32,14 @@ open class DbHelper(             context: Context,
     onUpgrade = onUpgrade
 )
 
+/**
+ * An optional shorter name for DbHelper for those who prefer it.
+ * The repos are basically files with extension functions on the DbHelper (unless you make your own wrapper),
+ * so, having a shorter name will affect every fun in every repo. And some people might prefer a shorter,
+ * but less descriptive name in this case.
+ */
+typealias Dbh = DbHelper
+
 
 
 

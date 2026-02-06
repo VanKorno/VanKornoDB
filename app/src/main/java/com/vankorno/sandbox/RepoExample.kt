@@ -5,13 +5,13 @@ import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.vankornodb.add.addObjects
-import com.vankorno.vankornodb.api.DbHelper
+import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.get.getDbFileName
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
 
-fun DbHelper.launchApp() = write("launchApp") { db ->
+fun Dbh.launchApp() = write("launchApp") { db ->
     
     dbFileNameFromDb = db.getDbFileName()
     

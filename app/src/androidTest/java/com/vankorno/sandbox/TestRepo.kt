@@ -3,13 +3,13 @@ package com.vankorno.sandbox
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.add.addObjects
-import com.vankorno.vankornodb.api.DbHelper
+import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.dbManagement.data.using
 
 const val LabRat = "Lab rat "
 
-fun DbHelper.getLabRats(                                                           table: String
+fun Dbh.getLabRats(                                                                table: String
 ) = write("launchApp", async = false) { db ->
     db.createTable(table using _Test)
     
