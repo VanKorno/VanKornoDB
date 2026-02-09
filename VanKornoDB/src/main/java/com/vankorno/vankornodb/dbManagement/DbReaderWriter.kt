@@ -9,6 +9,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.database.sqlite.transaction
+import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +24,7 @@ abstract class DbReaderWriter(
                                dbVersion: Int,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
+                                    lock: DbLock = DbLock(),
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbManager(
@@ -31,10 +33,10 @@ abstract class DbReaderWriter(
     dbVersion = dbVersion,
     entityMeta = entityMeta,
     createExclusiveTables = createExclusiveTables,
+    lock = lock,
     runOnCreate = onCreate,
     runOnUpgrade = onUpgrade,
 ) {
-    
     /**
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
      */
@@ -160,10 +162,10 @@ abstract class DbReaderWriter(
     
     inline fun <T> readBase(                                      defaultValue: T,
                                                                        funName: String = "read",
-                                                                           run: (SQLiteDatabase)->T,
+                                                               crossinline run: (SQLiteDatabase)->T,
     ): T {
         return try {
-            synchronized(dbLock) {
+            lock.withLock {
                 run(currDb)
             }
         } catch (e: Exception) {
@@ -175,15 +177,15 @@ abstract class DbReaderWriter(
     }
     
     inline fun voidReadBase(                                        funName: String = "voidRead",
-                                                                        run: (SQLiteDatabase)->Unit,
-    ) = readBase(Unit, funName){ run(it) }
+                                                            crossinline run: (SQLiteDatabase)->Unit,
+    ) = readBase(Unit, funName) { run(it) }
     
     
     inline fun writeBase(                                           funName: String = "write",
-                                                                        run: (SQLiteDatabase)->Unit,
+                                                            crossinline run: (SQLiteDatabase)->Unit,
     ) {
         try {
-            synchronized(dbLock) {
+            lock.withLock {
                 currDb.transaction { run(this) }
             }
         } catch (e: Exception) {
@@ -193,12 +195,12 @@ abstract class DbReaderWriter(
         }
     }
     
-    inline fun <T> readWriteBase(                              defaultValue: T,
-                                                                    funName: String = "readWrite",
-                                                                        run: (SQLiteDatabase)->T,
+    inline fun <T> readWriteBase(                                defaultValue: T,
+                                                                      funName: String = "readWrite",
+                                                              crossinline run: (SQLiteDatabase)->T,
     ): T {
         return try {
-            synchronized(dbLock) {
+            lock.withLock {
                 currDb.transaction { run(this) }
             }
         } catch (e: Exception) {

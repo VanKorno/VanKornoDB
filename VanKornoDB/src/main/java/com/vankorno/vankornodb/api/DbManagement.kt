@@ -8,6 +8,7 @@ package com.vankorno.vankornodb.api
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.DbHelperInternal
+import com.vankorno.vankornodb.dbManagement.DbLockInternal
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
@@ -20,6 +21,7 @@ open class DbHelper(             context: Context,
                                dbVersion: Int,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
+                                    lock: DbLock = DbLock(),
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbHelperInternal(
@@ -28,9 +30,11 @@ open class DbHelper(             context: Context,
     dbVersion = dbVersion,
     entityMeta = entityMeta,
     createExclusiveTables = createExclusiveTables,
+    lock = lock,
     onCreate = onCreate,
     onUpgrade = onUpgrade
 )
+
 
 /**
  * An optional shorter name for DbHelper for those who prefer it.
@@ -41,6 +45,12 @@ open class DbHelper(             context: Context,
 typealias Dbh = DbHelper
 
 
+
+class DbLock {
+    private val internalLock = DbLockInternal()
+    
+    fun <T> withLock(block: () -> T): T = internalLock.doLock { block() }
+}
 
 
 

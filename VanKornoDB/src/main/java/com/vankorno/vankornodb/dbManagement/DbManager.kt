@@ -10,8 +10,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.vankorno.vankornodb.add.addObj
+import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.createTable
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
+import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
+import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data.TTTEntityVersion
@@ -26,52 +29,47 @@ import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 /**
  * Manages the lifecycle and access of a single SQLite database instance.
  *
- * This class is responsible for creating or opening the database file, initializing
- * the entity version table, applying migrations, and providing safe, synchronized
- * access to the database for reading and writing.
+ * Responsibilities:
+ * - Opens or creates the database file via [writableDatabase].
+ * - Initializes and maintains the entity version table for migrations.
+ * - Provides safe, synchronized access to the database through [lock] for reading and writing.
  *
- * Lifecycle overview:
- * - When an instance of [DbManager] is created, the database is opened or created
- *   via [writableDatabase] and assigned to [currDb].
- * - The entity version table is immediately checked and initialized if empty.
- * - If the database is fresh, [onCreate] is called, creating the version table
- *   and executing any custom creation logic provided via [runOnCreate].
- * - On subsequent launches, [onCreate] is skipped, but [handleVersionTable]
- *   ensures entity version consistency and applies any missing metadata.
- * - [onUpgrade] handles database upgrades between schema versions and runs
- *   custom logic provided via [runOnUpgrade], wrapped in a transaction.
- * - The database can be closed via [closeDb], after which [currDb] becomes inaccessible.
+ * Lifecycle:
+ * - When an instance of [DbManager] is created, the database is opened and assigned to [currDb].
+ * - The entity version table is checked and initialized via [handleVersionTable].
+ * - [onCreate] is called for a fresh database, creating tables and executing any custom logic via [runOnCreate].
+ * - [onUpgrade] handles schema migrations between versions, executing [runOnUpgrade] inside a transaction.
+ * - [closeDb] closes the database and invalidates [currDb].
  *
  * Thread-safety:
- * All database access should be synchronized on [dbLock]. Use [currDb] within
- * synchronized blocks or through the higher-level read/write functions in [DbReaderWriter].
+ * All database operations are automatically synchronized using [lock]. External users
+ * should not need to lock manually; all read/write functions in [DbReaderWriter] use it.
  *
  * Entity metadata:
- * The [entityMeta] collection defines all entities tracked for versioning and
- * migrations. The system automatically:
- * - Adds missing entities to the version table
- * - Cleans up entities no longer present
- * - Ensures the version table is consistent with the current schema definitions
+ * The [entityMeta] collection defines entities tracked for versioning and migrations.
+ * The system automatically:
+ * - Adds missing entities to the version table.
+ * - Removes entities no longer present.
+ * - Ensures the version table matches the current schema definitions.
  *
- * @property dbLock a mutex used to synchronize access to the database instance.
+ * @property lock a [DbLock] instance that guarantees thread-safe access to the database.
  * @property entityMeta the collection of all entity metadata used for version tracking
  *   and automatic migration.
- * @property createExclusiveTables determines if onCreate automatically creates tables
- * of entities that have only one table (stated in [entityMeta]). If true, it runs function
- * createExclusiveTables() with the provided [entityMeta].
- * @property runOnCreate a lambda that runs custom logic when the database is created.
- * @property runOnUpgrade a lambda that runs custom logic when the database is upgraded.
+ * @property createExclusiveTables if true, [onCreate] automatically creates exclusive tables
+ *   for entities defined in [entityMeta].
+ * @property runOnCreate lambda executed during database creation for custom logic.
+ * @property runOnUpgrade lambda executed during database upgrade for custom logic.
  */
+
 abstract class DbManager(        context: Context,
                                   dbName: String,
                                dbVersion: Int,
                           val entityMeta: Collection<BaseEntityMeta>,
                val createExclusiveTables: Boolean = true,
+                                val lock: DbLock,
                          val runOnCreate: (SQLiteDatabase)->Unit = {},
                         val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
-    
-    val dbLock = Any()
     
     private var db: SQLiteDatabase? = null
     
@@ -82,7 +80,7 @@ abstract class DbManager(        context: Context,
     
     init {
         db = writableDatabase
-        synchronized(dbLock) {
+        lock.withLock {
             handleVersionTable(currDb)
         }
     }
@@ -93,7 +91,7 @@ abstract class DbManager(        context: Context,
         // region LOG
             Log.d(DbTAG, "onCreate runs")
         // endregion
-        synchronized(dbLock) {
+        lock.withLock {
             db.createTable(TTTEntityVersion)
             
             if (createExclusiveTables)
@@ -113,7 +111,7 @@ abstract class DbManager(        context: Context,
         // region LOG
             Log.d(DbTAG, "onUpgrade() Migrating...")
         // endregion
-        synchronized(dbLock) {
+        lock.withLock {
             db.beginTransaction()
             try {
                 runOnUpgrade(db, oldVersion)
@@ -134,7 +132,7 @@ abstract class DbManager(        context: Context,
         // region LOG
             Log.d(DbTAG, "closeDb()")
         // endregion
-        synchronized(dbLock) {
+        lock.withLock {
             db?.close()
             db = null
         }
