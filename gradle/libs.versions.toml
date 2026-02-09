@@ -15,8 +15,8 @@ activityCompose = "1.12.3"
 constraintlayoutCompose = "1.1.1"
 composeBom = "2026.01.01"
 testManifest = "1.10.2"
-vankornoHelpers = "2.77"
-vankornoCompose = "2.59"
+vankornoHelpers = "2.81"
+vankornoCompose = "2.69"
 
 
 [libraries]

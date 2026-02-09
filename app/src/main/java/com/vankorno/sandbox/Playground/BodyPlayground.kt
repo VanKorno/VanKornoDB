@@ -1,7 +1,6 @@
 package com.vankorno.sandbox.Playground
 
 import androidx.compose.runtime.Composable
-import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox._navig.Navig
@@ -9,6 +8,7 @@ import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._ui.LargeBtn
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
+import com.vankorno.vankornodb.api.DbHelperHolder.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 
 

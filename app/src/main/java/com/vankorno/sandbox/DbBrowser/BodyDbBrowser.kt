@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox._navig.Navig
 import com.vankorno.sandbox._navig.ScrTable
@@ -28,6 +27,7 @@ import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LibIcon
 import com.vankorno.vankornocompose.values.MOD_W90
+import com.vankorno.vankornodb.api.DbHelperHolder.dbh
 
 
 @Composable

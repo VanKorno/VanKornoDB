@@ -1,9 +1,9 @@
 package com.vankorno.sandbox.start
 
 import androidx.test.filters.MediumTest
-import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox._entities.EntityMeta
+import com.vankorno.vankornodb.api.DbHelperHolder.dbh
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data.TTTEntityVersion

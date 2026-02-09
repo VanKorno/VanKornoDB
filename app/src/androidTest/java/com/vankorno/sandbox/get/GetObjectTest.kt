@@ -1,14 +1,17 @@
 package com.vankorno.sandbox.get
 
-import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
+import com.vankorno.vankornodb.api.DbHelperHolder.dbh
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.whereId
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 private object DummySchema : CurrSchemaBundle<TestEntity>(

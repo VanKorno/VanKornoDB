@@ -1,10 +1,12 @@
 package com.vankorno.sandbox._navig
 
-import com.vankorno.vankornocompose.navig.BaseScreen
+import com.vankorno.vankornocompose.navig.Screen
+import kotlinx.parcelize.Parcelize
 
-object ScrPlayground : BaseScreen("Playground")
-object ScrDbBrowser : BaseScreen("DbBrowser")
-object ScrTable : BaseScreen("Table")
+
+@Parcelize object ScrPlayground : Screen()
+@Parcelize object ScrDbBrowser : Screen()
+@Parcelize object ScrTable : Screen()
 
 
 

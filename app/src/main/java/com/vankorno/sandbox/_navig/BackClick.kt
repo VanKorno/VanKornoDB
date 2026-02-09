@@ -1,10 +1,8 @@
 package com.vankorno.sandbox._navig
 
-import com.vankorno.vankornocompose.LibMainActivity.Companion.libVm
-import com.vankorno.vankornocompose.navig.PopStateOFF
+import com.vankorno.vankornocompose.navig.PopupOFF
 import com.vankorno.vankornocompose.navig.ScrHome
-import com.vankorno.vankornocompose.values.LibGlobals2.currScr
-import com.vankorno.vankornocompose.values.LibGlobals2.previousScr
+import com.vankorno.vankornocompose.values.LibGlobals2.libVm
 import com.vankorno.vankornocompose.values.popupOFF
 import com.vankorno.vankornohelpers.dLog
 import com.vankorno.vankornohelpers.values.minimizeApp
@@ -14,18 +12,20 @@ private const val TAG = "BackClick"
 class BackClick() : Navig() {
     
     fun goBack() {
+        val currScreen = libVm.currScreen.value
+        val previousScreen = libVm.previousScreen.value
         // region LOG
             dLog(TAG, "clickBack()")
         // endregion
-        if (libVm.popState != PopStateOFF) {
+        if (libVm.popupState != PopupOFF) {
             popupBackBtn()
             return //\/\/\/\/\/\
         }
         
         // region LOG
-            dLog(TAG, "Previous screen: $previousScr")
+            dLog(TAG, "Previous screen: $previousScreen")
         // endregion
-        when (currScr) {
+        when (currScreen) {
             ScrHome -> minimizeApp()
             ScrPlayground -> { goTo(ScrHome) }
             ScrDbBrowser -> { goTo(ScrHome) }
@@ -37,24 +37,26 @@ class BackClick() : Navig() {
         // region LOG
             dLog(TAG, "popupBackBtn()")
         // endregion
-        when (libVm.popState) {            
+        when (libVm.popupState) {
             
             else -> { popupOFF() }
         }
     }
     
     private fun goToPrevScr() {
+        val currScreen = libVm.currScreen.value
+        val previousScreen = libVm.previousScreen.value
         // region LOG
-            dLog(TAG, "goToPrevScr(currScr = $currScr, prevScr = $previousScr)")
+            dLog(TAG, "goToPrevScr(currScr = $currScreen, prevScr = $previousScreen)")
         // endregion
-        if (currScr == previousScr) {
+        if (currScreen == previousScreen) {
             // region LOG
-                dLog(TAG, "currScr == prevScr == $currScr. Returning to the Main screen...")
+                dLog(TAG, "currScr == prevScr == $currScreen. Returning to the Main screen...")
             // endregion
             goTo(ScrHome)
             return //\/\/\/\/\/\
         }
         
-        goTo(previousScr)
+        goTo(previousScreen)
     }
 }

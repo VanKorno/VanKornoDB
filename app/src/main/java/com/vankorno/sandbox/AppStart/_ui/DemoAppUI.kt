@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vankorno.sandbox.DbBrowser.LayoutsDbBrowser
 import com.vankorno.sandbox.DbBrowser.TableBrowser._ui.LayoutsTable
 import com.vankorno.sandbox.H_O_M_E.LayoutsHome
@@ -13,14 +12,15 @@ import com.vankorno.sandbox._menus.popup.PopupMaker
 import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._navig.ScrPlayground
 import com.vankorno.sandbox._navig.ScrTable
-import com.vankorno.vankornocompose.LibMainActivity.Companion.libVm
-import com.vankorno.vankornocompose.navig.PopStateOFF
+import com.vankorno.vankornocompose.navig.PopupOFF
 import com.vankorno.vankornocompose.navig.ScrHome
+import com.vankorno.vankornocompose.values.LibGlobals2.libVm
 import com.vankorno.vankornocompose.values.LibLayoutModifiers
 import com.vankorno.vankornocompose.values.LocalScreen
 import com.vankorno.vankornocompose.values.MOD_MaxH
 import com.vankorno.vankornocompose.values.MOD_MaxSize
 import com.vankorno.vankornocompose.values.MOD_MaxW
+import com.vankorno.vankornocompose.vm.state
 
 
 @Composable
@@ -28,7 +28,7 @@ fun DemoAppUI() {
     ConstraintLayout(MOD_MaxSize) {
         val (barTop, topShadow, body, barBottom, popup) = createRefs()
         
-        val popState by libVm.popStateFlow.collectAsStateWithLifecycle()
+        val popupState by libVm.popupState.state()
         
         val modifTop = MOD_MaxW
             .constrainAs(barTop) {
@@ -71,8 +71,8 @@ fun DemoAppUI() {
         
         ScrNavig(modifiers)
         
-        AnimatedVisibility(popState != PopStateOFF) {
-            PopupMaker(popState, modifPopup)
+        AnimatedVisibility(popupState != PopupOFF) {
+            PopupMaker(popupState, modifPopup)
         }
     }
 }

@@ -45,6 +45,13 @@ open class DbHelper(             context: Context,
 typealias Dbh = DbHelper
 
 
+/**
+ * Just a holder with a short name for DbHelper for those who need it.
+ */
+object DbHelperHolder {
+    lateinit var dbh: DbHelper
+}
+
 
 class DbLock {
     private val internalLock = DbLockInternal()

@@ -2,7 +2,6 @@ package com.vankorno.sandbox.set
 
 import android.content.ContentValues
 import androidx.test.filters.MediumTest
-import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbh
 import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox._entities.testEntity.CTest.Bool1
@@ -21,9 +20,12 @@ import com.vankorno.sandbox._entities.testEntity.CTest.Str1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
+import com.vankorno.vankornodb.api.DbHelperHolder.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.whereName
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 @MediumTest
