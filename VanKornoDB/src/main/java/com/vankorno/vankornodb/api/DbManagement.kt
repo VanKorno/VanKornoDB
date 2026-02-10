@@ -57,7 +57,11 @@ class DbLock {
  * as a single operation with the lock, to avoid conflicts with other ops running at the same time.
  */
 class LockedOpsRunner(lock: DbLock) : LockedOpsRunnerInternal(lock)
-
+/**
+ * An optional shorter name for LockedOpsRunner for those who prefer it.
+ * Same story as with [Dbh]
+ */
+typealias LOps = LockedOpsRunner
 
 
 object DbRuntime {
