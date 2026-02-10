@@ -48,8 +48,9 @@ typealias Dbh = DbHelper
 /**
  * Just a holder with a short name for DbHelper for those who need it.
  */
-object DbHelperHolder {
+object DbRuntime {
     lateinit var dbh: DbHelper
+    
 }
 
 

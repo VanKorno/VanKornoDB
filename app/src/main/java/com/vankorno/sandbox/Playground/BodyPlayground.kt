@@ -8,7 +8,7 @@ import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._ui.LargeBtn
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
-import com.vankorno.vankornodb.api.DbHelperHolder.dbh
+import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 
 

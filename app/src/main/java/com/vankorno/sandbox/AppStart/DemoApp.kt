@@ -6,8 +6,8 @@ import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornocompose.LibApp
 import com.vankorno.vankornodb.api.DbHelper
-import com.vankorno.vankornodb.api.DbHelperHolder.dbh
 import com.vankorno.vankornodb.api.DbMigrator
+import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.core.data.DbConstants.InMemoryDB
 import com.vankorno.vankornodb.dbManagement.data.using

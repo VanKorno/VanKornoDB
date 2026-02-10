@@ -9,7 +9,7 @@ import com.vankorno.sandbox._navig.UpdateScr
 import com.vankorno.sandbox._vm.VmShared
 import com.vankorno.vankornocompose.LibMainActivity
 import com.vankorno.vankornocompose.navig.ScrHome
-import com.vankorno.vankornodb.api.DbHelperHolder.dbh
+import com.vankorno.vankornodb.api.DbRuntime.dbh
 
 class MainActivity : LibMainActivity() {
     companion object {

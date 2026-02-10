@@ -27,7 +27,7 @@ import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LibIcon
 import com.vankorno.vankornocompose.values.MOD_W90
-import com.vankorno.vankornodb.api.DbHelperHolder.dbh
+import com.vankorno.vankornodb.api.DbRuntime.dbh
 
 
 @Composable

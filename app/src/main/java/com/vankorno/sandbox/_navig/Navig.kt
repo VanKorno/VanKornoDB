@@ -4,7 +4,7 @@ import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornocompose.values.LibGlobals2.libVm
-import com.vankorno.vankornodb.api.DbHelperHolder.dbh
+import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornohelpers.dLog
 import com.vankorno.vankornohelpers.values.hideKeyboard
 
