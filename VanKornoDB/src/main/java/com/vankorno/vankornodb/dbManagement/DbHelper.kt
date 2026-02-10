@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.delete.*
 import com.vankorno.vankornodb.get.*
@@ -24,7 +25,7 @@ abstract class DbHelperInternal(
                                dbVersion: Int,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
-                                    lock: DbLock = DbLock(),
+                                    lock: DbLock = dbLock,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbReaderWriter(

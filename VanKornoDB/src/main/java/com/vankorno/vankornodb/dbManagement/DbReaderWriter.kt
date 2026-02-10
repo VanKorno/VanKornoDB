@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.core.database.sqlite.transaction
 import com.vankorno.vankornodb.api.DbLock
+import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +24,7 @@ abstract class DbReaderWriter(
                                dbVersion: Int,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
-                                    lock: DbLock = DbLock(),
+                                    lock: DbLock = dbLock,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbManager(
