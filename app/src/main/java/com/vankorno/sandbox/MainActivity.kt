@@ -9,7 +9,7 @@ import com.vankorno.sandbox._navig.UpdateScr
 import com.vankorno.sandbox._vm.VmShared
 import com.vankorno.vankornocompose.LibMainActivity
 import com.vankorno.vankornocompose.navig.ScrHome
-import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.api.DbRuntime.lops
 
 class MainActivity : LibMainActivity() {
     companion object {
@@ -23,12 +23,12 @@ class MainActivity : LibMainActivity() {
         vm = ViewModelProvider(this)[VmShared::class.java]
     }
     
-    override fun startupFirstLaunch() { dbh.launchApp() }
+    override fun startupFirstLaunch() { lops.launchApp() }
     
-    override fun doEveryMinute() { UpdateScr().updateEveryMinute() }
+    override fun doEveryMinute() { lops.exec { UpdateScr().updateEveryMinute() } }
     
     override fun goingHome() { Navig().goTo(ScrHome) }
-    override fun goingBack() { BackClick().goBack() }
+    override fun goingBack() { lops.exec { BackClick().goBack() } }
     
     
     

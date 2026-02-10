@@ -18,20 +18,21 @@ import kotlinx.coroutines.withContext
 abstract class LockedOpsRunnerInternal(                                         val lock: DbLock
 ) {
     
-    inline fun <T> run(                                                     defaultValue: T,
+    inline fun <T> exec(                                                    defaultValue: T,
                                                                        crossinline block: ()->T,
     ): T {
         return try {
-            lock.withLock {
-                block()
-            }
+            lock.withLock { block() }
         } catch (_: Exception) {
             defaultValue
         }
     }
     
+    inline fun exec(crossinline block: ()->Unit) { exec(Unit){block()} }
     
-    fun launch(                                                                    block: ()->Unit,
+    
+    
+    fun async(                                                                    block: ()->Unit
     ) {
         CoroutineScope(Dispatchers.Default).launch {
             try {
@@ -44,16 +45,20 @@ abstract class LockedOpsRunnerInternal(                                         
     }
     
     
-    suspend inline fun <T> runSusp(                                         defaultValue: T,
+    
+    suspend inline fun <T> susp(                                            defaultValue: T,
                                                                        crossinline block: ()->T,
     ): T = withContext(Dispatchers.Default) {
         try {
-            lock.withLock {
-                block()
-            }
+            lock.withLock { block() }
         } catch (_: Exception) {
             defaultValue
         }
     }
+
+    suspend inline fun susp(crossinline block: ()->Unit) { susp(Unit){block()} }
+    
+    
+
 }
 
