@@ -16,18 +16,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vankorno.sandbox.MainActivity.Companion.vm
-import com.vankorno.sandbox._navig.Navig
 import com.vankorno.sandbox._navig.ScrTable
 import com.vankorno.sandbox._navig.UpdateScr
 import com.vankorno.vankornocompose.composables.Spa_______________cer
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.composables.barTop.LibTopBarIconBtn
+import com.vankorno.vankornocompose.navig.goToAsync
 import com.vankorno.vankornocompose.sp1
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LibIcon
 import com.vankorno.vankornocompose.values.MOD_W90
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.api.DbRuntime.lops
 
 
 @Composable
@@ -77,7 +78,7 @@ private fun TableBtn(                                                       tabl
             .clickable(
                 onClick = {
                     vm.currTable = table
-                    Navig().goTo(ScrTable)
+                    lops.goToAsync(ScrTable)
                 }
             )
             .padding(vertical = 15.dp, horizontal = 10.dp)

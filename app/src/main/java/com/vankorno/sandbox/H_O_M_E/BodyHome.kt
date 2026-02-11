@@ -17,17 +17,18 @@ import androidx.compose.ui.unit.dp
 import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbFileNameFromDb
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
-import com.vankorno.sandbox._navig.Navig
 import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._navig.ScrPlayground
 import com.vankorno.sandbox._ui.LargeBtn
 import com.vankorno.vankornocompose.composables.Spa_______________cer
 import com.vankorno.vankornocompose.dp3
 import com.vankorno.vankornocompose.navig.Screen
+import com.vankorno.vankornocompose.navig.goToAsync
 import com.vankorno.vankornocompose.sp2
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.MOD_MaxW
+import com.vankorno.vankornodb.api.DbRuntime.lops
 
 
 @Composable
@@ -53,7 +54,7 @@ private fun NavBtn(                                                      targetS
                                                                               text: String,
                                                                        accentColor: LibAccentColor,
 ) {
-    LargeBtn(text, accentColor) { Navig().goTo(targetScr) }
+    LargeBtn(text, accentColor) { lops.goToAsync(targetScr) }
 }
 
 
