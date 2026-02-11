@@ -42,7 +42,7 @@ class UpdateScr() {
     }
     
     private fun updateDbBrowser() {
-        vm.appTables = dbh.getAppTableNames()
+        vm.appTables.value = dbh.getAppTableNames()
     }
     
     

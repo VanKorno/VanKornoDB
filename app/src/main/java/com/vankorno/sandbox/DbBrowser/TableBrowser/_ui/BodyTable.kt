@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.ScrType
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
@@ -28,6 +27,7 @@ import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LocalScrType
 import com.vankorno.vankornocompose.values.MOD_MaxSize
 import com.vankorno.vankornocompose.values.MOD_MaxW
+import com.vankorno.vankornocompose.vm.state
 import kotlin.math.ceil
 
 
@@ -35,7 +35,7 @@ import kotlin.math.ceil
 fun BodyTable(                                                          columns: List<String>,
                                                                            rows: List<List<String>>,
 ) {
-    val columnTypes by vm.rawTypesFlow.collectAsStateWithLifecycle()
+    val columnTypes by vm.rawTypes.state()
     
     if (columns.isEmpty()) {
         Text("This table is as empty as a head of a russian fascist", color = Color.White)

@@ -4,12 +4,12 @@ import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornocompose.values.LibGlobals2.libVm
+import com.vankorno.vankornocompose.vm.reset
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornohelpers.dLog
 import com.vankorno.vankornohelpers.values.hideKeyboard
 
 private const val TAG = "Navig"
-
 
 open class Navig() {
     
@@ -50,11 +50,11 @@ open class Navig() {
         }
         when (targetScr) {
             ScrDbBrowser -> {
-                vm.internalTables = dbh.getInternalTableNames()
-                vm.appTables = dbh.getAppTableNames()
+                vm.internalTables.value = dbh.getInternalTableNames()
+                vm.appTables.value = dbh.getAppTableNames()
             }
             ScrTable -> {
-                vm.setRawTableData(dbh.getRawTableStr(vm.currTable))
+                vm.setRawTableData(dbh.getRawTableStr(vm.currTable.value))
             }
             
             else -> {}
@@ -68,8 +68,8 @@ open class Navig() {
         
         when (previousScreen) {
             ScrDbBrowser -> {
-                vm.internalTables = emptyList()
-                vm.appTables = emptyList()
+                vm.internalTables.reset()
+                vm.appTables.reset()
             }
             ScrTable -> { vm.clearRawTableData() }
             else -> {}

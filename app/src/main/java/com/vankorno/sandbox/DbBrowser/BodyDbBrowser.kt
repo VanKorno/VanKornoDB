@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox._navig.ScrTable
 import com.vankorno.sandbox._navig.UpdateScr
@@ -27,14 +26,15 @@ import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LibIcon
 import com.vankorno.vankornocompose.values.MOD_W90
+import com.vankorno.vankornocompose.vm.state
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.DbRuntime.lops
 
 
 @Composable
 fun BodyDbBrowser() {
-    val internalTables by vm.internalTablesFlow.collectAsStateWithLifecycle()
-    val appTables by vm.appTablesFlow.collectAsStateWithLifecycle()
+    val internalTables by vm.internalTables.state()
+    val appTables by vm.appTables.state()
     
     val lessSpace = 20.dp
     val moreSpace = 70.dp
@@ -77,7 +77,7 @@ private fun TableBtn(                                                       tabl
             .background(color, RoundedCornerShape(10.dp))
             .clickable(
                 onClick = {
-                    vm.currTable = table
+                    vm.currTable.value = table
                     lops.goToAsync(ScrTable)
                 }
             )
