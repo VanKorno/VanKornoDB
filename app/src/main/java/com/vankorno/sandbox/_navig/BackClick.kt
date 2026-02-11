@@ -17,7 +17,7 @@ class BackClick() : Navig() {
         // region LOG
             dLog(TAG, "clickBack()")
         // endregion
-        if (libVm.popupState != PopupOFF) {
+        if (libVm.popupState.value != PopupOFF) {
             popupBackBtn()
             return //\/\/\/\/\/\
         }
@@ -37,7 +37,7 @@ class BackClick() : Navig() {
         // region LOG
             dLog(TAG, "popupBackBtn()")
         // endregion
-        when (libVm.popupState) {
+        when (libVm.popupState.value) {
             
             else -> { popupOFF() }
         }
