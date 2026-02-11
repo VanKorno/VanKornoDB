@@ -4,7 +4,11 @@ import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._navig.BackClick
+import com.vankorno.sandbox._navig.Navig
+import com.vankorno.sandbox._navig.UpdateScr
 import com.vankorno.vankornocompose.LibApp
+import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.DbRuntime.dbh
@@ -39,6 +43,11 @@ class DemoApp : LibApp() {
         )
     }
     
+    override fun onGoTo(scr: Screen) { Navig().goTo(scr) }
+    
+    override fun onGoBack() { BackClick().goBack() }
+    
+    override fun onUpdateScreen() { UpdateScr().updateScr() }
     
     
 }
