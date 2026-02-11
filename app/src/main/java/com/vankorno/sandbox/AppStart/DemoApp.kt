@@ -8,6 +8,7 @@ import com.vankorno.sandbox._navig.BackClick
 import com.vankorno.sandbox._navig.Navig
 import com.vankorno.sandbox._navig.UpdateScr
 import com.vankorno.vankornocompose.LibApp
+import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
@@ -46,6 +47,8 @@ class DemoApp : LibApp() {
     override fun onGoTo(scr: Screen) { Navig().goTo(scr) }
     
     override fun onGoBack() { BackClick().goBack() }
+    
+    override fun onGoRoot() { Navig().goTo(ScrHome) }
     
     override fun onUpdateScreen() { UpdateScr().updateScr() }
     
