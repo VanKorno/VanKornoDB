@@ -51,12 +51,31 @@ abstract class DbHelperInternal(
         }
     }
     
+    suspend fun useCursorSusp(                                        table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->Unit,
+    ) = writeSusp("useCursorSusp") { db ->
+        db.getCursor(table, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
     
     fun useCursor(                                                 table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                    where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
+        db.getCursor(table, columns, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    suspend fun useCursorSusp(                                     table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                                   where: WhereDsl.()->Unit = {},
+                                                                   block: (Cursor)->Unit,
+    ) = writeSusp("useCursorSusp") { db ->
         db.getCursor(table, columns, where).use { cursor ->
             block(cursor)
         }
@@ -73,11 +92,30 @@ abstract class DbHelperInternal(
         }
     }
     
+    suspend fun useCursorSusp(                                        table: String,
+                                                                     column: TypedColumn<*>,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->Unit,
+    ) = writeSusp("useCursorSusp") { db ->
+        db.getCursor(table, column, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
     
     fun useCursorPro(                                                       table: String,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->Unit,
     ) = write("useCursorPro") { db ->
+        db.getCursorPro(table, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    suspend fun useCursorProSusp(                                           table: String,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->Unit,
+    ) = writeSusp("useCursorProSusp") { db ->
         db.getCursorPro(table, dsl).use { cursor ->
             block(cursor)
         }
@@ -94,12 +132,32 @@ abstract class DbHelperInternal(
         }
     }
     
+    suspend fun useCursorProSusp(                                  table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                                     dsl: FullDsl.()->Unit,
+                                                                   block: (Cursor)->Unit,
+    ) = writeSusp("useCursorProSusp") { db ->
+        db.getCursorPro(table, columns, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
     
     fun useCursorPro(                                                       table: String,
                                                                            column: TypedColumn<*>,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->Unit,
     ) = write("useCursorPro") { db ->
+        db.getCursorPro(table, column, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    suspend fun useCursorProSusp(                                           table: String,
+                                                                           column: TypedColumn<*>,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->Unit,
+    ) = writeSusp("useCursorProSusp") { db ->
         db.getCursorPro(table, column, dsl).use { cursor ->
             block(cursor)
         }
@@ -122,6 +180,16 @@ abstract class DbHelperInternal(
         }
     }
     
+    suspend fun <T> getFromCursorSusp(                                table: String,
+                                                               defaultValue: T,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->T,
+    ): T = readWriteSusp(defaultValue, "getFromCursorSusp") { db ->
+        db.getCursor(table, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
     
     fun <T> getFromCursor(                                         table: String,
                                                                  columns: Array<out TypedColumn<*>>,
@@ -129,6 +197,17 @@ abstract class DbHelperInternal(
                                                                    where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursor") { db ->
+        db.getCursor(table, columns, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    suspend fun <T> getFromCursorSusp(                             table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                            defaultValue: T,
+                                                                   where: WhereDsl.()->Unit = {},
+                                                                   block: (Cursor)->T,
+    ): T = readWriteSusp(defaultValue, "getFromCursorSusp") { db ->
         db.getCursor(table, columns, where).use { cursor ->
             block(cursor)
         }
@@ -146,12 +225,33 @@ abstract class DbHelperInternal(
         }
     }
     
+    suspend fun <T> getFromCursorSusp(                                table: String,
+                                                                     column: TypedColumn<*>,
+                                                               defaultValue: T,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->T,
+    ): T = readWriteSusp(defaultValue, "getFromCursorSusp") { db ->
+        db.getCursor(table, column, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
     
     fun <T> getFromCursorPro(                                               table: String,
                                                                      defaultValue: T,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
+        db.getCursorPro(table, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    suspend fun <T> getFromCursorProSusp(                                   table: String,
+                                                                     defaultValue: T,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->T,
+    ): T = readWriteSusp(defaultValue, "getFromCursorProSusp") { db ->
         db.getCursorPro(table, dsl).use { cursor ->
             block(cursor)
         }
@@ -169,6 +269,17 @@ abstract class DbHelperInternal(
         }
     }
     
+    suspend fun <T> getFromCursorProSusp(                          table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                            defaultValue: T,
+                                                                     dsl: FullDsl.()->Unit,
+                                                                   block: (Cursor)->T,
+    ): T = readWriteSusp(defaultValue, "getFromCursorProSusp") { db ->
+        db.getCursorPro(table, columns, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
     
     fun <T> getFromCursorPro(                                               table: String,
                                                                            column: TypedColumn<*>,
@@ -176,6 +287,17 @@ abstract class DbHelperInternal(
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
+        db.getCursorPro(table, column, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    suspend fun <T> getFromCursorProSusp(                                   table: String,
+                                                                           column: TypedColumn<*>,
+                                                                     defaultValue: T,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->T,
+    ): T = readWriteSusp(defaultValue, "getFromCursorProSusp") { db ->
         db.getCursorPro(table, column, dsl).use { cursor ->
             block(cursor)
         }
