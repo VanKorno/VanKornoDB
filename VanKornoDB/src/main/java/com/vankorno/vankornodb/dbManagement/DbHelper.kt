@@ -6,6 +6,7 @@
 package com.vankorno.vankornodb.dbManagement
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
@@ -38,6 +39,160 @@ abstract class DbHelperInternal(
     onCreate = onCreate,
     onUpgrade = onUpgrade,
 ) {
+    
+    // ===================================  C U R S O R  =================================== \\
+    
+    fun DbHelper.useCursor(                                           table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->Unit,
+    ) = write("useCursor") { db ->
+        db.getCursor(table, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun DbHelper.useCursor(                                        table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                                   where: WhereDsl.()->Unit = {},
+                                                                   block: (Cursor)->Unit,
+    ) = write("useCursor") { db ->
+        db.getCursor(table, columns, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun DbHelper.useCursor(                                           table: String,
+                                                                     column: TypedColumn<*>,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->Unit,
+    ) = write("useCursor") { db ->
+        db.getCursor(table, column, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun DbHelper.useCursorPro(                                              table: String,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->Unit,
+    ) = write("useCursorPro") { db ->
+        db.getCursorPro(table, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun DbHelper.useCursorPro(                                     table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                                     dsl: FullDsl.()->Unit,
+                                                                   block: (Cursor)->Unit,
+    ) = write("useCursorPro") { db ->
+        db.getCursorPro(table, columns, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun DbHelper.useCursorPro(                                              table: String,
+                                                                           column: TypedColumn<*>,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->Unit,
+    ) = write("useCursorPro") { db ->
+        db.getCursorPro(table, column, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    
+    
+    
+    
+    // -------------------------   R E T U R N I N G   V A L U E S   ------------------------- \\
+    
+    fun <T> DbHelper.getFromCursor(                                   table: String,
+                                                               defaultValue: T,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->T,
+    ): T = readWrite(defaultValue, "getFromCursor") { db ->
+        db.getCursor(table, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun <T> DbHelper.getFromCursor(                                table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                            defaultValue: T,
+                                                                   where: WhereDsl.()->Unit = {},
+                                                                   block: (Cursor)->T,
+    ): T = readWrite(defaultValue, "getFromCursor") { db ->
+        db.getCursor(table, columns, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun <T> DbHelper.getFromCursor(                                   table: String,
+                                                                     column: TypedColumn<*>,
+                                                               defaultValue: T,
+                                                                      where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->T,
+    ): T = readWrite(defaultValue, "getFromCursor") { db ->
+        db.getCursor(table, column, where).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun <T> DbHelper.getFromCursorPro(                                      table: String,
+                                                                     defaultValue: T,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->T,
+    ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
+        db.getCursorPro(table, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun <T> DbHelper.getFromCursorPro(                             table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                            defaultValue: T,
+                                                                     dsl: FullDsl.()->Unit,
+                                                                   block: (Cursor)->T,
+    ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
+        db.getCursorPro(table, columns, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    fun <T> DbHelper.getFromCursorPro(                                      table: String,
+                                                                           column: TypedColumn<*>,
+                                                                     defaultValue: T,
+                                                                              dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->T,
+    ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
+        db.getCursorPro(table, column, dsl).use { cursor ->
+            block(cursor)
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     // ===================================  S E T T E R S  =================================== \\
     
