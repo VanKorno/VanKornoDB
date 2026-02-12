@@ -42,7 +42,7 @@ abstract class DbHelperInternal(
     
     // ===================================  C U R S O R  =================================== \\
     
-    fun DbHelper.useCursor(                                           table: String,
+    fun useCursor(                                                    table: String,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
@@ -52,7 +52,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun DbHelper.useCursor(                                        table: String,
+    fun useCursor(                                                 table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                    where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->Unit,
@@ -63,7 +63,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun DbHelper.useCursor(                                           table: String,
+    fun useCursor(                                                    table: String,
                                                                      column: TypedColumn<*>,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->Unit,
@@ -74,7 +74,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun DbHelper.useCursorPro(                                              table: String,
+    fun useCursorPro(                                                       table: String,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->Unit,
     ) = write("useCursorPro") { db ->
@@ -84,7 +84,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun DbHelper.useCursorPro(                                     table: String,
+    fun useCursorPro(                                              table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                      dsl: FullDsl.()->Unit,
                                                                    block: (Cursor)->Unit,
@@ -95,7 +95,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun DbHelper.useCursorPro(                                              table: String,
+    fun useCursorPro(                                                       table: String,
                                                                            column: TypedColumn<*>,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->Unit,
@@ -112,7 +112,7 @@ abstract class DbHelperInternal(
     
     // -------------------------   R E T U R N I N G   V A L U E S   ------------------------- \\
     
-    fun <T> DbHelper.getFromCursor(                                   table: String,
+    fun <T> getFromCursor(                                            table: String,
                                                                defaultValue: T,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->T,
@@ -123,7 +123,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> DbHelper.getFromCursor(                                table: String,
+    fun <T> getFromCursor(                                         table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                             defaultValue: T,
                                                                    where: WhereDsl.()->Unit = {},
@@ -135,7 +135,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> DbHelper.getFromCursor(                                   table: String,
+    fun <T> getFromCursor(                                            table: String,
                                                                      column: TypedColumn<*>,
                                                                defaultValue: T,
                                                                       where: WhereDsl.()->Unit = {},
@@ -147,7 +147,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> DbHelper.getFromCursorPro(                                      table: String,
+    fun <T> getFromCursorPro(                                               table: String,
                                                                      defaultValue: T,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->T,
@@ -158,7 +158,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> DbHelper.getFromCursorPro(                             table: String,
+    fun <T> getFromCursorPro(                                      table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                             defaultValue: T,
                                                                      dsl: FullDsl.()->Unit,
@@ -170,7 +170,7 @@ abstract class DbHelperInternal(
     }
     
     
-    fun <T> DbHelper.getFromCursorPro(                                      table: String,
+    fun <T> getFromCursorPro(                                               table: String,
                                                                            column: TypedColumn<*>,
                                                                      defaultValue: T,
                                                                               dsl: FullDsl.()->Unit,
