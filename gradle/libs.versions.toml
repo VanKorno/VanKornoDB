@@ -16,7 +16,7 @@ constraintlayoutCompose = "1.1.1"
 composeBom = "2026.02.00"
 testManifest = "1.10.3"
 vankornoHelpers = "2.81"
-vankornoCompose = "2.75"
+vankornoCompose = "2.78"
 
 
 [libraries]

@@ -11,7 +11,7 @@ import com.vankorno.vankornohelpers.values.hideKeyboard
 
 private const val TAG = "Navig"
 
-open class Navig() {
+object Navigator {
     
     fun goTo(                                                           targetScr: Screen = ScrHome
     ) {

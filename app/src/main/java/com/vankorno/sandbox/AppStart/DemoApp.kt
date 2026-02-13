@@ -5,8 +5,8 @@ import com.vankorno.sandbox._entities.EntityMeta
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox._navig.BackClick
-import com.vankorno.sandbox._navig.Navig
-import com.vankorno.sandbox._navig.UpdateScr
+import com.vankorno.sandbox._navig.Navigator
+import com.vankorno.sandbox._navig.ScreenUpdater
 import com.vankorno.vankornocompose.LibApp
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.navig.Screen
@@ -44,13 +44,13 @@ class DemoApp : LibApp() {
         )
     }
     
-    override fun onGoTo(scr: Screen) { Navig().goTo(scr) }
+    override fun onGoTo(scr: Screen) { Navigator.goTo(scr) }
     
-    override fun onGoBack() { BackClick().goBack() }
+    override fun onGoBack() { BackClick.goBack() }
     
-    override fun onGoRoot() { Navig().goTo(ScrHome) }
+    override fun onGoToStart() { Navigator.goTo(ScrHome) }
     
-    override fun onUpdateScreen() { UpdateScr().updateScr() }
+    override fun onUpdateScreen() { ScreenUpdater.updateScr() }
     
     
 }

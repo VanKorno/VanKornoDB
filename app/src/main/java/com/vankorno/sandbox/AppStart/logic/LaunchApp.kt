@@ -1,13 +1,15 @@
-package com.vankorno.sandbox
+package com.vankorno.sandbox.AppStart.logic
 
 import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbFileNameFromDb
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.sandbox._entities.testEntity.TestEntity
+import com.vankorno.vankornocompose.launch.Launcher
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.api.LOps
+import com.vankorno.vankornodb.api.DbRuntime.lops
 
-fun LOps.launchApp() = exec {
+
+fun Launcher.launchApp() = lops.exec {
     dbFileNameFromDb = dbh.getDbFileName()
     
     if (!dbh.tableExists(TestTable)) {
@@ -20,6 +22,4 @@ fun LOps.launchApp() = exec {
         dbh.addObjects(_TestTable, testSubjects)
     }
 }
-
-
 

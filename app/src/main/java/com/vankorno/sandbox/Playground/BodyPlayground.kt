@@ -6,7 +6,7 @@ import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._ui.LargeBtn
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
-import com.vankorno.vankornocompose.navig.goTo
+import com.vankorno.vankornocompose.navig.Navig
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.DbRuntime.lops
@@ -25,7 +25,7 @@ fun BodyPlayground() {
                 (TestTable + it) using _Test
             }
             dbh.createTables(*tables)
-            lops.goTo(ScrDbBrowser)
+            Navig.goTo(ScrDbBrowser)
         }
     }
     
@@ -36,7 +36,7 @@ fun BodyPlayground() {
         lops.async {
             val appTables = dbh.getAppTableNames()
             dbh.deleteTables(appTables)
-            lops.goTo(ScrDbBrowser)
+            Navig.goTo(ScrDbBrowser)
         }
     }
     

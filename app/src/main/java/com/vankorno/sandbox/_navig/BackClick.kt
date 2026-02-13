@@ -1,5 +1,6 @@
 package com.vankorno.sandbox._navig
 
+import com.vankorno.vankornocompose.navig.Navig
 import com.vankorno.vankornocompose.navig.PopupOFF
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.values.LibGlobals2.libVm
@@ -9,7 +10,7 @@ import com.vankorno.vankornohelpers.values.minimizeApp
 
 private const val TAG = "BackClick"
 
-class BackClick() : Navig() {
+object BackClick {
     
     fun goBack() {
         val currScreen = libVm.currScreen.value
@@ -27,8 +28,8 @@ class BackClick() : Navig() {
         // endregion
         when (currScreen) {
             ScrHome -> minimizeApp()
-            ScrPlayground -> { goTo(ScrHome) }
-            ScrDbBrowser -> { goTo(ScrHome) }
+            ScrPlayground -> { Navig.goTo(ScrHome) }
+            ScrDbBrowser -> { Navig.goTo(ScrHome) }
             else -> goToPrevScr()
         }
     }
@@ -53,10 +54,10 @@ class BackClick() : Navig() {
             // region LOG
                 dLog(TAG, "currScr == prevScr == $currScreen. Returning to the Main screen...")
             // endregion
-            goTo(ScrHome)
+            Navig.goTo(ScrHome)
             return //\/\/\/\/\/\
         }
         
-        goTo(previousScreen)
+        Navig.goTo(previousScreen)
     }
 }

@@ -3,10 +3,11 @@ package com.vankorno.sandbox
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModelProvider
 import com.vankorno.sandbox.AppStart._ui.DemoAppUI
-import com.vankorno.sandbox._navig.UpdateScr
+import com.vankorno.sandbox.AppStart.logic.launchApp
 import com.vankorno.sandbox._vm.VmShared
 import com.vankorno.vankornocompose.LibMainActivity
-import com.vankorno.vankornodb.api.DbRuntime.lops
+import com.vankorno.vankornocompose.launch.Launcher
+import com.vankorno.vankornocompose.navig.Navig
 
 class MainActivity : LibMainActivity() {
     companion object {
@@ -20,11 +21,11 @@ class MainActivity : LibMainActivity() {
         vm = ViewModelProvider(this)[VmShared::class.java]
     }
     
-    override fun startupFirstLaunch() { lops.launchApp() }
-    override fun startupAfterProcessDeath() { lops.launchApp() }
+    override fun startupFirstLaunch() { Launcher.launchApp() }
+    override fun startupAfterProcessDeath() { Launcher.launchApp() }
     
     
-    override fun doEveryMinute() { lops.exec { UpdateScr().updateEveryMinute() } }
+    override fun doEveryMinute() { Navig.updateScreen() }
     
     
     

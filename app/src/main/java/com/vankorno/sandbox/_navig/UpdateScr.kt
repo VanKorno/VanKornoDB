@@ -6,13 +6,9 @@ import com.vankorno.vankornocompose.values.LibGlobals2.libVm
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornohelpers.dLog
 
-private const val TAG = "UpdateScr"
+private const val TAG = "ScreenUpdater"
 
-class UpdateScr() {
-    
-    fun updateEveryMinute() {
-        updateScr()
-    }
+object ScreenUpdater {
     
     fun updateScr() {
         val currScreen = libVm.currScreen.value
