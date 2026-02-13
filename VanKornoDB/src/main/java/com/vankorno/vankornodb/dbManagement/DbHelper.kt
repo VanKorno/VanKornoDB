@@ -1717,13 +1717,15 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
-    inline fun getLastPosition(                                                    table: String
+    fun getLastPosition(                                              table: String,
+                                                                      where: WhereDsl.()->Unit = {},
     ): Int = read(0, "getLastPosition") {
-        it.getLastPosition(table)
+        it.getLastPosition(table, where)
     }
-    suspend fun getLastPositionSusp(                                               table: String
+    suspend fun getLastPositionSusp(                                  table: String,
+                                                                      where: WhereDsl.()->Unit = {},
     ): Int = readSusp(0, "getLastPositionSusp") {
-        it.getLastPosition(table)
+        it.getLastPosition(table, where)
     }
     
     
