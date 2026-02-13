@@ -632,6 +632,98 @@ abstract class DbHelperInternal(
     
     
     
+    // =================================  G E T   P R O  ================================= \\
+    
+    fun getIntPro(                                                          table: String,
+                                                                           column: IntCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Int = read(-1, "getIntPro") {
+        it.getIntPro(table, column, dsl)
+    }
+    
+    suspend fun getIntProSusp(                                              table: String,
+                                                                           column: IntCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Int = readSusp(-1, "getIntProSusp") {
+        it.getIntPro(table, column, dsl)
+    }
+    
+    
+    fun getStrPro(                                                          table: String,
+                                                                           column: StrCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): String = read("", "getStrPro") {
+        it.getStrPro(table, column, dsl)
+    }
+    
+    suspend fun getStrProSusp(                                              table: String,
+                                                                           column: StrCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): String = readSusp("", "getStrProSusp") {
+        it.getStrPro(table, column, dsl)
+    }
+    
+    
+    fun getBoolPro(                                                         table: String,
+                                                                           column: BoolCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Boolean = read(false, "getBoolPro") {
+        it.getBoolPro(table, column, dsl)
+    }
+    
+    suspend fun getBoolProSusp(                                             table: String,
+                                                                           column: BoolCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Boolean = readSusp(false, "getBoolProSusp") {
+        it.getBoolPro(table, column, dsl)
+    }
+    
+    
+    fun getLongPro(                                                         table: String,
+                                                                           column: LongCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Long = read(-1L, "getLongPro") {
+        it.getLongPro(table, column, dsl)
+    }
+    
+    suspend fun getLongProSusp(                                             table: String,
+                                                                           column: LongCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Long = readSusp(-1L, "getLongProSusp") {
+        it.getLongPro(table, column, dsl)
+    }
+    
+    
+    fun getFloatPro(                                                        table: String,
+                                                                           column: FloatCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Float = read(-1F, "getFloatPro") {
+        it.getFloatPro(table, column, dsl)
+    }
+    
+    suspend fun getFloatProSusp(                                            table: String,
+                                                                           column: FloatCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): Float = readSusp(-1F, "getFloatProSusp") {
+        it.getFloatPro(table, column, dsl)
+    }
+    
+    
+    fun getBlobPro(                                                         table: String,
+                                                                           column: BlobCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): ByteArray = read(ByteArray(0), "getBlobPro") {
+        it.getBlobPro(table, column, dsl)
+    }
+    
+    suspend fun getBlobProSusp(                                             table: String,
+                                                                           column: BlobCol,
+                                                                              dsl: FullDsl.()->Unit,
+    ): ByteArray = readSusp(ByteArray(0), "getBlobProSusp") {
+        it.getBlobPro(table, column, dsl)
+    }
+    
+    
     
     
     
