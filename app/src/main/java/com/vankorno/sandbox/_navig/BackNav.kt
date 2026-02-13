@@ -10,9 +10,9 @@ import com.vankorno.vankornohelpers.values.minimizeApp
 
 private const val TAG = "BackClick"
 
-object BackClick {
+object BackNav {
     
-    fun goBack() {
+    fun navigBack() {
         val currScreen = libVm.currScreen.value
         val previousScreen = libVm.previousScreen.value
         // region LOG
