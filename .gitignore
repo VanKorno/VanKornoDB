@@ -4,6 +4,8 @@ build/
 
 # IDE
 .idea/
+!.idea/dictionaries/
+!.idea/dictionaries/**
 *.iml
 *.ipr
 *.iws

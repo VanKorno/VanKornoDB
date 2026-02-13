@@ -15,9 +15,14 @@ sealed class BaseColumn(val name: String)
 sealed class DescendingColumn(name: String): BaseColumn(name)
 
 
-sealed class AscendingColumn<T>(                                                   name: String,
+sealed class AscendingColumn<T>(                                                    name: String,
                                                                               defaultVal: T,
 ): TypedColumn<T>(name, defaultVal)
+
+
+sealed class NumberColumn<T: Number>(                                               name: String,
+                                                                              defaultVal: T,
+): AscendingColumn<T>(name, defaultVal)
 
 
 class DescendingIntCol(name: String) : DescendingColumn(name)

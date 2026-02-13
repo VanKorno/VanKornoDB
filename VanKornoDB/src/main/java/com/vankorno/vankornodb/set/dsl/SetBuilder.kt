@@ -10,6 +10,7 @@ import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
+import com.vankorno.vankornodb.dbManagement.data.NumberColumn
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
@@ -32,11 +33,11 @@ open class SetDslInternal : SetDslBase () {
     fun ON(col: BoolCol) { _ops += SetOp.Set(col, true) }
     
     
-    infix fun IntCol.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
-    infix fun LongCol.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
-    infix fun FloatCol.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
+    infix fun <T : Number> NumberColumn<T>.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
     
-    infix fun IntCol.sub(value: Number) { add(-value.toInt()) }
+    fun <T : Number> List<NumberColumn<T>>.addToEach(value: Number) { this.forEach { it.add(value) }}
+    
+    infix fun IntCol.sub(value: Number) { add(-value.toInt()) } // TODO Check later
     infix fun LongCol.sub(value: Number) { add(-value.toLong()) }
     infix fun FloatCol.sub(value: Number) { add(-value.toFloat()) }
     
@@ -54,14 +55,8 @@ open class SetDslInternal : SetDslBase () {
     fun IntCol.abs() { _ops += SetOp.Abs(this.name) }
     
     
-    infix fun IntCol.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
-    infix fun IntCol.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
-    
-    infix fun LongCol.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
-    infix fun LongCol.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
-    
-    infix fun FloatCol.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
-    infix fun FloatCol.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
+    infix fun <T : Number> NumberColumn<T>.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
+    infix fun <T : Number> NumberColumn<T>.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
     
     
     infix fun IntCol.coerceIn(                                                     range: IntRange
