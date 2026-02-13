@@ -1654,13 +1654,15 @@ abstract class DbHelperInternal(
     }
     
     
-    inline fun getAllIDs(                                                          table: String
+    fun getAllIDs(                                                    table: String,
+                                                                    orderBy: OrderDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getAllIDs") {
-        it.getAllIDs(table)
+        it.getAllIDs(table, orderBy)
     }
-    suspend fun getAllIDsSusp(                                                     table: String
+    suspend fun getAllIDsSusp(                                        table: String,
+                                                                    orderBy: OrderDsl.()->Unit = {},
     ): List<Int> = readSusp(emptyList(), "getAllIDsSusp") {
-        it.getAllIDs(table)
+        it.getAllIDs(table, orderBy)
     }
     
     
