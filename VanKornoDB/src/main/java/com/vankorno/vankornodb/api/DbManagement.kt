@@ -12,7 +12,6 @@ import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.dbManagement.lock.DbLockInternal
-import com.vankorno.vankornodb.dbManagement.lock.LockedOpsRunnerInternal
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 import com.vankorno.vankornodb.newTable.createTablesInternal
 
@@ -52,17 +51,6 @@ class DbLock {
     fun <T> withLock(block: () -> T): T = internalLock.doLock { block() }
 }
 
-/**
- * Allows running bundles of db operations or even business logic
- * as a single operation with the lock, to avoid conflicts with other ops running at the same time.
- */
-class LockedOpsRunner(lock: DbLock) : LockedOpsRunnerInternal(lock)
-/**
- * An optional shorter name for LockedOpsRunner for those who prefer it.
- * Same story as with [Dbh]
- */
-typealias LOps = LockedOpsRunner
-
 
 object DbRuntime {
     /**
@@ -71,12 +59,6 @@ object DbRuntime {
     lateinit var dbh: DbHelper
     
     var dbLock = DbLock()
-    
-    /**
-     * Holds LockedOpsRunner that allows running bundles of db operations or even business logic
-     * as a single operation with the lock, to avoid conflicts with other ops running at the same time.
-     */
-    var lops = LockedOpsRunner(dbLock)
 }
 
 

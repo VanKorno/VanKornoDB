@@ -6,10 +6,9 @@ import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.vankornocompose.launch.Launcher
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.api.DbRuntime.lops
 
 
-fun Launcher.launchApp() = lops.exec {
+fun Launcher.launchApp() {
     dbFileNameFromDb = dbh.getDbFileName()
     
     if (!dbh.tableExists(TestTable)) {
