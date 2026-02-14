@@ -6,10 +6,6 @@
 package com.vankorno.vankornodb.dbManagement.lock
 
 import com.vankorno.vankornodb.api.DbLock
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Allows running bundles of db operations or even business logic
@@ -17,48 +13,12 @@ import kotlinx.coroutines.withContext
  */
 abstract class LockedOpsRunnerInternal(                                         val lock: DbLock
 ) {
-    
-    inline fun <T> exec(                                                    defaultValue: T,
-                                                                       crossinline block: ()->T,
-    ): T {
-        return try {
-            lock.withLock { block() }
-        } catch (_: Exception) {
-            defaultValue
-        }
-    }
-    
-    inline fun exec(crossinline block: ()->Unit) { exec(Unit){block()} }
-    
-    
-    
-    fun async(                                                                    block: ()->Unit
-    ) {
-        CoroutineScope(Dispatchers.Default).launch {
-            try {
-                lock.withLock {
-                    block()
-                }
-            } catch (_: Exception) {
-            }
-        }
-    }
-    
-    
-    
-    suspend inline fun <T> susp(                                            defaultValue: T,
-                                                                       crossinline block: ()->T,
-    ): T = withContext(Dispatchers.Default) {
-        try {
-            lock.withLock { block() }
-        } catch (_: Exception) {
-            defaultValue
-        }
-    }
+    fun <P> exec(block: (P)->Unit) = ExecOp(lock, block)
 
-    suspend inline fun susp(crossinline block: ()->Unit) { susp(Unit){block()} }
-    
-    
+    fun exec(block: ()->Unit) = ExecOp<Unit>(lock) { block() }
 
+    fun <P, R> get(default: R, block: (P)->R) = GetOp(lock, default, block)
+
+    fun <R> get(default: R, block: ()->R) = GetOp<Unit, R>(lock, default) { block() }
 }
 

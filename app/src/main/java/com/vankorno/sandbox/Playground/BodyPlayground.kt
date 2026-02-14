@@ -9,7 +9,6 @@ import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.navig.Navig
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.api.DbRuntime.lops
 import com.vankorno.vankornodb.dbManagement.data.using
 
 
@@ -20,24 +19,20 @@ fun BodyPlayground() {
         "Create 1000 tables of TestEntity",
         LibAccentColor.Red,
     ) {
-        lops.async {
-            val tables = Array(1000) {
-                (TestTable + it) using _Test
-            }
-            dbh.createTables(*tables)
-            Navig.goTo(ScrDbBrowser)
+        val tables = Array(1000) {
+            (TestTable + it) using _Test
         }
+        dbh.createTables(*tables)
+        Navig.goTo(ScrDbBrowser)
     }
     
     LargeBtn(
         "Delete all app-level tables",
         LibAccentColor.Brown,
     ) {
-        lops.async {
-            val appTables = dbh.getAppTableNames()
-            dbh.deleteTables(appTables)
-            Navig.goTo(ScrDbBrowser)
-        }
+        val appTables = dbh.getAppTableNames()
+        dbh.deleteTables(appTables)
+        Navig.goTo(ScrDbBrowser)
     }
     
     
