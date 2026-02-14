@@ -15,8 +15,7 @@ activityCompose = "1.12.4"
 constraintlayoutCompose = "1.1.1"
 composeBom = "2026.02.00"
 testManifest = "1.10.3"
-vankornoHelpers = "2.81"
-vankornoCompose = "2.78"
+vankornoCompose = "2.81"
 
 
 [libraries]
@@ -41,7 +40,6 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
-vankornohelpers = { module = "com.github.VanKorno:VanKornoHelpers", version.ref = "vankornoHelpers" }
 vankornocompose = { module = "com.github.VanKorno:VanKornoCompose", version.ref = "vankornoCompose" }
 
 [plugins]

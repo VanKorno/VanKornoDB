@@ -76,7 +76,7 @@ private fun TableBtn(                                                       tabl
             .clickable(
                 onClick = {
                     vm.currTable.value = table
-                    Navig.goToAsync(ScrTable)
+                    Navig.goTo.async(ScrTable)
                 }
             )
             .padding(vertical = 15.dp, horizontal = 10.dp)

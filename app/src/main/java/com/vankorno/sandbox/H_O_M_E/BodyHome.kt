@@ -53,7 +53,7 @@ private fun NavBtn(                                                      targetS
                                                                               text: String,
                                                                        accentColor: LibAccentColor,
 ) {
-    LargeBtn(text, accentColor) { Navig.goToAsync(targetScr) }
+    LargeBtn(text, accentColor) { Navig.goTo.async(targetScr) }
 }
 
 
