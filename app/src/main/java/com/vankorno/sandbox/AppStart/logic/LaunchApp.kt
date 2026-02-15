@@ -4,11 +4,10 @@ import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbFileNameFromDb
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.vankornocompose.launch.Launcher
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 
 
-fun Launcher.launchApp() {
+fun launchApp() {
     dbFileNameFromDb = dbh.getDbFileName()
     
     if (!dbh.tableExists(TestTable)) {
