@@ -4,15 +4,13 @@ import android.util.Log
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 
 private val unitTestCase: Boolean by lazy {
-    val testsRun = Thread.currentThread().stackTrace.any { it.className.startsWith("org.junit.") }
-    
     val androidTestsRun = try {
         Class.forName("androidx.test.platform.app.InstrumentationRegistry")
         true
     } catch (_: ClassNotFoundException) {
         false
     }
-    testsRun && !androidTestsRun
+    !androidTestsRun  &&  Thread.currentThread().stackTrace.any { it.className.startsWith("org.junit.") }
 }
 
 
