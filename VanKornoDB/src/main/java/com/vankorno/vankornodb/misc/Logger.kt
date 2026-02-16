@@ -1,43 +1,44 @@
 package com.vankorno.vankornodb.misc
 
-import android.util.Log
+import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 
 private val unitTestCase: Boolean by lazy {
     Thread.currentThread().stackTrace.any { it.className.startsWith("org.junit.") }
 }
 
 
-internal fun dLog(                                                                   tag: String,
-                                                                                     msg: String,
+@PublishedApi
+internal fun dLog(                                                                   msg: String
 ) {
     if (unitTestCase)
-        println("Dbg ($tag): $msg")
+        println("Dbg ($DbTAG): $msg")
     else
-        Log.d(tag, msg)
+        dLog(msg)
 }
 
 
-internal fun wLog(                                                                   tag: String,
-                                                                                     msg: String,
+@PublishedApi
+internal fun wLog(                                                                   msg: String
 ) {
     if (unitTestCase)
-        println("Warning ($tag): $msg")
+        println("Warning ($DbTAG): $msg")
     else
-        Log.w(tag, msg)
+        wLog(msg)
 }
 
 
-internal fun eLog(                                                           tag: String,
-                                                                             msg: String,
+@PublishedApi
+internal fun eLog(                                                           msg: String,
                                                                        throwable: Throwable? = null,
 ) {
     if (unitTestCase) {
-        println("ERROR! ($tag): $msg")
+        println("ERROR! ($DbTAG): $msg")
         throwable?.printStackTrace()
     } else {
-        Log.e(tag, msg, throwable)
+        eLog(msg, throwable)
     }
 }
 
 
-internal fun lambdaError(lambdaName: String) = eLog("Empty lambda!", "$lambdaName should not be empty at this point, but it is.")
+@PublishedApi
+internal fun lambdaError(lambdaName: String) = eLog("$lambdaName should not be empty at this point, but it is.")

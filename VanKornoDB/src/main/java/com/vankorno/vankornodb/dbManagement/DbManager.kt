@@ -8,11 +8,9 @@ package com.vankorno.vankornodb.dbManagement
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.createTable
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
@@ -23,7 +21,9 @@ import com.vankorno.vankornodb.get.getColStringsPro
 import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
+import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
+import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 
 /**
@@ -89,7 +89,7 @@ abstract class DbManager(        context: Context,
     override fun onCreate(                                                      db: SQLiteDatabase
     ) {
         // region LOG
-            Log.d(DbTAG, "onCreate runs")
+            dLog("onCreate runs")
         // endregion
         lock.withLock {
             db.createTable(TTTEntityVersion)
@@ -109,7 +109,7 @@ abstract class DbManager(        context: Context,
     ) {
         if (oldVersion >= newVersion)  return  //\/\/\/\/\/\
         // region LOG
-            Log.d(DbTAG, "onUpgrade() Migrating...")
+            dLog("onUpgrade() Migrating...")
         // endregion
         lock.withLock {
             db.beginTransaction()
@@ -118,7 +118,7 @@ abstract class DbManager(        context: Context,
                 db.setTransactionSuccessful()
             } catch (e: Exception) {
                 // region LOG
-                    Log.e(DbTAG, "onUpgrade() failed: ${e.message}", e)
+                    eLog("onUpgrade() failed: ${e.message}", e)
                 // endregion
                 throw e
             } finally {
@@ -130,7 +130,7 @@ abstract class DbManager(        context: Context,
     
     fun closeDb() {
         // region LOG
-            Log.d(DbTAG, "closeDb()")
+            dLog("closeDb()")
         // endregion
         lock.withLock {
             db?.close()
@@ -142,7 +142,7 @@ abstract class DbManager(        context: Context,
     private fun handleVersionTable(                                              db: SQLiteDatabase
     ) {
         // region LOG
-            Log.d(DbTAG, "handleVersionTable() runs")
+            dLog("handleVersionTable() runs")
         // endregion
         ensureEnttVerTableExists(db)
         
@@ -150,13 +150,13 @@ abstract class DbManager(        context: Context,
         
         if (empty) {
             // region LOG
-                Log.d(DbTAG, "handleVersionTable(): Empty EntityVersions table. Adding all entity data.")
+                dLog("handleVersionTable(): Empty EntityVersions table. Adding all entity data.")
             // endregion
             addAllEntityMeta(db)
             return //\/\/\/\/\/\
         }
         // region LOG
-            Log.d(DbTAG, "handleVersionTable(): EntityVersions table already has data. Running a cleanup and adding missing data.")
+            dLog("handleVersionTable(): EntityVersions table already has data. Running a cleanup and adding missing data.")
         // endregion
         cleanupVersionTable(db)
         addMissingEntityMeta(db)

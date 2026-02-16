@@ -6,11 +6,13 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.api.migrateMultiStep
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.EntityVersion
+import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
+import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.get.noty.getIntNoty
+import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.set.noty.setNoty
 
 abstract class DbMigratorInternal(                               val db: SQLiteDatabase,
@@ -22,7 +24,7 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
      */
     fun migrateSingleTableEntities() {
         // region LOG
-            Log.d(DbTAG, "migrateSingleTableEntities() runs")
+            dLog("migrateSingleTableEntities() runs")
         // endregion
         for (entity in allEntityMeta) {
             if (entity.limitedToTable != null)
@@ -41,7 +43,7 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
         val newVer = entityMeta.currVersion
         val table = entityMeta.limitedToTable ?: return //\/\/\
         // region LOG
-            Log.d(DbTAG, "migrateSingleTableEntity() table = $table, oldVer = $oldVer, newVer = $newVer")
+            dLog("migrateSingleTableEntity() table = $table, oldVer = $oldVer, newVer = $newVer")
         // endregion
         db.migrateMultiStep(table, oldVer, entityMeta)
         
@@ -59,7 +61,7 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
     ) {
         val dbRowName = entityMeta.dbRowName
         // region LOG
-            Log.d(DbTAG, "migrateTables(): Migrating tables that use the $dbRowName entity...")
+            dLog("migrateTables(): Migrating tables that use the $dbRowName entity...")
         // endregion
         val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, _Name, dbRowName)
         
@@ -68,7 +70,7 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
         }
         val newVer = entityMeta.currVersion
         // region LOG
-            Log.d(DbTAG, "migrateTables(): Finished migrating $dbRowName tables. Setting the new entity version ($newVer)...")
+            dLog("migrateTables(): Finished migrating $dbRowName tables. Setting the new entity version ($newVer)...")
         // endregion
         db.setNoty(newVer, TABLE_EntityVersions, EntityVersion, _Name, dbRowName)
     }

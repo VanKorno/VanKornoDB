@@ -6,12 +6,11 @@
 package com.vankorno.vankornodb.newTable
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.misc.dLog
 
 /**
  * Creates database tables.
@@ -50,7 +49,7 @@ internal fun SQLiteDatabase.createExclusiveTablesInternal(
                                                            allEntityMeta: Collection<BaseEntityMeta>
 ) {
     // region LOG
-        Log.d(DbTAG, "createExclusiveTables() runs")
+        dLog("createExclusiveTables() runs")
     // endregion
     for (entity in allEntityMeta) {
         val table = entity.limitedToTable

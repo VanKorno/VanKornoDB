@@ -6,16 +6,15 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.api.toEntity
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.misc.eLog
 
 /**
  * Gets one db table row as an object of an entity class,
- * using using the full VanKorno DSL (but limit is always 1).
+ * using the full VanKorno DSL (but limit is always 1).
  * Returns [default] if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjPro(                          tableInfo: TableInfoBase<T>,
@@ -23,7 +22,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                          tableInf
                                                                               dsl: FullDsl.()->Unit,
 ): T = getObjPro(tableInfo, dsl) ?: run {
     // region LOG
-        Log.e(DbTAG, "getObjPro(): The requested row doesn't exist in ${tableInfo.name}, returning default")
+        eLog("getObjPro(): The requested row doesn't exist in ${tableInfo.name}, returning default")
     // endregion
     default
 }
@@ -31,7 +30,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                          tableInf
 
 /**
  * Gets one db table row as an object of an entity class,
- * using using the full VanKorno DSL (but limit is always 1).
+ * using the full VanKorno DSL (but limit is always 1).
  * Returns null if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjPro(                          tableInfo: TableInfoBase<T>,

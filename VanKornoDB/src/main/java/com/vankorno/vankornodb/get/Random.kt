@@ -6,16 +6,15 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.toEntity
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.misc.eLog
 
 fun SQLiteDatabase.getRandomInt(                                      table: String,
                                                                      column: IntCol,
@@ -23,7 +22,7 @@ fun SQLiteDatabase.getRandomInt(                                      table: Str
 ): Int {
     val rand = getRandomValNoty<Int>(table, column.name, where) ?: run {
         // region LOG
-            Log.e(DbTAG, "There are no available values to pick from. Returning -1")
+            eLog("There are no available values to pick from. Returning -1")
         // endregion
         -1
     }

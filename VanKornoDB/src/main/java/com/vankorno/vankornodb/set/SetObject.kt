@@ -6,12 +6,11 @@
 package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.toContentValues
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.misc.wLog
 
 /**
  * Updates the row with the specified WhereDsl conditions in the given table with the values from [obj].
@@ -36,7 +35,7 @@ inline fun <T : CurrEntity> SQLiteDatabase.setObj(                tableInfo: Tab
     val affected = update(table, cv, whereClause, whereArgs)
     if (affected > 1) {
         // region LOG
-        Log.w(DbTAG, "setObj: $affected rows updated in '$table'. You may want to set more specific conditions if you want to update a single row.")
+        wLog("setObj: $affected rows updated in '$table'. You may want to set more specific conditions if you want to update a single row.")
         // endregion
     }
     return affected

@@ -6,11 +6,10 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.misc.eLog
 
 
 /**
@@ -31,7 +30,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
                                                                       where: WhereDsl.()->Unit = {},
 ): T = getObj(tableInfo, where) ?: run {
     // region LOG
-        Log.e(DbTAG, "getObj(): The requested row doesn't exist in ${tableInfo.name}, returning default")
+        eLog("getObj(): The requested row doesn't exist in ${tableInfo.name}, returning default")
     // endregion
     default
 }

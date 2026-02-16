@@ -6,15 +6,14 @@
 package com.vankorno.vankornodb.add
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.add.internal.getId
 import com.vankorno.vankornodb.add.internal.hasIdField
 import com.vankorno.vankornodb.add.internal.withId
 import com.vankorno.vankornodb.api.toContentValues
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.get.getLastId
+import com.vankorno.vankornodb.misc.wLog
 
 // TODO Maybe: Upsert-like function — insert or update depending on whether the row exists (SQLite supports INSERT OR REPLACE, INSERT ON CONFLICT, etc.)
 
@@ -74,7 +73,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObjects(                 tableInfo: Tab
         val rowId = addObj(tableInfo, obj)
         if (rowId == -1L) {
             // region LOG
-                Log.w(DbTAG, "addObjects() FAILED to insert object: $obj")
+                wLog("addObjects() FAILED to insert object: $obj")
             // endregion
         } else {
             count++

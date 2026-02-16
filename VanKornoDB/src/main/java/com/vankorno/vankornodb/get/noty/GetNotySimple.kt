@@ -7,8 +7,7 @@ package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
+import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.getBoolean
 
 inline fun <T, R> SQLiteDatabase.getValueNoty(                                  table: String,
@@ -25,7 +24,7 @@ inline fun <T, R> SQLiteDatabase.getValueNoty(                                  
     if (cursor.moveToFirst()) getCursorValue(cursor)
     else {
         // region LOG
-        Log.e(DbTAG, "$funName() Unable to get value from $table (column: $column). Returning default. Condition: $whereClause = $whereArg")
+        eLog("$funName() Unable to get value from $table (column: $column). Returning default. Condition: $whereClause = $whereArg")
         // endregion
         default
     }

@@ -6,12 +6,10 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
-import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
@@ -22,6 +20,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.getObjects
+import com.vankorno.vankornodb.misc.dLog
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -61,7 +60,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     val renameHistory = migrationBundle.renameHistory
     val milestones = migrationBundle.milestones
     // region LOG
-        Log.d(DbTAG, "Starting migrateMultiStep()... Table = $table, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${milestones.size}")
+        dLog("Starting migrateMultiStep()... Table = $table, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${milestones.size}")
     // endregion
     val relevantMilestones = milestones
         .filter { (version, _) -> version > oldVersion && version <= newVersion }
@@ -73,7 +72,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     
     val steps = relevantMilestones.map { it.first }
     // region LOG
-        Log.d(DbTAG, "migrateMultiStep() Steps (to-versions) = ${steps.joinToString(", ")}")
+        dLog("migrateMultiStep() Steps (to-versions) = ${steps.joinToString(", ")}")
     // endregion
     val lambdas = relevantMilestones.toMap()
     
@@ -86,16 +85,16 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     }
     this.deleteTable(table)
     // region LOG
-        Log.d(DbTAG, "migrateMultiStep() $table table is dropped. Recreating...")
+        dLog("migrateMultiStep() $table table is dropped. Recreating...")
     // endregion
     this.createTable(table using entityMeta.schemaBundle)
     // region LOG
-        Log.d(DbTAG, "migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
+        dLog("migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
     
     addObjects(table using schemaBundle, migratedObjects)
     // region LOG
-        Log.d(DbTAG, "migrateMultiStep() Done inserting rows. Starting onNewDbFilled()...")
+        dLog("migrateMultiStep() Done inserting rows. Starting onNewDbFilled()...")
     // endregion
     onNewDbFilled(migratedObjects)
 }
@@ -173,14 +172,14 @@ open class MigrationUtils {
                                       schemaBundles: Map<Int, NormalSchemaBundle<out NormalEntity>>,
     ): List<NormalEntity> {
         // region LOG
-            Log.d(DbTAG, "readEntitiesFromVersion() starts. Table = $table, version = $version")
+            dLog("readEntitiesFromVersion() starts. Table = $table, version = $version")
         // endregion
         val fromBundle = schemaBundles[version]
             ?: error("Missing schemaBundle for version $version")
         
         val elements = db.getObjects(table using fromBundle)
         // region LOG
-            Log.d(DbTAG, "readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
+            dLog("readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
         return elements
     }
@@ -337,13 +336,13 @@ internal fun SQLiteDatabase.dropAndCreateEmptyTablesInternal(
 ) {
     val size = tables.size
     // region LOG
-        Log.d(DbTAG, "dropDroppables(): Dropping $size table(s)...")
+        dLog("dropDroppables(): Dropping $size table(s)...")
     // endregion
     for (table in tables) {
         deleteTable(table.name)
     }
     // region LOG
-        Log.d(DbTAG, "dropDroppables(): Creating $size table(s)...")
+        dLog("dropDroppables(): Creating $size table(s)...")
     // endregion
     createTables(*tables)
 }
@@ -354,7 +353,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(
                                                     vararg tables: TableInfoNormal<out NormalEntity>
 ) {
     // region LOG
-        Log.d(DbTAG, "migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
+        dLog("migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
         val rows = getObjects(table)
@@ -362,7 +361,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(
         addObjects(table, rows)
     }
     // region LOG
-        Log.d(DbTAG, "migrateWithoutChange(): Migration complete.")
+        dLog("migrateWithoutChange(): Migration complete.")
     // endregion
 }
 
