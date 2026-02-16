@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.misc
 
+import android.util.Log
 import com.vankorno.vankornodb.core.data.DbConstants.DbTAG
 
 private val unitTestCase: Boolean by lazy {
@@ -13,7 +14,7 @@ internal fun dLog(                                                              
     if (unitTestCase)
         println("Dbg ($DbTAG): $msg")
     else
-        dLog(msg)
+        Log.d(DbTAG, msg)
 }
 
 
@@ -23,7 +24,7 @@ internal fun wLog(                                                              
     if (unitTestCase)
         println("Warning ($DbTAG): $msg")
     else
-        wLog(msg)
+        Log.w(DbTAG, msg)
 }
 
 
@@ -35,7 +36,7 @@ internal fun eLog(                                                           msg
         println("ERROR! ($DbTAG): $msg")
         throwable?.printStackTrace()
     } else {
-        eLog(msg, throwable)
+        Log.e(DbTAG, msg, throwable)
     }
 }
 
