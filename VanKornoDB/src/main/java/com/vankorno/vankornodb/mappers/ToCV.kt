@@ -106,9 +106,6 @@ internal fun <T : NormalEntity> toCV(                                           
                 putValue(columnName, elem)
         }
     }
-    // region disabled LOG
-        //Log.v(TAG, "toContentValues() result: $cv")
-    // endregion
     return cv
 }
 
