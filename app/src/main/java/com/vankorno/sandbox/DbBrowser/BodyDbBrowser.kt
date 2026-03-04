@@ -19,6 +19,7 @@ import com.vankorno.sandbox._navig.ScrTable
 import com.vankorno.vankornocompose.composables.Spa_______________cer
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.composables.barTop.LibTopBarIconBtn
+import com.vankorno.vankornocompose.db.LibDbVals.TTTMisc
 import com.vankorno.vankornocompose.navig.Navig
 import com.vankorno.vankornocompose.sp1
 import com.vankorno.vankornocompose.theme_main.LibAccentColor
@@ -69,6 +70,8 @@ private fun TableBtn(                                                       tabl
                                                                             color: Color,
                                                                        isInternal: Boolean = false,
 ) {
+    val btnFree = isInternal || table == TTTMisc
+    
     Row(
         MOD_W90
             .padding(vertical = 3.dp)
@@ -83,13 +86,13 @@ private fun TableBtn(                                                       tabl
         ,
         verticalAlignment = Alignment.CenterVertically,
         
-        horizontalArrangement = if (!isInternal)
-                                    Arrangement.SpaceBetween
+        horizontalArrangement = if (btnFree)
+                                    Arrangement.Center
                                 else
-                                    Arrangement.Center,
+                                    Arrangement.SpaceBetween,
     ) {
-        if (!isInternal)
-            Spa_______________cer(10)
+        if (!btnFree)
+            Spa_______________cer(20)
         
         Text(
             text = table,
@@ -97,7 +100,7 @@ private fun TableBtn(                                                       tabl
             fontSize = 16.sp1(),
             maxLines = 3,
         )
-        if (!isInternal)
+        if (!btnFree)
             DeleteBtn(table)
     }
 }

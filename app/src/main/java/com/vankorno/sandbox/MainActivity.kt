@@ -6,7 +6,7 @@ import com.vankorno.sandbox.AppStart._ui.DemoAppUI
 import com.vankorno.sandbox.AppStart.logic.launchApp
 import com.vankorno.sandbox._vm.VmShared
 import com.vankorno.vankornocompose.LibMainActivity
-import com.vankorno.vankornocompose.navig.Navig
+import com.vankorno.vankornocompose.navig.Navig.updateScreen
 
 class MainActivity : LibMainActivity() {
     companion object {
@@ -20,11 +20,10 @@ class MainActivity : LibMainActivity() {
         vm = ViewModelProvider(this)[VmShared::class.java]
     }
     
-    override fun startupFirstLaunch() { launchApp() }
-    override fun startupAfterProcessDeath() { launchApp() }
+    override fun startupLaunch() { launchApp() }
     
     
-    override fun doEveryMinute() { Navig.updateScreen() }
+    override fun doEveryMinute() { updateScreen.async() }
     
     
     

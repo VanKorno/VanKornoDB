@@ -88,6 +88,7 @@ fun BodyTable(                                                          columns:
                         fontSize = 9.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
+                        maxLines = 1,
                     )
                 }
             }
@@ -107,6 +108,7 @@ fun BodyTable(                                                          columns:
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
+                        maxLines = 1,
                     )
                 }
             }
@@ -128,6 +130,7 @@ fun BodyTable(                                                          columns:
                                 ,
                                 color = Color.White,
                                 textAlign = TextAlign.Center,
+                                maxLines = 1,
                             )
                         }
                     }

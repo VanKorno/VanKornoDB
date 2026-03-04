@@ -1,5 +1,5 @@
 [versions]
-agp = "9.0.1"
+agp = "9.1.0"
 kotlin = "2.3.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -8,7 +8,7 @@ espressoCore = "3.7.0"
 runner = "1.7.0"
 composeBom = "2026.02.01"
 testManifest = "1.10.4"
-vankornoCompose = "2.105"
+vankornoCompose = "2.110"
 
 
 [libraries]
