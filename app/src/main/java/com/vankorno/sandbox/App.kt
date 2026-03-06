@@ -1,4 +1,4 @@
-package com.vankorno.sandbox.AppStart
+package com.vankorno.sandbox
 
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
@@ -17,7 +17,7 @@ import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.core.data.DbConstants.InMemoryDB
 import com.vankorno.vankornodb.dbManagement.data.using
 
-class DemoApp : LibApp() {
+class App : LibApp() {
     companion object {
         const val DbName = "DbFile.dp"
         var dbFileNameFromDb = "" // useless shit for the demo

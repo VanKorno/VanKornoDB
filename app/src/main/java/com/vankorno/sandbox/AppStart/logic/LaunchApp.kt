@@ -1,6 +1,6 @@
 package com.vankorno.sandbox.AppStart.logic
 
-import com.vankorno.sandbox.AppStart.DemoApp.Companion.dbFileNameFromDb
+import com.vankorno.sandbox.App.Companion.dbFileNameFromDb
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.sandbox._entities.testEntity.TestEntity
