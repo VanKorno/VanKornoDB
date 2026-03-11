@@ -1552,34 +1552,34 @@ abstract class DbHelperInternal(
     
     // ============================   D E L E T E,  C L E A R   ============================ \\
     
-    inline fun <T> deleteRow(                                               table: String,
+    inline fun <T> deleteRows(                                              table: String,
                                                                             where: String,
                                                                            equals: T,
                                                                             async: Boolean = false,
-    ) = write("deleteRow", async) {
-        it.deleteRow(table, where, equals)
+    ) = write("deleteRows", async) {
+        it.deleteRows(table, where, equals)
     }
     
-    suspend fun <T> deleteRowSusp(                                                 table: String,
+    suspend fun <T> deleteRowsSusp(                                                table: String,
                                                                                    where: String,
                                                                                   equals: T,
-    ) = writeSusp("deleteRowSusp") {
-        it.deleteRow(table, where, equals)
+    ) = writeSusp("deleteRowsSusp") {
+        it.deleteRows(table, where, equals)
     }
     
     
-    fun deleteRow(                                                         table: String,
+    fun deleteRows(                                                        table: String,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("deleteRow", async) {
-        it.deleteRow(table, where)
+    ) = write("deleteRows", async) {
+        it.deleteRows(table, where)
     }
     
     
-    suspend fun deleteRowSusp(                                             table: String,
+    suspend fun deleteRowsSusp(                                            table: String,
                                                                            where: WhereDsl.()->Unit,
-    ) = writeSusp("deleteRowSusp") {
-        it.deleteRow(table, where)
+    ) = writeSusp("deleteRowsSusp") {
+        it.deleteRows(table, where)
     }
     
     

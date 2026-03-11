@@ -16,7 +16,7 @@ import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data.TTTEntityVersion
-import com.vankorno.vankornodb.delete.deleteRow
+import com.vankorno.vankornodb.delete.deleteRows
 import com.vankorno.vankornodb.get.getColStringsPro
 import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
@@ -189,7 +189,7 @@ abstract class DbManager(        context: Context,
             entityMeta.none { meta -> meta.dbRowName == name }
         }
         for (name in namesToDelete) {
-            db.deleteRow(TABLE_EntityVersions, _Name, name)
+            db.deleteRows(TABLE_EntityVersions, _Name, name)
         }
     }
     

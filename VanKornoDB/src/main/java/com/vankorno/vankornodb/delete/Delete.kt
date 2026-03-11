@@ -14,13 +14,13 @@ fun SQLiteDatabase.deleteRowById(                                               
 ): Int = delete(table, "$_ID = ?", arrayOf(id.toString()))
 
 
-fun <T> SQLiteDatabase.deleteRow(                                                  table: String,
+fun <T> SQLiteDatabase.deleteRows(                                                 table: String,
                                                                                    where: String,
                                                                                   equals: T,
 ): Int = delete(table, "$where = ?", arrayOf(equals.toString()))
 
 
-fun SQLiteDatabase.deleteRow(                                              table: String,
+fun SQLiteDatabase.deleteRows(                                             table: String,
                                                                            where: WhereDsl.()->Unit,
 ): Int {
     val builder = WhereDsl().apply(where)
