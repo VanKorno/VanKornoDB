@@ -4,9 +4,9 @@ import com.vankorno.vankornocompose.navig.Navig
 import com.vankorno.vankornocompose.navig.PopupOFF
 import com.vankorno.vankornocompose.navig.ScrHome
 import com.vankorno.vankornocompose.values.LibGlobals2.libVm
-import com.vankorno.vankornocompose.values.popupOFF
+import com.vankorno.vankornocompose.values.LibLambdas2.popupOFF
 import com.vankorno.vankornohelpers.dLog
-import com.vankorno.vankornohelpers.values.minimizeApp
+import com.vankorno.vankornohelpers.values.LibLambdas.minimizeApp
 
 private const val TAG = "BackClick"
 

@@ -7,7 +7,7 @@ import com.vankorno.vankornocompose.values.LibGlobals2.libVm
 import com.vankorno.vankornocompose.vm.reset
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornohelpers.dLog
-import com.vankorno.vankornohelpers.values.hideKeyboard
+import com.vankorno.vankornohelpers.values.LibLambdas.hideKeyboard
 
 private const val TAG = "Navig"
 
