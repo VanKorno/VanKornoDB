@@ -9,7 +9,7 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class TestLiteEntity(
-                                    val id: Int = -1,
+                           override var id: Int = -1,
                                   val name: String = "",
                               val position: Int = 0,
                                val enabled: Boolean = false,

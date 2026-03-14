@@ -16,7 +16,7 @@ data class EntityVersion(
                                val version: Int = 0,
                                  val notes: String = "",
 
-                                    val id: Int = -1,
+                           override var id: Int = -1,
 ) : CurrEntity
 
 

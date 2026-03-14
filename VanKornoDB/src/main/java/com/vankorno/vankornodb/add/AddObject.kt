@@ -6,9 +6,6 @@
 package com.vankorno.vankornodb.add
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.add.internal.getId
-import com.vankorno.vankornodb.add.internal.hasIdField
-import com.vankorno.vankornodb.add.internal.withId
 import com.vankorno.vankornodb.api.toContentValues
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
@@ -47,11 +44,10 @@ import com.vankorno.vankornodb.misc.wLog
 fun <T : NormalEntity> SQLiteDatabase.addObj(                     tableInfo: TableInfoNormal<out T>,
                                                                         obj: T,
 ): Long {
-    val modifiedEntity = if (obj.hasIdField() && obj.getId() < 1) {
-        obj.withId(getLastId(tableInfo.name) + 1)
-    } else obj
-    
-    val cv = toContentValues(modifiedEntity, tableInfo.schema)
+    if (obj.id < 1) {
+        obj.id = getLastId(tableInfo.name) + 1
+    }
+    val cv = toContentValues(obj, tableInfo.schema)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }

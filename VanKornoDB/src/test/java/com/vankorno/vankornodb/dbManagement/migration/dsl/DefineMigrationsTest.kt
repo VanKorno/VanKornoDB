@@ -1,23 +1,25 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.OldEntity
+import com.vankorno.vankornodb.api.CurrEntityWithId
+import com.vankorno.vankornodb.api.OldEntityWithId
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DefineMigrationsTest {
-    class V1 : OldEntity
+    class V1 : OldEntityWithId()
     object OrmV1 : OldSchemaBundle<V1>(V1::class)
-    class V2 : OldEntity
+    class V2 : OldEntityWithId()
     object OrmV2 : OldSchemaBundle<V2>(V2::class)
     
-    class CurrV : CurrEntity
+    class CurrV : CurrEntityWithId()
     object OrmCurr: CurrSchemaBundle<CurrV>(CurrV::class)
     
     
@@ -79,7 +81,7 @@ class DefineMigrationsTest {
         assertEquals("123", override?.fromInt?.invoke(123))
     }
     
-    data class Dummy(val value: String) : CurrEntity
+    data class Dummy(val value: String) : CurrEntityWithId()
     
     @Test
     fun `stores milestone with processFinalObj`() {

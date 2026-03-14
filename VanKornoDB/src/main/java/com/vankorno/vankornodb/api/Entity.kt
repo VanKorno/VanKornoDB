@@ -17,8 +17,17 @@ import com.vankorno.vankornodb.dbManagement.data.NormalEntity
  */
 interface CurrEntity : NormalEntity
 
+abstract class CurrEntityWithId : CurrEntity {
+    override var id: Int = -1
+}
+
 
 interface OldEntity : NormalEntity
+
+abstract class OldEntityWithId : OldEntity {
+    override var id: Int = -1
+}
+
 
 
 /**
