@@ -19,7 +19,7 @@ import com.vankorno.vankornodb.get.raw.data.RawTableStr
 import com.vankorno.vankornodb.get.raw.getRawTableStr
 import com.vankorno.vankornodb.set.*
 
-//@Suppress("NOTHING_TO_INLINE", "unused")
+@Suppress("NOTHING_TO_INLINE", "unused")
 abstract class DbHelperInternal(
                                  context: Context,
                                   dbName: String,
@@ -29,7 +29,7 @@ abstract class DbHelperInternal(
                                     lock: DbLock = dbLock,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-) : DbFunBoilerplateRemover(
+) : DbReaderWriter(
     context = context,
     dbName = dbName,
     dbVersion = dbVersion,
