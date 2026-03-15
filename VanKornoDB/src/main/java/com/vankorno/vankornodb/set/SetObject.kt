@@ -22,9 +22,9 @@ import com.vankorno.vankornodb.misc.wLog
  * @param where DSL conditions.
  * @return The number of rows affected.
  */
-inline fun <T : CurrEntity> SQLiteDatabase.setObj(                tableInfo: TableInfoNormal<out T>,
-                                                                        obj: T,
-                                                                      where: WhereDsl.()->Unit,
+inline fun <T : CurrEntity> SQLiteDatabase.setObj(                    tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
+                                                                          where: WhereDsl.()->Unit,
 ): Int {
     val cv = toContentValues(obj, tableInfo.schema)
     val whereDsl = WhereDsl().apply(where)

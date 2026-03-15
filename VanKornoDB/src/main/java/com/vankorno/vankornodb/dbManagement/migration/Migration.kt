@@ -6,7 +6,7 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.add.addObjects
+import com.vankorno.vankornodb.add.addObjectsOut
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
@@ -92,7 +92,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
         dLog("migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
     
-    addObjects(table using schemaBundle, migratedObjects)
+    addObjectsOut(table using schemaBundle, migratedObjects)
     // region LOG
         dLog("migrateMultiStep() Done inserting rows. Starting onNewDbFilled()...")
     // endregion
@@ -358,7 +358,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(
     for (table in tables) {
         val rows = getObjects(table)
         dropAndCreateEmptyTablesInternal(table)
-        addObjects(table, rows)
+        addObjectsOut(table, rows)
     }
     // region LOG
         dLog("migrateWithoutChange(): Migration complete.")

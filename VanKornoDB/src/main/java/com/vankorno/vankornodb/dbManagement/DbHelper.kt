@@ -470,49 +470,49 @@ abstract class DbHelperInternal(
     
     // -----------------------------------  O B J E C T  ----------------------------------- \\
     
-    inline fun <T : CurrEntity> addObj(                           tableInfo: TableInfoNormal<out T>,
-                                                                        obj: T,
-                                                                      async: Boolean = false,
+    inline fun <T : CurrEntity> addObj(                               tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
+                                                                          async: Boolean = false,
     ) = write("addObj", async) {
         it.addObj(tableInfo, obj)
     }
     
     
-    suspend fun <T : CurrEntity> addObjSusp(                      tableInfo: TableInfoNormal<out T>,
-                                                                        obj: T,
+    suspend fun <T : CurrEntity> addObjSusp(                          tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
     ): Long = readWriteSusp(-1L, "addObjSusp") {
         it.addObj(tableInfo, obj)
     }
     
     
-    inline fun <T : CurrEntity> addObjects(                       tableInfo: TableInfoNormal<out T>,
-                                                                    objects: List<T>,
-                                                                      async: Boolean = false,
+    inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
+                                                                        objects: List<T>,
+                                                                          async: Boolean = false,
     ) = write("addObjects", async) {
         it.addObjects(tableInfo, objects)
     }
     
     
-    suspend fun <T : CurrEntity> addObjectsSusp(                  tableInfo: TableInfoNormal<out T>,
-                                                                    objects: List<T>,
+    suspend fun <T : CurrEntity> addObjectsSusp(                      tableInfo: TableInfoNormal<T>,
+                                                                        objects: List<T>,
     ): Int = readWriteSusp(0, "addObjectsSusp") {
         it.addObjects(tableInfo, objects)
     }
     
     
     
-    fun <T : CurrEntity> setObj(                                  tableInfo: TableInfoNormal<out T>,
-                                                                        obj: T,
-                                                                      async: Boolean = false,
-                                                                      where: WhereDsl.()->Unit,
+    fun <T : CurrEntity> setObj(                                      tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
+                                                                          async: Boolean = false,
+                                                                          where: WhereDsl.()->Unit,
     ) = write("setObj", async) {
         it.setObj(tableInfo, obj, where)
     }
     
     
-    suspend fun <T : CurrEntity> setObjSusp(                      tableInfo: TableInfoNormal<out T>,
-                                                                        obj: T,
-                                                                      where: WhereDsl.()->Unit,
+    suspend fun <T : CurrEntity> setObjSusp(                          tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
+                                                                          where: WhereDsl.()->Unit,
     ): Int = readWriteSusp(0, "setObjSusp") {
         it.setObj(tableInfo, obj, where)
     }

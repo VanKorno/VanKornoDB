@@ -33,7 +33,7 @@ open class CurrSchemaBundle<T : CurrEntity>(
                                   override val columns: EntityColumns? = null,
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
-                                   override val withId: (T, Int)->T,
+                                   override val withId: (T, Int)->T = { obj, _ -> obj },
 ) : NormalSchemaBundle<T>
 
 
@@ -44,7 +44,7 @@ open class OldSchemaBundle<T : OldEntity>(
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
                                   override val columns: EntityColumns? = null,
-                                   override val withId: (T, Int)->T,
+                                   override val withId: (T, Int)->T = { obj, _ -> obj },
 ) : NormalSchemaBundle<T>
 
 
