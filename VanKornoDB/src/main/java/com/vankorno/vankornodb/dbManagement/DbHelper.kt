@@ -413,7 +413,17 @@ abstract class DbHelperInternal(
     
     
     
+    inline fun <reified T : BaseEntity> getRandomObj(             tableInfo: TableInfoBase<out T>,
+                                                             noinline where: WhereDsl.()->Unit = {},
+    ): T? = read(null, "getRandomObj") { db ->
+        db.getRandomObj<T>(tableInfo, where)
+    }
     
+    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): T? = read(null, "getLastObj") { db ->
+        db.getLastObj(tableInfo, where)
+    }
     
     
     
@@ -1001,13 +1011,6 @@ abstract class DbHelperInternal(
                                                                       where: WhereDsl.()->Unit = {},
     ): Int = read(-1, "getRandomId") { db ->
         db.getRandomId(table, where)
-    }
-    
-    
-    inline fun <reified T : BaseEntity> getRandomObj(             tableInfo: TableInfoBase<out T>,
-                                                             noinline where: WhereDsl.()->Unit = {},
-    ): T? = read(null, "getRandomObj") { db ->
-        db.getRandomObj<T>(tableInfo, where)
     }
     
     

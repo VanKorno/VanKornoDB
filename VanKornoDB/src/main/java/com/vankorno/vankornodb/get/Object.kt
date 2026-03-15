@@ -11,7 +11,6 @@ import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.misc.eLog
 
-
 /**
  * Gets one db table row as an object of an entity class using WhereDsl.
  * Returns null if no result found.
@@ -37,6 +36,12 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
 
 
 
+fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
+                                                                      where: WhereDsl.()->Unit = {},
+): T? = getObjPro(tableInfo) {
+    orderBy { flipRows() }
+    this.where = where
+}
 
 
 
