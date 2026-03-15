@@ -941,10 +941,7 @@ abstract class DbHelperInternal(
     
     // ====================================  O T H E R  ==================================== \\
     
-    inline fun getLastId(                                                          table: String
-    ): Int = read(0, "getLastId") {
-        it.getLastId(table)
-    }
+    inline fun getLastId(table: String): Int = read(0, "getLastId") { it.getLastId(table) }
     
     
     fun getAllIDs(                                                    table: String,
