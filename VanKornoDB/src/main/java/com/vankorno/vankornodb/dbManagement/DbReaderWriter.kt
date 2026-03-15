@@ -12,7 +12,6 @@ import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.misc.eLog
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,12 +36,12 @@ abstract class DbReaderWriter(
     runOnUpgrade = onUpgrade,
 ) {
     /** A shared fun */
-    private inline fun writeBase(                                   funName: String = "write",
-                                                            crossinline run: (SQLiteDatabase)->Unit,
+    private inline fun writeBase(                               funName: String = "write",
+                                                          crossinline block: (SQLiteDatabase)->Unit,
     ) {
         try {
             lock.withLock {
-                currDb.transaction { run(this) }
+                currDb.transaction { block(this) }
             }
         } catch (e: Exception) {
             // region LOG
@@ -57,11 +56,11 @@ abstract class DbReaderWriter(
      */
     inline fun <T> read(                                          defaultValue: T,
                                                                        funName: String = "read",
-                                                               crossinline run: (SQLiteDatabase)->T,
+                                                             crossinline block: (SQLiteDatabase)->T,
     ): T {
         return try {
             lock.withLock {
-                run(currDb)
+                block(currDb)
             }
         } catch (e: Exception) {
             // region LOG
@@ -79,14 +78,14 @@ abstract class DbReaderWriter(
     @JvmOverloads
     fun voidRead(                                                   funName: String = "voidRead",
                                                                       async: Boolean = false,
-                                                                        run: (SQLiteDatabase)->Unit,
+                                                                      block: (SQLiteDatabase)->Unit,
     ) {
         if (async) {
-            CoroutineScope(Dispatchers.IO).launch {
-                read(Unit, funName) { run(it) }
+            dbScope.launch {
+                read(Unit, funName) { block(it) }
             }
         } else {
-            read(Unit, funName) { run(it) }
+            read(Unit, funName) { block(it) }
         }
     }
     
@@ -98,14 +97,14 @@ abstract class DbReaderWriter(
     @JvmOverloads
     fun write(                                                      funName: String = "write",
                                                                       async: Boolean = false,
-                                                                        run: (SQLiteDatabase)->Unit,
+                                                                      block: (SQLiteDatabase)->Unit,
     ) {
         if (async) {
-            CoroutineScope(Dispatchers.IO).launch {
-                writeBase(funName, run)
+            dbScope.launch {
+                writeBase(funName, block)
             }
         } else {
-            writeBase(funName, run)
+            writeBase(funName, block)
         }
     }
     
@@ -115,11 +114,11 @@ abstract class DbReaderWriter(
      */
     inline fun <T> readWrite(                                    defaultValue: T,
                                                                       funName: String = "readWrite",
-                                                              crossinline run: (SQLiteDatabase)->T,
+                                                            crossinline block: (SQLiteDatabase)->T,
     ): T {
         return try {
             lock.withLock {
-                currDb.transaction { run(this) }
+                currDb.transaction { block(this) }
             }
         } catch (e: Exception) {
             // region LOG
@@ -139,11 +138,11 @@ abstract class DbReaderWriter(
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun <T> readSusp(                                   defaultValue: T,
-                                                                     funName: String = "readSusp",
-                                                                         run: (SQLiteDatabase)->T,
+    suspend fun <T> readSusp(                                     defaultValue: T,
+                                                                       funName: String = "readSusp",
+                                                                         block: (SQLiteDatabase)->T,
     ): T = withContext(Dispatchers.IO) {
-        read(defaultValue, funName, run)
+        read(defaultValue, funName, block)
     }
     
     
@@ -151,10 +150,10 @@ abstract class DbReaderWriter(
      * Same as readDB, but does not return anything (for reading db and setting some values from the inside).
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun voidReadSusp(                                     funName: String = "voidReadSusp",
-                                                                      run: (SQLiteDatabase)->Unit,
+    suspend fun voidReadSusp(                                      funName: String = "voidReadSusp",
+                                                                     block: (SQLiteDatabase)->Unit,
     ) = withContext(Dispatchers.IO) {
-        read(Unit, funName){ run(it) }
+        read(Unit, funName){ block(it) }
     }
     
     
@@ -163,9 +162,9 @@ abstract class DbReaderWriter(
      * Suspending non-blocking version (to be used inside coroutines)
      */
     suspend fun writeSusp(                                          funName: String = "writeSusp",
-                                                                        run: (SQLiteDatabase)->Unit,
+                                                                      block: (SQLiteDatabase)->Unit,
     ) = withContext(Dispatchers.IO) {
-        writeBase(funName) { run(it) }
+        writeBase(funName) { block(it) }
     }
     
     
@@ -173,22 +172,18 @@ abstract class DbReaderWriter(
      * All-mighty, but with writing overhead.
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun <T> readWriteSusp(                          defaultValue: T,
-                                                                 funName: String = "readWriteSusp",
-                                                                     run: (SQLiteDatabase)->T,
+    suspend fun <T> readWriteSusp(                           defaultValue: T,
+                                                                  funName: String = "readWriteSusp",
+                                                                    block: (SQLiteDatabase)->T,
     ): T = withContext(Dispatchers.IO) {
-        readWrite(defaultValue, funName, run)
+        readWrite(defaultValue, funName, block)
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
+
+
+
+
+
+
+

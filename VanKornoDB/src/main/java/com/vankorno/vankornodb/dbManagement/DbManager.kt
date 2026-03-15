@@ -25,6 +25,10 @@ import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 
 /**
  * Manages the lifecycle and access of a single SQLite database instance.
@@ -39,7 +43,7 @@ import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
  * - The entity version table is checked and initialized via [handleVersionTable].
  * - [onCreate] is called for a fresh database, creating tables and executing any custom logic via [runOnCreate].
  * - [onUpgrade] handles schema migrations between versions, executing [runOnUpgrade] inside a transaction.
- * - [closeDb] closes the database and invalidates [currDb].
+ * - [closeDb] closes the database, invalidates [currDb], cancels coroutine scope [dbScope].
  *
  * Thread-safety:
  * All database operations are automatically synchronized using [lock]. External users
@@ -72,6 +76,8 @@ abstract class DbManager(        context: Context,
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
     
     private var db: SQLiteDatabase? = null
+    
+    val dbScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     
     @PublishedApi
     internal val currDb: SQLiteDatabase
@@ -136,6 +142,7 @@ abstract class DbManager(        context: Context,
             db?.close()
             db = null
         }
+        dbScope.cancel()
     }
     
     
