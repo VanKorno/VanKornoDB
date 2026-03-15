@@ -8,7 +8,7 @@ espressoCore = "3.7.0"
 runner = "1.7.0"
 composeBom = "2026.03.00"
 testManifest = "1.10.5"
-vankornoCompose = "2.124"
+vankornoCompose = "2.129"
 
 
 [libraries]
