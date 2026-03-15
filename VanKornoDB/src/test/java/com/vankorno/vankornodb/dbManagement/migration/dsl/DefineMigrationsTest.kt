@@ -1,11 +1,11 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.api.CurrEntityWithId
-import com.vankorno.vankornodb.api.OldEntityWithId
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
+import com.vankorno.vankornodb.dbManagement.data.CurrEntityWithId
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.OldEntityWithId
 import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.assertEquals

@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
-import com.vankorno.vankornodb.api.CurrEntityWithId
+import com.vankorno.vankornodb.dbManagement.data.CurrEntityWithId
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

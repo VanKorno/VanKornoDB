@@ -17,16 +17,12 @@ import com.vankorno.vankornodb.dbManagement.data.NormalEntity
  */
 interface CurrEntity : NormalEntity
 
-abstract class CurrEntityWithId : CurrEntity {
-    override val id: Int = -1
-}
+
 
 
 interface OldEntity : NormalEntity
 
-abstract class OldEntityWithId : OldEntity {
-    override val id: Int = -1
-}
+
 
 
 

@@ -1,9 +1,9 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.CurrEntityWithId
 import com.vankorno.vankornodb.api.OldEntity
-import com.vankorno.vankornodb.api.OldEntityWithId
+import com.vankorno.vankornodb.dbManagement.data.CurrEntityWithId
+import com.vankorno.vankornodb.dbManagement.data.OldEntityWithId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
