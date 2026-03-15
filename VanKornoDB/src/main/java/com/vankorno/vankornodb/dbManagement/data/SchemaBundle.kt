@@ -23,6 +23,7 @@ sealed interface BaseSchemaBundle<T : BaseEntity> {
 
 sealed interface NormalSchemaBundle<T : NormalEntity> : BaseSchemaBundle<T> {
     val setter: ((T, ContentValues) -> ContentValues)?
+    val withId: (T, Int) -> T
 }
 
 
@@ -32,6 +33,7 @@ open class CurrSchemaBundle<T : CurrEntity>(
                                   override val columns: EntityColumns? = null,
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
+                                   override val withId: (T, Int)->T,
 ) : NormalSchemaBundle<T>
 
 
@@ -42,6 +44,7 @@ open class OldSchemaBundle<T : OldEntity>(
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
                                   override val columns: EntityColumns? = null,
+                                   override val withId: (T, Int)->T,
 ) : NormalSchemaBundle<T>
 
 

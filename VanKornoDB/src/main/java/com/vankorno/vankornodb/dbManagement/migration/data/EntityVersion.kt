@@ -16,7 +16,7 @@ data class EntityVersion(
                                val version: Int = 0,
                                  val notes: String = "",
 
-                           override var id: Int = -1,
+                           override val id: Int = -1,
 ) : CurrEntity
 
 
@@ -46,6 +46,8 @@ object _EntityVersion : CurrSchemaBundle<EntityVersion>(
         cv.put("id", e.id)
         cv
     },
+
+    withId = { obj, newId -> obj.copy(id = newId) }
 )
 
 

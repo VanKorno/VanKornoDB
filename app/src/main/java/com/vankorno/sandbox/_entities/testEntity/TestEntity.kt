@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class TestEntity(
-                           override var id: Int = -1,
+                           override val id: Int = -1,
                                   val name: String = "",
                               val position: Int = 0,
                                val enabled: Boolean = false,
@@ -94,6 +94,8 @@ object _Test : CurrSchemaBundle<TestEntity>(
         cv.put("float3", e.float3)
         cv
     },
+
+    withId = { obj, newId -> obj.copy(id = newId) }
 )
 
 

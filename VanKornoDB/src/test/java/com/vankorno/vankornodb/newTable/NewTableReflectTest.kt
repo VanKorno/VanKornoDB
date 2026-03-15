@@ -7,7 +7,7 @@ import org.junit.Test
 class NewTableReflectTest {
     
     data class SimpleEntity(
-        override var id: Int = 0,
+        override val id: Int = 0,
         val name: String = "default",
         val isActive: Boolean = true,
         val age: Int = 25
@@ -28,7 +28,7 @@ class NewTableReflectTest {
     }
     
     data class ComplexEntity(
-        override var id: Int = 0,
+        override val id: Int = 0,
         val data: ByteArray? = null,
         val name: String = "blob",
         val flags: Int = 0
@@ -44,7 +44,7 @@ class NewTableReflectTest {
     }
     
     data class NullableDefaultsEntity(
-        override var id: Int = 0,
+        override val id: Int = 0,
         val note: String? = "some", // nullable, should NOT emit DEFAULT
         val enabled: Boolean? = null
     ) : CurrEntity
@@ -63,7 +63,7 @@ class NewTableReflectTest {
     }
     
     data class UnsupportedTypesEntity(
-        override var id: Int = 0,
+        override val id: Int = 0,
         val numbers: List<Int> = emptyList(), // should be skipped
         val values: Array<String> = emptyArray() // should be skipped
     ) : CurrEntity
@@ -80,7 +80,7 @@ class NewTableReflectTest {
     }
     
     data class AllNullableEntity(
-        override var id: Int = 0,
+        override val id: Int = 0,
         val name: String? = null,
         val score: Float? = null
     ) : CurrEntity
@@ -100,7 +100,7 @@ class NewTableReflectTest {
     
     data class IdInMiddleEntity(
         val name: String = "middle",
-        override var id: Int = 0,
+        override val id: Int = 0,
         val active: Boolean = false
     ) : CurrEntity
     
@@ -119,7 +119,7 @@ class NewTableReflectTest {
     
     
     data class ListEntitySingle(
-        override var id: Int = 0,
+        override val id: Int = 0,
         val scoresList: List<Int> = listOf(1, 2, 3)
     ) : CurrEntity
     
@@ -138,7 +138,7 @@ class NewTableReflectTest {
     }
     
     data class ListEntityMixed(
-        override var id: Int = 0,
+        override val id: Int = 0,
         val flagsList: List<Boolean> = listOf(true, false),
         val namesList: List<String> = listOf("alpha", "beta")
     ) : CurrEntity

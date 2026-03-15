@@ -11,7 +11,7 @@ data class V1_TestEntity(
                                   val str1: String = "",
                                  val long1: Long = 0L,
                                 val float1: Float = 0F,
-                           override var id: Int = -1,
+                           override val id: Int = -1,
 ) : OldEntity
 
 
@@ -34,4 +34,6 @@ object _V1_Test : OldSchemaBundle<V1_TestEntity>(
             id = cursor.getInt(idx++)
         )
     },
+
+    withId = { obj, newId -> obj.copy(id = newId) }
 )

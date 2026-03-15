@@ -10,8 +10,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DbMigrationTest : MigrationUtils() {
-    data class OldV1(override var id: Int = 0, val title: String = "", val note: String = "") : OldEntity
-    data class NewV2(override var id: Int = 0, val name: String = "", val note: String = "") : CurrEntity
+    data class OldV1(override val id: Int = 0, val title: String = "", val note: String = "") : OldEntity
+    data class NewV2(override val id: Int = 0, val name: String = "", val note: String = "") : CurrEntity
     
     @Test
     fun `basic field rename with version map`() {
@@ -25,8 +25,8 @@ class DbMigrationTest : MigrationUtils() {
         assertEquals(old.note, new.note)
     }
     
-    data class OldV2(override var id: Int = 0, val title: String = "", val extra: String = "") : OldEntity
-    data class NewV3(override var id: Int = 0, val name: String = "", val description: String = "default") : CurrEntity
+    data class OldV2(override val id: Int = 0, val title: String = "", val extra: String = "") : OldEntity
+    data class NewV3(override val id: Int = 0, val name: String = "", val description: String = "default") : CurrEntity
     
     @Test
     fun `missing fields fallback to default`() {
@@ -40,8 +40,8 @@ class DbMigrationTest : MigrationUtils() {
         assertEquals("default", new.description)
     }
     
-    data class OldV3(override var id: Int = 0, val text: String = "abc") : OldEntity
-    data class NewV4(override var id: Int = 0, val text: String = "", val extra: Boolean = true) : CurrEntity
+    data class OldV3(override val id: Int = 0, val text: String = "abc") : OldEntity
+    data class NewV4(override val id: Int = 0, val text: String = "", val extra: Boolean = true) : CurrEntity
     
     @Test
     fun `unmapped field fallback with primitive default`() {

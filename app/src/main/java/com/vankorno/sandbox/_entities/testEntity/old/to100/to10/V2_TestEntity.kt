@@ -5,7 +5,7 @@ import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class V2_TestEntity(
-                           override var id: Int = -1,
+                           override val id: Int = -1,
                                   val name: String = "",
                               val position: String = "",
                                val enabled: Boolean = false,
@@ -58,4 +58,6 @@ object _V2_Test : OldSchemaBundle<V2_TestEntity>(
             float3 = cursor.getFloat(idx++)
         )
     },
+
+    withId = { obj, newId -> obj.copy(id = newId) }
 )

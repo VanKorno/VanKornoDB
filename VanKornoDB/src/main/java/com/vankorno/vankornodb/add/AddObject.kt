@@ -41,13 +41,14 @@ import com.vankorno.vankornodb.misc.wLog
  * @param obj The entity object to insert.
  * @return The row ID of the newly inserted row, or -1 if an error occurred.
  */
-fun <T : NormalEntity> SQLiteDatabase.addObj(                     tableInfo: TableInfoNormal<out T>,
-                                                                        obj: T,
+fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
 ): Long {
-    if (obj.id < 1) {
-        obj.id = getLastId(tableInfo.name) + 1
-    }
-    val cv = toContentValues(obj, tableInfo.schema)
+    val modifiedEntity = if (obj.id < 1) {
+        tableInfo.schema.withId(obj, getLastId(tableInfo.name) + 1)
+    } else obj
+    
+    val cv = toContentValues(modifiedEntity, tableInfo.schema)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
@@ -61,8 +62,8 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                     tableInfo: Tab
  * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
  */
-fun <T : NormalEntity> SQLiteDatabase.addObjects(                 tableInfo: TableInfoNormal<out T>,
-                                                                    objects: List<T>,
+fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
+                                                                        objects: List<T>,
 ): Int {
     var count = 0
     for (obj in objects) {
