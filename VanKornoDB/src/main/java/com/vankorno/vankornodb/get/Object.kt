@@ -39,11 +39,50 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
 fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(tableInfo) {
-    orderBy { flipRows() }
     this.where = where
+    orderBy { flipRows() }
+}
+
+fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
+                                                                    default: T,
+                                                                      where: WhereDsl.()->Unit = {},
+): T = getLastObj(tableInfo, where) ?: run {
+    // region LOG
+        eLog("getLastObj(): No fitting rows exist in ${tableInfo.name}, returning default")
+    // endregion
+    default
 }
 
 
+
+
+/**
+ * Retrieves a single random object (row) from the specified table and maps it to an entity class.
+ *
+ * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
+ * @param tableInfo Contains table name and a schema bundle of any entity type.
+ * @param where Optional lambda to specify additional WHERE conditions.
+ * @return A random object of type [T] from the table, or null if no rows match.
+ */
+inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
+                                                                  tableInfo: TableInfoBase<out T>,
+                                                             noinline where: WhereDsl.()->Unit = {},
+): T? = getObjPro(tableInfo) {
+    this.where = where
+    orderRandomly()
+}
+
+
+inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
+                                                                  tableInfo: TableInfoBase<out T>,
+                                                                    default: T,
+                                                             noinline where: WhereDsl.()->Unit = {},
+): T = getRandomObj(tableInfo, where) ?: run {
+    // region LOG
+        eLog("getRandomObj(): No fitting rows exist in ${tableInfo.name}, returning default")
+    // endregion
+    default
+}
 
 
 

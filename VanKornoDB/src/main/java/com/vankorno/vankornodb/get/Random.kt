@@ -7,10 +7,10 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.api.toEntity
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
+import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
-import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.dbManagement.data.LongCol
+import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -29,7 +29,48 @@ fun SQLiteDatabase.getRandomInt(                                      table: Str
     return rand
 }
 
-// TODO random String, Long, Float
+
+fun SQLiteDatabase.getRandomString(                                  table: String,
+                                                                     column: StrCol,
+                                                                      where: WhereDsl.()->Unit = {},
+): String {
+    val rand = getRandomValNoty<String>(table, column.name, where) ?: run {
+        // region LOG
+            eLog("There are no available values to pick from. Returning empty string")
+        // endregion
+        ""
+    }
+    return rand
+}
+
+
+fun SQLiteDatabase.getRandomLong(                                    table: String,
+                                                                     column: LongCol,
+                                                                      where: WhereDsl.()->Unit = {},
+): Long {
+    val rand = getRandomValNoty<Long>(table, column.name, where) ?: run {
+        // region LOG
+            eLog("There are no available values to pick from. Returning -1")
+        // endregion
+        -1L
+    }
+    return rand
+}
+
+
+fun SQLiteDatabase.getRandomFloat(                                   table: String,
+                                                                     column: FloatCol,
+                                                                      where: WhereDsl.()->Unit = {},
+): Float {
+    val rand = getRandomValNoty<Float>(table, column.name, where) ?: run {
+        // region LOG
+            eLog("There are no available values to pick from. Returning -1")
+        // endregion
+        -1f
+    }
+    return rand
+}
+
 
 
 
@@ -47,25 +88,7 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
 
 
 
-/**
- * Retrieves a single random object (row) from the specified table and maps it to an entity class.
- *
- * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
- * @param tableInfo Contains table name and a schema bundle of any entity type.
- * @param where Optional lambda to specify additional WHERE conditions.
- * @return A random object of type [T] from the table, or null if no rows match.
- */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
-                                                                  tableInfo: TableInfoBase<out T>,
-                                                             noinline where: WhereDsl.()->Unit = {},
-): T? = getCursorPro(tableInfo.name) {
-    this.where = where
-    limit = 1
-    orderRandomly()
-}.use { cursor ->
-    if (!cursor.moveToFirst()) return null
-    cursor.toEntity(tableInfo.schema)
-}
+
 
 
 

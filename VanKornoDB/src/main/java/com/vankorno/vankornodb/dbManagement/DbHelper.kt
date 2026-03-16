@@ -419,10 +419,26 @@ abstract class DbHelperInternal(
         db.getRandomObj<T>(tableInfo, where)
     }
     
+    inline fun <reified T : BaseEntity> getRandomObj(             tableInfo: TableInfoBase<out T>,
+                                                                    default: T,
+                                                             noinline where: WhereDsl.()->Unit = {},
+    ): T = read(default, "getRandomObj") { db ->
+        db.getRandomObj<T>(tableInfo, default, where)
+    }
+    
+    
+    
     fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getLastObj") { db ->
         db.getLastObj(tableInfo, where)
+    }
+    
+    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
+                                                                    default: T,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): T = read(default, "getLastObj") { db ->
+        db.getLastObj(tableInfo, default, where)
     }
     
     
@@ -1001,6 +1017,27 @@ abstract class DbHelperInternal(
                                                                       where: WhereDsl.()->Unit = {},
     ): Int = read(-1, "getRandomInt") { db ->
         db.getRandomInt(table, column, where)
+    }
+    
+    fun getRandomString(                                              table: String,
+                                                                     column: StrCol,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): String = read("", "getRandomString") { db ->
+        db.getRandomString(table, column, where)
+    }
+    
+    fun getRandomLong(                                                table: String,
+                                                                     column: LongCol,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Long = read(-1L, "getRandomLong") { db ->
+        db.getRandomLong(table, column, where)
+    }
+    
+    fun getRandomFloat(                                               table: String,
+                                                                     column: FloatCol,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Float = read(-1f, "getRandomFloat") { db ->
+        db.getRandomFloat(table, column, where)
     }
     
     
