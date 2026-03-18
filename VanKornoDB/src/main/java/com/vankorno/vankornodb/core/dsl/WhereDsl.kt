@@ -5,7 +5,10 @@
 // endregion
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.IN
+import com.vankorno.vankornodb.core.data.DbConstants.NOT_IN
+import com.vankorno.vankornodb.core.data.DbConstants._ID
+import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
@@ -101,18 +104,45 @@ open class WhereDslInternal() : WhereDslBase() {
     fun StrCol.notLikeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " NOT LIKE ", otherCols.map { it.name }.toTypedArray(), false)
     
     
-    fun IntCol.equalAny(vararg values: Int) = multCompare(this.name, IN, values.toTypedArray())
-    fun StrCol.equalAny(vararg values: String) = multCompare(this.name, IN, values)
-    fun BoolCol.equalAny(vararg values: Boolean) = multCompare(this.name, IN, values.map { if (it) "1" else "0" }.toTypedArray())
-    fun LongCol.equalAny(vararg values: Long) = multCompare(this.name, IN, values.toTypedArray())
-    fun FloatCol.equalAny(vararg values: Float) = multCompare(this.name, IN, values.toTypedArray())
     
-    fun IntCol.notEqualAny(vararg values: Int) = multCompare(this.name, NOT_IN, values.toTypedArray())
-    fun StrCol.notEqualAny(vararg values: String) = multCompare(this.name, NOT_IN, values)
-    fun BoolCol.notEqualAny(vararg values: Boolean) = multCompare(this.name, NOT_IN, values.map { if (it) "1" else "0" }.toTypedArray())
-    fun LongCol.notEqualAny(vararg values: Long) = multCompare(this.name, NOT_IN, values.toTypedArray())
-    fun FloatCol.notEqualAny(vararg values: Float) = multCompare(this.name, NOT_IN, values.toTypedArray())
-
+    infix fun IntCol.equalAny(values: Array<Int>) = multCompare(this.name, IN, values)
+    infix fun StrCol.equalAny(values: Array<String>) = multCompare(this.name, IN, values)
+    infix fun BoolCol.equalAny(values: Array<Boolean>) = multCompare(this.name, IN, values.map { if (it) "1" else "0" }.toTypedArray())
+    infix fun LongCol.equalAny(values: Array<Long>) = multCompare(this.name, IN, values)
+    infix fun FloatCol.equalAny(values: Array<Float>) = multCompare(this.name, IN, values)
+    
+    infix fun IntCol.notEqualAny(values: Array<Int>) = multCompare(this.name, NOT_IN, values)
+    infix fun StrCol.notEqualAny(values: Array<String>) = multCompare(this.name, NOT_IN, values)
+    infix fun BoolCol.notEqualAny(values: Array<Boolean>) = multCompare(this.name, NOT_IN, values.map { if (it) "1" else "0" }.toTypedArray())
+    infix fun LongCol.notEqualAny(values: Array<Long>) = multCompare(this.name, NOT_IN, values)
+    infix fun FloatCol.notEqualAny(values: Array<Float>) = multCompare(this.name, NOT_IN, values)
+    
+    
+    infix fun IntCol.equalAny(values: List<Int>) = this equalAny values.toTypedArray()
+    infix fun StrCol.equalAny(values: List<String>) = this equalAny values.toTypedArray()
+    infix fun BoolCol.equalAny(values: List<Boolean>) = this equalAny values.toTypedArray()
+    infix fun LongCol.equalAny(values: List<Long>) = this equalAny values.toTypedArray()
+    infix fun FloatCol.equalAny(values: List<Float>) = this equalAny values.toTypedArray()
+    
+    infix fun IntCol.notEqualAny(values: List<Int>) = this notEqualAny values.toTypedArray()
+    infix fun StrCol.notEqualAny(values: List<String>) = this notEqualAny values.toTypedArray()
+    infix fun BoolCol.notEqualAny(values: List<Boolean>) = this notEqualAny values.toTypedArray()
+    infix fun LongCol.notEqualAny(values: List<Long>) = this notEqualAny values.toTypedArray()
+    infix fun FloatCol.notEqualAny(values: List<Float>) = this notEqualAny values.toTypedArray()
+    
+    
+    fun IntCol.equalAnyOf(vararg values: Int) = this equalAny values.toTypedArray()
+    fun StrCol.equalAnyOf(vararg values: String) = this equalAny arrayOf(*values)
+    fun BoolCol.equalAnyOf(vararg values: Boolean) = this equalAny values.toTypedArray()
+    fun LongCol.equalAnyOf(vararg values: Long) = this equalAny values.toTypedArray()
+    fun FloatCol.equalAnyOf(vararg values: Float) = this equalAny values.toTypedArray()
+    
+    fun IntCol.notEqualAnyOf(vararg values: Int) = this notEqualAny values.toTypedArray()
+    fun StrCol.notEqualAnyOf(vararg values: String) = this notEqualAny arrayOf(*values)
+    fun BoolCol.notEqualAnyOf(vararg values: Boolean) = this notEqualAny values.toTypedArray()
+    fun LongCol.notEqualAnyOf(vararg values: Long) = this notEqualAny values.toTypedArray()
+    fun FloatCol.notEqualAnyOf(vararg values: Float) = this notEqualAny values.toTypedArray()
+    
     
     
     

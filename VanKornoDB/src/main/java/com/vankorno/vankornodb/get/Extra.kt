@@ -8,7 +8,10 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.DbTypeTable
+import com.vankorno.vankornodb.core.data.DbConstants.TABLE_AndroidMetadata
+import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
+import com.vankorno.vankornodb.core.data.DbConstants.TABLE_Master
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -41,7 +44,7 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getColStringsPro(TABLE_Mas
     where {
         cType equal DbTypeTable
         and { cName notLike "sqlite_%" }
-        and { cName.notEqualAny(TABLE_AndroidMetadata, TABLE_EntityVersions) }
+        and { cName.notEqualAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions) }
     }
     orderByName()
 }
@@ -56,7 +59,7 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
         cType equal DbTypeTable
         andGroup {
             cName like "sqlite_%"
-            or { cName.equalAny(TABLE_AndroidMetadata, TABLE_EntityVersions)}
+            or { cName.equalAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions)}
         }
     }
     orderByName()

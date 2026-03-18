@@ -14,8 +14,8 @@ class WhereEqualAnyTest {
     @Test
     fun `IntCol equalAny and notEqualAny`() {
         val whereObj = WhereDsl().apply {
-            iCol("intCol").equalAny(1, 2, 3)
-            iCol("intCol2").notEqualAny(4, 5)
+            iCol("intCol").equalAnyOf(1, 2, 3)
+            iCol("intCol2").notEqualAnyOf(4, 5)
         }
 
         assertEquals(whereObj.clauses[0], "intCol IN (?, ?, ?)")
@@ -31,8 +31,8 @@ class WhereEqualAnyTest {
     @Test
     fun `StrCol equalAny and notEqualAny`() {
         val whereObj = WhereDsl().apply {
-            sCol("strCol").equalAny("foo", "bar")
-            sCol("strCol2").notEqualAny("baz")
+            sCol("strCol").equalAnyOf("foo", "bar")
+            sCol("strCol2").notEqualAnyOf("baz")
         }
 
         assertEquals(whereObj.clauses[0], "strCol IN (?, ?)")
@@ -45,8 +45,8 @@ class WhereEqualAnyTest {
     @Test
     fun `BoolCol equalAny and notEqualAny`() {
         val whereObj = WhereDsl().apply {
-            bCol("boolCol").equalAny(true, false)
-            bCol("boolCol2").notEqualAny(false)
+            bCol("boolCol").equalAnyOf(true, false)
+            bCol("boolCol2").notEqualAnyOf(false)
         }
 
         assertEquals(whereObj.clauses[0], "boolCol IN (?, ?)")
@@ -59,8 +59,8 @@ class WhereEqualAnyTest {
     @Test
     fun `LongCol equalAny and notEqualAny`() {
         val whereObj = WhereDsl().apply {
-            lCol("longCol").equalAny(10L, 20L)
-            lCol("longCol2").notEqualAny(30L)
+            lCol("longCol").equalAnyOf(10L, 20L)
+            lCol("longCol2").notEqualAnyOf(30L)
         }
 
         assertEquals(whereObj.clauses[0], "longCol IN (?, ?)")
@@ -73,8 +73,8 @@ class WhereEqualAnyTest {
     @Test
     fun `FloatCol equalAny and notEqualAny`() {
         val whereObj = WhereDsl().apply {
-            fCol("floatCol").equalAny(1.1F, 2.2F)
-            fCol("floatCol2").notEqualAny(3.3F)
+            fCol("floatCol").equalAnyOf(1.1F, 2.2F)
+            fCol("floatCol2").notEqualAnyOf(3.3F)
         }
 
         assertEquals(whereObj.clauses[0], "floatCol IN (?, ?)")
