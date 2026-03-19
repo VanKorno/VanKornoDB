@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.api.FullDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.getBoolean
+import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
 
 
 inline fun <R> SQLiteDatabase.getValueNoty(                                table: String,
@@ -33,7 +34,8 @@ inline fun <R> SQLiteDatabase.getValueNoty(                                table
             getCursorValue(cursor)
         else {
             // region LOG
-            eLog("$funName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
+            if (!suppressValGetterErrorLog)
+                eLog("$funName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
             // endregion
             default
         }
@@ -56,7 +58,8 @@ fun <R> SQLiteDatabase.getValueProNoty(                                table: St
             getCursorValue(cursor)
         else {
             // region LOG
-            eLog("$funName() Unable to get value from $table (column: $column). Returning default.")
+            if (!suppressValGetterErrorLog)
+                eLog("$funName() Unable to get value from $table (column: $column). Returning default.")
             // endregion
             default
         }

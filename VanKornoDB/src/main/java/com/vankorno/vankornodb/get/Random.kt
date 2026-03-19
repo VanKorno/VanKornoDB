@@ -15,6 +15,7 @@ import com.vankorno.vankornodb.get.noty.getCursorProNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
 
 fun SQLiteDatabase.getRandomInt(                                      table: String,
                                                                      column: IntCol,
@@ -22,6 +23,7 @@ fun SQLiteDatabase.getRandomInt(                                      table: Str
 ): Int {
     val rand = getRandomValNoty<Int>(table, column.name, where) ?: run {
         // region LOG
+        if (!suppressValGetterErrorLog)
             eLog("There are no available values to pick from. Returning -1")
         // endregion
         -1
@@ -36,6 +38,7 @@ fun SQLiteDatabase.getRandomString(                                  table: Stri
 ): String {
     val rand = getRandomValNoty<String>(table, column.name, where) ?: run {
         // region LOG
+        if (!suppressValGetterErrorLog)
             eLog("There are no available values to pick from. Returning empty string")
         // endregion
         ""
@@ -50,6 +53,7 @@ fun SQLiteDatabase.getRandomLong(                                    table: Stri
 ): Long {
     val rand = getRandomValNoty<Long>(table, column.name, where) ?: run {
         // region LOG
+        if (!suppressValGetterErrorLog)
             eLog("There are no available values to pick from. Returning -1")
         // endregion
         -1L
@@ -64,6 +68,7 @@ fun SQLiteDatabase.getRandomFloat(                                   table: Stri
 ): Float {
     val rand = getRandomValNoty<Float>(table, column.name, where) ?: run {
         // region LOG
+        if (!suppressValGetterErrorLog)
             eLog("There are no available values to pick from. Returning -1")
         // endregion
         -1f

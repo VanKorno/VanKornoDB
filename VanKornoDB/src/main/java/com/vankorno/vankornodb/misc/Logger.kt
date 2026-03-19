@@ -13,6 +13,10 @@ private val unitTestCase: Boolean by lazy {
     !androidTestsRun  &&  Thread.currentThread().stackTrace.any { it.className.startsWith("org.junit.") }
 }
 
+var suppressValGetterErrorLog = false
+var suppressObjGetterErrorLog = false
+
+
 
 @PublishedApi
 internal fun dLog(                                                                   msg: String

@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
 
 /**
  * Gets one db table row as an object of an entity class,
@@ -22,6 +23,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjPro(                          tableInf
                                                                               dsl: FullDsl.()->Unit,
 ): T = getObjPro(tableInfo, dsl) ?: run {
     // region LOG
+    if (!suppressObjGetterErrorLog)
         eLog("getObjPro(): The requested row doesn't exist in ${tableInfo.name}, returning default")
     // endregion
     default

@@ -10,6 +10,7 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
 
 /**
  * Gets one db table row as an object of an entity class using WhereDsl.
@@ -29,6 +30,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
                                                                       where: WhereDsl.()->Unit = {},
 ): T = getObj(tableInfo, where) ?: run {
     // region LOG
+    if (!suppressObjGetterErrorLog)
         eLog("getObj(): The requested row doesn't exist in ${tableInfo.name}, returning default")
     // endregion
     default
@@ -48,6 +50,7 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
                                                                       where: WhereDsl.()->Unit = {},
 ): T = getLastObj(tableInfo, where) ?: run {
     // region LOG
+    if (!suppressObjGetterErrorLog)
         eLog("getLastObj(): No fitting rows exist in ${tableInfo.name}, returning default")
     // endregion
     default
@@ -79,6 +82,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                              noinline where: WhereDsl.()->Unit = {},
 ): T = getRandomObj(tableInfo, where) ?: run {
     // region LOG
+    if (!suppressObjGetterErrorLog)
         eLog("getRandomObj(): No fitting rows exist in ${tableInfo.name}, returning default")
     // endregion
     default
