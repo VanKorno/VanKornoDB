@@ -12,8 +12,6 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.get.getLastId
 import com.vankorno.vankornodb.misc.wLog
 
-// TODO Maybe: Upsert-like function — insert or update depending on whether the row exists (SQLite supports INSERT OR REPLACE, INSERT ON CONFLICT, etc.)
-
 /*
  * ## Rules for List Parameters:
  *  1. Lists must always be declared at the END of the constructor parameter list.
