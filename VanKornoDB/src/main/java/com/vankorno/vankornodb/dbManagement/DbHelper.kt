@@ -290,7 +290,7 @@ abstract class DbHelperInternal(
     fun getInt(                                                            table: String,
                                                                           column: IntCol,
                                                                            where: WhereDsl.()->Unit,
-    ): Int = read(0, "getInt") {
+    ): Int = read(-1, "getInt") {
         it.getInt(table, column, where)
     }
     
@@ -311,14 +311,14 @@ abstract class DbHelperInternal(
     fun getLong(                                                           table: String,
                                                                           column: LongCol,
                                                                            where: WhereDsl.()->Unit,
-    ): Long = read(0L, "getLong") {
+    ): Long = read(-1L, "getLong") {
         it.getLong(table, column, where)
     }
     
     fun getFloat(                                                          table: String,
                                                                           column: FloatCol,
                                                                            where: WhereDsl.()->Unit,
-    ): Float = read(0F, "getFloat") {
+    ): Float = read(-1F, "getFloat") {
         it.getFloat(table, column, where)
     }
     
