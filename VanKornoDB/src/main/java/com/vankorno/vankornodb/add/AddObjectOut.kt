@@ -14,8 +14,8 @@ import com.vankorno.vankornodb.misc.wLog
 /**
  *  For migration / polymorphic use
 */
-private fun SQLiteDatabase.addObjOut(                  tableInfo: TableInfoNormal<out NormalEntity>,
-                                                             obj: NormalEntity,
+private fun <T : NormalEntity> SQLiteDatabase.addObjOut(          tableInfo: TableInfoNormal<out T>,
+                                                                        obj: T,
 ): Long {
     val cv = toContentValues(obj, tableInfo.schema)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
@@ -25,10 +25,11 @@ private fun SQLiteDatabase.addObjOut(                  tableInfo: TableInfoNorma
 /**
  *  For migration / polymorphic use
 */
-internal fun SQLiteDatabase.addObjectsOut(             tableInfo: TableInfoNormal<out NormalEntity>,
-                                                         objects: List<NormalEntity>,
+internal fun <T : NormalEntity> SQLiteDatabase.addObjectsOut(     tableInfo: TableInfoNormal<out T>,
+                                                                    objects: List<T>,
 ): Int {
     var count = 0
+    
     for (obj in objects) {
         val rowId = addObjOut(tableInfo, obj)
         if (rowId == -1L) {
@@ -41,3 +42,6 @@ internal fun SQLiteDatabase.addObjectsOut(             tableInfo: TableInfoNorma
     }
     return count
 }
+
+
+
