@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.get.getLastId
 import com.vankorno.vankornodb.misc.wLog
+import kotlin.math.max
 
 /*
  * ## Rules for List Parameters:
@@ -34,6 +35,7 @@ import com.vankorno.vankornodb.misc.wLog
  * Inserts the given object into the specified database table.
  * Converts the entity into ContentValues and performs the SQLite insert operation.
  * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
+ * If object's id is less than 1, the new id is assigned automatically.
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param obj The entity object to insert.
@@ -42,20 +44,32 @@ import com.vankorno.vankornodb.misc.wLog
 fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
 ): Long {
-    val modifiedEntity = if (obj.id < 1) {
-        tableInfo.schema.withId(obj, getLastId(tableInfo.name) + 1)
-    } else obj
+    val modified =  if (obj.id < 1)
+                        tableInfo.schema.withId(obj, getLastId(tableInfo.name) + 1)
+                    else
+                        obj
     
-    val cv = toContentValues(modifiedEntity, tableInfo.schema)
+    return addObjWithoutIdCheck(tableInfo, modified)
+}
+
+
+
+private fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
+                                                                      tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
+): Long {
+    val cv = toContentValues(obj, tableInfo.schema)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
+
 
 /**
  * Inserts multiple objects into the specified database table.
  * Converts each entity into ContentValues and performs the SQLite insert operation for each.
  * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
- *  *
+ * If object's id is less than 1, the new id is assigned automatically.
+ * 
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param objects The list of entity objects to insert.
  * @return The number of rows successfully inserted.
@@ -63,15 +77,31 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
 fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
 ): Int {
+    val maxObjId = objects.maxOfOrNull { it.id } ?: 0
     var count = 0
+    var newId = -1
+    
     for (obj in objects) {
-        val rowId = addObj(tableInfo, obj)
+        val needsNewId = obj.id < 1
+        
+        if (needsNewId && newId == -1)
+            newId = max(maxObjId, getLastId(tableInfo.name) + 1)
+        
+        val modifiedObj =   if (needsNewId)
+                                tableInfo.schema.withId(obj, newId)
+                            else
+                                obj
+        
+        val rowId = addObjWithoutIdCheck(tableInfo, modifiedObj)
+        
         if (rowId == -1L) {
             // region LOG
-                wLog("addObjects() FAILED to insert object: $obj")
+                wLog("addObjects() FAILED to insert object: $modifiedObj")
             // endregion
         } else {
             count++
+            if (needsNewId)
+                newId++
         }
     }
     return count
