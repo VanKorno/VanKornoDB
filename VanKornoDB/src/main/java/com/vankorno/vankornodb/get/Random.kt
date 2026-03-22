@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
@@ -88,7 +84,7 @@ fun SQLiteDatabase.getRandomFloat(                                   table: Stri
  */
 fun SQLiteDatabase.getRandomId(                                       table: String,
                                                                       where: WhereDsl.()->Unit = {},
-): Int = getRandomInt(table, cID, where)
+): Long = getRandomLong(table, cID, where)
 
 
 

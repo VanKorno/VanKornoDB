@@ -22,7 +22,7 @@ private fun createTestTableIfAbsent() {
     }
     if (dbh.isTableEmpty(TestTable)) {
         val testSubjects = List(50) {
-            TestEntity(name = "Name" + it, position = it + 1)
+            TestEntity(name = "Name" + it, position = it + 1L)
         }
         dbh.addObjects(_TestTable, testSubjects)
     }

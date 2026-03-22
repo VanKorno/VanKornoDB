@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.data
 
 import android.content.ContentValues
@@ -23,7 +19,7 @@ sealed interface BaseSchemaBundle<T : BaseEntity> {
 
 sealed interface NormalSchemaBundle<T : NormalEntity> : BaseSchemaBundle<T> {
     val setter: ((T, ContentValues) -> ContentValues)?
-    val withId: (T, Int) -> T
+    val withId: (T, Long) -> T
 }
 
 
@@ -33,7 +29,7 @@ open class CurrSchemaBundle<T : CurrEntity>(
                                   override val columns: EntityColumns? = null,
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
-                                   override val withId: (T, Int)->T = { obj, _ -> obj },
+                                   override val withId: (T, Long)->T = { obj, _ -> obj },
 ) : NormalSchemaBundle<T>
 
 
@@ -44,7 +40,7 @@ open class OldSchemaBundle<T : OldEntity>(
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
                                   override val columns: EntityColumns? = null,
-                                   override val withId: (T, Int)->T = { obj, _ -> obj },
+                                   override val withId: (T, Long)->T = { obj, _ -> obj },
 ) : NormalSchemaBundle<T>
 
 

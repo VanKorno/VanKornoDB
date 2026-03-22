@@ -13,8 +13,8 @@ fun Dbh.getLabRats(                                                             
 ) = write("launchApp", async = false) { db ->
     db.createTable(table using _Test)
     
-    val testSubjects = List(50) {
-        TestEntity(name = LabRat + (it + 1), position = it + 1)
+    val testSubjects = List(50) { idx ->
+        TestEntity(name = LabRat + (idx + 1), position = idx + 1L)
     }
     db.addObjects(table using _Test, testSubjects)
 }

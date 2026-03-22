@@ -33,11 +33,11 @@ class ReorderTest : BaseAndroidTest() {
             val table = RoundKnightTable + idx
             dbh.createTable(table using _Test)
             
-            val objects = List(10) {
+            val objects = List(10) { idx ->
                 TestEntity(
-                    id = it + 1,
-                    name = "Knight" + it + 1,
-                    position = it + 1,
+                    id = idx + 1L,
+                    name = "Knight" + idx + 1,
+                    position = idx + 1L,
                 )
             }
             dbh.addObjects(table using _Test, objects)
@@ -52,22 +52,22 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 1
         
         // sanity
-        assertEquals(1, dbh.getInt(table, cPosition, whereId(1)))
+        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
         
-        var reordered = dbh.reorder(table, id = 1, moveUpOrBack = false, makeFirstOrLast = false)
+        var reordered = dbh.reorder(table, id = 1L, moveUpOrBack = false, makeFirstOrLast = false)
         
         // swapped with 2
         assertTrue(reordered)
-        assertEquals(2, dbh.getInt(table, cPosition, whereId(1)))
-        assertEquals(1, dbh.getInt(table, cPosition, whereId(2)))
-        assertEquals(3, dbh.getInt(table, cPosition, whereId(3)))
+        assertEquals(2L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(1L, dbh.getLong(table, cPosition, whereId(2L)))
+        assertEquals(3L, dbh.getLong(table, cPosition, whereId(3L)))
         
-        reordered = dbh.reorder(table, id = 1, moveUpOrBack = false, makeFirstOrLast = false)
+        reordered = dbh.reorder(table, id = 1L, moveUpOrBack = false, makeFirstOrLast = false)
         
         // swapped with 3
         assertTrue(reordered)
-        assertEquals(3, dbh.getInt(table, cPosition, whereId(1)))
-        assertEquals(2, dbh.getInt(table, cPosition, whereId(3)))
+        assertEquals(3L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(2L, dbh.getLong(table, cPosition, whereId(3L)))
     }
     
     
@@ -75,21 +75,21 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 2
         
         // sanity
-        assertEquals(10, dbh.getInt(table, cPosition, whereId(10)))
+        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
         
-        var reordered = dbh.reorder(table, id = 10, moveUpOrBack = true, makeFirstOrLast = false)
+        var reordered = dbh.reorder(table, id = 10L, moveUpOrBack = true, makeFirstOrLast = false)
         
         // swapped with 9
         assertTrue(reordered)
-        assertEquals(9, dbh.getInt(table, cPosition, whereId(10)))
-        assertEquals(10, dbh.getInt(table, cPosition, whereId(9)))
+        assertEquals(9L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(10L, dbh.getLong(table, cPosition, whereId(9L)))
         
-        reordered = dbh.reorder(table, id = 10, moveUpOrBack = true, makeFirstOrLast = false)
+        reordered = dbh.reorder(table, id = 10L, moveUpOrBack = true, makeFirstOrLast = false)
         
         // swapped with 8
         assertTrue(reordered)
-        assertEquals(8, dbh.getInt(table, cPosition, whereId(10)))
-        assertEquals(9, dbh.getInt(table, cPosition, whereId(8)))
+        assertEquals(8L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(9L, dbh.getLong(table, cPosition, whereId(8L)))
     }
     
     
@@ -97,20 +97,20 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 3
         
         // sanity
-        assertEquals(1, dbh.getInt(table, cPosition, whereId(1)))
-        assertEquals(10, dbh.getInt(table, cPosition, whereId(10)))
+        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
         
-        val reordered = dbh.reorder(table, id = 1, moveUpOrBack = false, makeFirstOrLast = true)
+        val reordered = dbh.reorder(table, id = 1L, moveUpOrBack = false, makeFirstOrLast = true)
         
         // moved to end
         assertTrue(reordered)
-        assertEquals(11, dbh.getInt(table, cPosition, whereId(1)))
+        assertEquals(11L, dbh.getLong(table, cPosition, whereId(1L)))
         
         // others unchanged
         assertTrue(reordered)
-        assertEquals(2, dbh.getInt(table, cPosition, whereId(2)))
-        assertEquals(3, dbh.getInt(table, cPosition, whereId(3)))
-        assertEquals(10, dbh.getInt(table, cPosition, whereId(10)))
+        assertEquals(2L, dbh.getLong(table, cPosition, whereId(2L)))
+        assertEquals(3L, dbh.getLong(table, cPosition, whereId(3L)))
+        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
     }
 
 
@@ -118,46 +118,46 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 4
         
         // sanity
-        assertEquals(10, dbh.getInt(table, cPosition, whereId(10)))
-        assertEquals(1, dbh.getInt(table, cPosition, whereId(1)))
+        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
         
-        val reordered = dbh.reorder(table, id = 10, moveUpOrBack = true, makeFirstOrLast = true)
+        val reordered = dbh.reorder(table, id = 10L, moveUpOrBack = true, makeFirstOrLast = true)
         
         // moved to start
         assertTrue(reordered)
-        assertEquals(1, dbh.getInt(table, cPosition, whereId(10)))
+        assertEquals(1L, dbh.getLong(table, cPosition, whereId(10L)))
         
         // everyone else shifted +1
         assertTrue(reordered)
-        assertEquals(2, dbh.getInt(table, cPosition, whereId(1)))
-        assertEquals(3, dbh.getInt(table, cPosition, whereId(2)))
-        assertEquals(11, dbh.getInt(table, cPosition, whereId(9)))
+        assertEquals(2L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(3L, dbh.getLong(table, cPosition, whereId(2L)))
+        assertEquals(11L, dbh.getLong(table, cPosition, whereId(9L)))
     }
     
     
     fun reorderUp_whenAlreadyAtTop_doesNothing() {
         val table = RoundKnightTable + 5
         
-        val reordered = dbh.reorder(table, id = 1, moveUpOrBack = true, makeFirstOrLast = false)
+        val reordered = dbh.reorder(table, id = 1L, moveUpOrBack = true, makeFirstOrLast = false)
         
         // nothing changed
         assertFalse(reordered)
-        assertEquals(1, dbh.getInt(table, cPosition, whereId(1)))
-        assertEquals(2, dbh.getInt(table, cPosition, whereId(2)))
-        assertEquals(3, dbh.getInt(table, cPosition, whereId(3)))
+        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(2L, dbh.getLong(table, cPosition, whereId(2L)))
+        assertEquals(3L, dbh.getLong(table, cPosition, whereId(3L)))
     }
     
     
     fun reorderDown_whenAlreadyAtBottom_doesNothing() {
         val table = RoundKnightTable + 6
         
-        val reordered = dbh.reorder(table, id = 10, moveUpOrBack = false, makeFirstOrLast = false)
+        val reordered = dbh.reorder(table, id = 10L, moveUpOrBack = false, makeFirstOrLast = false)
         
         // nothing changed
         assertFalse(reordered)
-        assertEquals(10, dbh.getInt(table, cPosition, whereId(10)))
-        assertEquals(9, dbh.getInt(table, cPosition, whereId(9)))
-        assertEquals(8, dbh.getInt(table, cPosition, whereId(8)))
+        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(9L, dbh.getLong(table, cPosition, whereId(9L)))
+        assertEquals(8L, dbh.getLong(table, cPosition, whereId(8L)))
     }
     
     

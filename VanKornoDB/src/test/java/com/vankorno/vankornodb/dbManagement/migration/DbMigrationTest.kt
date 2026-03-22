@@ -10,12 +10,12 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DbMigrationTest : MigrationUtils() {
-    data class OldV1(override val id: Int = 0, val title: String = "", val note: String = "") : OldEntity
-    data class NewV2(override val id: Int = 0, val name: String = "", val note: String = "") : CurrEntity
+    data class OldV1(override val id: Long = 0L, val title: String = "", val note: String = "") : OldEntity
+    data class NewV2(override val id: Long = 0L, val name: String = "", val note: String = "") : CurrEntity
     
     @Test
     fun `basic field rename with version map`() {
-        val old = OldV1(id = 1, title = "Task 1", note = "Some note")
+        val old = OldV1(id = 1L, title = "Task 1", note = "Some note")
         val renameMap = mapOf(Pair("name", "title"))
         
         val new = convertEntity(old, NewV2::class, renameMap) as NewV2
@@ -25,23 +25,23 @@ class DbMigrationTest : MigrationUtils() {
         assertEquals(old.note, new.note)
     }
     
-    data class OldV2(override val id: Int = 0, val title: String = "", val extra: String = "") : OldEntity
-    data class NewV3(override val id: Int = 0, val name: String = "", val description: String = "default") : CurrEntity
+    data class OldV2(override val id: Long = 0L, val title: String = "", val extra: String = "") : OldEntity
+    data class NewV3(override val id: Long = 0L, val name: String = "", val description: String = "default") : CurrEntity
     
     @Test
     fun `missing fields fallback to default`() {
-        val old = OldV2(id = 2, title = "Legacy", extra = "ignored")
+        val old = OldV2(id = 2L, title = "Legacy", extra = "ignored")
         val renameMap = mapOf(Pair("name", "title"))
         
         val new = convertEntity(old, NewV3::class, renameMap) as NewV3
         
-        assertEquals(2, new.id)
+        assertEquals(2L, new.id)
         assertEquals("Legacy", new.name)
         assertEquals("default", new.description)
     }
     
-    data class OldV3(override val id: Int = 0, val text: String = "abc") : OldEntity
-    data class NewV4(override val id: Int = 0, val text: String = "", val extra: Boolean = true) : CurrEntity
+    data class OldV3(override val id: Long = 0L, val text: String = "abc") : OldEntity
+    data class NewV4(override val id: Long = 0L, val text: String = "", val extra: Boolean = true) : CurrEntity
     
     @Test
     fun `unmapped field fallback with primitive default`() {

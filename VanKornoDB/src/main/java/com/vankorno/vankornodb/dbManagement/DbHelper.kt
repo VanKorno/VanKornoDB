@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement
 
 import android.content.Context
@@ -957,12 +953,12 @@ abstract class DbHelperInternal(
     
     // ====================================  O T H E R  ==================================== \\
     
-    inline fun getLastId(table: String): Int = read(0, "getLastId") { it.getLastId(table) }
+    inline fun getLastId(table: String): Long = read(0L, "getLastId") { it.getLastId(table) }
     
     
     fun getAllIDs(                                                    table: String,
                                                                     orderBy: OrderDsl.()->Unit = {},
-    ): List<Int> = read(emptyList(), "getAllIDs") {
+    ): List<Long> = read(emptyList(), "getAllIDs") {
         it.getAllIDs(table, orderBy)
     }
     
@@ -996,7 +992,7 @@ abstract class DbHelperInternal(
     
     fun getLastPosition(                                              table: String,
                                                                       where: WhereDsl.()->Unit = {},
-    ): Int = read(0, "getLastPosition") {
+    ): Long = read(0L, "getLastPosition") {
         it.getLastPosition(table, where)
     }
     
@@ -1006,6 +1002,13 @@ abstract class DbHelperInternal(
                                                                       where: WhereDsl.()->Unit = {},
     ) = read(0, "getLargestInt") {
         it.getLargestInt(table, column, where)
+    }
+    
+    fun getLargestLong(                                               table: String,
+                                                                     column: LongCol,
+                                                                      where: WhereDsl.()->Unit = {},
+    ) = read(0L, "getLargestLong") {
+        it.getLargestLong(table, column, where)
     }
     
     
@@ -1043,13 +1046,13 @@ abstract class DbHelperInternal(
     
     fun getRandomId(                                                  table: String,
                                                                       where: WhereDsl.()->Unit = {},
-    ): Int = read(-1, "getRandomId") { db ->
+    ): Long = read(-1L, "getRandomId") { db ->
         db.getRandomId(table, where)
     }
     
     
     fun reorder(                                                      table: String,
-                                                                         id: Int,
+                                                                         id: Long,
                                                                moveUpOrBack: Boolean,
                                                             makeFirstOrLast: Boolean = false,
                                                                       where: WhereDsl.()->Unit = {},

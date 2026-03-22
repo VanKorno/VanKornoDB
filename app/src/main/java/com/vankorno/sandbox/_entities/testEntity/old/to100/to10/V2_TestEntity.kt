@@ -5,7 +5,7 @@ import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class V2_TestEntity(
-                           override val id: Int = -1,
+                           override val id: Long = -1L,
                                   val name: String = "",
                               val position: String = "",
                                val enabled: Boolean = false,
@@ -37,7 +37,7 @@ object _V2_Test : OldSchemaBundle<V2_TestEntity>(
         var idx = 0
 
         V2_TestEntity(
-            id = cursor.getInt(idx++),
+            id = cursor.getLong(idx++),
             name = cursor.getString(idx++),
             position = cursor.getString(idx++),
             enabled = cursor.getBoolean(idx++),

@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.get.raw.data
 
 data class RawTableStr(

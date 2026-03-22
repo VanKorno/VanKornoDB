@@ -1,11 +1,9 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.newTable
 
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.CREATE_TABLE
+import com.vankorno.vankornodb.core.data.DbConstants.DEFAULT
+import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.dbManagement.data.*
 
 /**
@@ -35,17 +33,18 @@ internal fun newTableQuery(                                             table: S
         val name = col.name
         
         val (typeSql, defaultSql) = when (col) {
-            is IntCol -> {
-                if (name == _ID)
-                    ColumnTypeSql.ID.sql to null
-                else
-                    ColumnTypeSql.INT.sql to col.defaultVal.toString()
-            }
+            is IntCol -> ColumnTypeSql.INT.sql to col.defaultVal.toString()
+            
             is StrCol -> ColumnTypeSql.STR.sql to "'${col.defaultVal}'"
             
             is BoolCol -> ColumnTypeSql.BOOL.sql to (if (col.defaultVal) "1" else "0")
             
-            is LongCol -> ColumnTypeSql.LONG.sql to col.defaultVal.toString()
+            is LongCol -> {
+                if (name == _ID)
+                    ColumnTypeSql.ID.sql to null
+                else
+                    ColumnTypeSql.LONG.sql to col.defaultVal.toString()
+            }
             
             is FloatCol -> ColumnTypeSql.FLOAT.sql to col.defaultVal.toString()
             

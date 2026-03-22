@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.misc
 
 import android.database.Cursor
@@ -32,7 +28,7 @@ fun <T : TypedColumn<*>> typedColumns(vararg columns: T): Array<out T> = columns
  * A convenience fun to avoid tons of ById fun overloads. Used like this:
  * getInt(TableName, Column, whereId(id))
  */
-fun whereId(id: Int): WhereDsl.()->Unit = { ID = id }
+fun whereId(id: Long): WhereDsl.()->Unit = { ID = id }
 
 /**
  * A convenience fun to avoid tons of ById fun overloads. Used like this:

@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.data
 
 enum class ColumnTypeSql(                                                           val sql: String
@@ -18,8 +14,8 @@ enum class ColumnTypeSql(                                                       
     BOOL(" BOOL NOT NULL"),
     BOOL_NULLABLE(" BOOL"),
 
-    LONG(" BIGINT NOT NULL"),
-    LONG_NULLABLE(" BIGINT"),
+    LONG(" INTEGER NOT NULL"),
+    LONG_NULLABLE(" INTEGER"),
 
     FLOAT(" REAL NOT NULL"),
     FLOAT_NULLABLE(" REAL"),

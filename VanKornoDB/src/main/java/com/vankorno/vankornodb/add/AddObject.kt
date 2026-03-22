@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.add
 
 import android.database.sqlite.SQLiteDatabase
@@ -39,17 +35,24 @@ import kotlin.math.max
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param obj The entity object to insert.
- * @return The row ID of the newly inserted row, or -1 if an error occurred.
+ * @return The ID of the newly inserted row, or -1 if an error occurred.
  */
 fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
 ): Long {
-    val modified =  if (obj.id < 1)
-                        tableInfo.schema.withId(obj, getLastId(tableInfo.name) + 1)
+    val modified =  if (obj.id < 1L)
+                        tableInfo.schema.withId(obj, getLastId(tableInfo.name) + 1L)
                     else
                         obj
     
-    return addObjWithoutIdCheck(tableInfo, modified)
+    val rowId = addObjWithoutIdCheck(tableInfo, modified)
+    if (rowId == -1L) {
+        // region LOG
+            wLog("addObj() FAILED to insert object: $modified")
+        // endregion
+        return -1L
+    }
+    return modified.id
 }
 
 
@@ -59,7 +62,7 @@ private fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
                                                                             obj: T,
 ): Long {
     val cv = toContentValues(obj, tableInfo.schema)
-    if (cv.size() == 0) return -1 //\/\/\/\/\/\
+    if (cv.size() == 0) return -1L //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
 
@@ -77,15 +80,15 @@ private fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
 fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
 ): Int {
-    val maxObjId = objects.maxOfOrNull { it.id } ?: 0
+    val maxObjId = objects.maxOfOrNull { it.id } ?: 0L
     var count = 0
-    var newId = -1
+    var newId = -1L
     
     for (obj in objects) {
-        val needsNewId = obj.id < 1
+        val needsNewId = obj.id < 1L
         
-        if (needsNewId && newId == -1)
-            newId = max(maxObjId, getLastId(tableInfo.name) + 1)
+        if (needsNewId && newId == -1L)
+            newId = max(maxObjId, getLastId(tableInfo.name) + 1L)
         
         val modifiedObj =   if (needsNewId)
                                 tableInfo.schema.withId(obj, newId)

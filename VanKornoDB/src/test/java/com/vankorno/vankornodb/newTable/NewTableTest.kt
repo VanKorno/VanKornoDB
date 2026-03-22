@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.newTable
 
 import com.vankorno.vankornodb.dbManagement.data.*
+import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -8,7 +9,7 @@ class NewTableTest {
     @Test
     fun testSimpleEntityTableCreation() {
         val cols = listOf(
-            iCol("id"),
+            cID,
             sCol("name", "default"),
             bCol("isActive", true),
             iCol("age", 25)
@@ -30,7 +31,7 @@ class NewTableTest {
     @Test
     fun testComplexEntityTableCreation() {
         val cols = listOf(
-            iCol("id"),
+            cID,
             pCol("data"),
             sCol("name", "blob"),
             iCol("flags", 0)
@@ -52,7 +53,7 @@ class NewTableTest {
     @Test
     fun testUnsupportedTypesAreIgnored() {
         val cols = listOf(
-            iCol("id"),
+            cID,
             // intentionally omitted: unsupported types
         )
         
@@ -69,7 +70,7 @@ class NewTableTest {
     @Test
     fun testListEntitySingle() {
         val cols = listOf(
-            iCol("id")
+            cID
         ) + iListCol("scores", 3, 1)
         
         val sql = newTableQuery("ListSingleTable", cols)
@@ -88,7 +89,7 @@ class NewTableTest {
     @Test
     fun testListEntityMixed() {
         val cols = listOf(
-            iCol("id")
+            cID
         ) +
             bListCol("flags", 2, true) +
             sListCol("names", 2, "alpha")

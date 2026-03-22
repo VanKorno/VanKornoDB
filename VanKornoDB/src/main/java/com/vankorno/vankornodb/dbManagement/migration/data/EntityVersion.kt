@@ -1,14 +1,11 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.migration.data
 
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.iCol
+import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
 
 data class EntityVersion(
@@ -16,7 +13,7 @@ data class EntityVersion(
                                val version: Int = 0,
                                  val notes: String = "",
 
-                           override val id: Int = -1,
+                           override val id: Long = -1L,
 ) : CurrEntity
 
 
@@ -35,7 +32,7 @@ object _EntityVersion : CurrSchemaBundle<EntityVersion>(
             name = cursor.getString(idx++),
             version = cursor.getInt(idx++),
             notes = cursor.getString(idx++),
-            id = cursor.getInt(idx++)
+            id = cursor.getLong(idx++)
         )
     },
 
@@ -58,7 +55,7 @@ object CEntityVersion : EntityColumns {
     val Name = sCol("name", "")
     val Version = iCol("version", 0)
     val Notes = sCol("notes", "")
-    val Id = iCol("id", -1)
+    val Id = lCol("id", -1L)
 
     override val columns = buildColList {
         +Name

@@ -2,10 +2,14 @@
   <dictionary name="project">
     <words>
       <w>Bools</w>
+      <w>Descr</w>
+      <w>Entt</w>
       <w>Korno</w>
       <w>modif</w>
       <w>mult</w>
       <w>navig</w>
+      <w>orderoids</w>
+      <w>spdx</w>
       <w>susp</w>
     </words>
   </dictionary>

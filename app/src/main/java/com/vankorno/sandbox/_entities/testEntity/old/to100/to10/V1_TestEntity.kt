@@ -11,7 +11,7 @@ data class V1_TestEntity(
                                   val str1: String = "",
                                  val long1: Long = 0L,
                                 val float1: Float = 0F,
-                           override val id: Int = -1,
+                           override val id: Long = -1L,
 ) : OldEntity
 
 
@@ -31,7 +31,7 @@ object _V1_Test : OldSchemaBundle<V1_TestEntity>(
             str1 = cursor.getString(idx++),
             long1 = cursor.getLong(idx++),
             float1 = cursor.getFloat(idx++),
-            id = cursor.getInt(idx++)
+            id = cursor.getLong(idx++)
         )
     },
 

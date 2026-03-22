@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement
 
 import android.content.Context
@@ -15,7 +11,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
-import com.vankorno.vankornodb.dbManagement.migration.data.TTTEntityVersion
+import com.vankorno.vankornodb.dbManagement.migration.data._TTTEntityVersion
 import com.vankorno.vankornodb.delete.deleteRows
 import com.vankorno.vankornodb.get.getColStringsPro
 import com.vankorno.vankornodb.get.hasRows
@@ -98,7 +94,7 @@ abstract class DbManager(        context: Context,
             dLog("onCreate runs")
         // endregion
         lock.withLock {
-            db.createTable(TTTEntityVersion)
+            db.createTable(_TTTEntityVersion)
             
             if (createExclusiveTables)
                 db.createExclusiveTablesInternal(entityMeta)
@@ -173,7 +169,7 @@ abstract class DbManager(        context: Context,
     private fun ensureEnttVerTableExists(                                        db: SQLiteDatabase
     ) {
         if (!db.tableExists(TABLE_EntityVersions)) {
-            db.createTable(TTTEntityVersion)
+            db.createTable(_TTTEntityVersion)
         }
     }
     
@@ -181,7 +177,7 @@ abstract class DbManager(        context: Context,
     ) {
         for (meta in entityMeta) {
             db.addObj(
-                TTTEntityVersion,
+                _TTTEntityVersion,
                 EntityVersion(meta.dbRowName, meta.currVersion)
             )
         }
@@ -209,7 +205,7 @@ abstract class DbManager(        context: Context,
                 continue //\/\/\
             
             db.addObj(
-                TTTEntityVersion,
+                _TTTEntityVersion,
                 EntityVersion(dbName, meta.currVersion)
             )
         }

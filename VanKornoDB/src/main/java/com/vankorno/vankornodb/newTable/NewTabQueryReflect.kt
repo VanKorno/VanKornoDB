@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.newTable
 
 import com.vankorno.vankornodb.core.data.DbConstants.CREATE_TABLE
@@ -105,17 +101,18 @@ private object TableBuilderUtils {
                                                                           classifier: KClassifier?,
                                                                           isNullable: Boolean,
     ): ColumnTypeSql? {
-        if (paramName == null) return null
+        if (paramName == null) return null //\/\/\/\/\/\
     
         return when (classifier) {
-            Int::class ->       if (paramName == "id") {
-                                    ColumnTypeSql.ID
-                                } else {
-                                    if (isNullable) IntColNullable else ColumnTypeSql.INT
-                                }
+            Int::class ->       if (isNullable) IntColNullable else ColumnTypeSql.INT
             String::class ->    if (isNullable) StrColNullable else ColumnTypeSql.STR
             Boolean::class ->   if (isNullable) BoolColNullable else ColumnTypeSql.BOOL
-            Long::class ->      if (isNullable) LongColNullable else ColumnTypeSql.LONG
+            Long::class ->      {
+                if (paramName == "id")
+                    ColumnTypeSql.ID
+                else
+                    if (isNullable) LongColNullable else ColumnTypeSql.LONG
+            }
             Float::class ->     if (isNullable) FloatColNullable else ColumnTypeSql.FLOAT
             ByteArray::class -> if (isNullable) BlobColNullable else ColumnTypeSql.BLOB
             else -> null
@@ -125,7 +122,7 @@ private object TableBuilderUtils {
     inline fun <reified T : Any> getColumnDefinition(                            param: KParameter,
                                                                       defaultsInstance: T,
     ): String? {
-        val name = param.name ?: return null
+        val name = param.name ?: return null //\/\/\/\/\/\
         val classifier = param.type.classifier
         val isNullable = param.type.isMarkedNullable
         
@@ -134,10 +131,10 @@ private object TableBuilderUtils {
         val defaultValue = defaultsInstance::class.memberProperties
             .firstOrNull { it.name == name }?.getter?.call(defaultsInstance)
         
-        // SKIP default clause for AutoId/AutoIdNullable or null default
-        val skipDefault = colType == ColumnTypeSql.ID || defaultValue == null
+        // SKIP default clause for ID or null default
+        val useDefault = colType != ColumnTypeSql.ID && !isNullable && defaultValue != null
         
-        val defaultClause = if (!isNullable  &&  !skipDefault) {
+        val defaultClause = if (useDefault) {
             val defaultSqlValue = when (defaultValue) {
                 is String -> "'$defaultValue'"
                 is Boolean -> if (defaultValue) "1" else "0"

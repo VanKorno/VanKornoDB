@@ -11,9 +11,9 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class TestEntity(
-                           override val id: Int = -1,
+                           override val id: Long = -1L,
                                   val name: String = "",
-                              val position: Int = 0,
+                              val position: Long = 0L,
                                val enabled: Boolean = false,
                                   val int1: Int = 0,
                                   val int2: Int = 0,
@@ -50,9 +50,9 @@ object _Test : CurrSchemaBundle<TestEntity>(
         var idx = 0
 
         TestEntity(
-            id = cursor.getInt(idx++),
+            id = cursor.getLong(idx++),
             name = cursor.getString(idx++),
-            position = cursor.getInt(idx++),
+            position = cursor.getLong(idx++),
             enabled = cursor.getBoolean(idx++),
             int1 = cursor.getInt(idx++),
             int2 = cursor.getInt(idx++),
@@ -103,9 +103,9 @@ object _Test : CurrSchemaBundle<TestEntity>(
 
 
 object CTest : EntityColumns {
-    val Id = iCol("id", -1)
+    val Id = lCol("id", -1L)
     val Name = sCol("name", "")
-    val Position = iCol("position", 0)
+    val Position = lCol("position", 0L)
     val Enabled = bCol("enabled", false)
     val Int1 = iCol("int1", 0)
     val Int2 = iCol("int2", 0)

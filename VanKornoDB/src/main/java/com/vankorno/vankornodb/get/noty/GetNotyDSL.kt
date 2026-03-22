@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
@@ -12,7 +8,6 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
-
 
 inline fun <R> SQLiteDatabase.getValueNoty(                                table: String,
                                                                           column: String,

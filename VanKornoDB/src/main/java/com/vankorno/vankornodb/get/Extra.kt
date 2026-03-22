@@ -1,8 +1,4 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
@@ -13,7 +9,9 @@ import com.vankorno.vankornodb.core.data.DbConstants.TABLE_AndroidMetadata
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_Master
 import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
+import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
@@ -21,12 +19,12 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cType
 import java.io.File
 
 
-fun SQLiteDatabase.getLastId(table: String) = getLargestInt(table, cID)
+fun SQLiteDatabase.getLastId(table: String) = getLargestLong(table, cID)
 
 
 fun SQLiteDatabase.getAllIDs(                                         table: String,
                                                                     orderBy: OrderDsl.()->Unit = {},
-) = getColIntsPro(table, cID) { orderBy(orderBy) }
+) = getColLongsPro(table, cID) { orderBy(orderBy) }
 
 
 
@@ -74,7 +72,7 @@ fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
 fun SQLiteDatabase.getLastPosition(                                   table: String,
                                                                       where: WhereDsl.()->Unit = {},
-) = getLargestInt(table, cPosition, where)
+) = getLargestLong(table, cPosition, where)
 
 
 
@@ -83,10 +81,19 @@ fun SQLiteDatabase.getLargestInt(                                     table: Str
                                                                       where: WhereDsl.()->Unit = {},
 ): Int = getInt(
     table,
-    iCol("MAX(${column.name})"),
+    iCol("IFNULL(MAX(${column.name}), 0)"),
     where
 )
 
+
+fun SQLiteDatabase.getLargestLong(                                    table: String,
+                                                                     column: LongCol,
+                                                                      where: WhereDsl.()->Unit = {},
+): Long = getLong(
+    table,
+    lCol("IFNULL(MAX(${column.name}), 0)"),
+    where
+)
 
 
 

@@ -1,12 +1,11 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.get.raw
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.DbTypeTable
+import com.vankorno.vankornodb.core.data.DbConstants.TABLE_Master
+import com.vankorno.vankornodb.core.data.DbConstants._Name
+import com.vankorno.vankornodb.core.data.DbConstants._Type
 import com.vankorno.vankornodb.get.noty.getStrNoty
 
 fun SQLiteDatabase.getTableTypesFromInitQuery(                                     table: String

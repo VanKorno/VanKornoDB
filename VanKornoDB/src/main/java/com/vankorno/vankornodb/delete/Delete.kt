@@ -1,15 +1,11 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.delete
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 
-fun SQLiteDatabase.deleteRowById(                                                     id: Int,
+fun SQLiteDatabase.deleteRowById(                                                     id: Long,
                                                                                    table: String,
 ): Int = delete(table, "$_ID = ?", arrayOf(id.toString()))
 

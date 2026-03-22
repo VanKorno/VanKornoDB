@@ -1,14 +1,10 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.set.noty
 
 import android.database.sqlite.SQLiteDatabase
 
 fun SQLiteDatabase.addToIntNoty(                                                  addend: Number,
-                                                                                      id: Int,
+                                                                                      id: Long,
                                                                                    table: String,
                                                                                   column: String,
 ) {
@@ -18,13 +14,13 @@ fun SQLiteDatabase.addToIntNoty(                                                
     
     execSQL(
         "UPDATE $table SET $column = $column + ? WHERE id = ?",
-        arrayOf(iAddend, id)
+        arrayOf<Any>(iAddend, id)
     )
 }
 
 
 fun SQLiteDatabase.addToLongNoty(                                                 addend: Number,
-                                                                                      id: Int,
+                                                                                      id: Long,
                                                                                    table: String,
                                                                                   column: String,
 ) {
@@ -34,13 +30,13 @@ fun SQLiteDatabase.addToLongNoty(                                               
     
     execSQL(
         "UPDATE $table SET $column = $column + ? WHERE id = ?",
-        arrayOf<Any>(lAddend, id)
+        arrayOf(lAddend, id)
     )
 }
 
 
 fun SQLiteDatabase.addToFloatNoty(                                                addend: Number,
-                                                                                      id: Int,
+                                                                                      id: Long,
                                                                                    table: String,
                                                                                   column: String,
 ) {
@@ -55,7 +51,7 @@ fun SQLiteDatabase.addToFloatNoty(                                              
 }
 
 
-fun SQLiteDatabase.toggleBoolNoty(                                                    id: Int,
+fun SQLiteDatabase.toggleBoolNoty(                                                    id: Long,
                                                                                    table: String,
                                                                                   column: String,
 ) {

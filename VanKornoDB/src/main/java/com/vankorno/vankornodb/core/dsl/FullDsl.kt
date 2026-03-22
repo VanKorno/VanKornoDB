@@ -1,14 +1,12 @@
-// region License
-/** This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-**/
-// endregion
+/* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.core.dsl
 
 import com.vankorno.vankornodb.api.JoinDsl
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.DESCENDING
+import com.vankorno.vankornodb.core.data.DbConstants.RANDOM
+import com.vankorno.vankornodb.core.data.DbConstants.RowID
 import com.vankorno.vankornodb.core.data.FullDslHolder
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
