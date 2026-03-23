@@ -450,7 +450,7 @@ abstract class DbHelperInternal(
     
     fun <T : BaseEntity> getObjMap(                               tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): Map<Int, T> = read(emptyMap(), "getObjMap") {
+    ): Map<Long, T> = read(emptyMap(), "getObjMap") {
         it.getObjMapPro(tableInfo) { this.where = where }
     }
     
@@ -466,7 +466,7 @@ abstract class DbHelperInternal(
     
     fun <T : BaseEntity> getObjMapPro(                             tableInfo: TableInfoBase<T>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): Map<Int, T> = read(emptyMap(), "getObjMapPro") {
+    ): Map<Long, T> = read(emptyMap(), "getObjMapPro") {
         it.getObjMapPro(tableInfo, dsl)
     }
     

@@ -24,7 +24,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjects(                  tableInfo: Tabl
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjMap(                    tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): Map<Int, T> = getObjMapPro(tableInfo) {
+): Map<Long, T> = getObjMapPro(tableInfo) {
     this.where = where
 }
 
