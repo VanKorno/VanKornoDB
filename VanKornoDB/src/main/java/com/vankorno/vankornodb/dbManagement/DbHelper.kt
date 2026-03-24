@@ -252,16 +252,14 @@ abstract class DbHelperInternal(
     
     inline fun <T : CurrEntity> addObj(                               tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
-                                                                          async: Boolean = false,
-    ) = write("addObj", async) {
+    ) = readWrite(-1L, "addObj") {
         it.addObj(tableInfo, obj)
     }
     
     
     inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
-                                                                          async: Boolean = false,
-    ) = write("addObjects", async) {
+    ) = readWrite(emptyList(), "addObjects") {
         it.addObjects(tableInfo, objects)
     }
     

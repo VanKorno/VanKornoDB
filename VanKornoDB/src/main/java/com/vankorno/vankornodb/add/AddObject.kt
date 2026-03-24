@@ -75,14 +75,15 @@ private fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
  * 
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param objects The list of entity objects to insert.
- * @return The number of rows successfully inserted.
+ * @return The list of successfully inserted obj IDs.
  */
 fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
-): Int {
+): List<Long> {
     val maxObjId = objects.maxOfOrNull { it.id } ?: 0L
-    var count = 0
     var newId = -1L
+    
+    val addedIDs = mutableListOf<Long>()
     
     for (obj in objects) {
         val needsNewId = obj.id < 1L
@@ -102,12 +103,13 @@ fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo:
                 wLog("addObjects() FAILED to insert object: $modifiedObj")
             // endregion
         } else {
-            count++
-            if (needsNewId)
+            if (needsNewId) {
                 newId++
+            }
+            addedIDs.add(modifiedObj.id)
         }
     }
-    return count
+    return addedIDs
 }
 
 
