@@ -848,19 +848,25 @@ abstract class DbHelperInternal(
     
     // ============================   D E L E T E,  C L E A R   ============================ \\
     
-    inline fun <T> deleteRows(                                              table: String,
-                                                                            where: String,
-                                                                           equals: T,
-                                                                            async: Boolean = false,
-    ) = write("deleteRows", async) {
-        it.deleteRows(table, where, equals)
-    }
-    
     fun deleteRows(                                                        table: String,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
     ) = write("deleteRows", async) {
         it.deleteRows(table, where)
+    }
+    
+    
+    fun deleteRowsFromTables(                                             tables: List<String>,
+                                                                           async: Boolean = false,
+                                                                           where: WhereDsl.()->Unit,
+    ) = write("deleteRowsFromTables", async) {
+        it.deleteRowsFromTables(tables, where)
+    }
+    
+    fun deleteRowsFromTables(                                      vararg tables: String,
+                                                                           where: WhereDsl.()->Unit,
+    ) = write("deleteRowsFromTables") {
+        it.deleteRowsFromTables(tables.toList(), where)
     }
     
     
@@ -875,6 +881,7 @@ abstract class DbHelperInternal(
     ) = write("deleteLastRow", async) {
         it.deleteLastRow(table)
     }
+    
     
     // -------------------------------------------------------------------------------------- \\
     

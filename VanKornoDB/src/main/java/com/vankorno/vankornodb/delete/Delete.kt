@@ -24,6 +24,26 @@ fun SQLiteDatabase.deleteRows(                                             table
 }
 
 
+
+fun SQLiteDatabase.deleteRowsFromTables(                                  tables: List<String>,
+                                                                           where: WhereDsl.()->Unit,
+) {
+    for (table in tables) {
+        deleteRows(table, where)
+    }
+}
+
+fun SQLiteDatabase.deleteRowsFromTables(                           vararg tables: String,
+                                                                           where: WhereDsl.()->Unit,
+) {
+    for (table in tables) {
+        deleteRows(table, where)
+    }
+}
+
+
+
+
 fun SQLiteDatabase.deleteFirstRow(                                                 table: String,
 ) {
     delete(table, "ROWID = (SELECT ROWID FROM $table LIMIT 1)", null)
