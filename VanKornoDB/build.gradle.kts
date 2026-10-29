@@ -10,7 +10,6 @@ android {
     
     defaultConfig {
         minSdk = 21
-        
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -29,7 +28,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_25
     }
     publishing {
-        singleVariant("release") {}
+        singleVariant("release") {
+            // Replaces manual sourcesJar task
+            withSourcesJar()
+        }
     }
 }
 
@@ -39,12 +41,6 @@ dependencies {
     implementation(libs.kotlin.reflect)
 }
 
-val sourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
-}
-
-
 val versionTag = System.getenv("VERSION") ?: "unspecified"
 
 afterEvaluate {
@@ -52,15 +48,10 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components.findByName("release"))
-                groupId = "com.vankorno"
-                artifactId = "vankornodb"
+                groupId = "com.github.VanKorno"
+                artifactId = "VanKornoDB"
                 version = versionTag
-                
-                artifact(sourcesJar.get()) // Probably doesn't work anyway
             }
         }
     }
 }
-
-
-
