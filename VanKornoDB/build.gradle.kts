@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.vankorno.vankornodb"
-    compileSdk = 36
+    compileSdk = 37
     
     defaultConfig {
         minSdk = 21
@@ -25,8 +25,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
     publishing {
         singleVariant("release") {}

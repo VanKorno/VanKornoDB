@@ -32,4 +32,3 @@ captures/
 
 # Log files
 *.log
-/gradle/gradle-daemon-jvm.properties
