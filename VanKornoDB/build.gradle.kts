@@ -29,7 +29,6 @@ android {
     }
     publishing {
         singleVariant("release") {
-            // Replaces manual sourcesJar task
             withSourcesJar()
         }
     }
@@ -41,13 +40,16 @@ dependencies {
     implementation(libs.kotlin.reflect)
 }
 
-val versionTag = System.getenv("VERSION") ?: "unspecified"
+val versionTag = providers.environmentVariable("VERSION").orNull
+    ?: providers.gradleProperty("version").orNull.takeIf { it != "unspecified" }
+    ?: project.version.takeIf { it != "unspecified" }?.toString()
+    ?: "unspecified"
 
 afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
-                from(components.findByName("release"))
+                from(components["release"])
                 groupId = "com.github.VanKorno"
                 artifactId = "VanKornoDB"
                 version = versionTag

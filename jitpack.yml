@@ -6,3 +6,7 @@ jdk:
 
 install:
   - ./gradlew :VanKornoDB:publishToMavenLocal
+
+before_install:
+  - yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+  - yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-37" || true
