@@ -25,7 +25,6 @@ class GetLargestLastTest {
         makeRatsTestNest(LongTable)
         
         testIdPosition()
-        
         test0L()
         testWithValueChange() // Mutates rats
         
@@ -40,7 +39,7 @@ class GetLargestLastTest {
         var largest = dbh.getLargestInt(IntTable, Int1)
         assertEquals(0, largest)
         
-        dbh.setInt(2, IntTable, Int1) { ID = 2}
+        dbh.setInt(2, IntTable, Int1) { ID = 2 }
         largest = dbh.getLargestInt(IntTable, Int1)
         assertEquals(2, largest)
         
@@ -67,7 +66,6 @@ class GetLargestLastTest {
     
     
     
-    
     // ========================================================================================= \\
     
     private fun testIdPosition() {
@@ -81,6 +79,7 @@ class GetLargestLastTest {
         assertEquals(ratQuant, lastPosition)
         assertEquals(ratQuant, lastPosition2)
     }
+    
     
     private fun test0L() {
         val largestLong1 = dbh.getLargestLong(LongTable, Long1)
