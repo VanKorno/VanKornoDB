@@ -1,52 +1,41 @@
 package com.vankorno.sandbox._navig
 
+import com.vankorno.vankornocompose.navig.BaseBackNavigator
 import com.vankorno.vankornocompose.navig.Navig
 import com.vankorno.vankornocompose.navig.PopupOFF
+import com.vankorno.vankornocompose.navig.PopupState
 import com.vankorno.vankornocompose.navig.ScrHome
+import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornocompose.values.LibGlobals2.libVm
 import com.vankorno.vankornocompose.values.LibLambdas2.popupOFF
 import com.vankorno.vankornohelpers.dLog
 import com.vankorno.vankornohelpers.values.LibLambdas.minimizeApp
 
-private const val TAG = "BackClick"
-
-object BackNav {
+object BackNav : BaseBackNavigator() {
     
-    fun navigBack() {
-        val currScreen = libVm.currScreen.value
-        val previousScreen = libVm.previousScreen.value
-        // region LOG
-            dLog(TAG, "clickBack()")
-        // endregion
-        if (libVm.popupState.value != PopupOFF) {
-            popupBackBtn()
-            return //\/\/\/\/\/\
-        }
-        
-        // region LOG
-            dLog(TAG, "Previous screen: $previousScreen")
-        // endregion
+    override fun onBackWithoutPopup(                                          currScreen: Screen,
+                                                                          previousScreen: Screen,
+    ) {
         when (currScreen) {
             ScrHome -> minimizeApp()
             ScrPlayground -> { Navig.goTo(ScrHome) }
             ScrDbBrowser -> { Navig.goTo(ScrHome) }
-            else -> goToPrevScr()
+            else -> goToPrevScr(currScreen, previousScreen)
         }
     }
     
-    private fun popupBackBtn() {
-        // region LOG
-            dLog(TAG, "popupBackBtn()")
-        // endregion
-        when (libVm.popupState.value) {
+    override fun onBackFromPopup(                                             popupState: PopupState
+    ) {
+        when (popupState) {
             
             else -> { popupOFF() }
         }
     }
     
-    private fun goToPrevScr() {
-        val currScreen = libVm.currScreen.value
-        val previousScreen = libVm.previousScreen.value
+    
+    private fun goToPrevScr(                                                  currScreen: Screen,
+                                                                          previousScreen: Screen,
+    ) {
         // region LOG
             dLog(TAG, "goToPrevScr(currScr = $currScreen, prevScr = $previousScreen)")
         // endregion

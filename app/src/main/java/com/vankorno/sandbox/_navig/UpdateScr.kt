@@ -1,19 +1,17 @@
 package com.vankorno.sandbox._navig
 
 import com.vankorno.sandbox.MainActivity.Companion.vm
+import com.vankorno.vankornocompose.navig.BaseScreenUpdater
 import com.vankorno.vankornocompose.navig.ScrHome
+import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornocompose.values.LibGlobals2.libVm
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornohelpers.dLog
 
-object ScreenUpdater {
-    private const val TAG = "ScreenUpdater"
+object ScreenUpdater : BaseScreenUpdater() {
     
-    fun updateScr() {
-        val currScreen = libVm.currScreen.value
-        // region LOG
-            dLog("UpdateScr", "update(). Curr.screen: $currScreen")
-        // endregion
+    override fun onUpdateScreen(                                              currScreen: Screen
+    ) {
         when (currScreen) {
             ScrHome -> { updateScrMain() }
             ScrPlayground -> { updateReorder() }

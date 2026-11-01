@@ -1,54 +1,22 @@
 package com.vankorno.sandbox._navig
 
 import com.vankorno.sandbox.MainActivity.Companion.vm
-import com.vankorno.vankornocompose.navig.ScrHome
+import com.vankorno.vankornocompose.navig.BaseNavigator
 import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornocompose.values.LibGlobals2.libVm
 import com.vankorno.vankornocompose.vm.reset
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornohelpers.dLog
-import com.vankorno.vankornohelpers.values.LibLambdas.hideKeyboard
 
-private const val TAG = "Navig"
-
-object Navigator {
+object Navigator : BaseNavigator() {
     
-    fun goTo(                                                           targetScr: Screen = ScrHome
+    override fun runBeforeGoing(                                          previousScreen: Screen,
+                                                                            targetScreen: Screen,
     ) {
-        // region LOG
-            dLog(TAG, "goTo(targetScr = ${targetScr})")
-        // endregion
-        hideKeyboard()
-        libVm.previousScreen.value = libVm.currScreen.value
-        
-        specialBackstack(targetScr)
-        
-        runBeforeGoing(targetScr)
-        
-        libVm.currScreen.value = targetScr // GO
-        
-        runAfterGoing(targetScr)
-    }
-    
-    
-    private fun specialBackstack(                                              targetScr: Screen
-    ) {
-        // region LOG
-            dLog(TAG, "specialBackstack(previousScr = ${libVm.previousScreen.value}, targetScr = $targetScr)")
-        // endregion
-        
-    }
-    
-    
-    private fun runBeforeGoing(                                                targetScr: Screen
-    ) {
-        val previousScreen = libVm.previousScreen.value
-        
-        when (previousScreen) {
+        /*when (previousScreen) {
             
             else -> {}
-        }
-        when (targetScr) {
+        }*/
+        when (targetScreen) {
             ScrDbBrowser -> {
                 vm.internalTables.value = dbh.getInternalTableNames()
                 vm.appTables.value = dbh.getAppTableNames()
@@ -62,10 +30,9 @@ object Navigator {
     }
     
     
-    private fun runAfterGoing(                                                 targetScr: Screen
+    override fun runAfterGoing(                                           previousScreen: Screen,
+                                                                            targetScreen: Screen,
     ) {
-        val previousScreen = libVm.previousScreen.value
-        
         when (previousScreen) {
             ScrDbBrowser -> {
                 vm.internalTables.reset()
@@ -75,10 +42,10 @@ object Navigator {
             else -> {}
         }
         
-        when (targetScr) {
+        /*when (targetScreen) {
             
             else -> {}
-        }
+        }*/
     }
 }
 

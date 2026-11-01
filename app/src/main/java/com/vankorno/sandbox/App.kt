@@ -1,5 +1,6 @@
 package com.vankorno.sandbox
 
+import com.vankorno.sandbox._entities.DbName
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
 import com.vankorno.sandbox._entities.TestTable
@@ -17,25 +18,29 @@ import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.core.data.DbConstants.InMemoryDB
 import com.vankorno.vankornodb.dbManagement.data.using
 
-class App : LibApp() {
+class App : LibApp( // Don't mind this. Just using my lib that has nothing to do with this project
+    dbName = DbName,
+    navigator = Navigator,
+    backNavigator = BackNav,
+    screenUpdater = ScreenUpdater,
+) {
     companion object {
-        const val DbName = "DbFile.dp"
         var dbFileNameFromDb = "" // useless shit for the demo
         
         var androidTestRun = false
     }
     
-    override fun dbInit() {
+    override fun dbInit(                                                    actualDbName: String
+    ) {
         dbh = DbHelper( // Create the DB for the whole app to use if you want
             context = this,
-            dbName = if (androidTestRun) InMemoryDB else DbName, // Or whatever your db filename logic is...
+            dbName = actualDbName, // Or whatever you're getting your db filename from...
             dbVersion = DbVersion,
             entityMeta = EntityMeta.entries,
             createExclusiveTables = true,
             onCreate = { db ->
                 db.createTables(
                     TestTable using _Test
-                
                 )
             },
             onUpgrade = { db, _ ->
@@ -43,14 +48,6 @@ class App : LibApp() {
             }
         )
     }
-    
-    override fun onGoTo(scr: Screen) { Navigator.goTo(scr) }
-    
-    override fun onGoBack() { BackNav.navigBack() }
-    
-    override fun onGoToStart() { Navigator.goTo(ScrHome) }
-    
-    override fun onUpdateScreen() { ScreenUpdater.updateScr() }
     
     
 }

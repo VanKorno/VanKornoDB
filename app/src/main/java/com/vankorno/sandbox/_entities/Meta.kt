@@ -7,6 +7,7 @@ import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 
+const val DbName = "DbFile"
 const val DbVersion = 3
 
 /**
