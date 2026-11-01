@@ -4,8 +4,10 @@ package com.vankorno.vankornodb.dbManagement
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.add.InsertMode
 import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjects
+import com.vankorno.vankornodb.add.addWithAutoIdAndPosition
 import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.*
@@ -274,9 +276,25 @@ abstract class DbHelperInternal(
     }
     
     
+    fun <T : CurrEntity> addWithAutoIdAndPosition(                    tableInfo: TableInfoNormal<T>,
+                                                                       entities: List<T>,
+                                                                     insertMode: InsertMode,
+                                                                          async: Boolean = false,
+                                                                    getPosition: (T)->Long,
+                                                               setIdAndPosition: (T, Long, Long)->T,
+    ) = write("addWithAutoIdAndPosition", async) {
+        it.addWithAutoIdAndPosition(tableInfo, entities, insertMode, getPosition, setIdAndPosition)
+    }
     
-    
-    
+    fun <T : CurrEntity> addWithAutoIdAndPosition(                    tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
+                                                                     insertMode: InsertMode,
+                                                                          async: Boolean = false,
+                                                                    getPosition: (T)->Long,
+                                                               setIdAndPosition: (T, Long, Long)->T,
+    ) = write("addWithAutoIdAndPosition", async) {
+        it.addWithAutoIdAndPosition(tableInfo, listOf(entity), insertMode, getPosition, setIdAndPosition)
+    }
     
     
     // ==================================   G E T T E R S  ================================== \\

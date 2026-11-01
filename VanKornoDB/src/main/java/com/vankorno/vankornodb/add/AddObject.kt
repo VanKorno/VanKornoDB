@@ -57,7 +57,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
 
 
 
-private fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
+fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
                                                                       tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
 ): Long {

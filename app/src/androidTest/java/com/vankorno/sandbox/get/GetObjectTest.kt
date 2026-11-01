@@ -1,5 +1,6 @@
 package com.vankorno.sandbox.get
 
+import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
@@ -28,6 +29,7 @@ private object OrmTestWrongGetter : CurrSchemaBundle<TestEntity>(
 private const val GetObjTestTable = "GetObjTestTable"
 
 
+@MediumTest
 class GetObjectTest {
     @Test
     fun getObjectTest() {

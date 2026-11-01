@@ -25,7 +25,7 @@ class ReorderTest : BaseAndroidTest() {
         simpleReorderDown()
         simpleReorderUp()
         
-        
+        // TODO the rest
     }
     
     private fun prep() {

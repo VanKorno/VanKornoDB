@@ -1,5 +1,6 @@
 package com.vankorno.sandbox.get.extra
 
+import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRatQuant
 import com.vankorno.sandbox._entities.testEntity.CTest.Int1
 import com.vankorno.sandbox._entities.testEntity.CTest.Int2
@@ -17,6 +18,8 @@ import org.junit.Test
 private const val LongTable = "GetLargestLongTestTable"
 private const val IntTable = "GetLargestIntTestTable"
 
+
+@MediumTest
 class GetLargestLastTest {
     val ratQuant = LabRatQuant.toLong()
     
