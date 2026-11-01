@@ -957,7 +957,9 @@ abstract class DbHelperInternal(
     
     
     // ====================================  O T H E R  ==================================== \\
-    
+    /**
+     * Returns 0L if nothing was found
+     */
     inline fun getLastId(table: String): Long = read(0L, "getLastId") { it.getLastId(table) }
     
     
@@ -994,14 +996,18 @@ abstract class DbHelperInternal(
         it.getRawTableStr(table)
     }
     
-    
+    /**
+     * Returns 0L if nothing was found
+     */
     fun getLastPosition(                                              table: String,
                                                                       where: WhereDsl.()->Unit = {},
     ): Long = read(0L, "getLastPosition") {
         it.getLastPosition(table, where)
     }
     
-    
+    /**
+     * Returns 0 if nothing was found
+     */
     fun getLargestInt(                                                table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1009,6 +1015,9 @@ abstract class DbHelperInternal(
         it.getLargestInt(table, column, where)
     }
     
+    /**
+     * Returns 0L if nothing was found
+     */
     fun getLargestLong(                                               table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},

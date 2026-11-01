@@ -18,7 +18,9 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cType
 import java.io.File
 
-
+/**
+ * Returns 0L if nothing was found
+ */
 fun SQLiteDatabase.getLastId(table: String) = getLargestLong(table, cID)
 
 
@@ -69,13 +71,17 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
 
 fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
-
+/**
+ * Returns 0L if nothing was found
+ */
 fun SQLiteDatabase.getLastPosition(                                   table: String,
                                                                       where: WhereDsl.()->Unit = {},
 ) = getLargestLong(table, cPosition, where)
 
 
-
+/**
+ * Returns 0L if nothing was found
+ */
 fun SQLiteDatabase.getLargestInt(                                     table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -85,7 +91,9 @@ fun SQLiteDatabase.getLargestInt(                                     table: Str
     where
 )
 
-
+/**
+ * Returns 0L if nothing was found
+ */
 fun SQLiteDatabase.getLargestLong(                                    table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},

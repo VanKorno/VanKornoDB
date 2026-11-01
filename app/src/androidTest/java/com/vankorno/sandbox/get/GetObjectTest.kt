@@ -4,6 +4,7 @@ import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
+import com.vankorno.sandbox.makeRatsTestNest
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.using
@@ -24,16 +25,13 @@ private object OrmTestWrongGetter : CurrSchemaBundle<TestEntity>(
     }
 )
 
+private const val GetObjTestTable = "GetObjTestTable"
+
+
 class GetObjectTest {
-    companion object {
-        const val GetObjTestTable = "GetObjTestTable"
-    }
-    
     @Test
     fun getObjectTest() {
-        dbh.getLabRats(GetObjTestTable)
-        assertTrue(dbh.tableExists(GetObjTestTable))
-        assertFalse(dbh.isTableEmpty(GetObjTestTable))
+        makeRatsTestNest(GetObjTestTable)
         
         getObjWithGeneratedGetter()
         getObjWithNullGetter()
@@ -65,5 +63,4 @@ class GetObjectTest {
         assertEquals(999, obj!!.id)
         assertEquals("WRONG", obj.name)
     }
-    
 }
