@@ -3,32 +3,33 @@ package com.vankorno.vankornodb.dbManagement
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.get.getAllIDs
 
-fun planB() {
+private fun planB() {
     
 }
 
 
-fun SQLiteDatabase.getFreeIDs(                                        table: String,
+private fun SQLiteDatabase.getFreeIDs(                                table: String,
                                                                       count: Int,
                                                                 reservedIDs: Set<Long> = emptySet(),
 ): List<Long> {
     if (count <= 0) return emptyList() ///\/\/\/\/\/\
     
-    val existingIDs = getAllIDs(table) { byId() }
+    val existingIDs = getAllIDs(table).toSet()
     val allReservedIDs = reservedIDs.filter { it > 0L }.toSet()
-
+    
     val freeIDs = mutableListOf<Long>()
-    var candidate = 1L
-    var idx = 0
-
+    var candidateId = 1L
+    
     while (freeIDs.size < count) {
-        if (idx < existingIDs.size && existingIDs[idx] == candidate || candidate in allReservedIDs) {
-            if (idx < existingIDs.size && existingIDs[idx] == candidate)
-                idx++
-        } else {
-            freeIDs.add(candidate)
+        if (candidateId !in existingIDs && candidateId !in allReservedIDs)
+            freeIDs.add(candidateId)
+        
+        if (freeIDs.size < count) {
+            if (candidateId == Long.MAX_VALUE)
+                throw IllegalStateException("No more available positive IDs in table '$table'")
+            
+            candidateId++
         }
-        candidate++
     }
     return freeIDs
 }
