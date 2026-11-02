@@ -21,7 +21,7 @@ open class FullDslInternal {
     val query = FullDslHolder()
     
     
-    fun joins(dsl: JoinDsl.()->Unit) { query.joins = dsl }
+    fun joins(joinDsl: JoinDsl.()->Unit) { query.joins = joinDsl }
     
     var joins: JoinDsl.() -> Unit
         get() = query.joins
@@ -29,7 +29,7 @@ open class FullDslInternal {
     
     
     
-    fun where(dsl: WhereDsl.()->Unit) { query.where = dsl }
+    fun where(whereDsl: WhereDsl.()->Unit) { query.where = whereDsl }
     
     var where: WhereDsl.() -> Unit
         get() = query.where
@@ -58,8 +58,8 @@ open class FullDslInternal {
         get() = query.orderBy
         set(value) { query.orderBy = value }
     
-    fun orderBy(dsl: OrderDsl.()->Unit) {
-        query.orderBy = dsl
+    fun orderBy(orderDsl: OrderDsl.()->Unit) {
+        query.orderBy = orderDsl
     }
     
     fun orderBy(vararg columns: BaseColumn) { query.orderBy = { col(*columns) } }

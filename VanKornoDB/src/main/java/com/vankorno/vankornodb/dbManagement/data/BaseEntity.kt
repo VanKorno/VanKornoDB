@@ -14,13 +14,12 @@ interface NormalEntity : BaseEntity
 
 
 
-// Mainly for tests:
-
+/** Mainly for tests */
 abstract class CurrEntityWithId : CurrEntity {
     override val id: Long = -1L
 }
 
-
+/** Mainly for tests */
 abstract class OldEntityWithId : OldEntity {
     override val id: Long = -1L
 }

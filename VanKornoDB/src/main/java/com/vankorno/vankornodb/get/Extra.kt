@@ -19,9 +19,24 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cType
 import java.io.File
 
 /**
- * Returns 0L if nothing was found
+ * Returns 0L if nothing was found (for "get last + 1" logic)
  */
 fun SQLiteDatabase.getLastId(table: String) = getLargestLong(table, cID)
+
+/**
+ * Returns the first id that fits, -1L if nothing was found.
+ */
+fun SQLiteDatabase.getId(table: String, where: WhereDsl.()->Unit) = getLong(table, cID, where)
+
+
+fun SQLiteDatabase.getIDs(                                            table: String,
+                                                                      where: WhereDsl.()->Unit,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+) = getColLongsPro(table, cID) {
+    where(where)
+    orderBy(orderBy)
+}
+
 
 
 fun SQLiteDatabase.getAllIDs(                                         table: String,

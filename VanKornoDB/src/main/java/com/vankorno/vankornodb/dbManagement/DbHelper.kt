@@ -40,6 +40,9 @@ abstract class DbHelperInternal(
     
     // ===================================  C U R S O R  =================================== \\
     
+    // ===================================  C U R S O R  =================================== \\
+    
+    /** A wrapper fun for [SQLiteDatabase.getCursor] */
     fun useCursor(                                                    table: String,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->Unit,
@@ -49,6 +52,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursor] */
     fun useCursor(                                                 table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                    where: WhereDsl.()->Unit = {},
@@ -59,6 +63,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursor] */
     fun useCursor(                                                    table: String,
                                                                      column: TypedColumn<*>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -70,6 +75,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
     fun useCursorPro(                                                       table: String,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->Unit,
@@ -79,6 +85,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
     fun useCursorPro(                                              table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                      dsl: FullDsl.()->Unit,
@@ -89,6 +96,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
     fun useCursorPro(                                                       table: String,
                                                                            column: TypedColumn<*>,
                                                                               dsl: FullDsl.()->Unit,
@@ -102,6 +110,7 @@ abstract class DbHelperInternal(
     
     // -------------------------   R E T U R N I N G   V A L U E S   ------------------------- \\
     
+    /** A wrapper fun for [SQLiteDatabase.getCursor] */
     fun <T> getFromCursor(                                            table: String,
                                                                defaultValue: T,
                                                                       where: WhereDsl.()->Unit = {},
@@ -112,6 +121,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursor] */
     fun <T> getFromCursor(                                         table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                             defaultValue: T,
@@ -123,6 +133,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursor] */
     fun <T> getFromCursor(                                            table: String,
                                                                      column: TypedColumn<*>,
                                                                defaultValue: T,
@@ -135,6 +146,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
     fun <T> getFromCursorPro(                                               table: String,
                                                                      defaultValue: T,
                                                                               dsl: FullDsl.()->Unit,
@@ -145,6 +157,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
     fun <T> getFromCursorPro(                                      table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                             defaultValue: T,
@@ -156,6 +169,7 @@ abstract class DbHelperInternal(
         }
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
     fun <T> getFromCursorPro(                                               table: String,
                                                                            column: TypedColumn<*>,
                                                                      defaultValue: T,
@@ -181,6 +195,7 @@ abstract class DbHelperInternal(
     
     // ===================================  S E T T E R S  =================================== \\
     
+    /** A wrapper fun for [SQLiteDatabase.setInt] */
     fun setInt(                                                            value: Int,
                                                                            table: String,
                                                                           column: IntCol,
@@ -190,6 +205,7 @@ abstract class DbHelperInternal(
         it.setInt(value, table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.setStr] */
     fun setStr(                                                            value: String,
                                                                            table: String,
                                                                           column: StrCol,
@@ -199,6 +215,7 @@ abstract class DbHelperInternal(
         it.setStr(value, table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.setBool] */
     fun setBool(                                                           value: Boolean,
                                                                            table: String,
                                                                           column: BoolCol,
@@ -208,6 +225,7 @@ abstract class DbHelperInternal(
         it.setBool(value, table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.setLong] */
     fun setLong(                                                           value: Long,
                                                                            table: String,
                                                                           column: LongCol,
@@ -217,6 +235,7 @@ abstract class DbHelperInternal(
         it.setLong(value, table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.setFloat] */
     fun setFloat(                                                          value: Float,
                                                                            table: String,
                                                                           column: FloatCol,
@@ -226,6 +245,7 @@ abstract class DbHelperInternal(
         it.setFloat(value, table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.setBlob] */
     fun setBlob(                                                           value: ByteArray,
                                                                            table: String,
                                                                           column: BlobCol,
@@ -240,6 +260,7 @@ abstract class DbHelperInternal(
     
     // =============================  M U L T I - S E T T E R S  ============================= \\
     
+    /** A wrapper fun for [SQLiteDatabase.set] */
     fun set(                                                          table: String,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       async: Boolean = false,
@@ -252,6 +273,7 @@ abstract class DbHelperInternal(
     
     // -----------------------------------  O B J E C T  ----------------------------------- \\
     
+    /** A wrapper fun for [SQLiteDatabase.addObj] */
     inline fun <T : CurrEntity> addObj(                               tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
     ) = readWrite(-1L, "addObj") {
@@ -259,6 +281,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.addObjects] */
     inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
     ) = readWrite(emptyList(), "addObjects") {
@@ -267,6 +290,7 @@ abstract class DbHelperInternal(
     
     
     
+    /** A wrapper fun for [SQLiteDatabase.setObj] */
     fun <T : CurrEntity> setObj(                                      tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
                                                                           async: Boolean = false,
@@ -276,6 +300,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.addWithAutoIdAndPosition] */
     fun <T : CurrEntity> addWithAutoIdAndPosition(                    tableInfo: TableInfoNormal<T>,
                                                                        entities: List<T>,
                                                                      insertMode: InsertMode,
@@ -286,6 +311,7 @@ abstract class DbHelperInternal(
         it.addWithAutoIdAndPosition(tableInfo, entities, insertMode, getPosition, setIdAndPosition)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.addWithAutoIdAndPosition] */
     fun <T : CurrEntity> addWithAutoIdAndPosition(                    tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
                                                                      insertMode: InsertMode,
@@ -299,6 +325,7 @@ abstract class DbHelperInternal(
     
     // ==================================   G E T T E R S  ================================== \\
     
+    /** A wrapper fun for [SQLiteDatabase.getInt] */
     fun getInt(                                                            table: String,
                                                                           column: IntCol,
                                                                            where: WhereDsl.()->Unit,
@@ -306,6 +333,7 @@ abstract class DbHelperInternal(
         it.getInt(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getStr] */
     fun getStr(                                                            table: String,
                                                                           column: StrCol,
                                                                            where: WhereDsl.()->Unit,
@@ -313,6 +341,7 @@ abstract class DbHelperInternal(
         it.getStr(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getBool] */
     fun getBool(                                                           table: String,
                                                                           column: BoolCol,
                                                                            where: WhereDsl.()->Unit,
@@ -320,6 +349,7 @@ abstract class DbHelperInternal(
         it.getBool(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getLong] */
     fun getLong(                                                           table: String,
                                                                           column: LongCol,
                                                                            where: WhereDsl.()->Unit,
@@ -327,6 +357,7 @@ abstract class DbHelperInternal(
         it.getLong(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getFloat] */
     fun getFloat(                                                          table: String,
                                                                           column: FloatCol,
                                                                            where: WhereDsl.()->Unit,
@@ -334,6 +365,7 @@ abstract class DbHelperInternal(
         it.getFloat(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getBlob] */
     fun getBlob(                                                           table: String,
                                                                           column: BlobCol,
                                                                            where: WhereDsl.()->Unit,
@@ -345,6 +377,7 @@ abstract class DbHelperInternal(
     
     // ----------------------------------  G E T   P R O  ---------------------------------- \\
     
+    /** A wrapper fun for [SQLiteDatabase.getIntPro] */
     fun getIntPro(                                                          table: String,
                                                                            column: IntCol,
                                                                               dsl: FullDsl.()->Unit,
@@ -352,6 +385,7 @@ abstract class DbHelperInternal(
         it.getIntPro(table, column, dsl)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getStrPro] */
     fun getStrPro(                                                          table: String,
                                                                            column: StrCol,
                                                                               dsl: FullDsl.()->Unit,
@@ -359,6 +393,7 @@ abstract class DbHelperInternal(
         it.getStrPro(table, column, dsl)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getBoolPro] */
     fun getBoolPro(                                                         table: String,
                                                                            column: BoolCol,
                                                                               dsl: FullDsl.()->Unit,
@@ -366,6 +401,7 @@ abstract class DbHelperInternal(
         it.getBoolPro(table, column, dsl)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getLongPro] */
     fun getLongPro(                                                         table: String,
                                                                            column: LongCol,
                                                                               dsl: FullDsl.()->Unit,
@@ -373,6 +409,7 @@ abstract class DbHelperInternal(
         it.getLongPro(table, column, dsl)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getFloatPro] */
     fun getFloatPro(                                                        table: String,
                                                                            column: FloatCol,
                                                                               dsl: FullDsl.()->Unit,
@@ -380,6 +417,7 @@ abstract class DbHelperInternal(
         it.getFloatPro(table, column, dsl)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getBlobPro] */
     fun getBlobPro(                                                         table: String,
                                                                            column: BlobCol,
                                                                               dsl: FullDsl.()->Unit,
@@ -394,12 +432,14 @@ abstract class DbHelperInternal(
     
     // ==============================  G E T   O B J E C T S  ============================== \\
     
+    /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getObj") {
         it.getObj(tableInfo, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
@@ -410,12 +450,14 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
+    /** A wrapper fun for [SQLiteDatabase.getObjPro] */
     fun <T : BaseEntity> getObjPro(                                     tableInfo: TableInfoBase<T>,
                                                                               dsl: FullDsl.()->Unit,
     ): T? = read(null, "getObjPro") {
         it.getObjPro(tableInfo, dsl)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getObjPro] */
     fun <T : BaseEntity> getObjPro(                                 tableInfo: TableInfoBase<T>,
                                                                       default: T,
                                                                           dsl: FullDsl.()->Unit,
@@ -425,12 +467,14 @@ abstract class DbHelperInternal(
     
     
     
+    /** A wrapper fun for [SQLiteDatabase.getRandomObj] */
     inline fun <reified T : BaseEntity> getRandomObj(             tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getRandomObj") { db ->
         db.getRandomObj<T>(tableInfo, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRandomObj] */
     inline fun <reified T : BaseEntity> getRandomObj(             tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                              noinline where: WhereDsl.()->Unit = {},
@@ -440,12 +484,14 @@ abstract class DbHelperInternal(
     
     
     
+    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
     fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): T? = read(null, "getLastObj") { db ->
         db.getLastObj(tableInfo, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
     fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
@@ -457,6 +503,7 @@ abstract class DbHelperInternal(
     
     // =========================  M U L T I P L E   O B J E C T S  ========================= \\
     
+    /** A wrapper fun for [SQLiteDatabase.getObjects] */
     fun <T : BaseEntity> getObjects(                              tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") {
@@ -464,6 +511,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getObjMap] */
     fun <T : BaseEntity> getObjMap(                               tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
     ): Map<Long, T> = read(emptyMap(), "getObjMap") {
@@ -473,6 +521,7 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
+    /** A wrapper fun for [SQLiteDatabase.getObjectsPro] */
     fun <T : BaseEntity> getObjectsPro(                            tableInfo: TableInfoBase<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjectsPro") {
@@ -480,6 +529,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getObjMapPro] */
     fun <T : BaseEntity> getObjMapPro(                             tableInfo: TableInfoBase<T>,
                                                                          dsl: FullDsl.()->Unit = {},
     ): Map<Long, T> = read(emptyMap(), "getObjMapPro") {
@@ -497,6 +547,7 @@ abstract class DbHelperInternal(
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getColInts] */
     fun getColInts(                                                   table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -504,6 +555,7 @@ abstract class DbHelperInternal(
         it.getColInts(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getColIntsPro] */
     fun getColIntsPro(                                                 table: String,
                                                                       column: IntCol,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -514,6 +566,7 @@ abstract class DbHelperInternal(
     
     //  ------------------------------------  S T R I N G  ------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getColStrings] */
     fun getColStrings(                                                table: String,
                                                                      column: StrCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -521,6 +574,7 @@ abstract class DbHelperInternal(
         it.getColStrings(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getColStringsPro] */
     fun getColStringsPro(                                              table: String,
                                                                       column: StrCol,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -531,6 +585,7 @@ abstract class DbHelperInternal(
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getColBools] */
     fun getColBools(                                                  table: String,
                                                                      column: BoolCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -538,6 +593,7 @@ abstract class DbHelperInternal(
         it.getColBools(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getColBoolsPro] */
     fun getColBoolsPro(                                                table: String,
                                                                       column: BoolCol,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -548,6 +604,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getColLongs] */
     fun getColLongs(                                                  table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -555,6 +612,7 @@ abstract class DbHelperInternal(
         it.getColLongs(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getColLongsPro] */
     fun getColLongsPro(                                                table: String,
                                                                       column: LongCol,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -565,6 +623,7 @@ abstract class DbHelperInternal(
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getColFloats] */
     fun getColFloats(                                                 table: String,
                                                                      column: FloatCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -573,6 +632,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getColFloatsPro] */
     fun getColFloatsPro(                                               table: String,
                                                                       column: FloatCol,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -584,6 +644,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getColBlobs] */
     fun getColBlobs(                                                  table: String,
                                                                      column: BlobCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -591,6 +652,7 @@ abstract class DbHelperInternal(
         it.getColBlobs(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getColBlobsPro] */
     fun getColBlobsPro(                                                table: String,
                                                                       column: BlobCol,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -605,6 +667,7 @@ abstract class DbHelperInternal(
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getRowInts] */
     fun getRowInts(                                                   table: String,
                                                                     columns: Array<IntCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -612,6 +675,7 @@ abstract class DbHelperInternal(
         it.getRowInts(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRowIntsPro] */
     fun getRowIntsPro(                                                 table: String,
                                                                      columns: Array<IntCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -622,6 +686,7 @@ abstract class DbHelperInternal(
     
     //  -----------------------------------  S T R I N G  -----------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getRowStrings] */
     fun getRowStrings(                                                table: String,
                                                                     columns: Array<StrCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -629,6 +694,7 @@ abstract class DbHelperInternal(
         it.getRowStrings(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRowStringsPro] */
     fun getRowStringsPro(                                              table: String,
                                                                      columns: Array<StrCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -639,6 +705,7 @@ abstract class DbHelperInternal(
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getRowBools] */
     fun getRowBools(                                                  table: String,
                                                                     columns: Array<BoolCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -646,6 +713,7 @@ abstract class DbHelperInternal(
         it.getRowBools(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRowBoolsPro] */
     fun getRowBoolsPro(                                                table: String,
                                                                      columns: Array<BoolCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -656,6 +724,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getRowLongs] */
     fun getRowLongs(                                                  table: String,
                                                                     columns: Array<LongCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -663,6 +732,7 @@ abstract class DbHelperInternal(
         it.getRowLongs(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRowLongsPro] */
     fun getRowLongsPro(                                                table: String,
                                                                      columns: Array<LongCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -673,6 +743,7 @@ abstract class DbHelperInternal(
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getRowFloats] */
     fun getRowFloats(                                                 table: String,
                                                                     columns: Array<FloatCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -680,6 +751,7 @@ abstract class DbHelperInternal(
         it.getRowFloats(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRowFloatsPro] */
     fun getRowFloatsPro(                                               table: String,
                                                                      columns: Array<FloatCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -690,6 +762,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getRowBlobs] */
     fun getRowBlobs(                                                  table: String,
                                                                     columns: Array<BlobCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -697,6 +770,7 @@ abstract class DbHelperInternal(
         it.getRowBlobs(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRowBlobsPro] */
     fun getRowBlobsPro(                                                table: String,
                                                                      columns: Array<BlobCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -713,6 +787,7 @@ abstract class DbHelperInternal(
     
     //  --------------------------------------  I N T  --------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getTableInts] */
     fun getTableInts(                                                 table: String,
                                                                     columns: Array<IntCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -720,6 +795,7 @@ abstract class DbHelperInternal(
         it.getTableInts(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getTableIntsPro] */
     fun getTableIntsPro(                                               table: String,
                                                                      columns: Array<IntCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -730,6 +806,7 @@ abstract class DbHelperInternal(
     
     //  -----------------------------------  S T R I N G  -----------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getTableStrings] */
     fun getTableStrings(                                              table: String,
                                                                     columns: Array<StrCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -737,6 +814,7 @@ abstract class DbHelperInternal(
         it.getTableStrings(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getTableStringsPro] */
     fun getTableStringsPro(                                            table: String,
                                                                      columns: Array<StrCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -747,6 +825,7 @@ abstract class DbHelperInternal(
     
     //  ----------------------------------  B O O L E A N  ----------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getTableBools] */
     fun getTableBools(                                                table: String,
                                                                     columns: Array<BoolCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -754,6 +833,7 @@ abstract class DbHelperInternal(
         it.getTableBools(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getTableBoolsPro] */
     fun getTableBoolsPro(                                              table: String,
                                                                      columns: Array<BoolCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -764,6 +844,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  L O N G  -------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getTableLongs] */
     fun getTableLongs(                                                table: String,
                                                                     columns: Array<LongCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -771,6 +852,7 @@ abstract class DbHelperInternal(
         it.getTableLongs(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getTableLongsPro] */
     fun getTableLongsPro(                                              table: String,
                                                                      columns: Array<LongCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -781,6 +863,7 @@ abstract class DbHelperInternal(
     
     //  ------------------------------------  F L O A T  ------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getTableFloats] */
     fun getTableFloats(                                               table: String,
                                                                     columns: Array<FloatCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -788,6 +871,7 @@ abstract class DbHelperInternal(
         it.getTableFloats(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getTableFloatsPro] */
     fun getTableFloatsPro(                                             table: String,
                                                                      columns: Array<FloatCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -798,6 +882,7 @@ abstract class DbHelperInternal(
     
     //  -------------------------------------  B L O B  -------------------------------------  \\
     
+    /** A wrapper fun for [SQLiteDatabase.getTableBlobs] */
     fun getTableBlobs(                                                table: String,
                                                                     columns: Array<BlobCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -805,6 +890,7 @@ abstract class DbHelperInternal(
         it.getTableBlobs(table, columns, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getTableBlobsPro] */
     fun getTableBlobsPro(                                              table: String,
                                                                      columns: Array<BlobCol>,
                                                                          dsl: FullDsl.()->Unit = {},
@@ -819,6 +905,7 @@ abstract class DbHelperInternal(
     
     // ===================================   M O D I F Y   =================================== \\
     
+    /** A wrapper fun for [SQLiteDatabase.addToInt] */
     fun addToInt(                                                    addend: Number,
                                                                       table: String,
                                                                      column: IntCol,
@@ -829,6 +916,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.addToLong] */
     fun addToLong(                                                   addend: Number,
                                                                       table: String,
                                                                      column: LongCol,
@@ -839,6 +927,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.addToFloat] */
     fun addToFloat(                                                  addend: Number,
                                                                       table: String,
                                                                      column: FloatCol,
@@ -849,6 +938,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.flipBool] */
     fun flipBool(                                                     table: String,
                                                                      column: BoolCol,
                                                                       async: Boolean = false,
@@ -866,6 +956,7 @@ abstract class DbHelperInternal(
     
     // ============================   D E L E T E,  C L E A R   ============================ \\
     
+    /** A wrapper fun for [SQLiteDatabase.deleteRows] */
     fun deleteRows(                                                        table: String,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
@@ -874,6 +965,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.deleteRowsFromTables] */
     fun deleteRowsFromTables(                                             tables: List<String>,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
@@ -881,6 +973,7 @@ abstract class DbHelperInternal(
         it.deleteRowsFromTables(tables, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.deleteRowsFromTables] */
     fun deleteRowsFromTables(                                      vararg tables: String,
                                                                            where: WhereDsl.()->Unit,
     ) = write("deleteRowsFromTables") {
@@ -888,12 +981,14 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.deleteFirstRow] */
     inline fun deleteFirstRow(                                              table: String,
                                                                             async: Boolean = false,
     ) = write("deleteFirstRow", async) {
         it.deleteFirstRow(table)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.deleteLastRow] */
     inline fun deleteLastRow(                                               table: String,
                                                                             async: Boolean = false,
     ) = write("deleteLastRow", async) {
@@ -903,15 +998,18 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
+    /** A wrapper fun for [SQLiteDatabase.clearTable] */
     inline fun clearTable(                                                  table: String,
                                                                             async: Boolean = false,
     ) = write("clearTable", async) { it.clearTable(table) }
     
     
+    /** A wrapper fun for [SQLiteDatabase.clearTables] */
     inline fun clearTables(                                         vararg tables: String,
                                                                             async: Boolean = false,
     ) = write("clearTables", async) { it.clearTables(*tables) }
     
+    /** A wrapper fun for [SQLiteDatabase.clearTables] */
     inline fun clearTables(                                                tables: List<String>,
                                                                             async: Boolean = false,
     ) = write("clearTables", async) { it.clearTables(tables) }
@@ -919,15 +1017,18 @@ abstract class DbHelperInternal(
     
     // -------------------------------------------------------------------------------------- \\
     
+    /** A wrapper fun for [SQLiteDatabase.deleteTable] */
     inline fun deleteTable(                                                 table: String,
                                                                             async: Boolean = false,
     ) = write("deleteTable", async) { it.deleteTable(table) }
     
     
+    /** A wrapper fun for [SQLiteDatabase.deleteTables] */
     inline fun deleteTables(                                        vararg tables: String,
                                                                             async: Boolean = false,
     ) = write("deleteTables", async) { it.deleteTables(*tables) }
     
+    /** A wrapper fun for [SQLiteDatabase.deleteTables] */
     inline fun deleteTables(                                               tables: List<String>,
                                                                             async: Boolean = false,
     ) = write("deleteTables", async) { it.deleteTables(tables) }
@@ -938,14 +1039,14 @@ abstract class DbHelperInternal(
     
     // ====================================  C O U N T  ==================================== \\
     
-    /** Returns the number of rows matching the query conditions. */
+    /** A wrapper fun for [SQLiteDatabase.getRowCount] */
     fun getRowCount(                                                  table: String,
                                                                       where: WhereDsl.()->Unit = {},
     ) = read(0, "getRowCount") {
         it.getRowCount(table, where)
     }
     
-    /** Returns the number of rows matching the query conditions. */
+    /** A wrapper fun for [SQLiteDatabase.getRowCountPro] */
     fun getRowCountPro(                                                table: String,
                                                                          dsl: FullDsl.()->Unit = {},
     ) = read(0, "getRowCountPro") {
@@ -953,14 +1054,14 @@ abstract class DbHelperInternal(
     }
     
     
-    /** Returns true if at least one row matches the query conditions. */
+    /** A wrapper fun for [SQLiteDatabase.hasRows] */
     fun hasRows(                                                      table: String,
                                                                       where: WhereDsl.()->Unit = {},
     ) = read(false, "hasRows") {
         it.hasRows(table, where)
     }
     
-    /** Returns true if at least one row matches the query conditions. */
+    /** A wrapper fun for [SQLiteDatabase.hasRowsPro] */
     fun hasRowsPro(                                                         table: String,
                                                                               dsl: FullDsl.()->Unit,
     ) = read(false, "hasRowsPro") {
@@ -975,12 +1076,29 @@ abstract class DbHelperInternal(
     
     
     // ====================================  O T H E R  ==================================== \\
-    /**
-     * Returns 0L if nothing was found
-     */
+    /** A wrapper fun for [SQLiteDatabase.getLastId] */
     inline fun getLastId(table: String): Long = read(0L, "getLastId") { it.getLastId(table) }
     
+    /** A wrapper fun for [SQLiteDatabase.getId] */
+    fun getId(                                                             table: String,
+                                                                           where: WhereDsl.()->Unit,
+    ): Long = read(-1L, "getId") {
+        it.getId(table, where)
+    }
     
+    /** A wrapper fun for [SQLiteDatabase.getIDs] */
+    fun getIDs(                                                       table: String,
+                                                                      where: WhereDsl.()->Unit,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+    ): List<Long> = read(emptyList(), "getIDs") {
+        it.getIDs(table, where, orderBy)
+    }
+    
+    
+    
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.getAllIDs] */
     fun getAllIDs(                                                    table: String,
                                                                     orderBy: OrderDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getAllIDs") {
@@ -988,44 +1106,45 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.tableExists] */
     inline fun tableExists(                                                        table: String
     ): Boolean = read(false, "tableExists") {
         it.tableExists(table)
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.isTableEmpty] */
     inline fun isTableEmpty(                                                       table: String
     ): Boolean = read(true, "isTableEmpty") {
         it.isTableEmpty(table)
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getAppTableNames] */
     inline fun getAppTableNames(): List<String> = read(emptyList(), "getAppTableNames") {
         it.getAppTableNames()
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getInternalTableNames] */
     inline fun getInternalTableNames(): List<String> = read(emptyList(), "getInternalTableNames") {
         it.getInternalTableNames()
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getRawTableStr] */
     inline fun getRawTableStr(                                                     table: String
     ): RawTableStr = read(RawTableStr(), "getRawTableStr") {
         it.getRawTableStr(table)
     }
     
-    /**
-     * Returns 0L if nothing was found
-     */
+    /** A wrapper fun for [SQLiteDatabase.getLastPosition] */
     fun getLastPosition(                                              table: String,
                                                                       where: WhereDsl.()->Unit = {},
     ): Long = read(0L, "getLastPosition") {
         it.getLastPosition(table, where)
     }
     
-    /**
-     * Returns 0 if nothing was found
-     */
+    /** A wrapper fun for [SQLiteDatabase.getLargestInt] */
     fun getLargestInt(                                                table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1033,9 +1152,7 @@ abstract class DbHelperInternal(
         it.getLargestInt(table, column, where)
     }
     
-    /**
-     * Returns 0L if nothing was found
-     */
+    /** A wrapper fun for [SQLiteDatabase.getLargestLong] */
     fun getLargestLong(                                               table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1044,9 +1161,11 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getDbFileName] */
     inline fun getDbFileName() = read("", "getDbFileName") { it.getDbFileName() }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getRandomInt] */
     fun getRandomInt(                                                 table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1054,6 +1173,7 @@ abstract class DbHelperInternal(
         db.getRandomInt(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRandomString] */
     fun getRandomString(                                              table: String,
                                                                      column: StrCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1061,6 +1181,7 @@ abstract class DbHelperInternal(
         db.getRandomString(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRandomLong] */
     fun getRandomLong(                                                table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1068,6 +1189,7 @@ abstract class DbHelperInternal(
         db.getRandomLong(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.getRandomFloat] */
     fun getRandomFloat(                                               table: String,
                                                                      column: FloatCol,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1076,6 +1198,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getRandomId] */
     fun getRandomId(                                                  table: String,
                                                                       where: WhereDsl.()->Unit = {},
     ): Long = read(-1L, "getRandomId") { db ->
@@ -1083,6 +1206,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.reorder] */
     fun reorder(                                                      table: String,
                                                                          id: Long,
                                                                moveUpOrBack: Boolean,
@@ -1093,6 +1217,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.createTable] */
     inline fun createTable(                            tableInfo: TableInfoNormal<out NormalEntity>,
                                                            async: Boolean = false,
     ) = write("createTable", async) {
@@ -1100,6 +1225,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.createTables] */
     inline fun createTables(                       vararg tables: TableInfoNormal<out NormalEntity>,
                                                            async: Boolean = false,
     ) = write("createTables", async) {
@@ -1107,6 +1233,7 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.createTables] */
     inline fun createTables(                        tables: List<TableInfoNormal<out NormalEntity>>,
                                                      async: Boolean = false,
     ) = write("createTables", async) {
