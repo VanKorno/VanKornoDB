@@ -17,10 +17,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
 ): T? = getObjPro(tableInfo) { this.where = where }
 
 
-/**
- * Gets one db table row as an object of an entity class using WhereDsl.
- * Returns [default] if no result found.
- */
+/** Default-value overload of [getObj] */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: TableInfoBase<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
@@ -34,6 +31,10 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
 
 
 
+/**
+ * Gets the last db table row as an object of an entity class using WhereDsl.
+ * Returns null if no result found.
+ */
 fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
 ): T? = getObjPro(tableInfo) {
@@ -41,6 +42,7 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
     orderBy { flipRows() }
 }
 
+/** Default-value overload of [getLastObj] */
 fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
@@ -72,6 +74,7 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
 }
 
 
+/** Default-value overload of [getRandomObj] */
 inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                                   tableInfo: TableInfoBase<out T>,
                                                                     default: T,

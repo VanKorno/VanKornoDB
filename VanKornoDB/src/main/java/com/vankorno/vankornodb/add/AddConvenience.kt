@@ -67,9 +67,7 @@ fun <T : CurrEntity> SQLiteDatabase.addWithAutoIdAndPosition(         tableInfo:
 }
 
 
-/**
- * Single-object overload of [addWithAutoIdAndPosition].
- */
+/** Single-object overload of [addWithAutoIdAndPosition] */
 fun <T : CurrEntity> SQLiteDatabase.addWithAutoIdAndPosition(         tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
                                                                      insertMode: InsertMode,

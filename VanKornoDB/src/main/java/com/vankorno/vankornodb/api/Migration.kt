@@ -19,6 +19,7 @@ import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeIntern
 class MigrationDsl() : MigrationDslInternal()
 
 
+/** Defines migrations for the given entity metadata. */
 fun defineMigrations(                                             entityMeta: BaseEntityMeta,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(
@@ -28,6 +29,7 @@ fun defineMigrations(                                             entityMeta: Ba
 )
 
 
+/** Overload of [defineMigrations] taking explicit version and schema bundle. */
 fun <T: CurrEntity> defineMigrations(                          latestVersion: Int,
                                                           latestSchemaBundle: CurrSchemaBundle<T>,
                                                                        block: MigrationDsl.()->Unit,

@@ -25,6 +25,7 @@ fun SQLiteDatabase.deleteRows(                                             table
 
 
 
+/** Deletes rows from the specified tables matching the condition. */
 fun SQLiteDatabase.deleteRowsFromTables(                                  tables: List<String>,
                                                                            where: WhereDsl.()->Unit,
 ) {
@@ -33,6 +34,7 @@ fun SQLiteDatabase.deleteRowsFromTables(                                  tables
     }
 }
 
+/** Vararg overload of [deleteRowsFromTables] */
 fun SQLiteDatabase.deleteRowsFromTables(                           vararg tables: String,
                                                                            where: WhereDsl.()->Unit,
 ) {
@@ -44,30 +46,37 @@ fun SQLiteDatabase.deleteRowsFromTables(                           vararg tables
 
 
 
+/** Deletes the first row from the specified table. */
 fun SQLiteDatabase.deleteFirstRow(                                                 table: String,
 ) {
     delete(table, "ROWID = (SELECT ROWID FROM $table LIMIT 1)", null)
 }
 
-
+/** Deletes the last row from the specified table. */
 fun SQLiteDatabase.deleteLastRow(                                                  table: String,
 ) {
     delete(table, "ROWID = (SELECT ROWID FROM $table ORDER BY ROWID DESC LIMIT 1)", null)
 }
 
 
+/** Clears the contents of the specified table. */
 fun SQLiteDatabase.clearTable(table: String) { execSQL("DELETE FROM " + table) }
 
+/** Clears the contents of the specified tables. */
 fun SQLiteDatabase.clearTables(vararg tables: String) = tables.forEach { clearTable(it) }
 
+/** List overload of [clearTables] */
 fun SQLiteDatabase.clearTables(tables: List<String>) = tables.forEach { clearTable(it) }
 
 
 
+/** Deletes the specified table from the database. */
 fun SQLiteDatabase.deleteTable(table: String) { execSQL("DROP TABLE IF EXISTS " + table) }
 
+/** Deletes the specified tables from the database. */
 fun SQLiteDatabase.deleteTables(vararg tables: String) = tables.forEach { deleteTable(it) }
 
+/** List overload of [deleteTables] */
 fun SQLiteDatabase.deleteTables(tables: List<String>) = tables.forEach { deleteTable(it) }
 
 
