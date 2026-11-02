@@ -56,7 +56,13 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
 }
 
 
-
+/**
+ * Inserts the given object into the specified database table without checking or modifying its ID.
+ *
+ * @param tableInfo The combination of a table name and its SchemaBundle.
+ * @param obj The entity object to insert.
+ * @return The ID of the inserted row, or -1 if an error occurred.
+ */
 fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
                                                                       tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
@@ -65,6 +71,21 @@ fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
     if (cv.size() == 0) return -1L //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
+
+
+/**
+ * Inserts multiple objects into the specified database table without checking or modifying their IDs.
+ *
+ * @param tableInfo The combination of a table name and its SchemaBundle.
+ * @param objects The entities to insert.
+ * @return A list of IDs of the inserted rows, with -1 indicating insertion failures.
+ */
+fun <T : NormalEntity> SQLiteDatabase.addObjectsWithoutIdCheck(       tableInfo: TableInfoNormal<T>,
+                                                                        objects: List<T>,
+): List<Long> = objects.map {
+    addObjWithoutIdCheck(tableInfo, it)
+}
+
 
 
 /**

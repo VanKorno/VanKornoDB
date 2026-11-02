@@ -4,10 +4,11 @@ package com.vankorno.vankornodb.dbManagement
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.add.InsertMode
 import com.vankorno.vankornodb.add.addObj
+import com.vankorno.vankornodb.add.addObjWithoutIdCheck
 import com.vankorno.vankornodb.add.addObjects
-import com.vankorno.vankornodb.add.addWithAutoIdAndPosition
+import com.vankorno.vankornodb.add.addObjectsWithoutIdCheck
+import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.*
@@ -275,7 +276,6 @@ abstract class DbHelperInternal(
         it.addObj(tableInfo, obj)
     }
     
-    
     /** A wrapper fun for [SQLiteDatabase.addObjects] */
     inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
@@ -284,6 +284,41 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.addObjWithoutIdCheck] */
+    inline fun <T : CurrEntity> addObjWithoutIdCheck(                 tableInfo: TableInfoNormal<T>,
+                                                                            obj: T,
+    ) = readWrite(-1L, "addObjWithoutIdCheck") {
+        it.addObjWithoutIdCheck(tableInfo, obj)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.addObjectsWithoutIdCheck] */
+    inline fun <T : CurrEntity> addObjectsWithoutIdCheck(             tableInfo: TableInfoNormal<T>,
+                                                                        objects: List<T>,
+    ) = readWrite(emptyList(), "addObjectsWithoutIdCheck") {
+        it.addObjectsWithoutIdCheck(tableInfo, objects)
+    }
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
+    fun <T : CurrEntity> addWithNewIdAndPosition(                     tableInfo: TableInfoNormal<T>,
+                                                                       entities: List<T>,
+                                                                          async: Boolean = false,
+                                                               setIdAndPosition: (T, Long, Long)->T,
+    ) = write("addWithNewIdAndPosition", async) {
+        it.addWithNewIdAndPosition(tableInfo, entities, setIdAndPosition)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
+    fun <T : CurrEntity> addWithNewIdAndPosition(                     tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
+                                                                          async: Boolean = false,
+                                                               setIdAndPosition: (T, Long, Long)->T,
+    ) = write("addWithNewIdAndPosition", async) {
+        it.addWithNewIdAndPosition(tableInfo, listOf(entity), setIdAndPosition)
+    }
+    
+    
+    // ---------------------------------------  S E T  --------------------------------------- \\
     
     /** A wrapper fun for [SQLiteDatabase.setObj] */
     fun <T : CurrEntity> setObj(                                      tableInfo: TableInfoNormal<T>,
@@ -295,27 +330,9 @@ abstract class DbHelperInternal(
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.addWithAutoIdAndPosition] */
-    fun <T : CurrEntity> addWithAutoIdAndPosition(                    tableInfo: TableInfoNormal<T>,
-                                                                       entities: List<T>,
-                                                                     insertMode: InsertMode,
-                                                                          async: Boolean = false,
-                                                                    getPosition: (T)->Long,
-                                                               setIdAndPosition: (T, Long, Long)->T,
-    ) = write("addWithAutoIdAndPosition", async) {
-        it.addWithAutoIdAndPosition(tableInfo, entities, insertMode, getPosition, setIdAndPosition)
-    }
     
-    /** A wrapper fun for [SQLiteDatabase.addWithAutoIdAndPosition] */
-    fun <T : CurrEntity> addWithAutoIdAndPosition(                    tableInfo: TableInfoNormal<T>,
-                                                                         entity: T,
-                                                                     insertMode: InsertMode,
-                                                                          async: Boolean = false,
-                                                                    getPosition: (T)->Long,
-                                                               setIdAndPosition: (T, Long, Long)->T,
-    ) = write("addWithAutoIdAndPosition", async) {
-        it.addWithAutoIdAndPosition(tableInfo, listOf(entity), insertMode, getPosition, setIdAndPosition)
-    }
+    
+    
     
     
     // ==================================   G E T T E R S  ================================== \\
