@@ -32,7 +32,7 @@ abstract class DbReaderWriter(
     runOnUpgrade = onUpgrade,
 ) {
     /** A shared fun */
-    private inline fun writeBase(                               funName: String = "write",
+    private inline fun writeBase(                                   funName: String = "write",
                                                           crossinline block: (SQLiteDatabase)->Unit,
     ) {
         try {
