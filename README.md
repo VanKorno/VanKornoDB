@@ -7,7 +7,7 @@ You can create multiple tables from the same entity class, or use multiple entit
 This enables a very different workflow. For example, instead of storing all TODO items in one huge table, each TODO list can have its own table. When a list is deleted, the entire table is dropped — no need to delete rows one by one.
 This approach results in better encapsulation, simpler logic, easier ID management, and often better performance.
 It’s similar to organizing files by folders instead of dumping everything into one directory. The database structure better reflects the actual structure of an app.
-That approach enables countless possibilities for dynamic generation of tables/columns etc. For example, with traditional ORM you would have to type every single column in it's entity definition, but with VanKornoDB you can easily use loops or just lists in entity definitions.
+That approach enables countless possibilities for dynamic generation of tables/columns etc. For example, with traditional ORM you would have to type every single column in its entity definition, but with VanKornoDB you can easily use loops or just lists in entity definitions.
 
 
 Another key feature is a convenient, modern DSL that lets you do even the craziest nested things with the db, and keep your code readable and pleasant to deal with at the same time. It makes writing queries safer and more convenient, without limiting what you can do with SQLite. It's like Jetpack Compose, but for databases ;)
@@ -62,7 +62,7 @@ No string parsing or JSON blobs
 
 ## Examples
 
-getCursor() - a function that's often used by other functions under the hood. It can also be useful when you want do do some things with the cursor directly:
+getCursor() - a function that's often used by other functions under the hood. It can also be useful when you want to do some things with the cursor directly:
 
 ```kotlin
 db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals to value 'userName' 
@@ -181,33 +181,11 @@ dependencyResolutionManagement {
 ```
 
 
-## R8
-If you're using the R8 optimization, put this into your app's proguard-rules.pro:
-```
-# Keep all classes implementing DbEntity and their primary constructors
--keep class * implements com.vankorno.vankornodb.dbManagement.data.BaseEntity {
-    <init>(...);
-}
-
-# Keep all fields and methods (needed for defaultInstanceValueOf and reflection)
--keepclassmembers class * implements com.vankorno.vankornodb.dbManagement.data.BaseEntity {
-    <fields>;
-    <methods>;
-}
-
-# Keep constructor parameter names (needed for reflection-based mapping)
--keepattributes RuntimeVisibleParameterAnnotations,ParameterNames
-
-```
-It is needed because VanKornoDB uses reflection as a "plan-B" if some data in schema bundles is missing. It maps db column name directly to a class param name and we don't want R8 to shrink those names and break the mapping.
-
-
-
 ## Migrations
 You keep in your files and provide the migration system with the current entity class and the previous classes.
-It automatically chooses from which to which class to migrate, and which intermediate steps to do (milestones).
+It automatically chooses from which to which class to migrate, and which intermediate steps to take (milestones).
 It automatically removes deleted rows and adds new ones. You don't have to state that anywhere.
-For things like renaming you'll have to keep the a convenient DSL-record, like this example from a real project:
+For things like renaming you'll have to keep a convenient DSL-record, like this example from a real project:
 
 ```kotlin
 fun migrationsTaskoid() = defineMigrations(
@@ -241,7 +219,7 @@ fun migrationsTaskoid() = defineMigrations(
 }
 ```
 Normal migrations get skipped, their differences are handled automatically. There's no need to migrate through each of them. The system is smarter: calculates the differences based on the data you keep, then migrates to the latest class it can.
-You define milestones when you want to make the migration non-skippable, it'll became a step in the migration chain, at which you can run more advanced data transformations using the DSL for popular actions or provide your own lambda to modify data the way you want.
+You define milestones when you want to make the migration non-skippable, it'll become a step in the migration chain, at which you can run more advanced data transformations using the DSL for popular actions or provide your own lambda to modify data the way you want.
 
 
 ## Lists
