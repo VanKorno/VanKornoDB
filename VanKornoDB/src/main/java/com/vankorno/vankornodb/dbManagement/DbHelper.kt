@@ -37,9 +37,6 @@ abstract class DbHelperInternal(
     onCreate = onCreate,
     onUpgrade = onUpgrade,
 ) {
-    
-    // ===================================  C U R S O R  =================================== \\
-    
     // ===================================  C U R S O R  =================================== \\
     
     /** A wrapper fun for [SQLiteDatabase.getCursor] */
@@ -180,8 +177,6 @@ abstract class DbHelperInternal(
             block(cursor)
         }
     }
-    
-    
     
     
     
@@ -1076,8 +1071,10 @@ abstract class DbHelperInternal(
     
     
     // ====================================  O T H E R  ==================================== \\
+    
     /** A wrapper fun for [SQLiteDatabase.getLastId] */
     inline fun getLastId(table: String): Long = read(0L, "getLastId") { it.getLastId(table) }
+    
     
     /** A wrapper fun for [SQLiteDatabase.getId] */
     fun getId(                                                             table: String,
@@ -1094,10 +1091,6 @@ abstract class DbHelperInternal(
         it.getIDs(table, where, orderBy)
     }
     
-    
-    
-    
-    
     /** A wrapper fun for [SQLiteDatabase.getAllIDs] */
     fun getAllIDs(                                                    table: String,
                                                                     orderBy: OrderDsl.()->Unit = {},
@@ -1111,7 +1104,6 @@ abstract class DbHelperInternal(
     ): Boolean = read(false, "tableExists") {
         it.tableExists(table)
     }
-    
     
     /** A wrapper fun for [SQLiteDatabase.isTableEmpty] */
     inline fun isTableEmpty(                                                       table: String
@@ -1197,7 +1189,6 @@ abstract class DbHelperInternal(
         db.getRandomFloat(table, column, where)
     }
     
-    
     /** A wrapper fun for [SQLiteDatabase.getRandomId] */
     fun getRandomId(                                                  table: String,
                                                                       where: WhereDsl.()->Unit = {},
@@ -1224,7 +1215,6 @@ abstract class DbHelperInternal(
         it.createTable(tableInfo)
     }
     
-    
     /** A wrapper fun for [SQLiteDatabase.createTables] */
     inline fun createTables(                       vararg tables: TableInfoNormal<out NormalEntity>,
                                                            async: Boolean = false,
@@ -1232,18 +1222,11 @@ abstract class DbHelperInternal(
         it.createTables(*tables)
     }
     
-    
     /** A wrapper fun for [SQLiteDatabase.createTables] */
     inline fun createTables(                        tables: List<TableInfoNormal<out NormalEntity>>,
                                                      async: Boolean = false,
     ) = write("createTables", async) {
         it.createTables(tables)
     }
-    
-    
-    
-    
-    
-    
     
 }
