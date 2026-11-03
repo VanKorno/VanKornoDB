@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.add
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
-import com.vankorno.vankornodb.get.getLastId
+import com.vankorno.vankornodb.get.getNewIDs
 import com.vankorno.vankornodb.get.getLastPosition
 
 /**
@@ -19,13 +19,13 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo:
                                                                        entities: List<T>,
                                                                setIdAndPosition: (T, Long, Long)->T,
 ) {
-    var nextId = getLastId(tableInfo.name) + 1
+    val newIDs = getNewIDs(tableInfo.name, entities.size)
+    
     var nextPosition = getLastPosition(tableInfo.name) + 1
     
-    for (entity in entities) {
-        val newEntity = setIdAndPosition(entity, nextId, nextPosition)
+    entities.forEachIndexed { idx, entity ->
+        val newEntity = setIdAndPosition(entity, newIDs[idx], nextPosition)
         addObjWithoutIdCheck(tableInfo, newEntity)
-        nextId++
         nextPosition++
     }
 }

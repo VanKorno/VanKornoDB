@@ -1,4 +1,4 @@
-package com.vankorno.sandbox.get.extra
+package com.vankorno.sandbox.get.id
 
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRat

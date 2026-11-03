@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.toContentValues
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
-import com.vankorno.vankornodb.get.getLastId
+import com.vankorno.vankornodb.get.getNewIDs
+import com.vankorno.vankornodb.get.getNewId
 import com.vankorno.vankornodb.misc.wLog
-import kotlin.math.max
 
 /*
  * ## Rules for List Parameters:
@@ -41,7 +41,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
                                                                             obj: T,
 ): Long {
     val modified =  if (obj.id < 1L)
-                        tableInfo.schema.withId(obj, getLastId(tableInfo.name) + 1L)
+                        tableInfo.schema.withId(obj, getNewId(tableInfo.name))
                     else
                         obj
     
@@ -101,34 +101,28 @@ fun <T : NormalEntity> SQLiteDatabase.addObjectsWithoutIdCheck(       tableInfo:
 fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
 ): List<Long> {
-    val maxObjId = objects.maxOfOrNull { it.id } ?: 0L
-    var newId = -1L
+    val newIDs = getNewIDs(
+        table = tableInfo.name,
+        count = objects.count { it.id < 1L },
+        reservedIDs = objects.filter { it.id > 0L }.map { it.id }.toSet()
+    ).iterator()
     
     val addedIDs = mutableListOf<Long>()
     
     for (obj in objects) {
-        val needsNewId = obj.id < 1L
-        
-        if (needsNewId && newId == -1L)
-            newId = max(maxObjId, getLastId(tableInfo.name) + 1L)
-        
-        val modifiedObj =   if (needsNewId)
-                                tableInfo.schema.withId(obj, newId)
-                            else
-                                obj
+        val modifiedObj = if (obj.id < 1L)
+            tableInfo.schema.withId(obj, newIDs.next())
+        else
+            obj
         
         val rowId = addObjWithoutIdCheck(tableInfo, modifiedObj)
         
-        if (rowId == -1L) {
+        if (rowId == -1L)
             // region LOG
                 wLog("addObjects() FAILED to insert object: $modifiedObj")
             // endregion
-        } else {
-            if (needsNewId) {
-                newId++
-            }
+        else
             addedIDs.add(modifiedObj.id)
-        }
     }
     return addedIDs
 }

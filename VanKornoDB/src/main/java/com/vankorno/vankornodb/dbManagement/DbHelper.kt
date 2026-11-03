@@ -1116,6 +1116,22 @@ abstract class DbHelperInternal(
     }
     
     
+    /** A wrapper fun for [SQLiteDatabase.getNewIDs] */
+    fun getNewIDs(                                                    table: String,
+                                                                      count: Int,
+                                                                reservedIDs: Set<Long> = emptySet(),
+    ): List<Long> = read(emptyList(), "getNewIDs") {
+        it.getNewIDs(table, count, reservedIDs)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getNewId] */
+    fun getNewId(                                                    table: String,
+                                                                reservedIDs: Set<Long> = emptySet(),
+    ): Long = read(-1L, "getNewId") {
+        it.getNewId(table, reservedIDs)
+    }
+    
+    
     /** A wrapper fun for [SQLiteDatabase.tableExists] */
     inline fun tableExists(                                                        table: String
     ): Boolean = read(false, "tableExists") {
