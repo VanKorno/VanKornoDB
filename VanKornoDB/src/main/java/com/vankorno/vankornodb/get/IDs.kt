@@ -60,7 +60,7 @@ fun SQLiteDatabase.getNewIDs(                                         table: Str
     return  if (enoughSpace)
                 List(count) { idx -> maxID + idx + 1L }
             else
-                getFreeIDs(table, count, reservedIDs)
+                getFreeIDsBefore(table, count, reservedIDs)
 }
 
 
@@ -78,7 +78,7 @@ fun SQLiteDatabase.getNewId(                                          table: Str
  *
  * @throws IllegalStateException If there aren't enough available positive IDs.
  */
-private fun SQLiteDatabase.getFreeIDs(                                table: String,
+private fun SQLiteDatabase.getFreeIDsBefore(                                table: String,
                                                                       count: Int,
                                                                 reservedIDs: Set<Long> = emptySet(),
 ): List<Long> {
