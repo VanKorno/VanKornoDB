@@ -4,8 +4,8 @@ package com.vankorno.vankornodb.add
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
-import com.vankorno.vankornodb.get.getNewIDs
-import com.vankorno.vankornodb.get.getLastPosition
+import com.vankorno.vankornodb.get.getNextIDs
+import com.vankorno.vankornodb.get.getNextPositions
 
 /**
  * Inserts multiple entities while automatically assigning new IDs and positions.
@@ -19,19 +19,19 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo:
                                                                        entities: List<T>,
                                                                setIdAndPosition: (T, Long, Long)->T,
 ) {
-    val newIDs = getNewIDs(tableInfo.name, entities.size)
-    
-    var nextPosition = getLastPosition(tableInfo.name) + 1
-    
+    val newIDs = getNextIDs(tableInfo.name, entities.size)
+    val newPositions = getNextPositions(tableInfo.name, entities.size)
+
     entities.forEachIndexed { idx, entity ->
-        val newEntity = setIdAndPosition(entity, newIDs[idx], nextPosition)
+        val newEntity = setIdAndPosition(entity, newIDs[idx], newPositions[idx])
         addObjWithoutIdCheck(tableInfo, newEntity)
-        nextPosition++
     }
 }
 
 
-/** Single-object overload of [addWithNewIdAndPosition] */
+/**
+ *  Single-object overload of [addWithNewIdAndPosition]
+ */
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
                                                                setIdAndPosition: (T, Long, Long)->T,

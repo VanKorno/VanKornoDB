@@ -1116,19 +1116,19 @@ abstract class DbHelperInternal(
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.getNewIDs] */
-    fun getNewIDs(                                                    table: String,
+    /** A wrapper fun for [SQLiteDatabase.getNextIDs] */
+    fun getNextIDs(                                                   table: String,
                                                                       count: Int,
                                                                 reservedIDs: Set<Long> = emptySet(),
-    ): List<Long> = read(emptyList(), "getNewIDs") {
-        it.getNewIDs(table, count, reservedIDs)
+    ): List<Long> = read(emptyList(), "getNextIDs") {
+        it.getNextIDs(table, count, reservedIDs)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getNewId] */
-    fun getNewId(                                                    table: String,
+    /** A wrapper fun for [SQLiteDatabase.getNextId] */
+    fun getNextId(                                                    table: String,
                                                                 reservedIDs: Set<Long> = emptySet(),
-    ): Long = read(-1L, "getNewId") {
-        it.getNewId(table, reservedIDs)
+    ): Long = read(-1L, "getNextId") {
+        it.getNextId(table, reservedIDs)
     }
     
     
@@ -1168,6 +1168,65 @@ abstract class DbHelperInternal(
     ): Long = read(0L, "getLastPosition") {
         it.getLastPosition(table, where)
     }
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.getNextPosition] */
+    fun getNextPosition(                                               table: String,
+                                                                   reserved: Set<Long> = emptySet(),
+    ): Long = read(-1L, "getNextPosition") {
+        it.getNextPosition(table, reserved)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getNextPositions] */
+    fun getNextPositions(                                              table: String,
+                                                                      count: Int,
+                                                                   reserved: Set<Long> = emptySet(),
+    ): List<Long> = read(emptyList(), "getNextPositions") {
+        it.getNextPositions(table, count, reserved)
+    }
+    
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.getNextInt] */
+    fun getNextInt(                                                    table: String,
+                                                                      column: IntCol,
+                                                                   startFrom: Int = 1,
+                                                                    reserved: Set<Int> = emptySet(),
+    ): Int = read(-1, "getNextInt") {
+        it.getNextInt(table, column, startFrom, reserved)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getNextInts] */
+    fun getNextInts(                                                   table: String,
+                                                                      column: IntCol,
+                                                                       count: Int,
+                                                                   startFrom: Int = 1,
+                                                                    reserved: Set<Int> = emptySet(),
+    ): List<Int> = read(emptyList(), "getNextInts") {
+        it.getNextInts(table, column, count, startFrom, reserved)
+    }
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.getNextLong] */
+    fun getNextLong(                                                  table: String,
+                                                                     column: LongCol,
+                                                                  startFrom: Long = 1L,
+                                                                   reserved: Set<Long> = emptySet(),
+    ): Long = read(-1L, "getNextLong") {
+        it.getNextLong(table, column, startFrom, reserved)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getNextLongs] */
+    fun getNextLongs(                                                 table: String,
+                                                                     column: LongCol,
+                                                                      count: Int,
+                                                                  startFrom: Long = 1L,
+                                                                   reserved: Set<Long> = emptySet(),
+    ): List<Long> = read(emptyList(), "getNextLongs") {
+        it.getNextLongs(table, column, count, startFrom, reserved)
+    }
+    
+    
     
     /** A wrapper fun for [SQLiteDatabase.getLargestInt] */
     fun getLargestInt(                                                table: String,

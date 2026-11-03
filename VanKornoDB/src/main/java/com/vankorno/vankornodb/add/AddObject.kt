@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.toContentValues
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
-import com.vankorno.vankornodb.get.getNewIDs
-import com.vankorno.vankornodb.get.getNewId
+import com.vankorno.vankornodb.get.getNextIDs
+import com.vankorno.vankornodb.get.getNextId
 import com.vankorno.vankornodb.misc.wLog
 
 /*
@@ -41,7 +41,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
                                                                             obj: T,
 ): Long {
     val modified =  if (obj.id < 1L)
-                        tableInfo.schema.withId(obj, getNewId(tableInfo.name))
+                        tableInfo.schema.withId(obj, getNextId(tableInfo.name))
                     else
                         obj
     
@@ -101,7 +101,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObjectsWithoutIdCheck(       tableInfo:
 fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
 ): List<Long> {
-    val newIDs = getNewIDs(
+    val newIDs = getNextIDs(
         table = tableInfo.name,
         count = objects.count { it.id < 1L },
         reservedIDs = objects.filter { it.id > 0L }.map { it.id }.toSet()

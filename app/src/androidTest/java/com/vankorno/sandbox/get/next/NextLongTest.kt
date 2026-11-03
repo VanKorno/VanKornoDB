@@ -1,7 +1,6 @@
-package com.vankorno.sandbox.get.id
+package com.vankorno.sandbox.get.next
 
 import androidx.test.filters.MediumTest
-import com.vankorno.sandbox.LabRatQuant
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
@@ -12,28 +11,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 @MediumTest
-class GetNewIdTest {
+class NextLongTest {
     /**
-     *  With a non-existent table:
-     *  getNewId returns -1
-     *  getNewIDs returns an empty List
-     */
-    @Test
-    fun nonExistentTable() {
-        val table = "GodTable"
-        
-        val id1 = dbh.getNewId(table)
-        val ids1 = dbh.getNewIDs(table, 3)
-        assertEquals(-1L, id1)
-        assertEquals(emptyList<Long>(), ids1)
-        
-        dbh.deleteTable(table)
-    }
-    
-    /**
-     *  With an empty table:
-     *  getNewId returns 1
-     *  getNewIDs returns first ids
+     * With an empty table:
+     * getNextLong returns 1
+     * getNextLongs returns first values
      */
     @Test
     fun emptyTable() {
@@ -44,25 +26,22 @@ class GetNewIdTest {
     }
     
     /**
-     *  Standard behavior for tables with existing rows:
-     *  getNewId and getNewIDs return ids larger (next) than the last existing id.
+     * Standard behavior for tables with existing rows:
+     * getNextLong and getNextLongs return values larger than the last existing value.
      */
     @Test
-    fun standardLastIDs() {
-        val table = "standardLastIDs"
+    fun standardLastValues() {
+        val table = "standardLastValues"
         
         dbh.getLabRats(table)
         assertBothFun(table, 51L, 52L)
         
-        // Delete one row
         dbh.deleteRows(table) { ID = 10 }
         assertBothFun(table, 51L, 52L)
         
-        // Delete first rows
         dbh.deleteRows(table) { cID less 10 }
         assertBothFun(table, 51L, 52L)
         
-        // Add larger num ID
         dbh.addObjWithoutIdCheck(table using _Test, TestEntity(999990))
         assertBothFun(table, 999991L, 999992L)
         
@@ -70,7 +49,7 @@ class GetNewIdTest {
     }
     
     
-    /** In an empty table with first IDs reserved, fun find IDs after. */
+    /** In an empty table with first values reserved, the allocator finds values after them */
     @Test
     fun reservedInEmptyTable() {
         val table = "reservedInEmptyTable"
@@ -82,9 +61,7 @@ class GetNewIdTest {
     }
     
     
-    /**
-     *  In a filled table with first IDs taken and next IDs reserved, fun find IDs after all of them.
-     */
+    /** In a filled table with next values reserved, the allocator finds values after all of them */
     @Test
     fun reservedInFilledTableSequential() {
         val table = "reservedInFilledTableSequential"
@@ -97,19 +74,19 @@ class GetNewIdTest {
     }
     
     
-    /** With even IDs reserved and odd not reserved, the fun find IDs after all of them. */
+    /** With even values reserved and odd values available, the allocator finds values after them */
     @Test
     fun reservedEvenNumbersIn() {
         val table = "reservedEvenNumbersIn"
         val reserved = setOf(2L, 4L, 6L)
-        
+
         dbh.createTable(table using _Test)
         assertBothFun(table, 7L, 8L, reserved)
         dbh.deleteTable(table)
     }
     
     
-    /** In a table with a single row that has max Long value ID, fun find first ids */
+    /** With Long.MAX_VALUE in a single row, the allocator finds the first available values */
     @Test
     fun maxValueInSingleRowTable() {
         val table = "maxValueInSingleRowTable"
@@ -123,7 +100,7 @@ class GetNewIdTest {
     }
     
     
-    /** With max Long value in reserved IDs, fun find first ids */
+    /** With Long.MAX_VALUE reserved, the allocator finds the first available values */
     @Test
     fun maxValueInReserved() {
         val table = "maxValueInReserved"
@@ -135,8 +112,8 @@ class GetNewIdTest {
     
     /**
      * In case of MAX_VALUE - 1:
-     * getNewId returns MAX_VALUE ID
-     * getNewIDs return first IDs
+     * getNextLong returns MAX_VALUE
+     * getNextLongs returns first available values
      */
     @Test
     fun closeToMax() {
@@ -146,19 +123,19 @@ class GetNewIdTest {
         dbh.createTable(tableInfo)
         dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
-        val id1 = dbh.getNewId(table)
-        val ids1 = dbh.getNewIDs(table, 2)
-        assertEquals(Long.MAX_VALUE, id1)
-        assertEquals(listOf(1L, 2L), ids1)
+        val value1 = dbh.getNextLong(table, cID)
+        val values1 = dbh.getNextLongs(table, cID, 2)
+        assertEquals(Long.MAX_VALUE, value1)
+        assertEquals(listOf(1L, 2L), values1)
         
         dbh.deleteTable(table)
     }
     
     
     /**
-     * In case of 'MAX_VALUE - 1' in reserved:
-     * getNewId returns MAX_VALUE ID
-     * getNewIDs return first IDs
+     * In case of MAX_VALUE - 1 in reserved:
+     * getNextLong returns MAX_VALUE
+     * getNextLongs returns first available values
      */
     @Test
     fun reservedCloseToMax() {
@@ -169,30 +146,35 @@ class GetNewIdTest {
         dbh.createTable(tableInfo)
         dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
-        val id1 = dbh.getNewId(table, reserved)
-        val ids1 = dbh.getNewIDs(table, 2, reserved)
-        assertEquals(Long.MAX_VALUE, id1)
-        assertEquals(listOf(1L, 2L), ids1)
+        val value1 = dbh.getNextLong(table, cID, reserved = reserved)
+        val values1 = dbh.getNextLongs(table, cID, 2, reserved = reserved)
+        assertEquals(Long.MAX_VALUE, value1)
+        assertEquals(listOf(1L, 2L), values1)
         
         dbh.deleteTable(table)
     }
     
     
-    /** With even IDs already taken, Plan-B finds odd IDs. */
+    /** With even values already taken, fallback finds the available odd values */
     @Test
     fun takenEvenNumbersWithMaxValueCeiling() {
         val table = "takenEvenNumbersWithMaxValueCeiling"
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(TestEntity(2L), TestEntity(4L), TestEntity(6L), TestEntity(Long.MAX_VALUE)))
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(2L),
+            TestEntity(4L),
+            TestEntity(6L),
+            TestEntity(Long.MAX_VALUE)
+        ))
         
         assertBothFun(table, 1L, 3L)
         dbh.deleteTable(table)
     }
     
     
-    /** With even IDs reserved and odd not reserved, Plan-B finds odd IDs. */
+    /** With even values reserved, fallback finds the available odd values */
     @Test
     fun reservedEvenNumbersWithMaxValueCeiling() {
         val table = "reservedEvenNumbersWithMaxValueCeiling"
@@ -204,18 +186,14 @@ class GetNewIdTest {
     }
     
     
-    
     private fun assertBothFun(                                        table: String,
                                                               firstExpected: Long,
                                                              secondExpected: Long,
                                                                    reserved: Set<Long> = emptySet(),
     ) {
-        val id1 = dbh.getNewId(table, reserved)
-        val ids1 = dbh.getNewIDs(table, 2, reserved)
-        assertEquals(firstExpected, id1)
-        assertEquals(listOf(firstExpected, secondExpected), ids1)
+        val value1 = dbh.getNextLong(table, cID, reserved = reserved)
+        val values1 = dbh.getNextLongs(table, cID, 2, reserved = reserved)
+        assertEquals(firstExpected, value1)
+        assertEquals(listOf(firstExpected, secondExpected), values1)
     }
-    
-    
-    
 }

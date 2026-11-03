@@ -1,0 +1,209 @@
+package com.vankorno.sandbox.get.next
+
+import androidx.test.filters.MediumTest
+import com.vankorno.sandbox._entities.testEntity.CTest
+import com.vankorno.sandbox._entities.testEntity.CTest.Int1
+import com.vankorno.sandbox._entities.testEntity.TestEntity
+import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.dbManagement.data.using
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
+@MediumTest
+class NextIntTest {
+    /**
+     * With an empty table:
+     * getNextInt returns 1
+     * getNextInts returns first values
+     */
+    @Test
+    fun emptyTable() {
+        val table = "EmptyTable"
+        dbh.createTable(table using _Test)
+        assertBothFun(table, 1, 2)
+        dbh.deleteTable(table)
+    }
+    
+    
+    /**
+     * Standard behavior for tables with existing values:
+     * getNextInt and getNextInts return values larger than the largest existing value.
+     */
+    @Test
+    fun standardLastValues() {
+        val table = "standardLastValues"
+        val tableInfo = table using _Test
+        
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, List(20) { idx ->
+            TestEntity(int1 = idx + 1)
+        })
+        
+        assertBothFun(table, 21, 22)
+        
+        dbh.deleteRows(table) { Int1 equal 10 }
+        assertBothFun(table, 21, 22)
+        
+        dbh.deleteRows(table) { Int1 less 10 }
+        assertBothFun(table, 21, 22)
+        
+        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = 999990))
+        assertBothFun(table, 999991, 999992)
+        
+        dbh.deleteTable(table)
+    }
+
+
+    /** In an empty table with first values reserved, the allocator finds values after them. */
+    @Test
+    fun reservedInEmptyTable() {
+        val table = "reservedInEmptyTable"
+        val reserved = setOf(1, 2, 3)
+        
+        dbh.createTable(table using _Test)
+        assertBothFun(table, 4, 5, reserved)
+        dbh.deleteTable(table)
+    }
+    
+    
+    /** In a filled table with next values reserved, the allocator finds values after all of them. */
+    @Test
+    fun reservedInFilledTableSequential() {
+        val table = "reservedInFilledTableSequential"
+        val reserved = setOf(11, 12, 13)
+        val tableInfo = table using _Test
+        
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, List(10) { idx ->
+            TestEntity(int1 = idx + 1)
+        })
+        
+        assertBothFun(table, 14, 15, reserved)
+        dbh.deleteTable(table)
+    }
+    
+    
+    /** With even values reserved and odd values available, the allocator finds values after them. */
+    @Test
+    fun reservedEvenNumbersIn() {
+        val table = "reservedEvenNumbersIn"
+        val reserved = setOf(2, 4, 6)
+        
+        dbh.createTable(table using _Test)
+        assertBothFun(table, 7, 8, reserved)
+        dbh.deleteTable(table)
+    }
+    
+    
+    /** With Int.MAX_VALUE in a single row, the allocator finds the first available values. */
+    @Test
+    fun maxValueInSingleRowTable() {
+        val table = "maxValueInSingleRowTable"
+        val tableInfo = table using _Test
+        
+        dbh.createTable(tableInfo)
+        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE))
+        
+        assertBothFun(table, 1, 2)
+        dbh.deleteTable(table)
+    }
+    
+    
+    /** With Int.MAX_VALUE reserved, the allocator finds the first available values. */
+    @Test
+    fun maxValueInReserved() {
+        val table = "maxValueInReserved"
+        dbh.createTable(table using _Test)
+        assertBothFun(table, 1, 2, setOf(50, Int.MAX_VALUE))
+        dbh.deleteTable(table)
+    }
+    
+    
+    /**
+     * In case of MAX_VALUE - 1:
+     * getNextInt returns MAX_VALUE
+     * getNextInts returns first available values
+     */
+    @Test
+    fun closeToMax() {
+        val table = "closeToMax"
+        val tableInfo = table using _Test
+        
+        dbh.createTable(tableInfo)
+        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
+        
+        val value1 = dbh.getNextInt(table, Int1)
+        val values1 = dbh.getNextInts(table, Int1, 2)
+        assertEquals(Int.MAX_VALUE, value1)
+        assertEquals(listOf(1, 2), values1)
+        
+        dbh.deleteTable(table)
+    }
+    
+    
+    /**
+     * In case of MAX_VALUE - 1 in reserved:
+     * getNextInt returns MAX_VALUE
+     * getNextInts returns first available values
+     */
+    @Test
+    fun reservedCloseToMax() {
+        val table = "reservedCloseToMax"
+        val tableInfo = table using _Test
+        val reserved = setOf(100, Int.MAX_VALUE - 1)
+        
+        dbh.createTable(tableInfo)
+        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
+        
+        val value1 = dbh.getNextInt(table, CTest.Int1, reserved = reserved)
+        val values1 = dbh.getNextInts(table, CTest.Int1, 2, reserved = reserved)
+        assertEquals(Int.MAX_VALUE, value1)
+        assertEquals(listOf(1, 2), values1)
+        
+        dbh.deleteTable(table)
+    }
+    
+    
+    /** With even values already taken, fallback finds the available odd values. */
+    @Test
+    fun takenEvenNumbersWithMaxValueCeiling() {
+        val table = "takenEvenNumbersWithMaxValueCeiling"
+        val tableInfo = table using _Test
+        
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(int1 = 2),
+            TestEntity(int1 = 4),
+            TestEntity(int1 = 6),
+            TestEntity(int1 = Int.MAX_VALUE)
+        ))
+        
+        assertBothFun(table, 1, 3)
+        dbh.deleteTable(table)
+    }
+    
+    
+    /** With even values reserved, fallback finds the available odd values. */
+    @Test
+    fun reservedEvenNumbersWithMaxValueCeiling() {
+        val table = "reservedEvenNumbersWithMaxValueCeiling"
+        val reserved = setOf(2, 4, 6, Int.MAX_VALUE)
+        
+        dbh.createTable(table using _Test)
+        assertBothFun(table, 1, 3, reserved)
+        dbh.deleteTable(table)
+    }
+    
+    
+    private fun assertBothFun(                                        table: String,
+                                                              firstExpected: Int,
+                                                             secondExpected: Int,
+                                                                   reserved: Set<Int> = emptySet(),
+    ) {
+        val value1 = dbh.getNextInt(table, CTest.Int1, reserved = reserved)
+        val values1 = dbh.getNextInts(table, CTest.Int1, 2, reserved = reserved)
+        assertEquals(firstExpected, value1)
+        assertEquals(listOf(firstExpected, secondExpected), values1)
+    }
+}

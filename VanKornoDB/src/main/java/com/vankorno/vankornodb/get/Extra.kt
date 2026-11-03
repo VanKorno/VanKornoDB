@@ -59,38 +59,6 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABL
 
 fun SQLiteDatabase.isTableEmpty(table: String) = !hasRows(table)
 
-/**
- * Returns 0L if nothing was found
- */
-fun SQLiteDatabase.getLastPosition(                                   table: String,
-                                                                      where: WhereDsl.()->Unit = {},
-) = getLargestLong(table, cPosition, where)
-
-
-/**
- * Returns 0L if nothing was found
- */
-fun SQLiteDatabase.getLargestInt(                                     table: String,
-                                                                     column: IntCol,
-                                                                      where: WhereDsl.()->Unit = {},
-): Int = getInt(
-    table,
-    iCol("IFNULL(MAX(${column.name}), 0)"),
-    where
-)
-
-/**
- * Returns 0L if nothing was found
- */
-fun SQLiteDatabase.getLargestLong(                                    table: String,
-                                                                     column: LongCol,
-                                                                      where: WhereDsl.()->Unit = {},
-): Long = getLong(
-    table,
-    lCol("IFNULL(MAX(${column.name}), 0)"),
-    where
-)
-
 
 
 fun SQLiteDatabase.getDbFileName(): String = File(path).name
