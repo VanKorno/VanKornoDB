@@ -12,6 +12,10 @@ import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.*
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateId
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateInts
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateLongs
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicatePosition
 import com.vankorno.vankornodb.delete.*
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
@@ -933,6 +937,39 @@ abstract class DbHelperInternal(
                                                                       where: WhereDsl.()->Unit = {},
     ) = write("flipBool", async) { db ->
         db.flipBool(table, column, where)
+    }
+    
+    
+    // ---------------------------------  F I X   D U P L I C A T E S  --------------------------------- \\
+    
+    /** A wrapper fun for [SQLiteDatabase.fixDuplicateId] */
+    fun fixDuplicateId(                                               table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Int = readWrite(0, "fixDuplicateId") { db ->
+        db.fixDuplicateId(table, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.fixDuplicatePosition] */
+    fun fixDuplicatePosition(                                         table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Int = readWrite(0, "fixDuplicatePosition") { db ->
+        db.fixDuplicatePosition(table, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.fixDuplicateLongs] */
+    fun fixDuplicateLongs(                                            table: String,
+                                                                     column: LongCol,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Int = readWrite(0, "fixDuplicateLongs") { db ->
+        db.fixDuplicateLongs(table, column, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.fixDuplicateInts] */
+    fun fixDuplicateInts(                                             table: String,
+                                                                     column: IntCol,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Int = readWrite(0, "fixDuplicateInts") { db ->
+        db.fixDuplicateInts(table, column, where)
     }
     
     

@@ -9,9 +9,29 @@ import com.vankorno.vankornodb.get.getNextInts
 import com.vankorno.vankornodb.get.getNextLongs
 import com.vankorno.vankornodb.get.getTableLongs
 import com.vankorno.vankornodb.get.useCursor
+import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
 import com.vankorno.vankornodb.set.setInt
 import com.vankorno.vankornodb.set.setLong
+
+/**
+ * Fixes duplicate IDs in the specified table by assigning new unique IDs.
+ * @return The number of rows modified.
+ */
+fun SQLiteDatabase.fixDuplicateId(                                    table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+) = fixDuplicateLongs(table, cID, where)
+
+
+/**
+ * Fixes duplicate positions in the specified table by assigning new unique positions.
+ * @return The number of rows modified.
+ */
+fun SQLiteDatabase.fixDuplicatePosition(                              table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+) = fixDuplicateLongs(table, cPosition, where)
+
 
 /**
  * Finds duplicate values in a column and assigns unique values to subsequent occurrences.
@@ -40,7 +60,12 @@ fun SQLiteDatabase.fixDuplicateLongs(                                 table: Str
 }
 
 
-
+/**
+ * Finds duplicate values in a column and assigns unique values to subsequent occurrences.
+ * The first occurrence of each value is preserved.
+ *
+ * @return Number of rows modified.
+ */
 fun SQLiteDatabase.fixDuplicateInts(                                  table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
