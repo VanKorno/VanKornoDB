@@ -25,8 +25,6 @@ class NextIdTest {
         val ids1 = dbh.getNextIDs(table, 3)
         assertEquals(-1L, id1)
         assertEquals(emptyList<Long>(), ids1)
-        
-        dbh.deleteTable(table)
     }
     
     /**

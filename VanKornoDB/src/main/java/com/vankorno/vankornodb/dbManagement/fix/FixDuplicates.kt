@@ -9,20 +9,10 @@ import com.vankorno.vankornodb.get.getNextInts
 import com.vankorno.vankornodb.get.getNextLongs
 import com.vankorno.vankornodb.get.getTableLongs
 import com.vankorno.vankornodb.get.useCursor
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
 import com.vankorno.vankornodb.set.setInt
 import com.vankorno.vankornodb.set.setLong
-
-/**
- * Fixes duplicate IDs in the specified table by assigning new unique IDs.
- * @return The number of rows modified.
- */
-fun SQLiteDatabase.fixDuplicateId(                                    table: String,
-                                                                      where: WhereDsl.()->Unit = {},
-) = fixDuplicateLongs(table, cID, where)
-
 
 /**
  * Fixes duplicate positions in the specified table by assigning new unique positions.

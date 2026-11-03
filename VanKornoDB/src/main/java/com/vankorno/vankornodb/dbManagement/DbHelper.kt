@@ -12,7 +12,6 @@ import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.*
-import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateId
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateInts
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateLongs
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicatePosition
@@ -941,13 +940,6 @@ abstract class DbHelperInternal(
     
     
     // ---------------------------------  F I X   D U P L I C A T E S  --------------------------------- \\
-    
-    /** A wrapper fun for [SQLiteDatabase.fixDuplicateId] */
-    fun fixDuplicateId(                                               table: String,
-                                                                      where: WhereDsl.()->Unit = {},
-    ): Int = readWrite(0, "fixDuplicateId") { db ->
-        db.fixDuplicateId(table, where)
-    }
     
     /** A wrapper fun for [SQLiteDatabase.fixDuplicatePosition] */
     fun fixDuplicatePosition(                                         table: String,
