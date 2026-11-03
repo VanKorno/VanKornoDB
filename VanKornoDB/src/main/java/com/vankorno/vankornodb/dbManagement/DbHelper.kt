@@ -40,143 +40,119 @@ abstract class DbHelperInternal(
 ) {
     // ===================================  C U R S O R  =================================== \\
     
-    /** A wrapper fun for [SQLiteDatabase.getCursor] */
+    /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun useCursor(                                                    table: String,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
-        db.getCursor(table, where).use { cursor ->
-            block(cursor)
-        }
+        db.useCursor(table, where, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursor] */
+    /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun useCursor(                                                 table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                    where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
-        db.getCursor(table, columns, where).use { cursor ->
-            block(cursor)
-        }
+        db.useCursor(table, columns, where, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursor] */
+    /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun useCursor(                                                    table: String,
                                                                      column: TypedColumn<*>,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
-        db.getCursor(table, column, where).use { cursor ->
-            block(cursor)
-        }
+        db.useCursor(table, column, where, block)
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
+    /** A wrapper fun for [SQLiteDatabase.useCursorPro] */
     fun useCursorPro(                                                       table: String,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->Unit,
     ) = write("useCursorPro") { db ->
-        db.getCursorPro(table, dsl).use { cursor ->
-            block(cursor)
-        }
+        db.useCursorPro(table, dsl, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
+    /** A wrapper fun for [SQLiteDatabase.useCursorPro] */
     fun useCursorPro(                                              table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                      dsl: FullDsl.()->Unit,
                                                                    block: (Cursor)->Unit,
     ) = write("useCursorPro") { db ->
-        db.getCursorPro(table, columns, dsl).use { cursor ->
-            block(cursor)
-        }
+        db.useCursorPro(table, columns, dsl, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
+    /** A wrapper fun for [SQLiteDatabase.useCursorPro] */
     fun useCursorPro(                                                       table: String,
                                                                            column: TypedColumn<*>,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->Unit,
     ) = write("useCursorPro") { db ->
-        db.getCursorPro(table, column, dsl).use { cursor ->
-            block(cursor)
-        }
+        db.useCursorPro(table, column, dsl, block)
     }
     
     
     // -------------------------   R E T U R N I N G   V A L U E S   ------------------------- \\
     
-    /** A wrapper fun for [SQLiteDatabase.getCursor] */
+    /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                            table: String,
                                                                defaultValue: T,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursor") { db ->
-        db.getCursor(table, where).use { cursor ->
-            block(cursor)
-        }
+        db.useCursor(table, where, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursor] */
+    /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                         table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                             defaultValue: T,
                                                                    where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursor") { db ->
-        db.getCursor(table, columns, where).use { cursor ->
-            block(cursor)
-        }
+        db.useCursor(table, columns, where, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursor] */
+    /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                            table: String,
                                                                      column: TypedColumn<*>,
                                                                defaultValue: T,
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursor") { db ->
-        db.getCursor(table, column, where).use { cursor ->
-            block(cursor)
-        }
+        db.useCursor(table, column, where, block)
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
+    /** A wrapper fun for [SQLiteDatabase.useCursorPro] */
     fun <T> getFromCursorPro(                                               table: String,
                                                                      defaultValue: T,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
-        db.getCursorPro(table, dsl).use { cursor ->
-            block(cursor)
-        }
+        db.useCursorPro(table, dsl, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
+    /** A wrapper fun for [SQLiteDatabase.useCursorPro] */
     fun <T> getFromCursorPro(                                      table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                             defaultValue: T,
                                                                      dsl: FullDsl.()->Unit,
                                                                    block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
-        db.getCursorPro(table, columns, dsl).use { cursor ->
-            block(cursor)
-        }
+        db.useCursorPro(table, columns, dsl, block)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getCursorPro] */
+    /** A wrapper fun for [SQLiteDatabase.useCursorPro] */
     fun <T> getFromCursorPro(                                               table: String,
                                                                            column: TypedColumn<*>,
                                                                      defaultValue: T,
                                                                               dsl: FullDsl.()->Unit,
                                                                             block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursorPro") { db ->
-        db.getCursorPro(table, column, dsl).use { cursor ->
-            block(cursor)
-        }
+        db.useCursorPro(table, column, dsl, block)
     }
     
     
@@ -197,8 +173,8 @@ abstract class DbHelperInternal(
                                                                           column: IntCol,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("setInt", async) {
-        it.setInt(value, table, column, where)
+    ) = write("setInt", async) { db ->
+        db.setInt(value, table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.setStr] */
@@ -207,8 +183,8 @@ abstract class DbHelperInternal(
                                                                           column: StrCol,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("setStr", async) {
-        it.setStr(value, table, column, where)
+    ) = write("setStr", async) { db ->
+        db.setStr(value, table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.setBool] */
@@ -217,8 +193,8 @@ abstract class DbHelperInternal(
                                                                           column: BoolCol,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("setBool", async) {
-        it.setBool(value, table, column, where)
+    ) = write("setBool", async) { db ->
+        db.setBool(value, table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.setLong] */
@@ -227,8 +203,8 @@ abstract class DbHelperInternal(
                                                                           column: LongCol,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("setLong", async) {
-        it.setLong(value, table, column, where)
+    ) = write("setLong", async) { db ->
+        db.setLong(value, table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.setFloat] */
@@ -237,8 +213,8 @@ abstract class DbHelperInternal(
                                                                           column: FloatCol,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("setFloat", async) {
-        it.setFloat(value, table, column, where)
+    ) = write("setFloat", async) { db ->
+        db.setFloat(value, table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.setBlob] */
@@ -247,8 +223,8 @@ abstract class DbHelperInternal(
                                                                           column: BlobCol,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("setBlob", async) {
-        it.setBlob(value, table, column, where)
+    ) = write("setBlob", async) { db ->
+        db.setBlob(value, table, column, where)
     }
     
     
@@ -261,8 +237,8 @@ abstract class DbHelperInternal(
                                                                       where: WhereDsl.()->Unit = {},
                                                                       async: Boolean = false,
                                                                     actions: SetDsl.()->Unit,
-    ) = write("set", async) {
-        it.set(table, where, actions)
+    ) = write("set", async) { db ->
+        db.set(table, where, actions)
     }
     
     
@@ -272,30 +248,30 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.addObj] */
     inline fun <T : CurrEntity> addObj(                               tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
-    ) = readWrite(-1L, "addObj") {
-        it.addObj(tableInfo, obj)
+    ) = readWrite(-1L, "addObj") { db ->
+        db.addObj(tableInfo, obj)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addObjects] */
     inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
-    ) = readWrite(emptyList(), "addObjects") {
-        it.addObjects(tableInfo, objects)
+    ) = readWrite(emptyList(), "addObjects") { db ->
+        db.addObjects(tableInfo, objects)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.addObjWithoutIdCheck] */
     inline fun <T : CurrEntity> addObjWithoutIdCheck(                 tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
-    ) = readWrite(-1L, "addObjWithoutIdCheck") {
-        it.addObjWithoutIdCheck(tableInfo, obj)
+    ) = readWrite(-1L, "addObjWithoutIdCheck") { db ->
+        db.addObjWithoutIdCheck(tableInfo, obj)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addObjectsWithoutIdCheck] */
     inline fun <T : CurrEntity> addObjectsWithoutIdCheck(             tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
-    ) = readWrite(emptyList(), "addObjectsWithoutIdCheck") {
-        it.addObjectsWithoutIdCheck(tableInfo, objects)
+    ) = readWrite(emptyList(), "addObjectsWithoutIdCheck") { db ->
+        db.addObjectsWithoutIdCheck(tableInfo, objects)
     }
     
     
@@ -304,8 +280,8 @@ abstract class DbHelperInternal(
                                                                        entities: List<T>,
                                                                           async: Boolean = false,
                                                                setIdAndPosition: (T, Long, Long)->T,
-    ) = write("addWithNewIdAndPosition", async) {
-        it.addWithNewIdAndPosition(tableInfo, entities, setIdAndPosition)
+    ) = write("addWithNewIdAndPosition", async) { db ->
+        db.addWithNewIdAndPosition(tableInfo, entities, setIdAndPosition)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
@@ -313,8 +289,8 @@ abstract class DbHelperInternal(
                                                                          entity: T,
                                                                           async: Boolean = false,
                                                                setIdAndPosition: (T, Long, Long)->T,
-    ) = write("addWithNewIdAndPosition", async) {
-        it.addWithNewIdAndPosition(tableInfo, listOf(entity), setIdAndPosition)
+    ) = write("addWithNewIdAndPosition", async) { db ->
+        db.addWithNewIdAndPosition(tableInfo, listOf(entity), setIdAndPosition)
     }
     
     
@@ -325,8 +301,8 @@ abstract class DbHelperInternal(
                                                                             obj: T,
                                                                           async: Boolean = false,
                                                                           where: WhereDsl.()->Unit,
-    ) = write("setObj", async) {
-        it.setObj(tableInfo, obj, where)
+    ) = write("setObj", async) { db ->
+        db.setObj(tableInfo, obj, where)
     }
     
     
@@ -341,48 +317,48 @@ abstract class DbHelperInternal(
     fun getInt(                                                            table: String,
                                                                           column: IntCol,
                                                                            where: WhereDsl.()->Unit,
-    ): Int = read(-1, "getInt") {
-        it.getInt(table, column, where)
+    ): Int = read(-1, "getInt") { db ->
+        db.getInt(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getStr] */
     fun getStr(                                                            table: String,
                                                                           column: StrCol,
                                                                            where: WhereDsl.()->Unit,
-    ): String = read("", "getStr") {
-        it.getStr(table, column, where)
+    ): String = read("", "getStr") { db ->
+        db.getStr(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBool] */
     fun getBool(                                                           table: String,
                                                                           column: BoolCol,
                                                                            where: WhereDsl.()->Unit,
-    ): Boolean = read(false, "getBool") {
-        it.getBool(table, column, where)
+    ): Boolean = read(false, "getBool") { db ->
+        db.getBool(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getLong] */
     fun getLong(                                                           table: String,
                                                                           column: LongCol,
                                                                            where: WhereDsl.()->Unit,
-    ): Long = read(-1L, "getLong") {
-        it.getLong(table, column, where)
+    ): Long = read(-1L, "getLong") { db ->
+        db.getLong(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getFloat] */
     fun getFloat(                                                          table: String,
                                                                           column: FloatCol,
                                                                            where: WhereDsl.()->Unit,
-    ): Float = read(-1F, "getFloat") {
-        it.getFloat(table, column, where)
+    ): Float = read(-1F, "getFloat") { db ->
+        db.getFloat(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBlob] */
     fun getBlob(                                                           table: String,
                                                                           column: BlobCol,
                                                                            where: WhereDsl.()->Unit,
-    ): ByteArray = read(ByteArray(0), "getBlob") {
-        it.getBlob(table, column, where)
+    ): ByteArray = read(ByteArray(0), "getBlob") { db ->
+        db.getBlob(table, column, where)
     }
     
     
@@ -393,48 +369,48 @@ abstract class DbHelperInternal(
     fun getIntPro(                                                          table: String,
                                                                            column: IntCol,
                                                                               dsl: FullDsl.()->Unit,
-    ): Int = read(-1, "getIntPro") {
-        it.getIntPro(table, column, dsl)
+    ): Int = read(-1, "getIntPro") { db ->
+        db.getIntPro(table, column, dsl)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getStrPro] */
     fun getStrPro(                                                          table: String,
                                                                            column: StrCol,
                                                                               dsl: FullDsl.()->Unit,
-    ): String = read("", "getStrPro") {
-        it.getStrPro(table, column, dsl)
+    ): String = read("", "getStrPro") { db ->
+        db.getStrPro(table, column, dsl)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBoolPro] */
     fun getBoolPro(                                                         table: String,
                                                                            column: BoolCol,
                                                                               dsl: FullDsl.()->Unit,
-    ): Boolean = read(false, "getBoolPro") {
-        it.getBoolPro(table, column, dsl)
+    ): Boolean = read(false, "getBoolPro") { db ->
+        db.getBoolPro(table, column, dsl)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getLongPro] */
     fun getLongPro(                                                         table: String,
                                                                            column: LongCol,
                                                                               dsl: FullDsl.()->Unit,
-    ): Long = read(-1L, "getLongPro") {
-        it.getLongPro(table, column, dsl)
+    ): Long = read(-1L, "getLongPro") { db ->
+        db.getLongPro(table, column, dsl)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getFloatPro] */
     fun getFloatPro(                                                        table: String,
                                                                            column: FloatCol,
                                                                               dsl: FullDsl.()->Unit,
-    ): Float = read(-1F, "getFloatPro") {
-        it.getFloatPro(table, column, dsl)
+    ): Float = read(-1F, "getFloatPro") { db ->
+        db.getFloatPro(table, column, dsl)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBlobPro] */
     fun getBlobPro(                                                         table: String,
                                                                            column: BlobCol,
                                                                               dsl: FullDsl.()->Unit,
-    ): ByteArray = read(ByteArray(0), "getBlobPro") {
-        it.getBlobPro(table, column, dsl)
+    ): ByteArray = read(ByteArray(0), "getBlobPro") { db ->
+        db.getBlobPro(table, column, dsl)
     }
     
     
@@ -447,16 +423,16 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): T? = read(null, "getObj") {
-        it.getObj(tableInfo, where)
+    ): T? = read(null, "getObj") { db ->
+        db.getObj(tableInfo, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-    ): T = read(default, "getObj") {
-        it.getObj(tableInfo, default, where)
+    ): T = read(default, "getObj") { db ->
+        db.getObj(tableInfo, default, where)
     }
     
     
@@ -465,16 +441,16 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getObjPro] */
     fun <T : BaseEntity> getObjPro(                                     tableInfo: TableInfoBase<T>,
                                                                               dsl: FullDsl.()->Unit,
-    ): T? = read(null, "getObjPro") {
-        it.getObjPro(tableInfo, dsl)
+    ): T? = read(null, "getObjPro") { db ->
+        db.getObjPro(tableInfo, dsl)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getObjPro] */
     fun <T : BaseEntity> getObjPro(                                 tableInfo: TableInfoBase<T>,
                                                                       default: T,
                                                                           dsl: FullDsl.()->Unit,
-    ): T = read(default, "getObjPro") {
-        it.getObjPro(tableInfo, default, dsl)
+    ): T = read(default, "getObjPro") { db ->
+        db.getObjPro(tableInfo, default, dsl)
     }
     
     
@@ -518,16 +494,16 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getObjects] */
     fun <T : BaseEntity> getObjects(                              tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<T> = read(emptyList(), "getObjects") {
-        it.getObjectsPro(tableInfo) { this.where = where }
+    ): List<T> = read(emptyList(), "getObjects") { db ->
+        db.getObjectsPro(tableInfo) { this.where = where }
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getObjMap] */
     fun <T : BaseEntity> getObjMap(                               tableInfo: TableInfoBase<T>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): Map<Long, T> = read(emptyMap(), "getObjMap") {
-        it.getObjMapPro(tableInfo) { this.where = where }
+    ): Map<Long, T> = read(emptyMap(), "getObjMap") { db ->
+        db.getObjMapPro(tableInfo) { this.where = where }
     }
     
     
@@ -536,16 +512,16 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getObjectsPro] */
     fun <T : BaseEntity> getObjectsPro(                            tableInfo: TableInfoBase<T>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<T> = read(emptyList(), "getObjectsPro") {
-        it.getObjectsPro(tableInfo, dsl)
+    ): List<T> = read(emptyList(), "getObjectsPro") { db ->
+        db.getObjectsPro(tableInfo, dsl)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getObjMapPro] */
     fun <T : BaseEntity> getObjMapPro(                             tableInfo: TableInfoBase<T>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): Map<Long, T> = read(emptyMap(), "getObjMapPro") {
-        it.getObjMapPro(tableInfo, dsl)
+    ): Map<Long, T> = read(emptyMap(), "getObjMapPro") { db ->
+        db.getObjMapPro(tableInfo, dsl)
     }
     
     
@@ -563,16 +539,16 @@ abstract class DbHelperInternal(
     fun getColInts(                                                   table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Int> = read(emptyList(), "getColInts") {
-        it.getColInts(table, column, where)
+    ): List<Int> = read(emptyList(), "getColInts") { db ->
+        db.getColInts(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getColIntsPro] */
     fun getColIntsPro(                                                 table: String,
                                                                       column: IntCol,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Int> = read(emptyList(), "getColIntsPro") {
-        it.getColIntsPro(table, column, dsl)
+    ): List<Int> = read(emptyList(), "getColIntsPro") { db ->
+        db.getColIntsPro(table, column, dsl)
     }
     
     
@@ -582,16 +558,16 @@ abstract class DbHelperInternal(
     fun getColStrings(                                                table: String,
                                                                      column: StrCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<String> = read(emptyList(), "getColStrings") {
-        it.getColStrings(table, column, where)
+    ): List<String> = read(emptyList(), "getColStrings") { db ->
+        db.getColStrings(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getColStringsPro] */
     fun getColStringsPro(                                              table: String,
                                                                       column: StrCol,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<String> = read(emptyList(), "getColStringsPro") {
-        it.getColStringsPro(table, column, dsl)
+    ): List<String> = read(emptyList(), "getColStringsPro") { db ->
+        db.getColStringsPro(table, column, dsl)
     }
     
     
@@ -601,16 +577,16 @@ abstract class DbHelperInternal(
     fun getColBools(                                                  table: String,
                                                                      column: BoolCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Boolean> = read(emptyList(), "getColBools") {
-        it.getColBools(table, column, where)
+    ): List<Boolean> = read(emptyList(), "getColBools") { db ->
+        db.getColBools(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getColBoolsPro] */
     fun getColBoolsPro(                                                table: String,
                                                                       column: BoolCol,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Boolean> = read(emptyList(), "getColBoolsPro") {
-        it.getColBoolsPro(table, column, dsl)
+    ): List<Boolean> = read(emptyList(), "getColBoolsPro") { db ->
+        db.getColBoolsPro(table, column, dsl)
     }
     
     
@@ -620,16 +596,16 @@ abstract class DbHelperInternal(
     fun getColLongs(                                                  table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Long> = read(emptyList(), "getColLongs") {
-        it.getColLongs(table, column, where)
+    ): List<Long> = read(emptyList(), "getColLongs") { db ->
+        db.getColLongs(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getColLongsPro] */
     fun getColLongsPro(                                                table: String,
                                                                       column: LongCol,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Long> = read(emptyList(), "getColLongsPro") {
-        it.getColLongsPro(table, column, dsl)
+    ): List<Long> = read(emptyList(), "getColLongsPro") { db ->
+        db.getColLongsPro(table, column, dsl)
     }
     
     
@@ -639,8 +615,8 @@ abstract class DbHelperInternal(
     fun getColFloats(                                                 table: String,
                                                                      column: FloatCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Float> = read(emptyList(), "getColFloats") {
-        it.getColFloats(table, column, where)
+    ): List<Float> = read(emptyList(), "getColFloats") { db ->
+        db.getColFloats(table, column, where)
     }
     
     
@@ -648,8 +624,8 @@ abstract class DbHelperInternal(
     fun getColFloatsPro(                                               table: String,
                                                                       column: FloatCol,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Float> = read(emptyList(), "getColFloatsPro") {
-        it.getColFloatsPro(table, column, dsl)
+    ): List<Float> = read(emptyList(), "getColFloatsPro") { db ->
+        db.getColFloatsPro(table, column, dsl)
     }
     
     
@@ -660,16 +636,16 @@ abstract class DbHelperInternal(
     fun getColBlobs(                                                  table: String,
                                                                      column: BlobCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<ByteArray> = read(emptyList(), "getColBlobs") {
-        it.getColBlobs(table, column, where)
+    ): List<ByteArray> = read(emptyList(), "getColBlobs") { db ->
+        db.getColBlobs(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getColBlobsPro] */
     fun getColBlobsPro(                                                table: String,
                                                                       column: BlobCol,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<ByteArray> = read(emptyList(), "getColBlobsPro") {
-        it.getColBlobsPro(table, column, dsl)
+    ): List<ByteArray> = read(emptyList(), "getColBlobsPro") { db ->
+        db.getColBlobsPro(table, column, dsl)
     }
     
     
@@ -683,16 +659,16 @@ abstract class DbHelperInternal(
     fun getRowInts(                                                   table: String,
                                                                     columns: Array<IntCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Int> = read(emptyList(), "getRowInts") {
-        it.getRowInts(table, columns, where)
+    ): List<Int> = read(emptyList(), "getRowInts") { db ->
+        db.getRowInts(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getRowIntsPro] */
     fun getRowIntsPro(                                                 table: String,
                                                                      columns: Array<IntCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Int> = read(emptyList(), "getRowIntsPro") {
-        it.getRowIntsPro(table, columns, dsl)
+    ): List<Int> = read(emptyList(), "getRowIntsPro") { db ->
+        db.getRowIntsPro(table, columns, dsl)
     }
     
     
@@ -702,16 +678,16 @@ abstract class DbHelperInternal(
     fun getRowStrings(                                                table: String,
                                                                     columns: Array<StrCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<String> = read(emptyList(), "getRowStrings") {
-        it.getRowStrings(table, columns, where)
+    ): List<String> = read(emptyList(), "getRowStrings") { db ->
+        db.getRowStrings(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getRowStringsPro] */
     fun getRowStringsPro(                                              table: String,
                                                                      columns: Array<StrCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<String> = read(emptyList(), "getRowStringsPro") {
-        it.getRowStringsPro(table, columns, dsl)
+    ): List<String> = read(emptyList(), "getRowStringsPro") { db ->
+        db.getRowStringsPro(table, columns, dsl)
     }
     
     
@@ -721,16 +697,16 @@ abstract class DbHelperInternal(
     fun getRowBools(                                                  table: String,
                                                                     columns: Array<BoolCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Boolean> = read(emptyList(), "getRowBools") {
-        it.getRowBools(table, columns, where)
+    ): List<Boolean> = read(emptyList(), "getRowBools") { db ->
+        db.getRowBools(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getRowBoolsPro] */
     fun getRowBoolsPro(                                                table: String,
                                                                      columns: Array<BoolCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Boolean> = read(emptyList(), "getRowBoolsPro") {
-        it.getRowBoolsPro(table, columns, dsl)
+    ): List<Boolean> = read(emptyList(), "getRowBoolsPro") { db ->
+        db.getRowBoolsPro(table, columns, dsl)
     }
     
     
@@ -740,16 +716,16 @@ abstract class DbHelperInternal(
     fun getRowLongs(                                                  table: String,
                                                                     columns: Array<LongCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Long> = read(emptyList(), "getRowLongs") {
-        it.getRowLongs(table, columns, where)
+    ): List<Long> = read(emptyList(), "getRowLongs") { db ->
+        db.getRowLongs(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getRowLongsPro] */
     fun getRowLongsPro(                                                table: String,
                                                                      columns: Array<LongCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Long> = read(emptyList(), "getRowLongsPro") {
-        it.getRowLongsPro(table, columns, dsl)
+    ): List<Long> = read(emptyList(), "getRowLongsPro") { db ->
+        db.getRowLongsPro(table, columns, dsl)
     }
     
     
@@ -759,16 +735,16 @@ abstract class DbHelperInternal(
     fun getRowFloats(                                                 table: String,
                                                                     columns: Array<FloatCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<Float> = read(emptyList(), "getRowFloats") {
-        it.getRowFloats(table, columns, where)
+    ): List<Float> = read(emptyList(), "getRowFloats") { db ->
+        db.getRowFloats(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getRowFloatsPro] */
     fun getRowFloatsPro(                                               table: String,
                                                                      columns: Array<FloatCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<Float> = read(emptyList(), "getRowFloatsPro") {
-        it.getRowFloatsPro(table, columns, dsl)
+    ): List<Float> = read(emptyList(), "getRowFloatsPro") { db ->
+        db.getRowFloatsPro(table, columns, dsl)
     }
     
     
@@ -778,16 +754,16 @@ abstract class DbHelperInternal(
     fun getRowBlobs(                                                  table: String,
                                                                     columns: Array<BlobCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<ByteArray> = read(emptyList(), "getRowBlobs") {
-        it.getRowBlobs(table, columns, where)
+    ): List<ByteArray> = read(emptyList(), "getRowBlobs") { db ->
+        db.getRowBlobs(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getRowBlobsPro] */
     fun getRowBlobsPro(                                                table: String,
                                                                      columns: Array<BlobCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<ByteArray> = read(emptyList(), "getRowBlobsPro") {
-        it.getRowBlobsPro(table, columns, dsl)
+    ): List<ByteArray> = read(emptyList(), "getRowBlobsPro") { db ->
+        db.getRowBlobsPro(table, columns, dsl)
     }
     
     
@@ -803,16 +779,16 @@ abstract class DbHelperInternal(
     fun getTableInts(                                                 table: String,
                                                                     columns: Array<IntCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<List<Int>> = read(emptyList(), "getTableInts") {
-        it.getTableInts(table, columns, where)
+    ): List<List<Int>> = read(emptyList(), "getTableInts") { db ->
+        db.getTableInts(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getTableIntsPro] */
     fun getTableIntsPro(                                               table: String,
                                                                      columns: Array<IntCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<List<Int>> = read(emptyList(), "getTableIntsPro") {
-        it.getTableIntsPro(table, columns, dsl)
+    ): List<List<Int>> = read(emptyList(), "getTableIntsPro") { db ->
+        db.getTableIntsPro(table, columns, dsl)
     }
     
     
@@ -822,16 +798,16 @@ abstract class DbHelperInternal(
     fun getTableStrings(                                              table: String,
                                                                     columns: Array<StrCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<List<String>> = read(emptyList(), "getTableStrings") {
-        it.getTableStrings(table, columns, where)
+    ): List<List<String>> = read(emptyList(), "getTableStrings") { db ->
+        db.getTableStrings(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getTableStringsPro] */
     fun getTableStringsPro(                                            table: String,
                                                                      columns: Array<StrCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<List<String>> = read(emptyList(), "getTableStringsPro") {
-        it.getTableStringsPro(table, columns, dsl)
+    ): List<List<String>> = read(emptyList(), "getTableStringsPro") { db ->
+        db.getTableStringsPro(table, columns, dsl)
     }
     
     
@@ -841,16 +817,16 @@ abstract class DbHelperInternal(
     fun getTableBools(                                                table: String,
                                                                     columns: Array<BoolCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<List<Boolean>> = read(emptyList(), "getTableBools") {
-        it.getTableBools(table, columns, where)
+    ): List<List<Boolean>> = read(emptyList(), "getTableBools") { db ->
+        db.getTableBools(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getTableBoolsPro] */
     fun getTableBoolsPro(                                              table: String,
                                                                      columns: Array<BoolCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<List<Boolean>> = read(emptyList(), "getTableBoolsPro") {
-        it.getTableBoolsPro(table, columns, dsl)
+    ): List<List<Boolean>> = read(emptyList(), "getTableBoolsPro") { db ->
+        db.getTableBoolsPro(table, columns, dsl)
     }
     
     
@@ -860,16 +836,16 @@ abstract class DbHelperInternal(
     fun getTableLongs(                                                table: String,
                                                                     columns: Array<LongCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<List<Long>> = read(emptyList(), "getTableLongs") {
-        it.getTableLongs(table, columns, where)
+    ): List<List<Long>> = read(emptyList(), "getTableLongs") { db ->
+        db.getTableLongs(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getTableLongsPro] */
     fun getTableLongsPro(                                              table: String,
                                                                      columns: Array<LongCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<List<Long>> = read(emptyList(), "getTableLongsPro") {
-        it.getTableLongsPro(table, columns, dsl)
+    ): List<List<Long>> = read(emptyList(), "getTableLongsPro") { db ->
+        db.getTableLongsPro(table, columns, dsl)
     }
     
     
@@ -879,16 +855,16 @@ abstract class DbHelperInternal(
     fun getTableFloats(                                               table: String,
                                                                     columns: Array<FloatCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<List<Float>> = read(emptyList(), "getTableFloats") {
-        it.getTableFloats(table, columns, where)
+    ): List<List<Float>> = read(emptyList(), "getTableFloats") { db ->
+        db.getTableFloats(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getTableFloatsPro] */
     fun getTableFloatsPro(                                             table: String,
                                                                      columns: Array<FloatCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<List<Float>> = read(emptyList(), "getTableFloatsPro") {
-        it.getTableFloatsPro(table, columns, dsl)
+    ): List<List<Float>> = read(emptyList(), "getTableFloatsPro") { db ->
+        db.getTableFloatsPro(table, columns, dsl)
     }
     
     
@@ -898,16 +874,16 @@ abstract class DbHelperInternal(
     fun getTableBlobs(                                                table: String,
                                                                     columns: Array<BlobCol>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<List<ByteArray>> = read(emptyList(), "getTableBlobs") {
-        it.getTableBlobs(table, columns, where)
+    ): List<List<ByteArray>> = read(emptyList(), "getTableBlobs") { db ->
+        db.getTableBlobs(table, columns, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getTableBlobsPro] */
     fun getTableBlobsPro(                                              table: String,
                                                                      columns: Array<BlobCol>,
                                                                          dsl: FullDsl.()->Unit = {},
-    ): List<List<ByteArray>> = read(emptyList(), "getTableBlobsPro") {
-        it.getTableBlobsPro(table, columns, dsl)
+    ): List<List<ByteArray>> = read(emptyList(), "getTableBlobsPro") { db ->
+        db.getTableBlobsPro(table, columns, dsl)
     }
     
     
@@ -923,8 +899,8 @@ abstract class DbHelperInternal(
                                                                      column: IntCol,
                                                                       async: Boolean = false,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = write("addToInt", async) {
-        it.addToInt(addend, table, column, where)
+    ) = write("addToInt", async) { db ->
+        db.addToInt(addend, table, column, where)
     }
     
     
@@ -934,8 +910,8 @@ abstract class DbHelperInternal(
                                                                      column: LongCol,
                                                                       async: Boolean = false,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = write("addToLong", async) {
-        it.addToLong(addend, table, column, where)
+    ) = write("addToLong", async) { db ->
+        db.addToLong(addend, table, column, where)
     }
     
     
@@ -945,8 +921,8 @@ abstract class DbHelperInternal(
                                                                      column: FloatCol,
                                                                       async: Boolean = false,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = write("addToFloat", async) {
-        it.addToFloat(addend, table, column, where)
+    ) = write("addToFloat", async) { db ->
+        db.addToFloat(addend, table, column, where)
     }
     
     
@@ -955,8 +931,8 @@ abstract class DbHelperInternal(
                                                                      column: BoolCol,
                                                                       async: Boolean = false,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = write("flipBool", async) {
-        it.flipBool(table, column, where)
+    ) = write("flipBool", async) { db ->
+        db.flipBool(table, column, where)
     }
     
     
@@ -972,8 +948,8 @@ abstract class DbHelperInternal(
     fun deleteRows(                                                        table: String,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("deleteRows", async) {
-        it.deleteRows(table, where)
+    ) = write("deleteRows", async) { db ->
+        db.deleteRows(table, where)
     }
     
     
@@ -981,30 +957,30 @@ abstract class DbHelperInternal(
     fun deleteRowsFromTables(                                             tables: List<String>,
                                                                            async: Boolean = false,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("deleteRowsFromTables", async) {
-        it.deleteRowsFromTables(tables, where)
+    ) = write("deleteRowsFromTables", async) { db ->
+        db.deleteRowsFromTables(tables, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.deleteRowsFromTables] */
     fun deleteRowsFromTables(                                      vararg tables: String,
                                                                            where: WhereDsl.()->Unit,
-    ) = write("deleteRowsFromTables") {
-        it.deleteRowsFromTables(tables.toList(), where)
+    ) = write("deleteRowsFromTables") { db ->
+        db.deleteRowsFromTables(tables.toList(), where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.deleteFirstRow] */
     inline fun deleteFirstRow(                                              table: String,
                                                                             async: Boolean = false,
-    ) = write("deleteFirstRow", async) {
-        it.deleteFirstRow(table)
+    ) = write("deleteFirstRow", async) { db ->
+        db.deleteFirstRow(table)
     }
     
     /** A wrapper fun for [SQLiteDatabase.deleteLastRow] */
     inline fun deleteLastRow(                                               table: String,
                                                                             async: Boolean = false,
-    ) = write("deleteLastRow", async) {
-        it.deleteLastRow(table)
+    ) = write("deleteLastRow", async) { db ->
+        db.deleteLastRow(table)
     }
     
     
@@ -1054,30 +1030,30 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getRowCount] */
     fun getRowCount(                                                  table: String,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = read(0, "getRowCount") {
-        it.getRowCount(table, where)
+    ) = read(0, "getRowCount") { db ->
+        db.getRowCount(table, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getRowCountPro] */
     fun getRowCountPro(                                                table: String,
                                                                          dsl: FullDsl.()->Unit = {},
-    ) = read(0, "getRowCountPro") {
-        it.getRowCountPro(table, dsl)
+    ) = read(0, "getRowCountPro") { db ->
+        db.getRowCountPro(table, dsl)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.hasRows] */
     fun hasRows(                                                      table: String,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = read(false, "hasRows") {
-        it.hasRows(table, where)
+    ) = read(false, "hasRows") { db ->
+        db.hasRows(table, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.hasRowsPro] */
     fun hasRowsPro(                                                         table: String,
                                                                               dsl: FullDsl.()->Unit,
-    ) = read(false, "hasRowsPro") {
-        it.hasRowsPro(table, dsl)
+    ) = read(false, "hasRowsPro") { db ->
+        db.hasRowsPro(table, dsl)
     }
     
     
@@ -1096,23 +1072,23 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getId] */
     fun getId(                                                             table: String,
                                                                            where: WhereDsl.()->Unit,
-    ): Long = read(-1L, "getId") {
-        it.getId(table, where)
+    ): Long = read(-1L, "getId") { db ->
+        db.getId(table, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getIDs] */
     fun getIDs(                                                       table: String,
                                                                       where: WhereDsl.()->Unit,
                                                                     orderBy: OrderDsl.()->Unit = {},
-    ): List<Long> = read(emptyList(), "getIDs") {
-        it.getIDs(table, where, orderBy)
+    ): List<Long> = read(emptyList(), "getIDs") { db ->
+        db.getIDs(table, where, orderBy)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getAllIDs] */
     fun getAllIDs(                                                    table: String,
                                                                     orderBy: OrderDsl.()->Unit = {},
-    ): List<Long> = read(emptyList(), "getAllIDs") {
-        it.getAllIDs(table, orderBy)
+    ): List<Long> = read(emptyList(), "getAllIDs") { db ->
+        db.getAllIDs(table, orderBy)
     }
     
     
@@ -1120,69 +1096,69 @@ abstract class DbHelperInternal(
     fun getNextIDs(                                                   table: String,
                                                                       count: Int,
                                                                 reservedIDs: Set<Long> = emptySet(),
-    ): List<Long> = read(emptyList(), "getNextIDs") {
-        it.getNextIDs(table, count, reservedIDs)
+    ): List<Long> = read(emptyList(), "getNextIDs") { db ->
+        db.getNextIDs(table, count, reservedIDs)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getNextId] */
     fun getNextId(                                                    table: String,
                                                                 reservedIDs: Set<Long> = emptySet(),
-    ): Long = read(-1L, "getNextId") {
-        it.getNextId(table, reservedIDs)
+    ): Long = read(-1L, "getNextId") { db ->
+        db.getNextId(table, reservedIDs)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.tableExists] */
     inline fun tableExists(                                                        table: String
-    ): Boolean = read(false, "tableExists") {
-        it.tableExists(table)
+    ): Boolean = read(false, "tableExists") { db ->
+        db.tableExists(table)
     }
     
     /** A wrapper fun for [SQLiteDatabase.isTableEmpty] */
     inline fun isTableEmpty(                                                       table: String
-    ): Boolean = read(true, "isTableEmpty") {
-        it.isTableEmpty(table)
+    ): Boolean = read(true, "isTableEmpty") { db ->
+        db.isTableEmpty(table)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getAppTableNames] */
-    inline fun getAppTableNames(): List<String> = read(emptyList(), "getAppTableNames") {
-        it.getAppTableNames()
+    inline fun getAppTableNames(): List<String> = read(emptyList(), "getAppTableNames") { db ->
+        db.getAppTableNames()
     }
     
     /** A wrapper fun for [SQLiteDatabase.getInternalTableNames] */
-    inline fun getInternalTableNames(): List<String> = read(emptyList(), "getInternalTableNames") {
-        it.getInternalTableNames()
+    inline fun getInternalTableNames(): List<String> = read(emptyList(), "getInternalTableNames") { db ->
+        db.getInternalTableNames()
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getRawTableStr] */
     inline fun getRawTableStr(                                                     table: String
-    ): RawTableStr = read(RawTableStr(), "getRawTableStr") {
-        it.getRawTableStr(table)
+    ): RawTableStr = read(RawTableStr(), "getRawTableStr") { db ->
+        db.getRawTableStr(table)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getLastPosition] */
     fun getLastPosition(                                              table: String,
                                                                       where: WhereDsl.()->Unit = {},
-    ): Long = read(0L, "getLastPosition") {
-        it.getLastPosition(table, where)
+    ): Long = read(0L, "getLastPosition") { db ->
+        db.getLastPosition(table, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getNextPosition] */
     fun getNextPosition(                                               table: String,
                                                                    reserved: Set<Long> = emptySet(),
-    ): Long = read(-1L, "getNextPosition") {
-        it.getNextPosition(table, reserved)
+    ): Long = read(-1L, "getNextPosition") { db ->
+        db.getNextPosition(table, reserved)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getNextPositions] */
     fun getNextPositions(                                              table: String,
                                                                       count: Int,
                                                                    reserved: Set<Long> = emptySet(),
-    ): List<Long> = read(emptyList(), "getNextPositions") {
-        it.getNextPositions(table, count, reserved)
+    ): List<Long> = read(emptyList(), "getNextPositions") { db ->
+        db.getNextPositions(table, count, reserved)
     }
     
     
@@ -1192,8 +1168,8 @@ abstract class DbHelperInternal(
                                                                       column: IntCol,
                                                                    startFrom: Int = 1,
                                                                     reserved: Set<Int> = emptySet(),
-    ): Int = read(-1, "getNextInt") {
-        it.getNextInt(table, column, startFrom, reserved)
+    ): Int = read(-1, "getNextInt") { db ->
+        db.getNextInt(table, column, startFrom, reserved)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getNextInts] */
@@ -1202,8 +1178,8 @@ abstract class DbHelperInternal(
                                                                        count: Int,
                                                                    startFrom: Int = 1,
                                                                     reserved: Set<Int> = emptySet(),
-    ): List<Int> = read(emptyList(), "getNextInts") {
-        it.getNextInts(table, column, count, startFrom, reserved)
+    ): List<Int> = read(emptyList(), "getNextInts") { db ->
+        db.getNextInts(table, column, count, startFrom, reserved)
     }
     
     
@@ -1212,8 +1188,8 @@ abstract class DbHelperInternal(
                                                                      column: LongCol,
                                                                   startFrom: Long = 1L,
                                                                    reserved: Set<Long> = emptySet(),
-    ): Long = read(-1L, "getNextLong") {
-        it.getNextLong(table, column, startFrom, reserved)
+    ): Long = read(-1L, "getNextLong") { db ->
+        db.getNextLong(table, column, startFrom, reserved)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getNextLongs] */
@@ -1222,8 +1198,8 @@ abstract class DbHelperInternal(
                                                                       count: Int,
                                                                   startFrom: Long = 1L,
                                                                    reserved: Set<Long> = emptySet(),
-    ): List<Long> = read(emptyList(), "getNextLongs") {
-        it.getNextLongs(table, column, count, startFrom, reserved)
+    ): List<Long> = read(emptyList(), "getNextLongs") { db ->
+        db.getNextLongs(table, column, count, startFrom, reserved)
     }
     
     
@@ -1232,16 +1208,16 @@ abstract class DbHelperInternal(
     fun getLargestInt(                                                table: String,
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = read(0, "getLargestInt") {
-        it.getLargestInt(table, column, where)
+    ) = read(0, "getLargestInt") { db ->
+        db.getLargestInt(table, column, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getLargestLong] */
     fun getLargestLong(                                               table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
-    ) = read(0L, "getLargestLong") {
-        it.getLargestLong(table, column, where)
+    ) = read(0L, "getLargestLong") { db ->
+        db.getLargestLong(table, column, where)
     }
     
     
@@ -1295,30 +1271,30 @@ abstract class DbHelperInternal(
                                                                moveUpOrBack: Boolean,
                                                             makeFirstOrLast: Boolean = false,
                                                                       where: WhereDsl.()->Unit = {},
-    ): Boolean = readWrite(false, "reorder") {
-        it.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
+    ): Boolean = readWrite(false, "reorder") { db ->
+        db.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.createTable] */
     inline fun createTable(                            tableInfo: TableInfoNormal<out NormalEntity>,
                                                            async: Boolean = false,
-    ) = write("createTable", async) {
-        it.createTable(tableInfo)
+    ) = write("createTable", async) { db ->
+        db.createTable(tableInfo)
     }
     
     /** A wrapper fun for [SQLiteDatabase.createTables] */
     inline fun createTables(                       vararg tables: TableInfoNormal<out NormalEntity>,
                                                            async: Boolean = false,
-    ) = write("createTables", async) {
-        it.createTables(*tables)
+    ) = write("createTables", async) { db ->
+        db.createTables(*tables)
     }
     
     /** A wrapper fun for [SQLiteDatabase.createTables] */
     inline fun createTables(                        tables: List<TableInfoNormal<out NormalEntity>>,
                                                      async: Boolean = false,
-    ) = write("createTables", async) {
-        it.createTables(tables)
+    ) = write("createTables", async) { db ->
+        db.createTables(tables)
     }
     
 }

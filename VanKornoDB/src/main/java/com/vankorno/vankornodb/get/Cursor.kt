@@ -64,3 +64,55 @@ fun SQLiteDatabase.getCursorPro(                                            tabl
 }
 
 
+
+
+
+inline fun <R> SQLiteDatabase.useCursor(                              table: String,
+                                                             noinline where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->R,
+): R = getCursor(table, where).use(block)
+
+
+inline fun <R> SQLiteDatabase.useCursor(                           table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                          noinline where: WhereDsl.()->Unit = {},
+                                                                   block: (Cursor)->R,
+): R = getCursor(table, columns, where).use(block)
+
+
+inline fun <R> SQLiteDatabase.useCursor(                              table: String,
+                                                                     column: TypedColumn<*>,
+                                                             noinline where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->R,
+): R = getCursor(table, column, where).use(block)
+
+
+
+
+
+inline fun <R> SQLiteDatabase.useCursorPro(                                 table: String,
+                                                                     noinline dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->R,
+): R = getCursorPro(table, dsl).use(block)
+
+
+inline fun <R> SQLiteDatabase.useCursorPro(                        table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                            noinline dsl: FullDsl.()->Unit,
+                                                                   block: (Cursor)->R,
+): R = getCursorPro(table, columns, dsl).use(block)
+
+
+inline fun <R> SQLiteDatabase.useCursorPro(                                 table: String,
+                                                                           column: TypedColumn<*>,
+                                                                     noinline dsl: FullDsl.()->Unit,
+                                                                            block: (Cursor)->R,
+): R = getCursorPro(table, column, dsl).use(block)
+
+
+
+
+
+
+
+

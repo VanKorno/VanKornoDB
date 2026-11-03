@@ -20,9 +20,7 @@ open class WhereDslInternal() : WhereDslBase() {
     /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
     fun rawClause(str: String) = clauses.add(str)
     
-    
     infix fun String.dot(str2: String = "") = this + "." + str2
-    
     
     
     // ======================  T Y P E - S A F E   C O M P A R I S O N  ====================== \\
@@ -142,7 +140,6 @@ open class WhereDslInternal() : WhereDslBase() {
     
     
     
-    
     // ==================  N O T   T Y P E - S A F E   C O M P A R I S O N  ================== \\
     
     /** For comparisons to provided values. The values are automatically put into the arg array. **/
@@ -190,7 +187,6 @@ open class WhereDslInternal() : WhereDslBase() {
     
     
     
-    
     // ===============================  C O N V E N I E N C E  =============================== \\
     
     var ID: Long
@@ -204,12 +200,5 @@ open class WhereDslInternal() : WhereDslBase() {
         set(value) {
             condition(_Name, "=", value)
         }
-    
-    
-    
-    
-    
-    
-    
     
 }
