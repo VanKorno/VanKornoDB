@@ -35,10 +35,6 @@ fun SQLiteDatabase.getNextLongs(                                      table: Str
     val spaceLeft = Long.MAX_VALUE - maxValue
     val enoughSpace = count.toLong() <= spaceLeft
     
-    /* In case I switch to handling negatives
-    val enoughSpace = maxValue >= 0L && count.toLong() <= spaceLeft ||
-                    maxValue < 0L && count.toLong() <= Long.MAX_VALUE - maxValue*/
-    
     return if (enoughSpace)
         List(count) { idx -> maxValue + idx + 1L }
     else
