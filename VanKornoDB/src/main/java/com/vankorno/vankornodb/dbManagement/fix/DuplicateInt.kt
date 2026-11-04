@@ -4,51 +4,20 @@ package com.vankorno.vankornodb.dbManagement.fix
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.IntCol
-import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.get.getNextInts
-import com.vankorno.vankornodb.get.getNextLongs
-import com.vankorno.vankornodb.get.getTableLongs
 import com.vankorno.vankornodb.get.useCursor
-import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
 import com.vankorno.vankornodb.set.setInt
-import com.vankorno.vankornodb.set.setLong
 
 /**
- * Fixes duplicate positions in the specified table by assigning new unique positions.
- * @return The number of rows modified.
+ * Multi-table, multi-column variant of [fixDuplicateInts]
  */
-fun SQLiteDatabase.fixDuplicatePosition(                              table: String,
+fun SQLiteDatabase.fixDuplicateIntsMult(                             tables: List<String>,
+                                                                    columns: List<IntCol>,
                                                                       where: WhereDsl.()->Unit = {},
-) = fixDuplicateLongs(table, cPosition, where)
-
-
-/**
- * Finds duplicate values in a column and assigns unique values to subsequent occurrences.
- * The first occurrence of each value is preserved.
- *
- * @return Number of rows modified.
- */
-fun SQLiteDatabase.fixDuplicateLongs(                                 table: String,
-                                                                     column: LongCol,
-                                                                      where: WhereDsl.()->Unit = {},
-): Int {
-    val rows = getTableLongs(table, arrayOf(cRowID, column), where)
-    val seenValues = mutableSetOf<Long>()
-    val duplicateRows = rows.filter { (_, value) -> !seenValues.add(value) }
-    
-    if (duplicateRows.isEmpty()) return 0 //\/\/\/\/\/\
-    
-    val newValues = getNextLongs(table, column, duplicateRows.size)
-    
-    duplicateRows.forEachIndexed { idx, (rowId, _) ->
-        setLong(newValues[idx], table, column) {
-            cRowID equal rowId
-        }
-    }
-    return duplicateRows.size
+) = tables.sumOf { table ->
+    columns.sumOf { column -> fixDuplicateInts(table, column, where) }
 }
-
 
 /**
  * Finds duplicate values in a column and assigns unique values to subsequent occurrences.
@@ -69,7 +38,6 @@ fun SQLiteDatabase.fixDuplicateInts(                                  table: Str
             } while (cursor.moveToNext())
         }
     }
-    
     val seenValues = mutableSetOf<Int>()
     val duplicateRows = rows.filter { (_, value) -> !seenValues.add(value) }
     
