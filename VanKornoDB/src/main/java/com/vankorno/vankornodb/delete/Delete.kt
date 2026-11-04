@@ -49,7 +49,7 @@ fun SQLiteDatabase.deleteRowsFromTables(                           vararg tables
 /** Deletes the first row from the specified table. */
 fun SQLiteDatabase.deleteFirstRow(                                                 table: String,
 ) {
-    delete(table, "ROWID = (SELECT ROWID FROM $table LIMIT 1)", null)
+    delete(table, "ROWID = (SELECT ROWID FROM $table ORDER BY ROWID ASC LIMIT 1)", null)
 }
 
 /** Deletes the last row from the specified table. */

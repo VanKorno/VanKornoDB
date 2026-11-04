@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.core.dsl
 import com.vankorno.vankornodb.api.JoinDsl
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.core.data.DbConstants.ASCENDING
 import com.vankorno.vankornodb.core.data.DbConstants.DESCENDING
 import com.vankorno.vankornodb.core.data.DbConstants.RANDOM
 import com.vankorno.vankornodb.core.data.DbConstants.RowID
@@ -78,7 +79,10 @@ open class FullDslInternal {
     fun orderByPosition() = orderBy(cPosition)
     fun orderByPositionAnd(andOrderBy: OrderDsl.()->Unit) = orderBy { cPosition(); and(andOrderBy) }
     
-    fun orderByFlippedRows() = orderBy(RowID + DESCENDING)
+    fun orderByRowId() = orderBy(RowID + ASCENDING)
+    
+    fun orderByRowIdDesc() = orderBy(RowID + DESCENDING)
+    fun orderByFlippedRowId() = orderBy(RowID + DESCENDING)
     
     
     fun IntCol.flip() = DescendingIntCol(this.name)

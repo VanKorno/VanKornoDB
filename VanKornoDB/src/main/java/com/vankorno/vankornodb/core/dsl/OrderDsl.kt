@@ -44,16 +44,13 @@ open class OrderDslInternal {
     
     
     
-    // Convenience fun
-    
     fun random() { orderoids += RANDOM }
     
     fun byId() { orderoids += _ID }
     fun byPosition() { orderoids += _Position }
     
-    /**
-     * Flips the actual order of rows in a db table (row id)
-     */
+    fun byRowId() { orderoids += RowID + ASCENDING }
+    fun byRowIdDesc() { orderoids += RowID + DESCENDING}
     fun flipRows() { orderoids += RowID + DESCENDING}
     
     
