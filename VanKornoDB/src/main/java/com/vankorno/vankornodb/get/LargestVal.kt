@@ -15,9 +15,9 @@ fun SQLiteDatabase.getLargestInt(                                     table: Str
                                                                      column: IntCol,
                                                                       where: WhereDsl.()->Unit = {},
 ): Int = getInt(
-    table,
-    iCol("IFNULL(MAX(${column.name}), 0)"),
-    where
+    table = table,
+    column = iCol("IFNULL(MAX(${column.name}), 0)"),
+    where = where
 )
 
 /**
@@ -27,7 +27,12 @@ fun SQLiteDatabase.getLargestLong(                                    table: Str
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
 ): Long = getLong(
-    table,
-    lCol("IFNULL(MAX(${column.name}), 0)"),
-    where
+    table = table,
+    column = lCol("IFNULL(MAX(${column.name}), 0)"),
+    where = where
 )
+
+
+
+
+

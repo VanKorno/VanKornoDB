@@ -12,7 +12,7 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
  */
 object SharedCol {
     val cID = lCol(_ID, -1L)
-    val cRowID by lazy { lCol(RowID, -1L) }
+    val cRowId by lazy { lCol(RowID, -1L) }
     val cName = sCol(_Name)
     val cPosition = lCol(_Position)
     val cType by lazy { sCol(_Type) }

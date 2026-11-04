@@ -14,19 +14,19 @@ fun SQLiteDatabase.getLastId(table: String) = getLargestLong(table, cID)
 /**
  * Returns the first id that fits, -1L if nothing was found.
  */
-fun SQLiteDatabase.getId(table: String, where: WhereDsl.()->Unit) = getLong(table, cID, where)
+fun SQLiteDatabase.getId(table: String, where: WhereDsl.()->Unit) = getLong(table, cID, where = where)
 
 
 fun SQLiteDatabase.getIDs(                                            table: String,
-                                                                      where: WhereDsl.()->Unit,
                                                                     orderBy: OrderDsl.()->Unit = {},
-) = getColLongs(table, cID, where, orderBy)
+                                                                      where: WhereDsl.()->Unit,
+) = getColLongs(table, cID, orderBy, where = where)
 
 
 
 fun SQLiteDatabase.getAllIDs(                                         table: String,
                                                                     orderBy: OrderDsl.()->Unit = {},
-) = getColLongs(table, cID, orderBy = orderBy)
+) = getColLongs(table, cID, orderBy)
 
 
 

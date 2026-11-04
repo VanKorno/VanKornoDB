@@ -7,7 +7,6 @@ import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
-import com.vankorno.vankornodb.misc.whereId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -52,22 +51,22 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 1
         
         // sanity
-        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(1L, dbh.getLong(table, cPosition) { ID = 1L })
         
         var reordered = dbh.reorder(table, id = 1L, moveUpOrBack = false, makeFirstOrLast = false)
         
         // swapped with 2
         assertTrue(reordered)
-        assertEquals(2L, dbh.getLong(table, cPosition, whereId(1L)))
-        assertEquals(1L, dbh.getLong(table, cPosition, whereId(2L)))
-        assertEquals(3L, dbh.getLong(table, cPosition, whereId(3L)))
+        assertEquals(2L, dbh.getLong(table, cPosition) { ID = 1L })
+        assertEquals(1L, dbh.getLong(table, cPosition) { ID = 2L })
+        assertEquals(3L, dbh.getLong(table, cPosition) { ID = 3L })
         
         reordered = dbh.reorder(table, id = 1L, moveUpOrBack = false, makeFirstOrLast = false)
         
         // swapped with 3
         assertTrue(reordered)
-        assertEquals(3L, dbh.getLong(table, cPosition, whereId(1L)))
-        assertEquals(2L, dbh.getLong(table, cPosition, whereId(3L)))
+        assertEquals(3L, dbh.getLong(table, cPosition) { ID = 1L })
+        assertEquals(2L, dbh.getLong(table, cPosition) { ID = 3L })
     }
     
     
@@ -75,21 +74,21 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 2
         
         // sanity
-        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(10L, dbh.getLong(table, cPosition) { ID = 10L })
         
         var reordered = dbh.reorder(table, id = 10L, moveUpOrBack = true, makeFirstOrLast = false)
         
         // swapped with 9
         assertTrue(reordered)
-        assertEquals(9L, dbh.getLong(table, cPosition, whereId(10L)))
-        assertEquals(10L, dbh.getLong(table, cPosition, whereId(9L)))
+        assertEquals(9L, dbh.getLong(table, cPosition) { ID = 10L })
+        assertEquals(10L, dbh.getLong(table, cPosition) { ID = 9L })
         
         reordered = dbh.reorder(table, id = 10L, moveUpOrBack = true, makeFirstOrLast = false)
         
         // swapped with 8
         assertTrue(reordered)
-        assertEquals(8L, dbh.getLong(table, cPosition, whereId(10L)))
-        assertEquals(9L, dbh.getLong(table, cPosition, whereId(8L)))
+        assertEquals(8L, dbh.getLong(table, cPosition) { ID = 10L })
+        assertEquals(9L, dbh.getLong(table, cPosition) { ID = 8L })
     }
     
     
@@ -97,20 +96,20 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 3
         
         // sanity
-        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
-        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(1L, dbh.getLong(table, cPosition) { ID = 1L })
+        assertEquals(10L, dbh.getLong(table, cPosition) { ID = 10L })
         
         val reordered = dbh.reorder(table, id = 1L, moveUpOrBack = false, makeFirstOrLast = true)
         
         // moved to end
         assertTrue(reordered)
-        assertEquals(11L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(11L, dbh.getLong(table, cPosition) { ID = 1L })
         
         // others unchanged
         assertTrue(reordered)
-        assertEquals(2L, dbh.getLong(table, cPosition, whereId(2L)))
-        assertEquals(3L, dbh.getLong(table, cPosition, whereId(3L)))
-        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(2L, dbh.getLong(table, cPosition) { ID = 2L })
+        assertEquals(3L, dbh.getLong(table, cPosition) { ID = 3L })
+        assertEquals(10L, dbh.getLong(table, cPosition) { ID = 10L })
     }
 
 
@@ -118,20 +117,20 @@ class ReorderTest : BaseAndroidTest() {
         val table = RoundKnightTable + 4
         
         // sanity
-        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
-        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
+        assertEquals(10L, dbh.getLong(table, cPosition) { ID = 10L })
+        assertEquals(1L, dbh.getLong(table, cPosition) { ID = 1L })
         
         val reordered = dbh.reorder(table, id = 10L, moveUpOrBack = true, makeFirstOrLast = true)
         
         // moved to start
         assertTrue(reordered)
-        assertEquals(1L, dbh.getLong(table, cPosition, whereId(10L)))
+        assertEquals(1L, dbh.getLong(table, cPosition) { ID = 10L })
         
         // everyone else shifted +1
         assertTrue(reordered)
-        assertEquals(2L, dbh.getLong(table, cPosition, whereId(1L)))
-        assertEquals(3L, dbh.getLong(table, cPosition, whereId(2L)))
-        assertEquals(11L, dbh.getLong(table, cPosition, whereId(9L)))
+        assertEquals(2L, dbh.getLong(table, cPosition) { ID = 1L })
+        assertEquals(3L, dbh.getLong(table, cPosition) { ID = 2L })
+        assertEquals(11L, dbh.getLong(table, cPosition) { ID = 9L })
     }
     
     
@@ -142,9 +141,9 @@ class ReorderTest : BaseAndroidTest() {
         
         // nothing changed
         assertFalse(reordered)
-        assertEquals(1L, dbh.getLong(table, cPosition, whereId(1L)))
-        assertEquals(2L, dbh.getLong(table, cPosition, whereId(2L)))
-        assertEquals(3L, dbh.getLong(table, cPosition, whereId(3L)))
+        assertEquals(1L, dbh.getLong(table, cPosition) { ID = 1L })
+        assertEquals(2L, dbh.getLong(table, cPosition) { ID = 2L })
+        assertEquals(3L, dbh.getLong(table, cPosition) { ID = 3L })
     }
     
     
@@ -155,9 +154,9 @@ class ReorderTest : BaseAndroidTest() {
         
         // nothing changed
         assertFalse(reordered)
-        assertEquals(10L, dbh.getLong(table, cPosition, whereId(10L)))
-        assertEquals(9L, dbh.getLong(table, cPosition, whereId(9L)))
-        assertEquals(8L, dbh.getLong(table, cPosition, whereId(8L)))
+        assertEquals(10L, dbh.getLong(table, cPosition) { ID = 10L })
+        assertEquals(9L, dbh.getLong(table, cPosition) { ID = 9L })
+        assertEquals(8L, dbh.getLong(table, cPosition) { ID = 8L })
     }
     
     

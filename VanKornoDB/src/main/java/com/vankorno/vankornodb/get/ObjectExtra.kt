@@ -5,20 +5,57 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
+import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
+
+/**
+ * Gets the first row as an object of an entity class using WhereDsl.
+ * Returns null if no result found.
+ */
+fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: TableInfoBase<out T>,
+                                                                      where: WhereDsl.()->Unit = {},
+): T? = getObjects(tableInfo,
+    orderBy = { cRowId() },
+    extra = { limit = 1 },
+    where = where,
+).firstOrNull()
+
+
+/**
+ * Gets the first row as an object of an entity class using WhereDsl.
+ * Returns [default] and logs error if no result found.
+ */
+fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: TableInfoBase<out T>,
+                                                                    default: T,
+                                                                      where: WhereDsl.()->Unit = {},
+): T = getFirstObj(tableInfo, where) ?: run {
+    // region LOG
+    if (!suppressObjGetterErrorLog)
+        eLog("getFirstObj(): No fitting rows exist in ${tableInfo.name}, returning default")
+    // endregion
+    default
+}
+
+
 
 /**
  * Gets the last row as an object of an entity class using WhereDsl.
  * Returns null if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>, // TODO Add limit maybe
+fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObj(tableInfo, where, orderBy = { cRowID.flip() })
+): T? = getObjects(tableInfo,
+    orderBy = { cRowId.flip() },
+    extra = { limit = 1 },
+    where = where,
+).firstOrNull()
 
 
-/** Default-value overload of [getLastObj] */
+/**
+ * Gets the last row as an object of an entity class using WhereDsl.
+ * Returns [default] and logs error if no result found.
+ */
 fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
@@ -35,7 +72,6 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
 
 /**
  * Retrieves a single random object (row) from the specified table and maps it to an entity class.
- * An overload without the default value.
  *
  * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
  * @param tableInfo Contains table name and a schema bundle of any entity type.
@@ -45,17 +81,20 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
 inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                                   tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getObj(tableInfo, where, orderBy = { random() })
+): T? = getObjects(tableInfo,
+    orderBy = { random() },
+    extra = { limit = 1 },
+    where = where,
+).firstOrNull()
 
 
 /**
  * Retrieves a single random object (row) from the specified table and maps it to an entity class.
- * An overload with the default value.
  *
  * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
  * @param tableInfo Contains table name and a schema bundle of any entity type.
  * @param where Optional lambda to specify additional WHERE conditions.
- * @return A random object of type [T] from the table, or null if no rows match.
+ * @return A random object of type [T] from the table, or [default] if no rows match.
  */
 inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                                   tableInfo: TableInfoBase<out T>,

@@ -23,12 +23,12 @@ fun SQLiteDatabase.tableExists(                                                 
 fun SQLiteDatabase.getAppTableNames(): List<String> = getColStrings(
     table = TABLE_Master,
     column = cName,
+    orderBy = { cName },
     where = {
         cType equal DbTypeTable
         and { cName notLike "sqlite_%" }
         and { cName.notEqualAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions) }
     },
-    orderBy = { cName }
 )
 
 
@@ -39,14 +39,14 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getColStrings(
 fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStrings(
     table = TABLE_Master,
     column = cName,
+    orderBy = { cName },
     where = {
         cType equal DbTypeTable
         andGroup {
             cName like "sqlite_%"
             or { cName.equalAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions) }
         }
-    },
-    orderBy = { cName }
+    }
 )
 
 // TODO get tables with data, not just names

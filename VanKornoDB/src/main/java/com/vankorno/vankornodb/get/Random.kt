@@ -7,8 +7,8 @@ import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
-import com.vankorno.vankornodb.get.noty.getCursorNoty
-import com.vankorno.vankornodb.get.noty.getTypedVal
+import com.vankorno.vankornodb.get.internal.getTypedVal
+import com.vankorno.vankornodb.get.noty.useCursorNoty
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
@@ -28,7 +28,7 @@ fun SQLiteDatabase.getRandomInt(                                      table: Str
 }
 
 
-fun SQLiteDatabase.getRandomString(                                  table: String,
+fun SQLiteDatabase.getRandomString(                                   table: String,
                                                                      column: StrCol,
                                                                       where: WhereDsl.()->Unit = {},
 ): String {
@@ -43,7 +43,7 @@ fun SQLiteDatabase.getRandomString(                                  table: Stri
 }
 
 
-fun SQLiteDatabase.getRandomLong(                                    table: String,
+fun SQLiteDatabase.getRandomLong(                                     table: String,
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
 ): Long {
@@ -58,7 +58,7 @@ fun SQLiteDatabase.getRandomLong(                                    table: Stri
 }
 
 
-fun SQLiteDatabase.getRandomFloat(                                   table: String,
+fun SQLiteDatabase.getRandomFloat(                                    table: String,
                                                                      column: FloatCol,
                                                                       where: WhereDsl.()->Unit = {},
 ): Float {
@@ -109,9 +109,13 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
 inline fun <reified T> SQLiteDatabase.getRandomValNoty(               table: String,
                                                                      column: String,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getCursorNoty(table, arrayOf(column), where, orderBy = { random() }) {
-    limit = 1
-}.use { cursor ->
+): T? = useCursorNoty(
+    table = table,
+    columns = arrayOf(column),
+    orderBy = { random() },
+    extra = { limit = 1 },
+    where = where,
+) { cursor ->
     if (cursor.moveToFirst())
         cursor.getTypedVal<T>(0)
     else

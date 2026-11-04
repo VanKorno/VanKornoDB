@@ -11,9 +11,9 @@ import com.vankorno.vankornodb.core.data.QueryWithArgs
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                            where: WhereDsl.()->Unit = {},
                                                           orderBy: OrderDsl.()->Unit = {},
                                                             extra: ExtraDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
 ): QueryWithArgs {
     val extraDsl = ExtraDsl().apply(extra).query
     val whereDsl = WhereDsl().apply(where)

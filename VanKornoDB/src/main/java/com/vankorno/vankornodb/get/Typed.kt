@@ -10,57 +10,60 @@ import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
-import com.vankorno.vankornodb.get.noty.*
+import com.vankorno.vankornodb.get.noty.getValueNoty
 import com.vankorno.vankornodb.misc.getBoolean
 
-fun SQLiteDatabase.getInt(table: String, column: IntCol, where: WhereDsl.()->Unit = {}) = getIntNoty(table, column.name, where)
-fun SQLiteDatabase.getStr(table: String, column: StrCol, where: WhereDsl.()->Unit = {}) = getStrNoty(table, column.name, where)
-fun SQLiteDatabase.getBool(table: String, column: BoolCol, where: WhereDsl.()->Unit = {}) = getBoolNoty(table, column.name, where)
-fun SQLiteDatabase.getLong(table: String, column: LongCol, where: WhereDsl.()->Unit = {}) = getLongNoty(table, column.name, where)
-fun SQLiteDatabase.getFloat(table: String, column: FloatCol, where: WhereDsl.()->Unit = {}) = getFloatNoty(table, column.name, where)
-fun SQLiteDatabase.getBlob(table: String, column: BlobCol, where: WhereDsl.()->Unit = {}) = getBlobNoty(table, column.name, where)
 
-
-
-fun SQLiteDatabase.getIntPro(                                          table: String,
-                                                                      column: IntCol,
-                                                                         dsl: ExtraDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, -1, "getIntPro", dsl) {
+fun SQLiteDatabase.getInt(                                            table: String,
+                                                                     column: IntCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+) = getValueNoty(table, column.name, -1, "getIntPro", extra, where) {
     it.getInt(0)
 }
 
-fun SQLiteDatabase.getStrPro(                                          table: String,
-                                                                      column: StrCol,
-                                                                         dsl: ExtraDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, "", "getStrPro", dsl) {
+
+fun SQLiteDatabase.getStr(                                            table: String,
+                                                                     column: StrCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+) = getValueNoty(table, column.name, "", "getStrPro", extra, where) {
     it.getString(0)
 }
 
-fun SQLiteDatabase.getBoolPro(                                         table: String,
-                                                                      column: BoolCol,
-                                                                         dsl: ExtraDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, false, "getBoolPro", dsl) {
+
+fun SQLiteDatabase.getBool(                                           table: String,
+                                                                     column: BoolCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+) = getValueNoty(table, column.name, false, "getBoolPro", extra, where) {
     it.getBoolean(0)
 }
 
-fun SQLiteDatabase.getLongPro(                                         table: String,
-                                                                      column: LongCol,
-                                                                         dsl: ExtraDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, -1L, "getLongPro", dsl) {
+
+fun SQLiteDatabase.getLong(                                           table: String,
+                                                                     column: LongCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+) = getValueNoty(table, column.name, -1L, "getLongPro", extra, where) {
     it.getLong(0)
 }
 
-fun SQLiteDatabase.getFloatPro(                                        table: String,
-                                                                      column: FloatCol,
-                                                                         dsl: ExtraDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, -1F, "getFloat", dsl) {
+
+fun SQLiteDatabase.getFloat(                                          table: String,
+                                                                     column: FloatCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+) = getValueNoty(table, column.name, -1F, "getFloat", extra, where) {
     it.getFloat(0)
 }
 
-fun SQLiteDatabase.getBlobPro(                                         table: String,
-                                                                      column: BlobCol,
-                                                                         dsl: ExtraDsl.()->Unit = {},
-) = getValueProNoty(table, column.name, ByteArray(0), "getBlob", dsl) {
+
+fun SQLiteDatabase.getBlob(                                           table: String,
+                                                                     column: BlobCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+) = getValueNoty(table, column.name, ByteArray(0), "getBlob", extra, where) {
     it.getBlob(0)
 }
 

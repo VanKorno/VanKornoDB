@@ -19,10 +19,10 @@ import com.vankorno.vankornodb.misc.getBoolean
  */
 fun SQLiteDatabase.getColInts(                                        table: String,
                                                                      column: IntCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): List<Int> = getColVals(table, column.name, where, orderBy, extra) { it.getInt(0) }
+                                                                      where: WhereDsl.()->Unit = {},
+): List<Int> = getColVals(table, column.name, orderBy, extra, where) { it.getInt(0) }
 
 
 /**
@@ -30,10 +30,10 @@ fun SQLiteDatabase.getColInts(                                        table: Str
  */
 fun SQLiteDatabase.getColStrings(                                     table: String,
                                                                      column: StrCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): List<String> = getColVals(table, column.name, where, orderBy, extra) { it.getString(0) }
+                                                                      where: WhereDsl.()->Unit = {},
+): List<String> = getColVals(table, column.name, orderBy, extra, where) { it.getString(0) }
 
 
 /**
@@ -41,10 +41,10 @@ fun SQLiteDatabase.getColStrings(                                     table: Str
  */
 fun SQLiteDatabase.getColBools(                                       table: String,
                                                                      column: BoolCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): List<Boolean> = getColVals(table, column.name, where, orderBy, extra) { it.getBoolean(0) }
+                                                                      where: WhereDsl.()->Unit = {},
+): List<Boolean> = getColVals(table, column.name, orderBy, extra, where) { it.getBoolean(0) }
 
 
 /**
@@ -52,10 +52,10 @@ fun SQLiteDatabase.getColBools(                                       table: Str
  */
 fun SQLiteDatabase.getColLongs(                                       table: String,
                                                                      column: LongCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): List<Long> = getColVals(table, column.name, where, orderBy, extra) { it.getLong(0) }
+                                                                      where: WhereDsl.()->Unit = {},
+): List<Long> = getColVals(table, column.name, orderBy, extra, where) { it.getLong(0) }
 
 
 /**
@@ -63,10 +63,10 @@ fun SQLiteDatabase.getColLongs(                                       table: Str
  */
 fun SQLiteDatabase.getColFloats(                                      table: String,
                                                                      column: FloatCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): List<Float> = getColVals(table, column.name, where, orderBy, extra) { it.getFloat(0) }
+                                                                      where: WhereDsl.()->Unit = {},
+): List<Float> = getColVals(table, column.name, orderBy, extra, where) { it.getFloat(0) }
 
 
 /**
@@ -74,10 +74,10 @@ fun SQLiteDatabase.getColFloats(                                      table: Str
  */
 fun SQLiteDatabase.getColBlobs(                                       table: String,
                                                                      column: BlobCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): List<ByteArray> = getColVals(table, column.name, where, orderBy, extra) { it.getBlob(0) }
+                                                                      where: WhereDsl.()->Unit = {},
+): List<ByteArray> = getColVals(table, column.name, orderBy, extra, where) { it.getBlob(0) }
 
 
 

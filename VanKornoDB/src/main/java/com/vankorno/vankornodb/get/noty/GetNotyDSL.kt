@@ -9,46 +9,21 @@ import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
 
-inline fun <R> SQLiteDatabase.getValueNoty(                                table: String,
-                                                                          column: String,
-                                                                         default: R,
-                                                                         funName: String,
-                                                                           where: WhereDsl.()->Unit,
-                                                      crossinline getCursorValue: (Cursor)->R,
+
+fun <R> SQLiteDatabase.getValueNoty(                                  table: String,
+                                                                     column: String,
+                                                                    default: R,
+                                                                    funName: String,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+                                                             getCursorValue: (Cursor)->R,
 ): R {
-    val builder = WhereDsl().apply(where)
-    val whereClause = builder.clauses.joinToString(" ")
-    val whereArgs = builder.args.toTypedArray()
-    
-    val whereClauseStr = if (whereClause.isNotBlank()) " WHERE $whereClause" else ""
-    
-    val sql = "SELECT $column FROM $table $whereClauseStr LIMIT 1"
-    
-    return rawQuery(sql, whereArgs).use { cursor ->
-        if (cursor.moveToFirst())
-            getCursorValue(cursor)
-        else {
-            // region LOG
-            if (!suppressValGetterErrorLog)
-                eLog("$funName() Unable to get value from $table (column: $column). Returning default. Where: $whereClause Args: ${whereArgs.joinToString()}")
-            // endregion
-            default
+    return getCursorNoty(table, arrayOf(column), where = where,
+        extra = {
+            applyDsl(extra)
+            limit = 1
         }
-    }
-}
-
-
-fun <R> SQLiteDatabase.getValueProNoty(                                table: String,
-                                                                      column: String,
-                                                                     default: R,
-                                                                     funName: String,
-                                                                         dsl: ExtraDsl.()->Unit = {},
-                                                              getCursorValue: (Cursor)->R,
-): R {
-    return getCursorNoty(table, arrayOf(column)) {
-        applyDsl(dsl)
-        limit = 1
-    }.use { cursor ->
+    ).use { cursor ->
         if (cursor.moveToFirst())
             getCursorValue(cursor)
         else {
@@ -63,22 +38,22 @@ fun <R> SQLiteDatabase.getValueProNoty(                                table: St
 
 
 fun SQLiteDatabase.getIntNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, -1, "getInt", where) { it.getInt(0) }
+    getValueNoty(table, column, -1, "getInt", where = where) { it.getInt(0) }
 
 fun SQLiteDatabase.getStrNoty(table: String, column: String, where: WhereDsl.()->Unit): String =
-    getValueNoty(table, column, "", "getStr", where) { it.getString(0) }
+    getValueNoty(table, column, "", "getStr", where = where) { it.getString(0) }
 
 fun SQLiteDatabase.getBoolNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, false, "getBool", where) { it.getBoolean(0) }
+    getValueNoty(table, column, false, "getBool", where = where) { it.getBoolean(0) }
 
 fun SQLiteDatabase.getLongNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, -1L, "getLong", where) { it.getLong(0) }
+    getValueNoty(table, column, -1L, "getLong", where = where) { it.getLong(0) }
 
 fun SQLiteDatabase.getFloatNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, -1F, "getFloat", where) { it.getFloat(0) }
+    getValueNoty(table, column, -1F, "getFloat", where = where) { it.getFloat(0) }
 
 fun SQLiteDatabase.getBlobNoty(table: String, column: String, where: WhereDsl.()->Unit): ByteArray =
-    getValueNoty(table, column, ByteArray(0), "getBlob", where) { it.getBlob(0) }
+    getValueNoty(table, column, ByteArray(0), "getBlob", where = where) { it.getBlob(0) }
 
 
 

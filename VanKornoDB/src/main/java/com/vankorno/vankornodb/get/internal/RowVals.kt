@@ -12,11 +12,11 @@ import com.vankorno.vankornodb.api.WhereDsl
  */
 internal inline fun <T> SQLiteDatabase.getRowVals(                    table: String,
                                                                     columns: Array<out String>,
-                                                             noinline where: WhereDsl.()->Unit = {},
                                                            noinline orderBy: OrderDsl.()->Unit = {},
                                                              noinline extra: ExtraDsl.()->Unit = {},
+                                                             noinline where: WhereDsl.()->Unit = {},
                                                  crossinline getCursorValue: (Cursor, Int)->T,
-): List<T> = baseGetVals(table, columns, where, orderBy, 
+): List<T> = baseGetVals(table, columns, orderBy, where = where, 
     extra = {
         applyDsl(extra)
         limit = 1

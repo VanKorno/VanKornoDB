@@ -13,11 +13,11 @@ import com.vankorno.vankornodb.get.noty.getCursorNoty
  */
 internal fun <T> SQLiteDatabase.baseGetVals(                          table: String,
                                                                     columns: Array<out String>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
                                                              getCursorValue: (Cursor, Int)->T,
-): List<List<T>> = getCursorNoty(table, columns, where, orderBy, extra).use { cursor ->
+): List<List<T>> = getCursorNoty(table, columns, orderBy, extra, where).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {

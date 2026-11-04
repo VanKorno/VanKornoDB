@@ -15,11 +15,11 @@ import com.vankorno.vankornodb.misc.getColNames
  * Selects all columns (`*`).
  */
 fun SQLiteDatabase.getCursor(                                         table: String,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): Cursor {
-    val (query, args) = getQuery(table, arrayOf("*"), where, orderBy, extra)
+    val (query, args) = getQuery(table, arrayOf("*"), orderBy, extra, where)
     return rawQuery(query, args)
 }
 
@@ -29,11 +29,11 @@ fun SQLiteDatabase.getCursor(                                         table: Str
  */
 fun SQLiteDatabase.getCursor(                                      table: String,
                                                                  columns: Array<out TypedColumn<*>>,
-                                                                   where: WhereDsl.()->Unit = {},
                                                                  orderBy: OrderDsl.()->Unit = {},
                                                                    extra: ExtraDsl.()->Unit = {},
+                                                                   where: WhereDsl.()->Unit = {},
 ): Cursor {
-    val (query, args) = getQuery(table, getColNames(columns), where, orderBy, extra)
+    val (query, args) = getQuery(table, getColNames(columns), orderBy, extra, where)
     return rawQuery(query, args)
 }
 
@@ -43,11 +43,11 @@ fun SQLiteDatabase.getCursor(                                      table: String
  */
 fun SQLiteDatabase.getCursor(                                         table: String,
                                                                      column: TypedColumn<*>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): Cursor {
-    val (query, args) = getQuery(table, arrayOf(column.name), where, orderBy, extra)
+    val (query, args) = getQuery(table, arrayOf(column.name), orderBy, extra, where)
     return rawQuery(query, args)
 }
 
@@ -60,11 +60,11 @@ fun SQLiteDatabase.getCursor(                                         table: Str
  * Selects all columns (`*`).
  */
 inline fun <R> SQLiteDatabase.useCursor(                              table: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
                                                            noinline orderBy: OrderDsl.()->Unit = {},
                                                              noinline extra: ExtraDsl.()->Unit = {},
+                                                             noinline where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->R,
-): R = getCursor(table, where, orderBy, extra).use(block)
+): R = getCursor(table, orderBy, extra, where).use(block)
 
 /**
  * Executes a query and manages the lifecycle of the resulting [Cursor] within [block].
@@ -72,11 +72,11 @@ inline fun <R> SQLiteDatabase.useCursor(                              table: Str
  */
 inline fun <R> SQLiteDatabase.useCursor(                           table: String,
                                                                  columns: Array<out TypedColumn<*>>,
-                                                          noinline where: WhereDsl.()->Unit = {},
                                                         noinline orderBy: OrderDsl.()->Unit = {},
                                                           noinline extra: ExtraDsl.()->Unit = {},
+                                                          noinline where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->R,
-): R = getCursor(table, columns, where, orderBy, extra).use(block)
+): R = getCursor(table, columns, orderBy, extra, where).use(block)
 
 /**
  * Executes a query and manages the lifecycle of the resulting [Cursor] within [block].
@@ -84,11 +84,11 @@ inline fun <R> SQLiteDatabase.useCursor(                           table: String
  */
 inline fun <R> SQLiteDatabase.useCursor(                              table: String,
                                                                      column: TypedColumn<*>,
-                                                             noinline where: WhereDsl.()->Unit = {},
                                                            noinline orderBy: OrderDsl.()->Unit = {},
                                                              noinline extra: ExtraDsl.()->Unit = {},
+                                                             noinline where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->R,
-): R = getCursor(table, column, where, orderBy, extra).use(block)
+): R = getCursor(table, column, orderBy, extra, where).use(block)
 
 
 

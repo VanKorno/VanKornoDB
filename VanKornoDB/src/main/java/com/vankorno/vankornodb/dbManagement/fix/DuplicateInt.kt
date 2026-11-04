@@ -6,7 +6,7 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.get.getNextInts
 import com.vankorno.vankornodb.get.useCursor
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
+import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 import com.vankorno.vankornodb.set.setInt
 
 /**
@@ -31,7 +31,7 @@ fun SQLiteDatabase.fixDuplicateInts(                                  table: Str
 ): Int {
     val rows = mutableListOf<Pair<Long, Int>>()
     
-    useCursor(table, arrayOf(cRowID, column), where, orderBy = { cRowID }) { cursor ->
+    useCursor(table, arrayOf(cRowId, column), orderBy = { cRowId }, where = where) { cursor ->
         if (cursor.moveToFirst()) {
             do {
                 rows.add(cursor.getLong(0) to cursor.getInt(1))
@@ -47,7 +47,7 @@ fun SQLiteDatabase.fixDuplicateInts(                                  table: Str
     
     duplicateRows.forEachIndexed { idx, (rowId, _) ->
         setInt(newValues[idx], table, column) {
-            cRowID equal rowId
+            cRowId equal rowId
         }
     }
     return duplicateRows.size

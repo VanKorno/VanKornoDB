@@ -15,11 +15,30 @@ import com.vankorno.vankornodb.core.dsl.getQuery
  */
 fun SQLiteDatabase.getCursorNoty(                                     table: String,
                                                                     columns: Array<out String>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): Cursor {
-    val (query, args) = getQuery(table, columns, where, orderBy, extra)
+    val (query, args) = getQuery(table, columns, orderBy, extra, where)
     return rawQuery(query, args)
 }
+
+
+
+/**
+ * Executes a query and manages the lifecycle of the resulting [Cursor] within [block].
+ */
+inline fun <R> SQLiteDatabase.useCursorNoty(                          table: String,
+                                                                    columns: Array<out String>,
+                                                           noinline orderBy: OrderDsl.()->Unit = {},
+                                                             noinline extra: ExtraDsl.()->Unit = {},
+                                                             noinline where: WhereDsl.()->Unit = {},
+                                                                      block: (Cursor)->R,
+): R = getCursorNoty(table, columns, orderBy, extra, where).use(block)
+
+
+
+
+
+
 

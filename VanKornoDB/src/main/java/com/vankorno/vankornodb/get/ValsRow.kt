@@ -19,11 +19,11 @@ import com.vankorno.vankornodb.misc.getBoolean
  */
 fun SQLiteDatabase.getRowInts(                                        table: String,
                                                                     columns: Array<IntCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Int> = getRowVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getInt(col)
 }
@@ -34,11 +34,11 @@ fun SQLiteDatabase.getRowInts(                                        table: Str
  */
 fun SQLiteDatabase.getRowStrings(                                     table: String,
                                                                     columns: Array<StrCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<String> = getRowVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getString(col)
 }
@@ -49,11 +49,11 @@ fun SQLiteDatabase.getRowStrings(                                     table: Str
  */
 fun SQLiteDatabase.getRowBools(                                       table: String,
                                                                     columns: Array<BoolCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Boolean> = getRowVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getBoolean(col)
 }
@@ -64,11 +64,11 @@ fun SQLiteDatabase.getRowBools(                                       table: Str
  */
 fun SQLiteDatabase.getRowLongs(                                       table: String,
                                                                     columns: Array<LongCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Long> = getRowVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getLong(col)
 }
@@ -79,11 +79,11 @@ fun SQLiteDatabase.getRowLongs(                                       table: Str
  */
 fun SQLiteDatabase.getRowFloats(                                      table: String,
                                                                     columns: Array<FloatCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Float> = getRowVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getFloat(col)
 }
@@ -94,11 +94,11 @@ fun SQLiteDatabase.getRowFloats(                                      table: Str
  */
 fun SQLiteDatabase.getRowBlobs(                                       table: String,
                                                                     columns: Array<BlobCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<ByteArray> = getRowVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getBlob(col)
 }

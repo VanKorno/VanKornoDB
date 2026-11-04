@@ -8,17 +8,16 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 
 /**
  * Retrieves a list of objects mapped from the given columns.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjects(                   tableInfo: TableInfoBase<T>,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-): List<T> = getCursor(tableInfo.name, where, orderBy) {
-    applyDsl(extra)
-}.use { cursor ->
+fun <T : BaseEntity> SQLiteDatabase.getObjects(         tableInfo: TableInfoBase<T>,
+                                                          orderBy: OrderDsl.()->Unit = { cRowId() },
+                                                            extra: ExtraDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
+): List<T> = useCursor(tableInfo.name, orderBy, extra, where) { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
@@ -35,13 +34,11 @@ fun <T : BaseEntity> SQLiteDatabase.getObjects(                   tableInfo: Tab
 /** 
  * Retrieves a map of objects from the given table.
  */
-fun <T : BaseEntity> SQLiteDatabase.getObjMap(                    tableInfo: TableInfoBase<T>,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-): Map<Long, T> = getCursor(tableInfo.name, where, orderBy) {
-    applyDsl(extra)
-}.use { cursor ->
+fun <T : BaseEntity> SQLiteDatabase.getObjMap(          tableInfo: TableInfoBase<T>,
+                                                          orderBy: OrderDsl.()->Unit = { cRowId() },
+                                                            extra: ExtraDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
+): Map<Long, T> = useCursor(tableInfo.name, orderBy, extra, where) { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")

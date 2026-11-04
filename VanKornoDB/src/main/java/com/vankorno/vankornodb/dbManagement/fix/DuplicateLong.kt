@@ -6,7 +6,7 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.get.getNextLongs
 import com.vankorno.vankornodb.get.getTableLongs
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
+import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 import com.vankorno.vankornodb.set.setLong
 
 /**
@@ -30,7 +30,7 @@ fun SQLiteDatabase.fixDuplicateLongs(                                 table: Str
                                                                      column: LongCol,
                                                                       where: WhereDsl.()->Unit = {},
 ): Int {
-    val rows = getTableLongs(table, arrayOf(cRowID, column), where)
+    val rows = getTableLongs(table, arrayOf(cRowId, column), where = where)
     val seenValues = mutableSetOf<Long>()
     val duplicateRows = rows.filter { (_, value) -> !seenValues.add(value) }
     
@@ -40,7 +40,7 @@ fun SQLiteDatabase.fixDuplicateLongs(                                 table: Str
     
     duplicateRows.forEachIndexed { idx, (rowId, _) ->
         setLong(newValues[idx], table, column) {
-            cRowID equal rowId
+            cRowId equal rowId
         }
     }
     return duplicateRows.size

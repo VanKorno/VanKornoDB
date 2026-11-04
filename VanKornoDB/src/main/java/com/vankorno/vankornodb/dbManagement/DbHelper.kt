@@ -45,12 +45,12 @@ abstract class DbHelperInternal(
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun useCursor(                                                    table: String,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
-        db.useCursor(table, where, orderBy, extra, block)
+        db.useCursor(table, orderBy, extra, where, block)
     }
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
@@ -61,18 +61,18 @@ abstract class DbHelperInternal(
                                                                    extra: ExtraDsl.()->Unit = {},
                                                                    block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
-        db.useCursor(table, columns, where, orderBy, extra, block)
+        db.useCursor(table, columns, orderBy, extra, where, block)
     }
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun useCursor(                                                    table: String,
                                                                      column: TypedColumn<*>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
-        db.useCursor(table, column, where, orderBy, extra, block)
+        db.useCursor(table, column, orderBy, extra, where, block)
     }
     
     
@@ -81,36 +81,36 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                            table: String,
                                                                defaultValue: T,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursor") { db ->
-        db.useCursor(table, where, orderBy, extra, block)
+        db.useCursor(table, orderBy, extra, where, block)
     }
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                         table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                             defaultValue: T,
-                                                                   where: WhereDsl.()->Unit = {},
                                                                  orderBy: OrderDsl.()->Unit = {},
                                                                    extra: ExtraDsl.()->Unit = {},
+                                                                   where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursor") { db ->
-        db.useCursor(table, columns, where, orderBy, extra, block)
+        db.useCursor(table, columns, orderBy, extra, where, block)
     }
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                            table: String,
                                                                      column: TypedColumn<*>,
                                                                defaultValue: T,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->T,
     ): T = readWrite(defaultValue, "getFromCursor") { db ->
-        db.useCursor(table, column, where, orderBy, extra, block)
+        db.useCursor(table, column, orderBy, extra, where, block)
     }
     
     
@@ -272,103 +272,57 @@ abstract class DbHelperInternal(
     // ==================================   G E T T E R S  ================================== \\
     
     /** A wrapper fun for [SQLiteDatabase.getInt] */
-    fun getInt(                                                            table: String,
-                                                                          column: IntCol,
-                                                                           where: WhereDsl.()->Unit,
+    fun getInt(                                                       table: String,
+                                                                     column: IntCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): Int = read(-1, "getInt") { db ->
-        db.getInt(table, column, where)
+        db.getInt(table, column, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getStr] */
-    fun getStr(                                                            table: String,
-                                                                          column: StrCol,
-                                                                           where: WhereDsl.()->Unit,
+    fun getStr(                                                       table: String,
+                                                                     column: StrCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): String = read("", "getStr") { db ->
-        db.getStr(table, column, where)
+        db.getStr(table, column, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBool] */
-    fun getBool(                                                           table: String,
-                                                                          column: BoolCol,
-                                                                           where: WhereDsl.()->Unit,
+    fun getBool(                                                      table: String,
+                                                                     column: BoolCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): Boolean = read(false, "getBool") { db ->
-        db.getBool(table, column, where)
+        db.getBool(table, column, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getLong] */
-    fun getLong(                                                           table: String,
-                                                                          column: LongCol,
-                                                                           where: WhereDsl.()->Unit,
+    fun getLong(                                                      table: String,
+                                                                     column: LongCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): Long = read(-1L, "getLong") { db ->
-        db.getLong(table, column, where)
+        db.getLong(table, column, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getFloat] */
-    fun getFloat(                                                          table: String,
-                                                                          column: FloatCol,
-                                                                           where: WhereDsl.()->Unit,
+    fun getFloat(                                                     table: String,
+                                                                     column: FloatCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): Float = read(-1F, "getFloat") { db ->
-        db.getFloat(table, column, where)
+        db.getFloat(table, column, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBlob] */
-    fun getBlob(                                                           table: String,
-                                                                          column: BlobCol,
-                                                                           where: WhereDsl.()->Unit,
+    fun getBlob(                                                      table: String,
+                                                                     column: BlobCol,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): ByteArray = read(ByteArray(0), "getBlob") { db ->
-        db.getBlob(table, column, where)
-    }
-    
-    
-    
-    // ----------------------------------  G E T   P R O  ---------------------------------- \\
-    
-    /** A wrapper fun for [SQLiteDatabase.getIntPro] */
-    fun getIntPro(                                                          table: String,
-                                                                           column: IntCol,
-                                                                              dsl: ExtraDsl.()->Unit,
-    ): Int = read(-1, "getIntPro") { db ->
-        db.getIntPro(table, column, dsl)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getStrPro] */
-    fun getStrPro(                                                          table: String,
-                                                                           column: StrCol,
-                                                                              dsl: ExtraDsl.()->Unit,
-    ): String = read("", "getStrPro") { db ->
-        db.getStrPro(table, column, dsl)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getBoolPro] */
-    fun getBoolPro(                                                         table: String,
-                                                                           column: BoolCol,
-                                                                              dsl: ExtraDsl.()->Unit,
-    ): Boolean = read(false, "getBoolPro") { db ->
-        db.getBoolPro(table, column, dsl)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getLongPro] */
-    fun getLongPro(                                                         table: String,
-                                                                           column: LongCol,
-                                                                              dsl: ExtraDsl.()->Unit,
-    ): Long = read(-1L, "getLongPro") { db ->
-        db.getLongPro(table, column, dsl)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getFloatPro] */
-    fun getFloatPro(                                                        table: String,
-                                                                           column: FloatCol,
-                                                                              dsl: ExtraDsl.()->Unit,
-    ): Float = read(-1F, "getFloatPro") { db ->
-        db.getFloatPro(table, column, dsl)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getBlobPro] */
-    fun getBlobPro(                                                         table: String,
-                                                                           column: BlobCol,
-                                                                              dsl: ExtraDsl.()->Unit,
-    ): ByteArray = read(ByteArray(0), "getBlobPro") { db ->
-        db.getBlobPro(table, column, dsl)
+        db.getBlob(table, column, extra, where)
     }
     
     
@@ -380,23 +334,53 @@ abstract class DbHelperInternal(
     
     /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
     ): T? = read(null, "getObj") { db ->
-        db.getObj(tableInfo, where, orderBy, extra)
+        db.getObj(tableInfo, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
                                                                     default: T,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
     ): T = read(default, "getObj") { db ->
-        db.getObj(tableInfo, default, where, orderBy, extra)
+        db.getObj(tableInfo, default, extra, where)
     }
     
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.getFirstObj] */
+    fun <T : BaseEntity> getFirstObj(                             tableInfo: TableInfoBase<out T>,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): T? = read(null, "getFirstObj") { db ->
+        db.getFirstObj(tableInfo, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getFirstObj] */
+    fun <T : BaseEntity> getFirstObj(                             tableInfo: TableInfoBase<out T>,
+                                                                    default: T,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): T = read(default, "getFirstObj") { db ->
+        db.getFirstObj(tableInfo, default, where)
+    }
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
+    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): T? = read(null, "getLastObj") { db ->
+        db.getLastObj(tableInfo, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
+    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
+                                                                    default: T,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): T = read(default, "getLastObj") { db ->
+        db.getLastObj(tableInfo, default, where)
+    }
     
     
     /** A wrapper fun for [SQLiteDatabase.getRandomObj] */
@@ -416,42 +400,26 @@ abstract class DbHelperInternal(
     
     
     
-    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
-    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
-                                                                      where: WhereDsl.()->Unit = {},
-    ): T? = read(null, "getLastObj") { db ->
-        db.getLastObj(tableInfo, where)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
-    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
-                                                                    default: T,
-                                                                      where: WhereDsl.()->Unit = {},
-    ): T = read(default, "getLastObj") { db ->
-        db.getLastObj(tableInfo, default, where)
-    }
-    
-    
     
     // =========================  M U L T I P L E   O B J E C T S  ========================= \\
     
     /** A wrapper fun for [SQLiteDatabase.getObjects] */
     fun <T : BaseEntity> getObjects(                              tableInfo: TableInfoBase<T>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getObjects") { db ->
-        db.getObjects(tableInfo, where, orderBy, extra)
+        db.getObjects(tableInfo, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getObjMap] */
     fun <T : BaseEntity> getObjMap(                               tableInfo: TableInfoBase<T>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): Map<Long, T> = read(emptyMap(), "getObjMap") { db ->
-        db.getObjMap(tableInfo, where, orderBy, extra)
+        db.getObjMap(tableInfo, orderBy, extra, where)
     }
     
     
@@ -466,66 +434,66 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getColInts] */
     fun getColInts(                                                   table: String,
                                                                      column: IntCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getColInts") { db ->
-        db.getColInts(table, column, where, orderBy, extra)
+        db.getColInts(table, column, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getColStrings] */
     fun getColStrings(                                                table: String,
                                                                      column: StrCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<String> = read(emptyList(), "getColStrings") { db ->
-        db.getColStrings(table, column, where, orderBy, extra)
+        db.getColStrings(table, column, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getColBools] */
     fun getColBools(                                                  table: String,
                                                                      column: BoolCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getColBools") { db ->
-        db.getColBools(table, column, where, orderBy, extra)
+        db.getColBools(table, column, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getColLongs] */
     fun getColLongs(                                                  table: String,
                                                                      column: LongCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getColLongs") { db ->
-        db.getColLongs(table, column, where, orderBy, extra)
+        db.getColLongs(table, column, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getColFloats] */
     fun getColFloats(                                                 table: String,
                                                                      column: FloatCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Float> = read(emptyList(), "getColFloats") { db ->
-        db.getColFloats(table, column, where, orderBy, extra)
+        db.getColFloats(table, column, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getColBlobs] */
     fun getColBlobs(                                                  table: String,
                                                                      column: BlobCol,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getColBlobs") { db ->
-        db.getColBlobs(table, column, where, orderBy, extra)
+        db.getColBlobs(table, column, orderBy, extra, where)
     }
     
     
@@ -536,66 +504,66 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getRowInts] */
     fun getRowInts(                                                   table: String,
                                                                     columns: Array<IntCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getRowInts") { db ->
-        db.getRowInts(table, columns, where, orderBy, extra)
+        db.getRowInts(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getRowStrings] */
     fun getRowStrings(                                                table: String,
                                                                     columns: Array<StrCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<String> = read(emptyList(), "getRowStrings") { db ->
-        db.getRowStrings(table, columns, where, orderBy, extra)
+        db.getRowStrings(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getRowBools] */
     fun getRowBools(                                                  table: String,
                                                                     columns: Array<BoolCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getRowBools") { db ->
-        db.getRowBools(table, columns, where, orderBy, extra)
+        db.getRowBools(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getRowLongs] */
     fun getRowLongs(                                                  table: String,
                                                                     columns: Array<LongCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getRowLongs") { db ->
-        db.getRowLongs(table, columns, where, orderBy, extra)
+        db.getRowLongs(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getRowFloats] */
     fun getRowFloats(                                                 table: String,
                                                                     columns: Array<FloatCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Float> = read(emptyList(), "getRowFloats") { db ->
-        db.getRowFloats(table, columns, where, orderBy, extra)
+        db.getRowFloats(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getRowBlobs] */
     fun getRowBlobs(                                                  table: String,
                                                                     columns: Array<BlobCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getRowBlobs") { db ->
-        db.getRowBlobs(table, columns, where, orderBy, extra)
+        db.getRowBlobs(table, columns, orderBy, extra, where)
     }
     
     
@@ -608,66 +576,66 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getTableInts] */
     fun getTableInts(                                                 table: String,
                                                                     columns: Array<IntCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<List<Int>> = read(emptyList(), "getTableInts") { db ->
-        db.getTableInts(table, columns, where, orderBy, extra)
+        db.getTableInts(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getTableStrings] */
     fun getTableStrings(                                              table: String,
                                                                     columns: Array<StrCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<List<String>> = read(emptyList(), "getTableStrings") { db ->
-        db.getTableStrings(table, columns, where, orderBy, extra)
+        db.getTableStrings(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getTableBools] */
     fun getTableBools(                                                table: String,
                                                                     columns: Array<BoolCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<List<Boolean>> = read(emptyList(), "getTableBools") { db ->
-        db.getTableBools(table, columns, where, orderBy, extra)
+        db.getTableBools(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getTableLongs] */
     fun getTableLongs(                                                table: String,
                                                                     columns: Array<LongCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<List<Long>> = read(emptyList(), "getTableLongs") { db ->
-        db.getTableLongs(table, columns, where, orderBy, extra)
+        db.getTableLongs(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getTableFloats] */
     fun getTableFloats(                                               table: String,
                                                                     columns: Array<FloatCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<List<Float>> = read(emptyList(), "getTableFloats") { db ->
-        db.getTableFloats(table, columns, where, orderBy, extra)
+        db.getTableFloats(table, columns, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getTableBlobs] */
     fun getTableBlobs(                                                table: String,
                                                                     columns: Array<BlobCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<List<ByteArray>> = read(emptyList(), "getTableBlobs") { db ->
-        db.getTableBlobs(table, columns, where, orderBy, extra)
+        db.getTableBlobs(table, columns, orderBy, extra, where)
     }
     
     
@@ -838,22 +806,36 @@ abstract class DbHelperInternal(
     // ====================================  C O U N T  ==================================== \\
     
     /** A wrapper fun for [SQLiteDatabase.getRowCount] */
-    fun getRowCount(                                                  table: String,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
+    fun getRowCount(                                                       table: String,
+                                                                           extra: ExtraDsl.()->Unit,
+                                                                           where: WhereDsl.()->Unit,
     ) = read(0, "getRowCount") { db ->
-        db.getRowCount(table, where, extra)
+        db.getRowCount(table, extra, where)
+    }
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.getRowCount] */
+    fun getRowCount(                                                               table: String
+    ) = read(0, "getRowCount") { db ->
+        db.getRowCount(table)
+    }
+    
+    
+    
+    /** A wrapper fun for [SQLiteDatabase.hasRows] */
+    fun hasRows(                                                           table: String,
+                                                                           extra: ExtraDsl.()->Unit,
+                                                                           where: WhereDsl.()->Unit,
+    ) = read(false, "hasRows") { db ->
+        db.hasRows(table, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.hasRows] */
-    fun hasRows(                                                      table: String,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
+    fun hasRows(                                                                   table: String
     ) = read(false, "hasRows") { db ->
-        db.hasRows(table, where, extra)
+        db.hasRows(table)
     }
-    
     
     
     
@@ -876,10 +858,10 @@ abstract class DbHelperInternal(
     
     /** A wrapper fun for [SQLiteDatabase.getIDs] */
     fun getIDs(                                                       table: String,
-                                                                      where: WhereDsl.()->Unit,
                                                                     orderBy: OrderDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
     ): List<Long> = read(emptyList(), "getIDs") { db ->
-        db.getIDs(table, where, orderBy)
+        db.getIDs(table, orderBy, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getAllIDs] */

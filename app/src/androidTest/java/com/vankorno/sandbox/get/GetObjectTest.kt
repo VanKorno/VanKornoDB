@@ -8,7 +8,6 @@ import com.vankorno.sandbox.makeRatsTestNest
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.using
-import com.vankorno.vankornodb.misc.whereId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -39,7 +38,7 @@ class GetObjectTest {
     }
     
     private fun getObjWithGeneratedGetter() {
-        val obj = dbh.getObj(GetObjTestTable using _Test, whereId(1))
+        val obj = dbh.getObj(GetObjTestTable using _Test) { ID = 1L }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)
@@ -48,7 +47,7 @@ class GetObjectTest {
     
     
     private fun getObjWithNullGetter() {
-        val obj = dbh.getObj(GetObjTestTable using DummySchema, whereId(1))
+        val obj = dbh.getObj(GetObjTestTable using DummySchema) { ID = 1L }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)
@@ -57,7 +56,7 @@ class GetObjectTest {
     
     @Test
     fun getterHasPriorityOverReflection() {
-        val obj = dbh.getObj(GetObjTestTable using OrmTestWrongGetter, whereId(1))
+        val obj = dbh.getObj(GetObjTestTable using OrmTestWrongGetter) { ID = 1L }
         
         assertNotNull(obj)
         assertEquals(999, obj!!.id)

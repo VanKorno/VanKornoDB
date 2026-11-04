@@ -3,7 +3,6 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.ExtraDsl
-import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
@@ -17,10 +16,9 @@ import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
  */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: TableInfoBase<T>,
                                                                     default: T,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): T = getObj(tableInfo, where, orderBy, extra) ?: run {
+                                                                      where: WhereDsl.()->Unit,
+): T = getObj(tableInfo, extra, where) ?: run {
     // region LOG
     if (!suppressObjGetterErrorLog)
         eLog("getObj(): The requested row doesn't exist in ${tableInfo.name}, returning default")
@@ -34,13 +32,14 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
  * Returns null if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: TableInfoBase<T>,
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
-): T? = getCursor(tableInfo.name, where, orderBy) {
-    applyDsl(extra)
-    limit = 1
-}.use { cursor ->
+                                                                      where: WhereDsl.()->Unit,
+): T? = getCursor(tableInfo.name, where = where,
+    extra = {
+        applyDsl(extra)
+        limit = 1
+    }
+).use { cursor ->
     if (!cursor.moveToFirst()) return null //\/\/\/\/\/\
     
     cursor.toEntity(tableInfo.schema)

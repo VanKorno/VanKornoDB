@@ -19,11 +19,11 @@ import com.vankorno.vankornodb.misc.getBoolean
  */
 fun SQLiteDatabase.getTableInts(                                      table: String,
                                                                     columns: Array<IntCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Int>> = baseGetVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getInt(col)
 }
@@ -34,11 +34,11 @@ fun SQLiteDatabase.getTableInts(                                      table: Str
  */
 fun SQLiteDatabase.getTableStrings(                                   table: String,
                                                                     columns: Array<StrCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<String>> = baseGetVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getString(col)
 }
@@ -49,11 +49,11 @@ fun SQLiteDatabase.getTableStrings(                                   table: Str
  */
 fun SQLiteDatabase.getTableBools(                                     table: String,
                                                                     columns: Array<BoolCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Boolean>> = baseGetVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getBoolean(col)
 }
@@ -64,11 +64,11 @@ fun SQLiteDatabase.getTableBools(                                     table: Str
  */
 fun SQLiteDatabase.getTableLongs(                                     table: String,
                                                                     columns: Array<LongCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Long>> = baseGetVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getLong(col)
 }
@@ -79,11 +79,11 @@ fun SQLiteDatabase.getTableLongs(                                     table: Str
  */
 fun SQLiteDatabase.getTableFloats(                                    table: String,
                                                                     columns: Array<FloatCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<Float>> = baseGetVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getFloat(col)
 }
@@ -94,11 +94,11 @@ fun SQLiteDatabase.getTableFloats(                                    table: Str
  */
 fun SQLiteDatabase.getTableBlobs(                                     table: String,
                                                                     columns: Array<BlobCol>,
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<List<ByteArray>> = baseGetVals(
-    table, columns.map{ it.name }.toTypedArray(), where, orderBy, extra
+    table, columns.map{ it.name }.toTypedArray(), orderBy, extra, where
 ) { cursor, col ->
     cursor.getBlob(col)
 }

@@ -7,7 +7,7 @@ import com.vankorno.vankornodb.dbManagement.data.sListCol
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
+import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -50,7 +50,7 @@ class EntityColumnsTest {
     fun `Mixed single and list columns`() {
         val cols = object : EntityColumns {
             override val columns = buildColList {
-                +cRowID
+                +cRowId
                 +sListCol("tag_", 2, "x")
                 +cActive
             }
@@ -58,7 +58,7 @@ class EntityColumnsTest {
 
         assertEquals(4, cols.size)
 
-        assertEquals(cRowID, cols[0])
+        assertEquals(cRowId, cols[0])
         assertEquals("tag_1", cols[1].name)
         assertEquals("tag_2", cols[2].name)
         assertEquals(cActive, cols[3])

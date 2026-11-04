@@ -128,7 +128,7 @@ class WhereDsl : WhereDslInternal() {
                                                           orderBy: OrderDsl.()->Unit = {},
                                                             extra: ExtraDsl.()->Unit = {},
     ): String {
-        val innerBuilder = getQuery(table, columns, where, orderBy, extra)
+        val innerBuilder = getQuery(table, columns, orderBy, extra, where)
         
         val clause = "(${innerBuilder.query})"
         

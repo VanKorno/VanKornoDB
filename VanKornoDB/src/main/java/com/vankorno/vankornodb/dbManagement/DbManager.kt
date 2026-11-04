@@ -20,7 +20,6 @@ import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.eLog
-import com.vankorno.vankornodb.misc.whereName
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -201,7 +200,7 @@ abstract class DbManager(        context: Context,
     ) {
         for (meta in entityMeta) {
             val dbName = meta.dbRowName
-            val rowExists = db.hasRows(TABLE_EntityVersions, whereName(dbName))
+            val rowExists = db.hasRows(TABLE_EntityVersions) { Name = dbName }
             if (rowExists)
                 continue //\/\/\
             
