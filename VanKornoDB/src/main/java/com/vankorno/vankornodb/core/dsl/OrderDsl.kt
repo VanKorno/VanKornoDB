@@ -1,7 +1,9 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.core.data.DbConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.DESCENDING
+import com.vankorno.vankornodb.core.data.DbConstants.RANDOM
+import com.vankorno.vankornodb.core.data.DbConstants.comma
 import com.vankorno.vankornodb.dbManagement.data.*
 
 /**
@@ -43,22 +45,10 @@ open class OrderDslInternal {
     
     
     
-    
     fun random() { orderoids += RANDOM }
-    
-    fun byId() { orderoids += _ID }
-    fun byPosition() { orderoids += _Position }
-    
-    fun byRowId() { orderoids += RowID + ASCENDING }
-    fun byRowIdDesc() { orderoids += RowID + DESCENDING}
-    fun flipRows() { orderoids += RowID + DESCENDING}
-    
-    
-    
     
     
     fun case(encased: String) = "CASE$encased END" // TODO Find where to put
-    
     
 }
 

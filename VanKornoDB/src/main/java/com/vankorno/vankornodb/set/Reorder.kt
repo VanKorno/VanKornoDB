@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.get.getCursorPro
+import com.vankorno.vankornodb.get.getCursor
 import com.vankorno.vankornodb.get.getLastPosition
 import com.vankorno.vankornodb.get.getLong
 import com.vankorno.vankornodb.misc.columns
@@ -26,20 +26,19 @@ fun SQLiteDatabase.reorder(                                           table: Str
     }
     val position = getLong(table, cPosition) { ID = id }
     
-    getCursorPro(table, columns(cID, cPosition)) {
-        where {
+    getCursor(table, columns(cID, cPosition),
+        where = {
             if (moveUpOrBack)
                 cPosition less position
             else
                 cPosition greater position
             
             andGroup(where)
-        }
-        orderBy(cPosition.flipIf(moveUpOrBack))
-        limit = 1
-    }.use { cursor ->
-        if (!cursor.moveToFirst())
-            return false //\/\/\/\/\/\
+        },
+        orderBy = { cPosition.flipIf(moveUpOrBack) },
+        extra = { limit = 1 }
+    ).use { cursor ->
+        if (!cursor.moveToFirst()) return false //\/\/\/\/\/\
         
         val neighbourID = cursor.getLong(0)
         val neighbourPosition = cursor.getLong(1)

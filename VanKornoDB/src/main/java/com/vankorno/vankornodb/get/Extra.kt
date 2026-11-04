@@ -2,19 +2,11 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.OrderDsl
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.DbTypeTable
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_AndroidMetadata
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_Master
-import com.vankorno.vankornodb.dbManagement.data.IntCol
-import com.vankorno.vankornodb.dbManagement.data.LongCol
-import com.vankorno.vankornodb.dbManagement.data.iCol
-import com.vankorno.vankornodb.dbManagement.data.lCol
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
-import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cType
 import java.io.File
 
@@ -28,30 +20,34 @@ fun SQLiteDatabase.tableExists(                                                 
 /**
  * Gets the names of all tables in the database that are not "internal"
  */
-fun SQLiteDatabase.getAppTableNames(): List<String> = getColStringsPro(TABLE_Master, cName) {
-    where {
+fun SQLiteDatabase.getAppTableNames(): List<String> = getColStrings(
+    table = TABLE_Master,
+    column = cName,
+    where = {
         cType equal DbTypeTable
         and { cName notLike "sqlite_%" }
         and { cName.notEqualAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions) }
-    }
-    orderByName()
-}
+    },
+    orderBy = { cName }
+)
 
 
 /**
  * Gets the names of all internal, system tables in the database, including the entity version table,
  * that is managed by VanKornoDB
  */
-fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStringsPro(TABLE_Master, cName) {
-    where {
+fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStrings(
+    table = TABLE_Master,
+    column = cName,
+    where = {
         cType equal DbTypeTable
         andGroup {
             cName like "sqlite_%"
-            or { cName.equalAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions)}
+            or { cName.equalAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions) }
         }
-    }
-    orderByName()
-}
+    },
+    orderBy = { cName }
+)
 
 // TODO get tables with data, not just names
 

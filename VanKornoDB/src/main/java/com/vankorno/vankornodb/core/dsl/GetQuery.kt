@@ -1,28 +1,24 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.api.JoinDsl
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.comma
-import com.vankorno.vankornodb.core.data.FullDslHolder
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 
-internal fun getQuery(                                      table: String,
-                                                          columns: Array<out String> = arrayOf("*"),
-                                                              dsl: FullDsl.()->Unit,
-) = getQuery(table, columns, FullDsl().apply(dsl).query)
-
-
 
 internal fun getQuery(                                      table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                        dslHolder: FullDslHolder = FullDslHolder(),
+                                                            where: WhereDsl.()->Unit = {},
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
 ): QueryWithArgs {
-    val whereDsl = WhereDsl().apply(dslHolder.where)
-    val joinDsl = JoinDsl().apply(dslHolder.joins)
-    val orderDsl = OrderDsl().apply(dslHolder.orderBy)
+    val extraDsl = ExtraDsl().apply(extra).query
+    val whereDsl = WhereDsl().apply(where)
+    val joinDsl = JoinDsl().apply(extraDsl.joins)
+    val orderDsl = OrderDsl().apply(orderBy)
     
     val query = buildString {
         append("SELECT ")
@@ -37,28 +33,28 @@ internal fun getQuery(                                      table: String,
             append(" WHERE ")
             append(whereDsl.buildStr())
         }
-        if (dslHolder.groupBy.isNotBlank()) {
+        if (extraDsl.groupBy.isNotBlank()) {
             append(" GROUP BY ")
-            append(dslHolder.groupBy)
+            append(extraDsl.groupBy)
         }
-        if (dslHolder.having.isNotBlank()) {
+        if (extraDsl.having.isNotBlank()) {
             append(" HAVING ")
-            append(dslHolder.having)
+            append(extraDsl.having)
         }
         if (orderDsl.orderoids.isNotEmpty()) {
             append(" ORDER BY ")
             append(orderDsl.buildStr())
         }
-        if (dslHolder.limit != null) {
+        if (extraDsl.limit != null) {
             append(" LIMIT ")
-            append(dslHolder.limit)
+            append(extraDsl.limit)
         }
-        if (dslHolder.offset != null) {
+        if (extraDsl.offset != null) {
             append(" OFFSET ")
-            append(dslHolder.offset)
+            append(extraDsl.offset)
         }
-        if (dslHolder.customEnd.isNotBlank()) {
-            append(dslHolder.customEnd)
+        if (extraDsl.customEnd.isNotBlank()) {
+            append(extraDsl.customEnd)
         }
     }
     

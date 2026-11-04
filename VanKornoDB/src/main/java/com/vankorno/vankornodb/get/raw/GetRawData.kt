@@ -2,12 +2,12 @@
 package com.vankorno.vankornodb.get.raw
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.get.getCursor
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
+import com.vankorno.vankornodb.get.useCursor
 
 
 fun SQLiteDatabase.getRawTableStr(                                                 table: String
-): RawTableStr = getCursor(table).use { cursor ->
+): RawTableStr = useCursor(table) { cursor ->
     val cols = cursor.columnNames.toList()
     
     val types = getTableTypesFromInitQuery(table)

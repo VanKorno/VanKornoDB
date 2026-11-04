@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.get.getNextInts
-import com.vankorno.vankornodb.get.useCursorPro
+import com.vankorno.vankornodb.get.useCursor
 import com.vankorno.vankornodb.misc.data.SharedCol.cRowID
 import com.vankorno.vankornodb.set.setInt
 
@@ -31,12 +31,7 @@ fun SQLiteDatabase.fixDuplicateInts(                                  table: Str
 ): Int {
     val rows = mutableListOf<Pair<Long, Int>>()
     
-    useCursorPro(table, arrayOf(cRowID, column),
-        dsl = {
-            where(where)
-            orderByRowId()
-        }
-    ) { cursor ->
+    useCursor(table, arrayOf(cRowID, column), where, orderBy = { cRowID }) { cursor ->
         if (cursor.moveToFirst()) {
             do {
                 rows.add(cursor.getLong(0) to cursor.getInt(1))

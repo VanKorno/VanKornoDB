@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.getBoolean
@@ -42,10 +42,10 @@ fun <R> SQLiteDatabase.getValueProNoty(                                table: St
                                                                       column: String,
                                                                      default: R,
                                                                      funName: String,
-                                                                         dsl: FullDsl.()->Unit = {},
+                                                                         dsl: ExtraDsl.()->Unit = {},
                                                               getCursorValue: (Cursor)->R,
 ): R {
-    return getCursorProNoty(table, arrayOf(column)) {
+    return getCursorNoty(table, arrayOf(column)) {
         applyDsl(dsl)
         limit = 1
     }.use { cursor ->

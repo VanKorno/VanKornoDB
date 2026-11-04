@@ -13,13 +13,14 @@ import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data._TTTEntityVersion
 import com.vankorno.vankornodb.delete.deleteRows
-import com.vankorno.vankornodb.get.getColStringsPro
+import com.vankorno.vankornodb.get.getColStrings
 import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.whereName
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -185,7 +186,7 @@ abstract class DbManager(        context: Context,
     
     private fun cleanupVersionTable(                                             db: SQLiteDatabase
     ) {
-        val allNames = db.getColStringsPro(TABLE_EntityVersions, cName)
+        val allNames = db.getColStrings(TABLE_EntityVersions, cName)
         if (allNames.isEmpty()) return //\/\/\/\/\/\
         
         val namesToDelete = allNames.filter { name ->
@@ -200,7 +201,7 @@ abstract class DbManager(        context: Context,
     ) {
         for (meta in entityMeta) {
             val dbName = meta.dbRowName
-            val rowExists = db.hasRows(TABLE_EntityVersions) { cName equal dbName }
+            val rowExists = db.hasRows(TABLE_EntityVersions, whereName(dbName))
             if (rowExists)
                 continue //\/\/\
             

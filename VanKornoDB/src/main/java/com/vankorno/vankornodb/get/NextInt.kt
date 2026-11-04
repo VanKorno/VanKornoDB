@@ -65,7 +65,7 @@ fun SQLiteDatabase.getFreeIntsFromStart(                               table: St
     if (count <= 0) return emptyList() ///\/\/\/\/\/\
     require(startFrom > 0) { "startFrom must be positive" } //\/\/\
     
-    val unavailableValues = getColIntsPro(table, column).toSet() + reserved
+    val unavailableValues = getColInts(table, column).toSet() + reserved
     
     val freeValues = mutableListOf<Int>()
     var candidateValue = startFrom

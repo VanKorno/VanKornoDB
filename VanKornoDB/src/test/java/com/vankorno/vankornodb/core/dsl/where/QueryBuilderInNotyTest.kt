@@ -12,9 +12,7 @@ class QueryBuilderInNotyTest {
     fun `IN basic`() {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID + IN + "(?, ?, ?)",
-            getQuery(DirtyTable) {
-                where { _ID.equalAny(1, 2, 3) }
-            }.query
+            getQuery(DirtyTable, where = { _ID.equalAny(1, 2, 3) }).query
         )
     }
     
@@ -22,9 +20,7 @@ class QueryBuilderInNotyTest {
     fun `NOT IN basic`() {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID + NOT_IN + "(?, ?, ?)",
-            getQuery(DirtyTable) {
-                where { _ID.notEqualAny(1, 2, 3) }
-            }.query
+            getQuery(DirtyTable, where = { _ID.notEqualAny(1, 2, 3) }).query
         )
     }
     
@@ -32,9 +28,7 @@ class QueryBuilderInNotyTest {
     fun `IN args`() {
         assertEquals(
             arrayOf("1", "2", "3").joinToString(comma),
-            getQuery(DirtyTable) {
-                where { _ID.equalAny(1, 2, 3) }
-            }.args.joinToString(comma)
+            getQuery(DirtyTable, where = { _ID.equalAny(1, 2, 3) }).args.joinToString(comma)
         )
     }
     

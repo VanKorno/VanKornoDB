@@ -3,25 +3,20 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.ExtraDsl
+import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
-
-
-internal inline fun <T> SQLiteDatabase.getColVals(                    table: String,
-                                                                     column: String,
-                                                             noinline where: WhereDsl.()->Unit = {},
-                                                 crossinline getCursorValue: (Cursor)->T,
-): List<T> = getColValsPro(table, column, { this.where = where }, getCursorValue)
-
 
 /**
  * For internal use with the type-safe getColVals... functions.
  */
-internal inline fun <T> SQLiteDatabase.getColValsPro(                  table: String,
-                                                                      column: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-                                                  crossinline getCursorValue: (Cursor)->T,
-): List<T> = baseGetValsPro(table, arrayOf(column), dsl) { cursor, _ ->
+internal inline fun <T> SQLiteDatabase.getColVals(                    table: String,
+                                                                     column: String,
+                                                             noinline where: WhereDsl.()->Unit = {},
+                                                           noinline orderBy: OrderDsl.()->Unit = {},
+                                                             noinline extra: ExtraDsl.()->Unit = {},
+                                                 crossinline getCursorValue: (Cursor)->T,
+): List<T> = baseGetVals(table, arrayOf(column), where, orderBy, extra) { cursor, _ ->
     getCursorValue(cursor)
 }.flatten()
 

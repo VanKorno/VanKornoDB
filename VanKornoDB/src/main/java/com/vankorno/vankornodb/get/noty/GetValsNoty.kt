@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.get.raw.getTypedValAt
 
 /**
@@ -11,8 +11,8 @@ import com.vankorno.vankornodb.get.raw.getTypedValAt
  */
 inline fun <reified T> SQLiteDatabase.getColValsNoty(                  table: String,
                                                                   columnName: String,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-): List<T> = getCursorProNoty(table, arrayOf(columnName)) {
+                                                                noinline dsl: ExtraDsl.()->Unit = {},
+): List<T> = getCursorNoty(table, arrayOf(columnName)) {
     applyDsl(dsl)
 }.use { cursor ->
     buildList {
@@ -36,7 +36,7 @@ inline fun <reified T> SQLiteDatabase.getColValsNoty(                  table: St
  */
 inline fun <reified T> SQLiteDatabase.getRowValsProNoty(               table: String,
                                                                      columns: Array<out String>,
-                                                                noinline dsl: FullDsl.()->Unit = {},
+                                                                noinline dsl: ExtraDsl.()->Unit = {},
 ): List<T?> = getMultiRowValsProNoty<T>(table, columns) {
     applyDsl(dsl)
     limit = 1
@@ -54,8 +54,8 @@ inline fun <reified T> SQLiteDatabase.getRowValsProNoty(               table: St
  */
 inline fun <reified T> SQLiteDatabase.getMultiRowValsProNoty(          table: String,
                                                                      columns: Array<out String>,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-): List<List<T?>> = getCursorProNoty(table, columns) {
+                                                                noinline dsl: ExtraDsl.()->Unit = {},
+): List<List<T?>> = getCursorNoty(table, columns) {
     applyDsl(dsl)
 }.use { cursor ->
     buildList {

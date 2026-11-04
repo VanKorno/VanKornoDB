@@ -3,7 +3,8 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.ExtraDsl
+import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
 
 /**
@@ -12,17 +13,12 @@ import com.vankorno.vankornodb.api.WhereDsl
 internal inline fun <T> SQLiteDatabase.getRowVals(                    table: String,
                                                                     columns: Array<out String>,
                                                              noinline where: WhereDsl.()->Unit = {},
+                                                           noinline orderBy: OrderDsl.()->Unit = {},
+                                                             noinline extra: ExtraDsl.()->Unit = {},
                                                  crossinline getCursorValue: (Cursor, Int)->T,
-): List<T> = getRowValsPro(table, columns, { this.where = where }, getCursorValue)
-
-
-internal inline fun <T> SQLiteDatabase.getRowValsPro(                  table: String,
-                                                                     columns: Array<out String>,
-                                                                noinline dsl: FullDsl.()->Unit = {},
-                                                  crossinline getCursorValue: (Cursor, Int)->T,
-): List<T> = baseGetValsPro(table, columns,
-    dsl = {
-        applyDsl(dsl)
+): List<T> = baseGetVals(table, columns, where, orderBy, 
+    extra = {
+        applyDsl(extra)
         limit = 1
     }
 ) { cursor, col ->

@@ -7,7 +7,7 @@ import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
-import com.vankorno.vankornodb.get.noty.getCursorProNoty
+import com.vankorno.vankornodb.get.noty.getCursorNoty
 import com.vankorno.vankornodb.get.noty.getTypedVal
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.eLog
@@ -98,6 +98,7 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
 
 /**
  * Retrieves a single random value from the specified column in a table.
+ * (Not type-safe)
  *
  * @param T The type of the value to retrieve.
  * @param table The name of the table to query.
@@ -108,10 +109,8 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
 inline fun <reified T> SQLiteDatabase.getRandomValNoty(               table: String,
                                                                      column: String,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getCursorProNoty(table, arrayOf(column)) {
-    this.where = where
+): T? = getCursorNoty(table, arrayOf(column), where, orderBy = { random() }) {
     limit = 1
-    orderRandomly()
 }.use { cursor ->
     if (cursor.moveToFirst())
         cursor.getTypedVal<T>(0)

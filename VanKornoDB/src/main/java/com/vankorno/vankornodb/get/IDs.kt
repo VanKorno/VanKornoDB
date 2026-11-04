@@ -20,16 +20,13 @@ fun SQLiteDatabase.getId(table: String, where: WhereDsl.()->Unit) = getLong(tabl
 fun SQLiteDatabase.getIDs(                                            table: String,
                                                                       where: WhereDsl.()->Unit,
                                                                     orderBy: OrderDsl.()->Unit = {},
-) = getColLongsPro(table, cID) {
-    where(where)
-    orderBy(orderBy)
-}
+) = getColLongs(table, cID, where, orderBy)
 
 
 
 fun SQLiteDatabase.getAllIDs(                                         table: String,
                                                                     orderBy: OrderDsl.()->Unit = {},
-) = getColLongsPro(table, cID) { orderBy(orderBy) }
+) = getColLongs(table, cID, orderBy = orderBy)
 
 
 

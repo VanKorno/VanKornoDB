@@ -2,50 +2,34 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.get.noty.getCursorProNoty
+import com.vankorno.vankornodb.get.noty.getCursorNoty
 import com.vankorno.vankornodb.misc.columns
 
-/** Returns the number of rows matching the query conditions. */
-
+/**
+ * Returns the number of rows matching the query conditions.
+ */
 fun SQLiteDatabase.getRowCount(                                       table: String,
                                                                       where: WhereDsl.()->Unit = {},
-): Int = getCursorProNoty(table, columns("1")) {
-    applyDsl(where = where)
-}.use { it.count }
-
-
-/** Returns the number of rows matching the advanced query conditions. */
-
-fun SQLiteDatabase.getRowCountPro(                                          table: String,
-                                                                              dsl: FullDsl.()->Unit,
-): Int = getCursorProNoty(table, columns("1")) {
-    applyDsl(dsl)
-}.use { it.count }
+                                                                      extra: ExtraDsl.()->Unit = {},
+): Int = getCursorNoty(table, columns("1"), where, extra = extra).use { it.count }
 
 
 
 
-
-/** Returns true if at least one row matches the query conditions. */
-
+/**
+ * Returns true if at least one row matches the advanced query conditions.
+ */
 fun SQLiteDatabase.hasRows(                                           table: String,
                                                                       where: WhereDsl.()->Unit = {},
-): Boolean = getCursorProNoty(table, columns("1")) {
-    this.where = where
-    limit = 1
-}.use { it.moveToFirst() }
-
-
-/** Returns true if at least one row matches the advanced query conditions. */
-
-fun SQLiteDatabase.hasRowsPro(                                              table: String,
-                                                                              dsl: FullDsl.()->Unit,
-): Boolean = getCursorProNoty(table, columns("1")) {
-    applyDsl(dsl)
-    limit = 1
-}.use { it.moveToFirst() }
+                                                                      extra: ExtraDsl.()->Unit = {},
+): Boolean = getCursorNoty(table, columns("1"), where,
+    extra = {
+        applyDsl(extra)
+        limit = 1
+    }
+).use { it.moveToFirst() }
 
 
 

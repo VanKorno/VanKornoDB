@@ -3,26 +3,21 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.FullDsl
+import com.vankorno.vankornodb.api.ExtraDsl
+import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.get.noty.getCursorProNoty
+import com.vankorno.vankornodb.get.noty.getCursorNoty
 
-
+/**
+ * Base fun for getting multiple values from db
+ */
 internal fun <T> SQLiteDatabase.baseGetVals(                          table: String,
                                                                     columns: Array<out String>,
                                                                       where: WhereDsl.()->Unit = {},
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
                                                              getCursorValue: (Cursor, Int)->T,
-): List<List<T>> = baseGetValsPro(table, columns, dsl = { this.where = where }, getCursorValue)
-
-
-
-internal fun <T> SQLiteDatabase.baseGetValsPro(                        table: String,
-                                                                     columns: Array<out String>,
-                                                                         dsl: FullDsl.()->Unit = {},
-                                                              getCursorValue: (Cursor, Int)->T,
-): List<List<T>> = getCursorProNoty(table, columns) {
-    applyDsl(dsl)
-}.use { cursor ->
+): List<List<T>> = getCursorNoty(table, columns, where, orderBy, extra).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {

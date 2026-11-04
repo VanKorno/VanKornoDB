@@ -2,7 +2,7 @@
 package com.vankorno.vankornodb.api
 
 import com.vankorno.vankornodb.core.data.OrderWhen
-import com.vankorno.vankornodb.core.dsl.FullDslInternal
+import com.vankorno.vankornodb.core.dsl.ExtraDslInternal
 import com.vankorno.vankornodb.core.dsl.JoinDslInternal
 import com.vankorno.vankornodb.core.dsl.OrderDslInternal
 import com.vankorno.vankornodb.core.dsl.WhereDslInternal
@@ -10,8 +10,8 @@ import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
 import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
 
-class FullDsl : FullDslInternal() {
-    fun applyDsl(opts: FullDsl.()->Unit) { this.opts() }
+class ExtraDsl : ExtraDslInternal() {
+    fun applyDsl(opts: ExtraDsl.()->Unit) { this.opts() }
 }
 
 
@@ -124,9 +124,11 @@ class WhereDsl : WhereDslInternal() {
     
     fun subquery(                                           table: String,
                                                           columns: Array<out String> = arrayOf("*"),
-                                                              dsl: FullDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
     ): String {
-        val innerBuilder = getQuery(table, columns, dsl)
+        val innerBuilder = getQuery(table, columns, where, orderBy, extra)
         
         val clause = "(${innerBuilder.query})"
         

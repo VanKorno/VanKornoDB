@@ -2,40 +2,20 @@
 package com.vankorno.vankornodb.core.dsl
 
 import com.vankorno.vankornodb.api.JoinDsl
-import com.vankorno.vankornodb.api.OrderDsl
-import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.core.data.DbConstants.ASCENDING
-import com.vankorno.vankornodb.core.data.DbConstants.DESCENDING
-import com.vankorno.vankornodb.core.data.DbConstants.RANDOM
-import com.vankorno.vankornodb.core.data.DbConstants.RowID
-import com.vankorno.vankornodb.core.data.FullDslHolder
-import com.vankorno.vankornodb.dbManagement.data.*
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
-import com.vankorno.vankornodb.misc.data.SharedCol.cName
-import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
+import com.vankorno.vankornodb.core.data.ExtraDslHolder
 
 /**
- *  Internal base — use [com.vankorno.vankornodb.api.FullDsl] from the api package instead
+ *  Internal base — use [com.vankorno.vankornodb.api.ExtraDsl] from the api package instead
  */
 @Suppress("unused")
-open class FullDslInternal {
-    val query = FullDslHolder()
-    
+open class ExtraDslInternal {
+    val query = ExtraDslHolder()
     
     fun joins(joinDsl: JoinDsl.()->Unit) { query.joins = joinDsl }
     
     var joins: JoinDsl.() -> Unit
         get() = query.joins
         set(value) { query.joins = value }
-    
-    
-    
-    fun where(whereDsl: WhereDsl.()->Unit) { query.where = whereDsl }
-    
-    var where: WhereDsl.() -> Unit
-        get() = query.where
-        set(value) { query.where = value }
-    
     
     
     fun groupBy(by: String) { query.groupBy = by }
@@ -45,59 +25,11 @@ open class FullDslInternal {
         set(value) { query.groupBy = value }
     
     
-    
     fun having(having: String) { query.having = having }
     
     var having: String
         get() = query.having
         set(value) { query.having = value }
-    
-    
-    
-    
-    var orderBy: OrderDsl.()->Unit
-        get() = query.orderBy
-        set(value) { query.orderBy = value }
-    
-    fun orderBy(orderDsl: OrderDsl.()->Unit) {
-        query.orderBy = orderDsl
-    }
-    
-    fun orderBy(vararg columns: BaseColumn) { query.orderBy = { col(*columns) } }
-    
-    fun orderBy(vararg strings: String) { query.orderBy = { raw(*strings) } }
-    
-    
-    fun orderRandomly() = orderBy(RANDOM)
-    
-    fun orderById() = orderBy(cID)
-    fun orderByIdAnd(andOrderBy: OrderDsl.()->Unit) = orderBy { cID(); and(andOrderBy) }
-    
-    fun orderByName() = orderBy(cName)
-    fun orderByNameAnd(andOrderBy: OrderDsl.()->Unit) = orderBy { cName(); and(andOrderBy) }
-    
-    fun orderByPosition() = orderBy(cPosition)
-    fun orderByPositionAnd(andOrderBy: OrderDsl.()->Unit) = orderBy { cPosition(); and(andOrderBy) }
-    
-    fun orderByRowId() = orderBy(RowID + ASCENDING)
-    
-    fun orderByRowIdDesc() = orderBy(RowID + DESCENDING)
-    fun orderByFlippedRowId() = orderBy(RowID + DESCENDING)
-    
-    
-    fun IntCol.flip() = DescendingIntCol(this.name)
-    fun StrCol.flip() = DescendingStrCol(this.name)
-    fun BoolCol.flip() = DescendingBoolCol(this.name)
-    fun LongCol.flip() = DescendingLongCol(this.name)
-    fun FloatCol.flip() = DescendingFloatCol(this.name)
-    
-    fun IntCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun StrCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun BoolCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun LongCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun FloatCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    
-    
     
     
     fun limit(limit: Int) { query.limit = limit }
@@ -107,13 +39,11 @@ open class FullDslInternal {
         set(value) { query.limit = value }
     
     
-    
     fun offset(offset: Int) { query.offset = offset }
     
     var offset: Int?
         get() = query.offset
         set(value) { query.offset = value }
-    
     
     
     fun customEnd(queryStr: String) { query.customEnd = queryStr }
@@ -124,19 +54,14 @@ open class FullDslInternal {
     
     
     
-    
     fun applyDsl(                                                     joins: JoinDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
                                                                     groupBy: String = "",
                                                                      having: String = "",
-                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       limit: Int? = null,
                                                                      offset: Int? = null,
                                                                   customEnd: String = "",
     ) {
         this.joins(joins)
-        this.where(where)
-        this.orderBy(orderBy)
         if (groupBy.isNotBlank()) this.groupBy(groupBy)
         if (having.isNotBlank()) this.having(having)
         if (limit != null) this.limit(limit)
@@ -144,11 +69,6 @@ open class FullDslInternal {
         if (customEnd.isNotBlank()) this.customEnd(customEnd)
     }
 }
-
-
-
-
-
 
 
 

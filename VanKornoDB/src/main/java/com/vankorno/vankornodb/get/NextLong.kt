@@ -69,7 +69,7 @@ fun SQLiteDatabase.getFreeLongsFromStart(                             table: Str
     if (count <= 0) return emptyList() //\/\/\/\/\/\
     require(startFrom > 0L) { "startFrom must be positive" } //\/\/\
     
-    val unavailableValues = getColLongsPro(table, column).toSet() + reserved
+    val unavailableValues = getColLongs(table, column).toSet() + reserved
     
     val freeValues = mutableListOf<Long>()
     var candidateValue = startFrom
