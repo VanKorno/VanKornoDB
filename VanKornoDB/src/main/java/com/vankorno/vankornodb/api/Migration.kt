@@ -29,7 +29,7 @@ fun defineMigrations(                                             entityMeta: Ba
 )
 
 
-/** Overload of [defineMigrations] taking explicit version and schema bundle. */
+/** Defines migrations for the given entity metadata. Takes explicit version and schema bundle. */
 fun <T: CurrEntity> defineMigrations(                          latestVersion: Int,
                                                           latestSchemaBundle: CurrSchemaBundle<T>,
                                                                        block: MigrationDsl.()->Unit,

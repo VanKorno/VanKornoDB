@@ -34,7 +34,7 @@ fun SQLiteDatabase.deleteRowsFromTables(                                  tables
     }
 }
 
-/** Vararg overload of [deleteRowsFromTables] */
+/** Deletes rows from the specified tables matching the condition. (vararg-version) */
 fun SQLiteDatabase.deleteRowsFromTables(                           vararg tables: String,
                                                                            where: WhereDsl.()->Unit,
 ) {
@@ -73,10 +73,10 @@ fun SQLiteDatabase.clearTables(tables: List<String>) = tables.forEach { clearTab
 /** Deletes the specified table from the database. */
 fun SQLiteDatabase.deleteTable(table: String) { execSQL("DROP TABLE IF EXISTS " + table) }
 
-/** Deletes the specified tables from the database. */
+/** Deletes the specified tables from the database. Takes tables as vararg */
 fun SQLiteDatabase.deleteTables(vararg tables: String) = tables.forEach { deleteTable(it) }
 
-/** List overload of [deleteTables] */
+/** Deletes the specified tables from the database. Takes table list. */
 fun SQLiteDatabase.deleteTables(tables: List<String>) = tables.forEach { deleteTable(it) }
 
 

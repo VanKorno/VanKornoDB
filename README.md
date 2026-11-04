@@ -65,30 +65,32 @@ No string parsing or JSON blobs
 getCursor() - a function that's often used by other functions under the hood. It can also be useful when you want to do some things with the cursor directly:
 
 ```kotlin
-db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals to value 'userName' 
+db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals value 'userName' 
 
-db.getCursorPro(SomeTable, columns(Name, Position)) { // If simple 'where' DSL isn't enough, you can use extended DSL (functions that use it have 'Pro' suffix)
-    where {
+db.getCursor(
+    table = SomeTable,
+    columns = columns(Name, Position),
+    where = {
         ID notEqual 1
         and { Order equal 1 } // condition clause and value in one place
         and { Volume greater 1.1F }
         or  { Time less 1L }
-    }
-    orderByPosition()
-    limit = 10
-}
+    },
+    orderBy = { orderByPosition() },
+    extra = { limit = 10 }
+)
 ```
 
-getObj() - gets the whole db table row as an object of the entity data class
+getObj() - gets a whole db table row as an object of the entity data class
 
 ```kotlin
-db.getObj(table = RoundTable, schemaBundle = SbKnight) { KnightState notEqual drunk }
+db.getObj(_RoundTable) { KnightState notEqual drunk }
 ```
 
 getObjects() or getObjMap() - for getting multiple objects from a db table.
 
 ```kotlin
-db.getObjects(RoundTable, SbKnight) { KnightState less hammered }
+db.getObjects(_RoundTable) { KnightState less hammered }
 ```
 
 getInt() (same for other types) - for getting single values from a particular cell.
@@ -102,8 +104,10 @@ Of course, those one-liner fun examples don't show you what you're able to achie
 Here's some of that:
 
 ```kotlin
-db.getCursorPro(Users, columns(Name, Address, Phone)) {
-    where {
+db.getCursor(
+    table = Users,
+    columns = columns(Name, Address, Phone),
+    where = {
         subquery( // subqueries
             table = Posts,
             columns = columns(countAll), // COUNT(*)
@@ -124,9 +128,8 @@ db.getCursorPro(Users, columns(Name, Address, Phone)) {
                     ID greater someInt
             }
         }
-    }
-    
-    orderBy { // even orderBy has its own DSL that allows you to do some crazy nested things...
+    },
+    orderBy = { // even orderBy has its own DSL that allows you to do some crazy nested things...
         SomeColumn()
         AnotherColumn.flip()
         When(
@@ -135,7 +138,7 @@ db.getCursorPro(Users, columns(Name, Address, Phone)) {
             Else = { cID() }
         )
     }
-}
+)
 ```
 
 There are multiple setter functions as well. Single value setters, like setInt(), setString(), object setters, like setObj(), different convenience functions like addToInt(), flipBool()...

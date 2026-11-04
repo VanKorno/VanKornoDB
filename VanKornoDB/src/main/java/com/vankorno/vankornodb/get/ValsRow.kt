@@ -14,7 +14,9 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.get.internal.getRowVals
 import com.vankorno.vankornodb.misc.getBoolean
 
-
+/**
+ * Retrieves a list of Ints from multiple columns of a single row.
+ */
 fun SQLiteDatabase.getRowInts(                                        table: String,
                                                                     columns: Array<IntCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -27,6 +29,9 @@ fun SQLiteDatabase.getRowInts(                                        table: Str
 }
 
 
+/**
+ * Retrieves a list of Strings from multiple columns of a single row.
+ */
 fun SQLiteDatabase.getRowStrings(                                     table: String,
                                                                     columns: Array<StrCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -39,6 +44,9 @@ fun SQLiteDatabase.getRowStrings(                                     table: Str
 }
 
 
+/**
+ * Retrieves a list of Booleans from multiple columns of a single row.
+ */
 fun SQLiteDatabase.getRowBools(                                       table: String,
                                                                     columns: Array<BoolCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -51,6 +59,9 @@ fun SQLiteDatabase.getRowBools(                                       table: Str
 }
 
 
+/**
+ * Retrieves a list of Longs from multiple columns of a single row.
+ */
 fun SQLiteDatabase.getRowLongs(                                       table: String,
                                                                     columns: Array<LongCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -63,6 +74,9 @@ fun SQLiteDatabase.getRowLongs(                                       table: Str
 }
 
 
+/**
+ * Retrieves a list of Floats from multiple columns of a single row.
+ */
 fun SQLiteDatabase.getRowFloats(                                      table: String,
                                                                     columns: Array<FloatCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -75,6 +89,9 @@ fun SQLiteDatabase.getRowFloats(                                      table: Str
 }
 
 
+/**
+ * Retrieves a list of Blobs (ByteArray) from multiple columns of a single row.
+ */
 fun SQLiteDatabase.getRowBlobs(                                       table: String,
                                                                     columns: Array<BlobCol>,
                                                                       where: WhereDsl.()->Unit = {},

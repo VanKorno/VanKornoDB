@@ -12,8 +12,7 @@ import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
 
 /**
- * Gets one db table row as an object of an entity class,
- * using the full VanKorno DSL (but limit is always 1).
+ * Gets one db table row as an object of an entity class using VanKorno DSL parameters.
  * Returns [default] if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: TableInfoBase<T>,
@@ -24,15 +23,14 @@ fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: Tab
 ): T = getObj(tableInfo, where, orderBy, extra) ?: run {
     // region LOG
     if (!suppressObjGetterErrorLog)
-        eLog("getObjPro(): The requested row doesn't exist in ${tableInfo.name}, returning default")
+        eLog("getObj(): The requested row doesn't exist in ${tableInfo.name}, returning default")
     // endregion
     default
 }
 
 
 /**
- * Gets one db table row as an object of an entity class,
- * using the full VanKorno DSL (but limit is always 1).
+ * Gets one db table row as an object of an entity class using VanKorno DSL parameters.
  * Returns null if no result found.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObj(                       tableInfo: TableInfoBase<T>,

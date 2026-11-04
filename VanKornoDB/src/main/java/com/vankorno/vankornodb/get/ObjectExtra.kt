@@ -35,6 +35,7 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
 
 /**
  * Retrieves a single random object (row) from the specified table and maps it to an entity class.
+ * An overload without the default value.
  *
  * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
  * @param tableInfo Contains table name and a schema bundle of any entity type.
@@ -47,7 +48,15 @@ inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
 ): T? = getObj(tableInfo, where, orderBy = { random() })
 
 
-/** Default-value overload of [getRandomObj] */
+/**
+ * Retrieves a single random object (row) from the specified table and maps it to an entity class.
+ * An overload with the default value.
+ *
+ * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
+ * @param tableInfo Contains table name and a schema bundle of any entity type.
+ * @param where Optional lambda to specify additional WHERE conditions.
+ * @return A random object of type [T] from the table, or null if no rows match.
+ */
 inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                                   tableInfo: TableInfoBase<out T>,
                                                                     default: T,

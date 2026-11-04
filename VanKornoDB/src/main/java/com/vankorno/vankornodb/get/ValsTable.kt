@@ -14,8 +14,9 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.get.internal.baseGetVals
 import com.vankorno.vankornodb.misc.getBoolean
 
-// TODO doc
-
+/**
+ * Retrieves a 2D matrix of Ints from specified columns and rows.
+ */
 fun SQLiteDatabase.getTableInts(                                      table: String,
                                                                     columns: Array<IntCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -28,6 +29,9 @@ fun SQLiteDatabase.getTableInts(                                      table: Str
 }
 
 
+/**
+ * Retrieves a 2D matrix of Strings from specified columns and rows.
+ */
 fun SQLiteDatabase.getTableStrings(                                   table: String,
                                                                     columns: Array<StrCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -40,6 +44,9 @@ fun SQLiteDatabase.getTableStrings(                                   table: Str
 }
 
 
+/**
+ * Retrieves a 2D matrix of Booleans from specified columns and rows.
+ */
 fun SQLiteDatabase.getTableBools(                                     table: String,
                                                                     columns: Array<BoolCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -52,6 +59,9 @@ fun SQLiteDatabase.getTableBools(                                     table: Str
 }
 
 
+/**
+ * Retrieves a 2D matrix of Longs from specified columns and rows.
+ */
 fun SQLiteDatabase.getTableLongs(                                     table: String,
                                                                     columns: Array<LongCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -64,6 +74,9 @@ fun SQLiteDatabase.getTableLongs(                                     table: Str
 }
 
 
+/**
+ * Retrieves a 2D matrix of Floats from specified columns and rows.
+ */
 fun SQLiteDatabase.getTableFloats(                                    table: String,
                                                                     columns: Array<FloatCol>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -76,6 +89,9 @@ fun SQLiteDatabase.getTableFloats(                                    table: Str
 }
 
 
+/**
+ * Retrieves a 2D matrix of Blobs (ByteArray) from specified columns and rows.
+ */
 fun SQLiteDatabase.getTableBlobs(                                     table: String,
                                                                     columns: Array<BlobCol>,
                                                                       where: WhereDsl.()->Unit = {},

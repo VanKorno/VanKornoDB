@@ -10,6 +10,10 @@ import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.misc.getColNames
 
+/**
+ * Queries the database and returns a [Cursor] over the result set.
+ * Selects all columns (`*`).
+ */
 fun SQLiteDatabase.getCursor(                                         table: String,
                                                                       where: WhereDsl.()->Unit = {},
                                                                     orderBy: OrderDsl.()->Unit = {},
@@ -19,7 +23,10 @@ fun SQLiteDatabase.getCursor(                                         table: Str
     return rawQuery(query, args)
 }
 
-
+/**
+ * Queries the database and returns a [Cursor] over the result set.
+ * Selects specified [columns].
+ */
 fun SQLiteDatabase.getCursor(                                      table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                                    where: WhereDsl.()->Unit = {},
@@ -30,7 +37,10 @@ fun SQLiteDatabase.getCursor(                                      table: String
     return rawQuery(query, args)
 }
 
-
+/**
+ * Queries the database and returns a [Cursor] over the result set.
+ * Selects a single specified [column].
+ */
 fun SQLiteDatabase.getCursor(                                         table: String,
                                                                      column: TypedColumn<*>,
                                                                       where: WhereDsl.()->Unit = {},
@@ -45,6 +55,10 @@ fun SQLiteDatabase.getCursor(                                         table: Str
 
 
 
+/**
+ * Executes a query and manages the lifecycle of the resulting [Cursor] within [block].
+ * Selects all columns (`*`).
+ */
 inline fun <R> SQLiteDatabase.useCursor(                              table: String,
                                                              noinline where: WhereDsl.()->Unit = {},
                                                            noinline orderBy: OrderDsl.()->Unit = {},
@@ -52,7 +66,10 @@ inline fun <R> SQLiteDatabase.useCursor(                              table: Str
                                                                       block: (Cursor)->R,
 ): R = getCursor(table, where, orderBy, extra).use(block)
 
-
+/**
+ * Executes a query and manages the lifecycle of the resulting [Cursor] within [block].
+ * Selects specified [columns].
+ */
 inline fun <R> SQLiteDatabase.useCursor(                           table: String,
                                                                  columns: Array<out TypedColumn<*>>,
                                                           noinline where: WhereDsl.()->Unit = {},
@@ -61,7 +78,10 @@ inline fun <R> SQLiteDatabase.useCursor(                           table: String
                                                                    block: (Cursor)->R,
 ): R = getCursor(table, columns, where, orderBy, extra).use(block)
 
-
+/**
+ * Executes a query and manages the lifecycle of the resulting [Cursor] within [block].
+ * Selects a single specified [column].
+ */
 inline fun <R> SQLiteDatabase.useCursor(                              table: String,
                                                                      column: TypedColumn<*>,
                                                              noinline where: WhereDsl.()->Unit = {},

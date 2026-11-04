@@ -30,7 +30,12 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo:
 
 
 /**
- *  Single-object overload of [addWithNewIdAndPosition]
+ * Inserts a single entity while automatically assigning a new ID and position.
+ * Existing ID and position are always replaced.
+ *
+ * @param tableInfo The combination of a table name and its SchemaBundle.
+ * @param entity Entity to insert.
+ * @param setIdAndPosition Returns an entity with the specified ID and position.
  */
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
