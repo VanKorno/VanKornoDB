@@ -2,7 +2,7 @@
 package com.vankorno.vankornodb.core.dsl
 
 /**
- *  Internal base — use `JoinDsl` from the api package instead
+ *  Internal base — use [com.vankorno.vankornodb.api.JoinDsl] from the api package instead
  */
 @Suppress("unused")
 open class JoinDslInternal {

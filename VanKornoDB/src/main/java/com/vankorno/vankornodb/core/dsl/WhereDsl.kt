@@ -12,10 +12,10 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.StrCol
 
 /**
- *  Internal base — use `WhereDsl` from the api package instead
+ *  Internal base — use [com.vankorno.vankornodb.api.WhereDsl] from the api package instead
  */
 @Suppress("unused")
-open class WhereDslInternal() : WhereDslBase() {
+open class WhereDslInternal : WhereDslBase() {
     
     /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
     fun rawClause(str: String) = clauses.add(str)

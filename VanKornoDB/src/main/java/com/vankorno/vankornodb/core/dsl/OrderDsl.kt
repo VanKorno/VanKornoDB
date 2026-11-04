@@ -5,7 +5,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.*
 
 /**
- *  Internal base — use `OrderDsl` from the api package instead
+ *  Internal base — use [com.vankorno.vankornodb.api.OrderDsl] from the api package instead
  */
 open class OrderDslInternal {
     val orderoids = mutableListOf<String>()

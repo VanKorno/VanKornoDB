@@ -14,7 +14,7 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 
 /**
- *  Internal base — use `FullDsl` from the api package instead
+ *  Internal base — use [com.vankorno.vankornodb.api.FullDsl] from the api package instead
  */
 @Suppress("unused")
 open class FullDslInternal {
