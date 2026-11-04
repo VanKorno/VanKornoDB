@@ -106,7 +106,7 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random value of type [T] from the column, or null if no rows match.
  */
-inline fun <reified T> SQLiteDatabase.getRandomValNoty(               table: String,
+private inline fun <reified T> SQLiteDatabase.getRandomValNoty(       table: String,
                                                                      column: String,
                                                              noinline where: WhereDsl.()->Unit = {},
 ): T? = useCursorNoty(
