@@ -806,9 +806,9 @@ abstract class DbHelperInternal(
     // ====================================  C O U N T  ==================================== \\
     
     /** A wrapper fun for [SQLiteDatabase.getRowCount] */
-    fun getRowCount(                                                       table: String,
-                                                                           extra: ExtraDsl.()->Unit,
-                                                                           where: WhereDsl.()->Unit,
+    fun getRowCount(                                                  table: String,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
     ) = read(0, "getRowCount") { db ->
         db.getRowCount(table, extra, where)
     }
@@ -823,9 +823,9 @@ abstract class DbHelperInternal(
     
     
     /** A wrapper fun for [SQLiteDatabase.hasRows] */
-    fun hasRows(                                                           table: String,
-                                                                           extra: ExtraDsl.()->Unit,
-                                                                           where: WhereDsl.()->Unit,
+    fun hasRows(                                                      table: String,
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
     ) = read(false, "hasRows") { db ->
         db.hasRows(table, extra, where)
     }
