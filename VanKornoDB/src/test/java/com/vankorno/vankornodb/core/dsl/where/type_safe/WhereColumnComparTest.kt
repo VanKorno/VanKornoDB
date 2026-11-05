@@ -21,11 +21,11 @@ class WhereColumnComparTest {
             bCol("boolA") equalCol bCol("boolB")
         }
 
-        assertEquals(whereObj.clauses[0], "intA=intB")
-        assertEquals(whereObj.clauses[1], "longA=longB")
-        assertEquals(whereObj.clauses[2], "floatA=floatB")
-        assertEquals(whereObj.clauses[3], "strA=strB")
-        assertEquals(whereObj.clauses[4], "boolA=boolB")
+        assertEquals("intA=intB", whereObj.clauses[0])
+        assertEquals("longA=longB", whereObj.clauses[1])
+        assertEquals("floatA=floatB", whereObj.clauses[2])
+        assertEquals("strA=strB", whereObj.clauses[3])
+        assertEquals("boolA=boolB", whereObj.clauses[4])
     }
 
     @Test
@@ -38,11 +38,11 @@ class WhereColumnComparTest {
             bCol("boolA") notEqualCol bCol("boolB")
         }
 
-        assertEquals(whereObj.clauses[0], "intA!=intB")
-        assertEquals(whereObj.clauses[1], "longA!=longB")
-        assertEquals(whereObj.clauses[2], "floatA!=floatB")
-        assertEquals(whereObj.clauses[3], "strA!=strB")
-        assertEquals(whereObj.clauses[4], "boolA!=boolB")
+        assertEquals("intA!=intB", whereObj.clauses[0])
+        assertEquals("longA!=longB", whereObj.clauses[1])
+        assertEquals("floatA!=floatB", whereObj.clauses[2])
+        assertEquals("strA!=strB", whereObj.clauses[3])
+        assertEquals("boolA!=boolB", whereObj.clauses[4])
     }
 
     @Test
@@ -65,21 +65,20 @@ class WhereColumnComparTest {
             fCol("f7") lessEqualCol fCol("f8")
         }
 
-        assertEquals(whereObj.clauses[0], "i1>i2")
-        assertEquals(whereObj.clauses[1], "l1>l2")
-        assertEquals(whereObj.clauses[2], "f1>f2")
+        assertEquals("i1>i2", whereObj.clauses[0])
+        assertEquals("l1>l2", whereObj.clauses[1])
+        assertEquals("f1>f2", whereObj.clauses[2])
 
-        assertEquals(whereObj.clauses[3], "i3>=i4")
-        assertEquals(whereObj.clauses[4], "l3>=l4")
-        assertEquals(whereObj.clauses[5], "f3>=f4")
+        assertEquals("i3>=i4", whereObj.clauses[3])
+        assertEquals("l3>=l4", whereObj.clauses[4])
+        assertEquals("f3>=f4", whereObj.clauses[5])
 
-        assertEquals(whereObj.clauses[6], "i5<i6")
-        assertEquals(whereObj.clauses[7], "l5<l6")
-        assertEquals(whereObj.clauses[8], "f5<f6")
+        assertEquals("i5<i6", whereObj.clauses[6])
+        assertEquals("l5<l6", whereObj.clauses[7])
+        assertEquals("f5<f6", whereObj.clauses[8])
 
-        assertEquals(whereObj.clauses[9], "i7<=i8")
-        assertEquals(whereObj.clauses[10], "l7<=l8")
-        assertEquals(whereObj.clauses[11], "f7<=f8")
+        assertEquals("i7<=i8", whereObj.clauses[9])
+        assertEquals("l7<=l8", whereObj.clauses[10])
+        assertEquals("f7<=f8", whereObj.clauses[11])
     }
 }
-

@@ -58,7 +58,7 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Simple AND OR conditions`() {
         assertEquals(
-            SELECT_ALL_FROM + DirtyTable + WHERE + _ID+">=?" + and + _Name+"=?",
+            SELECT_ALL_FROM + DirtyTable + WHERE + _ID+">=?" + and + "($_Name=?)",
             
             getQuery(DirtyTable,
                 where = {
@@ -71,9 +71,9 @@ class QueryBuilderTest { // TODO split tests/files
         assertEquals(
             SELECT_ALL_FROM + DirtyTable +
                 WHERE + _ID+">=?" +
-                and + _Name+"=?" +
-                and + _Position+"=?" +
-                and + _ID+"=?",
+                and + "($_Name=?)" +
+                and + "($_Position=?)" +
+                and + "($_ID=?)",
             getQuery(DirtyTable,
                 where = {
                     _ID greaterEqual 10
@@ -87,9 +87,9 @@ class QueryBuilderTest { // TODO split tests/files
         assertEquals(
             SELECT_ALL_FROM + DirtyTable +
                 WHERE + _ID+">=?" +
-                and + _Name+"=?" +
-                or + _Position+"=?" +
-                or + _ID+"=?",
+                and + "($_Name=?)" +
+                or + "($_Position=?)" +
+                or + "($_ID=?)",
             getQuery(DirtyTable,
                 where = {
                     _ID greaterEqual 10
@@ -123,14 +123,14 @@ class QueryBuilderTest { // TODO split tests/files
         assertEquals(
             SELECT_ALL_FROM + DirtyTable +
                 WHERE + _ID+">=?" +
-                and + _Name+"=?" +
-                or + "("+_Position+"=?" + or + _ID+"=?)",
+                and + "($_Name=?)" +
+                or + "($_Position=?" + or + "($_ID=?))",
             
             getQuery(DirtyTable,
                 where = {
                     _ID greaterEqual 10
                     and { _Name equal BestName }
-                    orGroup {
+                    or {
                         _Position equal 1.1F
                         or { _ID equal 1 }
                     }
@@ -142,11 +142,8 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Two lvl conditions group{} is first`() {
         assertEquals(
-            SELECT_ALL_FROM + DirtyTable +
-                WHERE + "("+_ID+">=?" + and + _Name+"=?)" +
-                and + _Position+"=?" + 
-                or + _ID+"=?"
-            ,
+            SELECT_ALL_FROM + DirtyTable + WHERE + "($_ID>=? AND ($_Name=?)) AND ($_Position=?) OR ($_ID=?)",
+            
             getQuery(DirtyTable,
                 where = {
                     group {
@@ -167,14 +164,14 @@ class QueryBuilderTest { // TODO split tests/files
                 WHERE + 
                 _Position+"=?" +
                 and +
-                    "("+_ID+">=?" + and + _Name+"=?)" +
-                and + _Position+"=?" + 
-                or + _ID+"=?"
+                    "($_ID>=? AND ($_Name=?))" +
+                and + "($_Position=?)" + 
+                or + "($_ID=?)"
             ,
             getQuery(DirtyTable,
                 where = {
                     _Position equal 1.1F
-                    andGroup {
+                    and {
                         _ID greaterEqual 10
                         and { _Name equal BestName }
                     }
@@ -191,13 +188,13 @@ class QueryBuilderTest { // TODO split tests/files
         val result = getQuery(DirtyTable,
             where = {
                 _Position equal 1
-                andGroup {
+                and {
                     _ID greaterEqual 2
-                    orGroup {
+                    or {
                         _Name equal BestName
-                        andGroup {
+                        and {
                             _Name equal BestName
-                            orGroup {
+                            or {
                                 _Name equal BestName
                                 or { _Position less 5 }
                             }
@@ -221,13 +218,13 @@ class QueryBuilderTest { // TODO split tests/files
                             _Name+"=?"+
                             or + "("+
                                 _Name+"=?"+
-                                or + _Position+"<?" +
+                                or + "($_Position<?)" +
                             ")" +
                         ")" +
                     ")" +
                 ")" +
-                and + _Position+"=?" + 
-                or + _ID+"=?"
+                and + "($_Position=?)" + 
+                or + "($_ID=?)"
             ,
             result.query
         )
@@ -236,7 +233,7 @@ class QueryBuilderTest { // TODO split tests/files
             result.args.joinToString(", ")
         )
         assertEquals(
-            "SELECT * FROM $DirtyTable WHERE $_Position=? AND ($_ID>=? OR ($_Name=? AND ($_Name=? OR ($_Name=? OR $_Position<?)))) AND $_Position=? OR $_ID=?",
+            "SELECT * FROM $DirtyTable WHERE $_Position=? AND ($_ID>=? OR ($_Name=? AND ($_Name=? OR ($_Name=? OR ($_Position<?))))) AND ($_Position=?) OR ($_ID=?)",
             result.query
         )
     }

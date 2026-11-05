@@ -10,7 +10,7 @@ class MiscQueryBuilderTest {
     
     @Test
     fun `App Table Getter query`() {
-        val queryStr = "SELECT name FROM sqlite_master WHERE type=? AND name NOT LIKE ? AND name NOT IN (?, ?) ORDER BY name"
+        val queryStr = "SELECT name FROM sqlite_master WHERE type=? AND (name NOT LIKE ?) AND (name NOT IN (?, ?)) ORDER BY name"
         
         val builtQuery = getQuery(TABLE_Master, columns(_Name),
             where = {

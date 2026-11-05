@@ -42,7 +42,7 @@ fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStrings(
     orderBy = { cName },
     where = {
         cType equal DbTypeTable
-        andGroup {
+        and {
             cName like "sqlite_%"
             or { cName.equalAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions) }
         }

@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.dsl.where
+package com.vankorno.vankornodb.core.dsl.orderBy
 
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.fCol

@@ -16,16 +16,16 @@ class WhereEqualTest {
         val where: WhereDsl.()->Unit = { cPosition equal 11 }
         val whereObj = WhereDsl().apply(where)
         
-        assertEquals(whereObj.clauses[0], cPosition.name + "=?")
-        assertEquals(whereObj.args[0], "11")
+        assertEquals(cPosition.name + "=?", whereObj.clauses[0])
+        assertEquals("11", whereObj.args[0])
     }
     
     @Test
     fun `Equal Str`() {
         val whereObj = WhereDsl().apply { sCol("russiaIs") equal "aTerroristState" }
         
-        assertEquals(whereObj.clauses[0], "russiaIs=?")
-        assertEquals(whereObj.args[0], "aTerroristState")
+        assertEquals("russiaIs=?", whereObj.clauses[0])
+        assertEquals("aTerroristState", whereObj.args[0])
     }
     
     
@@ -33,13 +33,13 @@ class WhereEqualTest {
     fun `Equal Bool`() {
         val whereObj = WhereDsl().apply { cActive equal true }
         
-        assertEquals(whereObj.clauses[0], "active=?")
-        assertEquals(whereObj.args[0], "1")
+        assertEquals("active=?", whereObj.clauses[0])
+        assertEquals("1", whereObj.args[0])
         
         val whereObj2 = WhereDsl().apply { cActive equal false }
         
-        assertEquals(whereObj2.clauses[0], "active=?")
-        assertEquals(whereObj2.args[0], "0")
+        assertEquals("active=?", whereObj2.clauses[0])
+        assertEquals("0", whereObj2.args[0])
     }
     
     
@@ -47,8 +47,8 @@ class WhereEqualTest {
     fun `Equal Long`() {
         val whereObj = WhereDsl().apply { lCol("shLong") equal 50L }
         
-        assertEquals(whereObj.clauses[0], "shLong=?")
-        assertEquals(whereObj.args[0], "50")
+        assertEquals("shLong=?", whereObj.clauses[0])
+        assertEquals("50", whereObj.args[0])
     }
     
     
@@ -56,8 +56,8 @@ class WhereEqualTest {
     fun `Equal Float`() {
         val whereObj = WhereDsl().apply { fCol("ruFloatDoesntFloat") equal 13.2F }
         
-        assertEquals(whereObj.clauses[0], "ruFloatDoesntFloat=?")
-        assertEquals(whereObj.args[0], "13.2")
+        assertEquals("ruFloatDoesntFloat=?", whereObj.clauses[0])
+        assertEquals("13.2", whereObj.args[0])
     }
     
     

@@ -18,14 +18,14 @@ class WhereEqualAnyTest {
             iCol("intCol2").notEqualAnyOf(4, 5)
         }
 
-        assertEquals(whereObj.clauses[0], "intCol IN (?, ?, ?)")
-        assertEquals(whereObj.args[0], "1")
-        assertEquals(whereObj.args[1], "2")
-        assertEquals(whereObj.args[2], "3")
+        assertEquals("intCol IN (?, ?, ?)", whereObj.clauses[0])
+        assertEquals("1", whereObj.args[0])
+        assertEquals("2", whereObj.args[1])
+        assertEquals("3", whereObj.args[2])
 
-        assertEquals(whereObj.clauses[1], "intCol2 NOT IN (?, ?)")
-        assertEquals(whereObj.args[3], "4")
-        assertEquals(whereObj.args[4], "5")
+        assertEquals("intCol2 NOT IN (?, ?)", whereObj.clauses[1])
+        assertEquals("4", whereObj.args[3])
+        assertEquals("5", whereObj.args[4])
     }
 
     @Test
@@ -35,11 +35,11 @@ class WhereEqualAnyTest {
             sCol("strCol2").notEqualAnyOf("baz")
         }
 
-        assertEquals(whereObj.clauses[0], "strCol IN (?, ?)")
-        assertEquals(whereObj.args[0], "foo")
-        assertEquals(whereObj.args[1], "bar")
-        assertEquals(whereObj.clauses[1], "strCol2 NOT IN (?)")
-        assertEquals(whereObj.args[2], "baz")
+        assertEquals("strCol IN (?, ?)", whereObj.clauses[0])
+        assertEquals("foo", whereObj.args[0])
+        assertEquals("bar", whereObj.args[1])
+        assertEquals("strCol2 NOT IN (?)", whereObj.clauses[1])
+        assertEquals("baz", whereObj.args[2])
     }
 
     @Test
@@ -49,11 +49,11 @@ class WhereEqualAnyTest {
             bCol("boolCol2").notEqualAnyOf(false)
         }
 
-        assertEquals(whereObj.clauses[0], "boolCol IN (?, ?)")
-        assertEquals(whereObj.args[0], "1")
-        assertEquals(whereObj.args[1], "0")
-        assertEquals(whereObj.clauses[1], "boolCol2 NOT IN (?)")
-        assertEquals(whereObj.args[2], "0")
+        assertEquals("boolCol IN (?, ?)", whereObj.clauses[0])
+        assertEquals("1", whereObj.args[0])
+        assertEquals("0", whereObj.args[1])
+        assertEquals("boolCol2 NOT IN (?)", whereObj.clauses[1])
+        assertEquals("0", whereObj.args[2])
     }
 
     @Test
@@ -63,11 +63,11 @@ class WhereEqualAnyTest {
             lCol("longCol2").notEqualAnyOf(30L)
         }
 
-        assertEquals(whereObj.clauses[0], "longCol IN (?, ?)")
-        assertEquals(whereObj.args[0], "10")
-        assertEquals(whereObj.args[1], "20")
-        assertEquals(whereObj.clauses[1], "longCol2 NOT IN (?)")
-        assertEquals(whereObj.args[2], "30")
+        assertEquals("longCol IN (?, ?)", whereObj.clauses[0])
+        assertEquals("10", whereObj.args[0])
+        assertEquals("20", whereObj.args[1])
+        assertEquals("longCol2 NOT IN (?)", whereObj.clauses[1])
+        assertEquals("30", whereObj.args[2])
     }
 
     @Test
@@ -77,10 +77,10 @@ class WhereEqualAnyTest {
             fCol("floatCol2").notEqualAnyOf(3.3F)
         }
 
-        assertEquals(whereObj.clauses[0], "floatCol IN (?, ?)")
-        assertEquals(whereObj.args[0], "1.1")
-        assertEquals(whereObj.args[1], "2.2")
-        assertEquals(whereObj.clauses[1], "floatCol2 NOT IN (?)")
-        assertEquals(whereObj.args[2], "3.3")
+        assertEquals("floatCol IN (?, ?)", whereObj.clauses[0])
+        assertEquals("1.1", whereObj.args[0])
+        assertEquals("2.2", whereObj.args[1])
+        assertEquals("floatCol2 NOT IN (?)", whereObj.clauses[1])
+        assertEquals("3.3", whereObj.args[2])
     }
 }

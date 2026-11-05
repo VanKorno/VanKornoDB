@@ -14,10 +14,10 @@ class WhereLikeTest {
             sCol("colB") notLike "%suffix"
         }
 
-        assertEquals(whereObj.clauses[0], "colA LIKE ?")
-        assertEquals(whereObj.args[0], "pattern%")
-        assertEquals(whereObj.clauses[1], "colB NOT LIKE ?")
-        assertEquals(whereObj.args[1], "%suffix")
+        assertEquals("colA LIKE ?", whereObj.clauses[0])
+        assertEquals("pattern%", whereObj.args[0])
+        assertEquals("colB NOT LIKE ?", whereObj.clauses[1])
+        assertEquals("%suffix", whereObj.args[1])
     }
 
     @Test
@@ -27,8 +27,8 @@ class WhereLikeTest {
             sCol("colC") notLikeCol sCol("colD")
         }
 
-        assertEquals(whereObj.clauses[0], "colA LIKE colB")
-        assertEquals(whereObj.clauses[1], "colC NOT LIKE colD")
+        assertEquals("colA LIKE colB", whereObj.clauses[0])
+        assertEquals("colC NOT LIKE colD", whereObj.clauses[1])
     }
 
     @Test
@@ -38,9 +38,9 @@ class WhereLikeTest {
             sCol("colY").notLikeAny("x%", "y_")
         }
 
-        assertEquals(whereObj.clauses[0], "colX LIKE (?, ?, ?)")
-        assertEquals(whereObj.args, listOf("a%", "b_", "c%", "x%", "y_"))
-        assertEquals(whereObj.clauses[1], "colY NOT LIKE (?, ?)")
+        assertEquals("colX LIKE (?, ?, ?)", whereObj.clauses[0])
+        assertEquals(listOf("a%", "b_", "c%", "x%", "y_"), whereObj.args)
+        assertEquals("colY NOT LIKE (?, ?)", whereObj.clauses[1])
     }
 
     @Test
@@ -50,7 +50,7 @@ class WhereLikeTest {
             sCol("colP").notLikeAnyCol(sCol("colQ"), sCol("colR"), sCol("colS"))
         }
 
-        assertEquals(whereObj.clauses[0], "(colM LIKE colN OR colM LIKE colO)")
-        assertEquals(whereObj.clauses[1], "(colP NOT LIKE colQ AND colP NOT LIKE colR AND colP NOT LIKE colS)")
+        assertEquals("(colM LIKE colN OR colM LIKE colO)", whereObj.clauses[0])
+        assertEquals("(colP NOT LIKE colQ AND colP NOT LIKE colR AND colP NOT LIKE colS)", whereObj.clauses[1])
     }
 }

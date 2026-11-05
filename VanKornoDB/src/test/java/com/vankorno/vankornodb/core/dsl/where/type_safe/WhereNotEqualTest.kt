@@ -15,8 +15,8 @@ class WhereNotEqualTest {
     fun `NotEqual Int`() {
         val whereObj = WhereDsl().apply { iCol("two") notEqual 3 }
         
-        assertEquals(whereObj.clauses[0], "two!=?")
-        assertEquals(whereObj.args[0], "3")
+        assertEquals("two!=?", whereObj.clauses[0])
+        assertEquals("3", whereObj.args[0])
     }
     
     
@@ -24,8 +24,8 @@ class WhereNotEqualTest {
     fun `NotEqual Str`() {
         val whereObj = WhereDsl().apply { sCol("geek") notEqual "nerd" }
         
-        assertEquals(whereObj.clauses[0], "geek!=?")
-        assertEquals(whereObj.args[0], "nerd")
+        assertEquals("geek!=?", whereObj.clauses[0])
+        assertEquals("nerd", whereObj.args[0])
     }
     
     
@@ -33,13 +33,13 @@ class WhereNotEqualTest {
     fun `NotEqual Bool`() {
         val whereObj = WhereDsl().apply { bCol("kickedBully") notEqual true }
         
-        assertEquals(whereObj.clauses[0], "kickedBully!=?")
-        assertEquals(whereObj.args[0], "1")
+        assertEquals("kickedBully!=?", whereObj.clauses[0])
+        assertEquals("1", whereObj.args[0])
         
         val whereObj2 = WhereDsl().apply { bCol("kickedBully") notEqual false }
         
-        assertEquals(whereObj2.clauses[0], "kickedBully!=?")
-        assertEquals(whereObj2.args[0], "0")
+        assertEquals("kickedBully!=?", whereObj2.clauses[0])
+        assertEquals("0", whereObj2.args[0])
     }
     
     
@@ -47,8 +47,8 @@ class WhereNotEqualTest {
     fun `NotEqual Long`() {
         val whereObj = WhereDsl().apply { lCol("longSadness") notEqual 0L }
         
-        assertEquals(whereObj.clauses[0], "longSadness!=?")
-        assertEquals(whereObj.args[0], "0")
+        assertEquals("longSadness!=?", whereObj.clauses[0])
+        assertEquals("0", whereObj.args[0])
     }
     
     
@@ -56,7 +56,7 @@ class WhereNotEqualTest {
     fun `NotEqual Float`() {
         val whereObj = WhereDsl().apply { fCol("floaty") notEqual 3.1415F }
         
-        assertEquals(whereObj.clauses[0], "floaty!=?")
-        assertEquals(whereObj.args[0], "3.1415")
+        assertEquals("floaty!=?", whereObj.clauses[0])
+        assertEquals("3.1415", whereObj.args[0])
     }
 }

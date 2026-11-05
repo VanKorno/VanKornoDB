@@ -22,9 +22,6 @@ open class WhereDslInternal : WhereDslBase() {
     
     infix fun String.dot(str2: String = "") = this + "." + str2
     
-    
-    // ======================  T Y P E - S A F E   C O M P A R I S O N  ====================== \\
-    
     infix fun IntCol.equal(value: Int) = condition(this.name, "=", value.toString())
     infix fun StrCol.equal(value: String) = condition(this.name, "=", value)
     infix fun BoolCol.equal(value: Boolean) = condition(this.name, "=", if (value) "1" else "0")

@@ -33,7 +33,7 @@ fun SQLiteDatabase.reorder(                                           table: Str
             else
                 cPosition greater position
             
-            andGroup(where)
+            and(where)
         },
         orderBy = { cPosition.flipIf(moveUpOrBack) },
         extra = { limit = 1 }
@@ -71,7 +71,7 @@ private fun SQLiteDatabase.reorderToStartEnd(                         table: Str
             table,
             where = {
                 cPosition less position
-                andGroup(where)
+                and(where)
             }
         ) {
             cPosition add 1L
