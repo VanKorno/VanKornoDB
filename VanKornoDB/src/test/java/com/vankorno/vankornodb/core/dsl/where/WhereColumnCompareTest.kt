@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.dsl.where.type_safe
+package com.vankorno.vankornodb.core.dsl.where
 
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.bCol
@@ -9,7 +9,7 @@ import com.vankorno.vankornodb.dbManagement.data.sCol
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class WhereColumnComparTest {
+class WhereColumnCompareTest {
     
     @Test
     fun `Equal columns`() {

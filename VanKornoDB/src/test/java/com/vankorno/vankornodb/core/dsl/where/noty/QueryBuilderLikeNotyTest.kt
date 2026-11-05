@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.dsl.where
+package com.vankorno.vankornodb.core.dsl.where.noty
 
 import com.vankorno.vankornodb.TestConstants.DirtyTable
 import com.vankorno.vankornodb.core.data.DbConstants.*

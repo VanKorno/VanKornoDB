@@ -9,6 +9,10 @@ class WhereDsl : WhereDslInternal() {
     fun group(                                                              where: WhereDsl.()->Unit
     ) {
         val innerBuilder = WhereDsl().apply(where)
+        appendGroup(innerBuilder)
+    }
+    private fun appendGroup(                                                innerBuilder: WhereDsl
+    ) {
         if (innerBuilder.clauses.isEmpty())
             return //\/\/\/\/\/\
         
@@ -16,14 +20,17 @@ class WhereDsl : WhereDslInternal() {
         args.addAll(innerBuilder.args)
     }
     
+    
     fun and(                                                                where: WhereDsl.()->Unit
     ) {
         val innerBuilder = WhereDsl().apply(where)
         if (innerBuilder.clauses.isEmpty())
             return //\/\/\/\/\/\
         
-        clauses.add("AND")
-        group(where)
+        if (clauses.isNotEmpty()) // Check if the parent block already has conditions
+            clauses.add("AND")
+        
+        appendGroup(innerBuilder)
     }
     
     fun or(                                                                 where: WhereDsl.()->Unit
@@ -32,8 +39,10 @@ class WhereDsl : WhereDslInternal() {
         if (innerBuilder.clauses.isEmpty())
             return //\/\/\/\/\/\
         
-        clauses.add("OR")
-        group(where)
+        if (clauses.isNotEmpty()) // Check if the parent block already has conditions
+            clauses.add("OR")
+        
+        appendGroup(innerBuilder)
     }
     
     fun subquery(                                           table: String,

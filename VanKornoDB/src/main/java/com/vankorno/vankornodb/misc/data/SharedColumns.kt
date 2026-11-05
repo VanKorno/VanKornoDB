@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.misc.data
 
 import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.dbManagement.data.bCol
+import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
@@ -25,9 +26,9 @@ object SharedCol {
     val cDescr by lazy { sCol("description") }
     
     val cInt by lazy { iCol("cInt") }
-    val cStr by lazy { iCol("cStr") }
-    val cBool by lazy { iCol("cBool") }
-    val cLong by lazy { iCol("cLong") }
-    val cFloat by lazy { iCol("cFloat") }
+    val cStr by lazy { sCol("cStr") }
+    val cBool by lazy { bCol("cBool") }
+    val cLong by lazy { lCol("cLong") }
+    val cFloat by lazy { fCol("cFloat") }
     
 }

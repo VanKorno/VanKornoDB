@@ -58,7 +58,7 @@ class QueryBuilderTest { // TODO split tests/files
     @Test
     fun `Simple AND OR conditions`() {
         assertEquals(
-            SELECT_ALL_FROM + DirtyTable + WHERE + _ID+">=?" + and + "($_Name=?)",
+            SELECT_ALL_FROM + DirtyTable + WHERE + "$_ID>=? AND ($_Name=?)",
             
             getQuery(DirtyTable,
                 where = {
@@ -124,7 +124,7 @@ class QueryBuilderTest { // TODO split tests/files
             SELECT_ALL_FROM + DirtyTable +
                 WHERE + _ID+">=?" +
                 and + "($_Name=?)" +
-                or + "($_Position=?" + or + "($_ID=?))",
+                or + "($_Position=? OR ($_ID=?))",
             
             getQuery(DirtyTable,
                 where = {

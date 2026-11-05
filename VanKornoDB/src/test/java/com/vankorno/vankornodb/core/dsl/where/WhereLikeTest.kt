@@ -1,4 +1,4 @@
-package com.vankorno.vankornodb.core.dsl.where.type_safe
+package com.vankorno.vankornodb.core.dsl.where
 
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.sCol
