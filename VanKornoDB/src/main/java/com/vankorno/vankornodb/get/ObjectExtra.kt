@@ -45,11 +45,8 @@ fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: Tab
  */
 fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo,
-    orderBy = { cRowId.flip() },
-    extra = { limit = 1 },
-    where = where,
-).firstOrNull()
+): T? = getObjects(tableInfo, { cRowId.flip() }, { limit = 1 }, where)
+    .firstOrNull()
 
 
 /**
@@ -81,11 +78,8 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
 inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                                   tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo,
-    orderBy = { random() },
-    extra = { limit = 1 },
-    where = where,
-).firstOrNull()
+): T? = getObjects(tableInfo, { random() }, { limit = 1 }, where)
+    .firstOrNull()
 
 
 /**

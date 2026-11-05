@@ -11,6 +11,7 @@ import com.vankorno.sandbox.makeRatsTestNest
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.misc.orderByIdFlipped
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -76,32 +77,32 @@ class GetIdTest {
         makeRatsTestNest(GetIDsTable)
 
         // Filter single ID
-        val idsSingle = dbh.getIDs(GetIDsTable, where = { ID = 10L })
+        val idsSingle = dbh.getIDs(GetIDsTable) { ID = 10L }
         assertEquals(listOf(10L), idsSingle)
 
         // Filter range of IDs
-        val idsRange = dbh.getIDs(GetIDsTable, where = { cID greater 45L })
+        val idsRange = dbh.getIDs(GetIDsTable) { cID greater 45L }
         assertEquals(listOf(46L, 47L, 48L, 49L, 50L), idsRange)
 
         // Filter with custom column (Int1 equals 0 for all rats)
-        val idsCustomCol = dbh.getIDs(GetIDsTable, where = { Int1 equal 0 })
+        val idsCustomCol = dbh.getIDs(GetIDsTable) { Int1 equal 0 }
         assertEquals((1L..ratQuant).toList(), idsCustomCol)
 
         // Filter with orderBy (descending)
-        val idsDesc = dbh.getIDs(GetIDsTable, where = { cID greater 47L }, orderBy = { cID.flip() })
+        val idsDesc = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { cID greater 47L }
         assertEquals(listOf(50L, 49L, 48L), idsDesc)
 
         // Filter with equalAnyOf and orderBy
-        val idsInList = dbh.getIDs(GetIDsTable, where = { cID.equalAnyOf(5L, 15L, 25L) }, orderBy = { cID.flip() })
+        val idsInList = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { cID.equalAnyOf(5L, 15L, 25L) }
         assertEquals(listOf(25L, 15L, 5L), idsInList)
 
         // Condition matching nothing
-        val idsNone = dbh.getIDs(GetIDsTable, where = { ID = 9999L })
+        val idsNone = dbh.getIDs(GetIDsTable) { ID = 9999L }
         assertTrue(idsNone.isEmpty())
 
         // Empty table
         dbh.clearTable(GetIDsTable)
-        val idsEmpty = dbh.getIDs(GetIDsTable, where = { cID greater 0L })
+        val idsEmpty = dbh.getIDs(GetIDsTable) { cID greater 0L }
         assertTrue(idsEmpty.isEmpty())
     }
 
@@ -114,7 +115,7 @@ class GetIdTest {
         assertEquals((1L..ratQuant).toList(), allIds)
 
         // Explicit descending order
-        val allIdsDesc = dbh.getAllIDs(GetAllIDsTable) { cID.flip() }
+        val allIdsDesc = dbh.getAllIDs(GetAllIDsTable, orderByIdFlipped())
         assertEquals((ratQuant downTo 1L).toList(), allIdsDesc)
 
         // Add an extra row and verify

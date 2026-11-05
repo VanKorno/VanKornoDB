@@ -4,7 +4,13 @@ package com.vankorno.vankornodb.core.dsl
 import com.vankorno.vankornodb.core.data.DbConstants.DESCENDING
 import com.vankorno.vankornodb.core.data.DbConstants.RANDOM
 import com.vankorno.vankornodb.core.data.DbConstants.comma
-import com.vankorno.vankornodb.dbManagement.data.*
+import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
+import com.vankorno.vankornodb.dbManagement.data.BaseColumn
+import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
+import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.misc.data.SharedCol.cName
+import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
+import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 
 /**
  *  Internal base — use [com.vankorno.vankornodb.api.OrderDsl] from the api package instead
@@ -14,7 +20,6 @@ open class OrderDslInternal {
     val args = mutableListOf<String>()
     
     internal fun buildStr(): String = orderoids.joinToString(comma)
-    
     
     operator fun AscendingColumn<*>.invoke() {
         orderoids += this.name
@@ -27,29 +32,36 @@ open class OrderDslInternal {
         orderoids += it.name + if (it is DescendingColumn) DESCENDING else ""
     }
     
-    fun flip(vararg columns: AscendingColumn<*>) = columns.forEach { orderoids += it.name + DESCENDING }
+    fun flipAll(vararg columns: AscendingColumn<*>) = columns.forEach { orderoids += it.name + DESCENDING }
     
-    fun IntCol.flip() = DescendingIntCol(this.name)()
-    fun StrCol.flip() = DescendingStrCol(this.name)()
-    fun BoolCol.flip() = DescendingBoolCol(this.name)()
-    fun LongCol.flip() = DescendingLongCol(this.name)()
-    fun FloatCol.flip() = DescendingFloatCol(this.name)()
+    fun AscendingColumn<*>.flip() { orderoids += this@flip.name + DESCENDING }
     
-    fun IntCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun StrCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun BoolCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun LongCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
-    fun FloatCol.flipIf(condition: Boolean) = if (condition) this.flip() else this
+    fun AscendingColumn<*>.flipIf(                                             condition: Boolean
+    ) {
+        if (condition)
+            this.flip()
+        else
+            col(this)
+    }
     
     fun raw(vararg strings: String) = strings.forEach { orderoids += it }
     
+    fun byId() { cID() }
+    fun byIdFlipped() { cID.flip() }
     
+    fun byRowId() { cRowId() }
+    fun byRowIdFlipped() { cRowId.flip() }
+    
+    fun byPosition() { cPosition() }
+    fun byPositionFlipped() { cPosition.flip() }
+    
+    fun byName() { cName() }
+    fun byNameFlipped() { cName.flip() }
     
     fun random() { orderoids += RANDOM }
     
     
     fun case(encased: String) = "CASE$encased END" // TODO Find where to put
-    
 }
 
 

@@ -38,7 +38,6 @@ class OrderDsl : OrderDslInternal() {
         }
     }
     
-    
     fun orderWhen(orders: OrderDsl.()->Unit, whens: WhereDsl.()->Unit) = OrderWhen(orders, whens)
     
     fun orderWhen(orderBy: AscendingColumn<*>, whens: WhereDsl.()->Unit) = OrderWhen({ orderBy() }, whens)
@@ -65,7 +64,6 @@ class OrderDsl : OrderDslInternal() {
         }
         orderoids += case(assembled)
     }
-    
 }
 
 
