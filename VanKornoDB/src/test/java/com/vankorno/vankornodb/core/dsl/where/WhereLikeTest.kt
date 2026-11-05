@@ -16,7 +16,7 @@ class WhereLikeTest {
 
         assertEquals("colA LIKE ?", whereObj.clauses[0])
         assertEquals("pattern%", whereObj.args[0])
-        assertEquals("colB NOT LIKE ?", whereObj.clauses[1])
+        assertEquals("AND colB NOT LIKE ?", whereObj.clauses[1])
         assertEquals("%suffix", whereObj.args[1])
     }
 
@@ -28,7 +28,7 @@ class WhereLikeTest {
         }
 
         assertEquals("colA LIKE colB", whereObj.clauses[0])
-        assertEquals("colC NOT LIKE colD", whereObj.clauses[1])
+        assertEquals("AND colC NOT LIKE colD", whereObj.clauses[1])
     }
 
     @Test
@@ -40,7 +40,7 @@ class WhereLikeTest {
 
         assertEquals("colX LIKE (?, ?, ?)", whereObj.clauses[0])
         assertEquals(listOf("a%", "b_", "c%", "x%", "y_"), whereObj.args)
-        assertEquals("colY NOT LIKE (?, ?)", whereObj.clauses[1])
+        assertEquals("AND colY NOT LIKE (?, ?)", whereObj.clauses[1])
     }
 
     @Test
@@ -51,6 +51,6 @@ class WhereLikeTest {
         }
 
         assertEquals("(colM LIKE colN OR colM LIKE colO)", whereObj.clauses[0])
-        assertEquals("(colP NOT LIKE colQ AND colP NOT LIKE colR AND colP NOT LIKE colS)", whereObj.clauses[1])
+        assertEquals("AND (colP NOT LIKE colQ AND colP NOT LIKE colR AND colP NOT LIKE colS)", whereObj.clauses[1])
     }
 }

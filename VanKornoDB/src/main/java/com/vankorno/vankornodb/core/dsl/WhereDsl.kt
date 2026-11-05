@@ -18,7 +18,10 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
 open class WhereDslInternal : WhereDslBase() {
     
     /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
-    fun rawClause(str: String) = clauses.add(str)
+    fun rawClause(str: String) {
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        clauses.add(missingAnd + str)
+    }
     
     infix fun String.dot(str2: String = "") = this + "." + str2
     

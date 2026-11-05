@@ -13,7 +13,9 @@ abstract class WhereDslBase() {
                                                                                 operator: String,
                                                                                    value: String,
     ) {
-        clauses.add(column + operator + "?")
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        
+        clauses.add(missingAnd + column + operator + "?")
         args.add(value)
     }
     
@@ -22,7 +24,9 @@ abstract class WhereDslBase() {
                                                                                 operator: String,
                                                                              otherColumn: String,
     ) {
-        clauses.add(column + operator + otherColumn)
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        
+        clauses.add(missingAnd + column + operator + otherColumn)
     }
     
     
@@ -32,6 +36,9 @@ abstract class WhereDslBase() {
     ) {
         clauses.add(
             buildString {
+                if (clauses.isNotEmpty())
+                    append("AND ")
+                
                 append(column)
                 append(operator)
                 append("(")
@@ -56,6 +63,9 @@ abstract class WhereDslBase() {
     ) {
         clauses.add(
             buildString {
+                if (clauses.isNotEmpty())
+                    append("AND ")
+                
                 append("(")
                 for (idx in otherCols.indices) {
                     append(column)
