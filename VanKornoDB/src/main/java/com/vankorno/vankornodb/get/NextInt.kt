@@ -2,6 +2,7 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 
 /**
@@ -17,11 +18,12 @@ import com.vankorno.vankornodb.dbManagement.data.IntCol
  * @return A list of available values.
  * @throws IllegalStateException If there aren't enough available values.
  */
-fun SQLiteDatabase.getNextInts(                                        table: String,
-                                                                      column: IntCol,
-                                                                       count: Int,
-                                                                   startFrom: Int = 1,
-                                                                    reserved: Set<Int> = emptySet(),
+fun SQLiteDatabase.getNextInts(                                       table: String,
+                                                                     column: IntCol,
+                                                                      count: Int,
+                                                                  startFrom: Int = 1,
+                                                                   reserved: Set<Int> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Int> {
     if (count <= 0) return emptyList() ///\/\/\/\/\/\
     require(startFrom > 0) { "startFrom must be positive" } //\/\/\
@@ -29,7 +31,7 @@ fun SQLiteDatabase.getNextInts(                                        table: St
     val maxReservedValue = reserved.maxOrNull() ?: Int.MIN_VALUE
     val maxValue = maxOf(
         startFrom - 1,
-        getLargestInt(table, column),
+        getLargestInt(table, column, where),
         maxReservedValue
     )
     val firstValue = if (maxValue < startFrom) startFrom else maxValue + 1
@@ -38,16 +40,18 @@ fun SQLiteDatabase.getNextInts(                                        table: St
     return  if (enoughSpace)
                 List(count) { idx -> firstValue + idx }
             else
-                getFreeIntsFromStart(table, column, count, startFrom, reserved)
+                getFreeIntsFromStart(table, column, count, startFrom, reserved, where)
 }
 
 
 /** Single-value wrapper for [getNextInts]. Returns -1 if no value is available. */
-fun SQLiteDatabase.getNextInt(                                         table: String,
-                                                                      column: IntCol,
-                                                                   startFrom: Int = 1,
-                                                                    reserved: Set<Int> = emptySet(),
-): Int = getNextInts(table, column, 1, startFrom, reserved).firstOrNull() ?: -1
+fun SQLiteDatabase.getNextInt(                                        table: String,
+                                                                     column: IntCol,
+                                                                  startFrom: Int = 1,
+                                                                   reserved: Set<Int> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
+): Int = getNextInts(table, column, 1, startFrom, reserved, where)
+    .firstOrNull() ?: -1
 
 
 /**
@@ -56,16 +60,17 @@ fun SQLiteDatabase.getNextInt(                                         table: St
  *
  * @throws IllegalStateException If there aren't enough available values.
  */
-fun SQLiteDatabase.getFreeIntsFromStart(                               table: String,
-                                                                      column: IntCol,
-                                                                       count: Int,
-                                                                   startFrom: Int = 1,
-                                                                    reserved: Set<Int> = emptySet(),
+fun SQLiteDatabase.getFreeIntsFromStart(                              table: String,
+                                                                     column: IntCol,
+                                                                      count: Int,
+                                                                  startFrom: Int = 1,
+                                                                   reserved: Set<Int> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Int> {
     if (count <= 0) return emptyList() ///\/\/\/\/\/\
     require(startFrom > 0) { "startFrom must be positive" } //\/\/\
     
-    val unavailableValues = getColInts(table, column).toSet() + reserved
+    val unavailableValues = getColInts(table, column, where = where).toSet() + reserved
     
     val freeValues = mutableListOf<Int>()
     var candidateValue = startFrom

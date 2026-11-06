@@ -58,6 +58,8 @@ fun SQLiteDatabase.deleteLastRow(                                               
     delete(table, "ROWID = (SELECT ROWID FROM $table ORDER BY ROWID DESC LIMIT 1)", null)
 }
 
+// TODO Overloads with WhereDsl maybe
+
 
 /** Clears the contents of the specified table. */
 fun SQLiteDatabase.clearTable(table: String) { execSQL("DELETE FROM " + table) }

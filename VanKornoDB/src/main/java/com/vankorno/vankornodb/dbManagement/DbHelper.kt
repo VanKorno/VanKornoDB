@@ -949,16 +949,18 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getNextPosition] */
     fun getNextPosition(                                               table: String,
                                                                    reserved: Set<Long> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
     ): Long = read(-1L, "getNextPosition") { db ->
-        db.getNextPosition(table, reserved)
+        db.getNextPosition(table, reserved, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getNextPositions] */
     fun getNextPositions(                                              table: String,
                                                                       count: Int,
                                                                    reserved: Set<Long> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getNextPositions") { db ->
-        db.getNextPositions(table, count, reserved)
+        db.getNextPositions(table, count, reserved, where)
     }
     
     
@@ -968,8 +970,9 @@ abstract class DbHelperInternal(
                                                                       column: IntCol,
                                                                    startFrom: Int = 1,
                                                                     reserved: Set<Int> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
     ): Int = read(-1, "getNextInt") { db ->
-        db.getNextInt(table, column, startFrom, reserved)
+        db.getNextInt(table, column, startFrom, reserved, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getNextInts] */
@@ -978,8 +981,9 @@ abstract class DbHelperInternal(
                                                                        count: Int,
                                                                    startFrom: Int = 1,
                                                                     reserved: Set<Int> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Int> = read(emptyList(), "getNextInts") { db ->
-        db.getNextInts(table, column, count, startFrom, reserved)
+        db.getNextInts(table, column, count, startFrom, reserved, where)
     }
     
     
@@ -988,8 +992,9 @@ abstract class DbHelperInternal(
                                                                      column: LongCol,
                                                                   startFrom: Long = 1L,
                                                                    reserved: Set<Long> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
     ): Long = read(-1L, "getNextLong") { db ->
-        db.getNextLong(table, column, startFrom, reserved)
+        db.getNextLong(table, column, startFrom, reserved, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getNextLongs] */
@@ -998,8 +1003,9 @@ abstract class DbHelperInternal(
                                                                       count: Int,
                                                                   startFrom: Long = 1L,
                                                                    reserved: Set<Long> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
     ): List<Long> = read(emptyList(), "getNextLongs") { db ->
-        db.getNextLongs(table, column, count, startFrom, reserved)
+        db.getNextLongs(table, column, count, startFrom, reserved, where)
     }
     
     

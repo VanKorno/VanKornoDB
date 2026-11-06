@@ -2,6 +2,7 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 
 /**
@@ -14,6 +15,7 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
  * @param count Number of values to generate.
  * @param startFrom Starting value for fallback allocation. Must be positive.
  * @param reserved Values that must not be assigned.
+ * @param where Additional conditions for ignoring values in some db rows.
  * @return A list of available values.
  * @throws IllegalStateException If there aren't enough available values.
  */
@@ -22,6 +24,7 @@ fun SQLiteDatabase.getNextLongs(                                      table: Str
                                                                       count: Int,
                                                                   startFrom: Long = 1L,
                                                                    reserved: Set<Long> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Long> {
     if (count <= 0) return emptyList() ///\/\/\/\/\/\
     require(startFrom > 0L) { "startFrom must be positive" } //\/\/\
@@ -29,7 +32,7 @@ fun SQLiteDatabase.getNextLongs(                                      table: Str
     val maxReservedValue = reserved.maxOrNull() ?: Long.MIN_VALUE
     val maxValue = maxOf(
         startFrom - 1L,
-        getLargestLong(table, column),
+        getLargestLong(table, column, where),
         maxReservedValue
     )
     val spaceLeft = Long.MAX_VALUE - maxValue
@@ -38,7 +41,7 @@ fun SQLiteDatabase.getNextLongs(                                      table: Str
     return if (enoughSpace)
         List(count) { idx -> maxValue + idx + 1L }
     else
-        getFreeLongsFromStart(table, column, count, startFrom, reserved)
+        getFreeLongsFromStart(table, column, count, startFrom, reserved, where)
 }
 
 
@@ -49,7 +52,8 @@ fun SQLiteDatabase.getNextLong(                                       table: Str
                                                                      column: LongCol,
                                                                   startFrom: Long = 1L,
                                                                    reserved: Set<Long> = emptySet(),
-): Long = getNextLongs(table, column, 1, startFrom, reserved)
+                                                                      where: WhereDsl.()->Unit = {},
+): Long = getNextLongs(table, column, 1, startFrom, reserved, where)
     .firstOrNull() ?: -1L
 
 
@@ -65,11 +69,12 @@ fun SQLiteDatabase.getFreeLongsFromStart(                             table: Str
                                                                       count: Int,
                                                                   startFrom: Long = 1L,
                                                                    reserved: Set<Long> = emptySet(),
+                                                                      where: WhereDsl.()->Unit = {},
 ): List<Long> {
     if (count <= 0) return emptyList() //\/\/\/\/\/\
     require(startFrom > 0L) { "startFrom must be positive" } //\/\/\
     
-    val unavailableValues = getColLongs(table, column).toSet() + reserved
+    val unavailableValues = getColLongs(table, column, where = where).toSet() + reserved
     
     val freeValues = mutableListOf<Long>()
     var candidateValue = startFrom

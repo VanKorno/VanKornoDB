@@ -1,8 +1,8 @@
 package com.vankorno.sandbox.get.next
 
 import androidx.test.filters.MediumTest
-import com.vankorno.sandbox._entities.testEntity.CTest
 import com.vankorno.sandbox._entities.testEntity.CTest.Int1
+import com.vankorno.sandbox._entities.testEntity.CTest.Str1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.api.DbRuntime.dbh
@@ -156,8 +156,8 @@ class NextIntTest {
         dbh.createTable(tableInfo)
         dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
         
-        val value1 = dbh.getNextInt(table, CTest.Int1, reserved = reserved)
-        val values1 = dbh.getNextInts(table, CTest.Int1, 2, reserved = reserved)
+        val value1 = dbh.getNextInt(table, Int1, reserved = reserved)
+        val values1 = dbh.getNextInts(table, Int1, 2, reserved = reserved)
         assertEquals(Int.MAX_VALUE, value1)
         assertEquals(listOf(1, 2), values1)
         
@@ -196,13 +196,109 @@ class NextIntTest {
     }
     
     
+    /**
+     * With where filter:
+     * Values in rows not matching where clause are ignored,
+     * so getNextInt and getNextInts return values larger than the largest matching row.
+     */
+    @Test
+    fun whereFilterStandard() {
+        val table = "whereFilterStandard"
+        val tableInfo = table using _Test
+
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(int1 = 10, str1 = "cat"),
+            TestEntity(int1 = 20, str1 = "cat"),
+            TestEntity(int1 = 100, str1 = "dog")
+        ))
+
+        val catNext = dbh.getNextInt(table, Int1) { Str1 equal "cat" }
+        val catNexts = dbh.getNextInts(table, Int1, 2) { Str1 equal "cat" }
+        assertEquals(21, catNext)
+        assertEquals(listOf(21, 22), catNexts)
+
+        val dogNext = dbh.getNextInt(table, Int1) { Str1 equal "dog" }
+        val dogNexts = dbh.getNextInts(table, Int1, 2) { Str1 equal "dog" }
+        assertEquals(101, dogNext)
+        assertEquals(listOf(101, 102), dogNexts)
+
+        // Non-matching where condition behaves like empty table
+        val emptyNext = dbh.getNextInt(table, Int1) { Str1 equal "bird" }
+        val emptyNexts = dbh.getNextInts(table, Int1, 2) { Str1 equal "bird" }
+        assertEquals(1, emptyNext)
+        assertEquals(listOf(1, 2), emptyNexts)
+
+        dbh.deleteTable(table)
+    }
+
+
+    /**
+     * With Int.MAX_VALUE and where filter:
+     * Fallback only considers values in matching rows as taken.
+     * Values from other rows are free to be assigned.
+     */
+    @Test
+    fun whereFilterWithFallback() {
+        val table = "whereFilterWithFallback"
+        val tableInfo = table using _Test
+
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(int1 = 1, str1 = "cat"),
+            TestEntity(int1 = 2, str1 = "dog"), // 2 is taken by dog, not cat
+            TestEntity(int1 = 3, str1 = "cat"),
+            TestEntity(int1 = Int.MAX_VALUE, str1 = "cat")
+        ))
+
+        // For cat, 1, 3, and MAX_VALUE are taken. 2 is free!
+        val catNext = dbh.getNextInt(table, Int1) { Str1 equal "cat" }
+        val catNexts = dbh.getNextInts(table, Int1, 2) { Str1 equal "cat" }
+        assertEquals(2, catNext)
+        assertEquals(listOf(2, 4), catNexts)
+
+        // For dog, only 2 is taken, and dog does NOT have MAX_VALUE, so it allocates after 2
+        val dogNext = dbh.getNextInt(table, Int1) { Str1 equal "dog" }
+        val dogNexts = dbh.getNextInts(table, Int1, 2) { Str1 equal "dog" }
+        assertEquals(3, dogNext)
+        assertEquals(listOf(3, 4), dogNexts)
+
+        dbh.deleteTable(table)
+    }
+
+
+    /**
+     * With where filter combined with reserved set and startFrom.
+     */
+    @Test
+    fun whereFilterWithReservedAndStartFrom() {
+        val table = "whereFilterWithReservedAndStartFrom"
+        val tableInfo = table using _Test
+
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(int1 = 5, str1 = "cat"),
+            TestEntity(int1 = 10, str1 = "cat"),
+            TestEntity(int1 = 50, str1 = "dog")
+        ))
+
+        val reserved = setOf(11, 12)
+        val next = dbh.getNextInt(table, Int1, startFrom = 5, reserved = reserved) { Str1 equal "cat" }
+        val nexts = dbh.getNextInts(table, Int1, 2, startFrom = 5, reserved = reserved) { Str1 equal "cat" }
+        assertEquals(13, next)
+        assertEquals(listOf(13, 14), nexts)
+
+        dbh.deleteTable(table)
+    }
+    
+    
     private fun assertBothFun(                                        table: String,
                                                               firstExpected: Int,
                                                              secondExpected: Int,
                                                                    reserved: Set<Int> = emptySet(),
     ) {
-        val value1 = dbh.getNextInt(table, CTest.Int1, reserved = reserved)
-        val values1 = dbh.getNextInts(table, CTest.Int1, 2, reserved = reserved)
+        val value1 = dbh.getNextInt(table, Int1, reserved = reserved)
+        val values1 = dbh.getNextInts(table, Int1, 2, reserved = reserved)
         assertEquals(firstExpected, value1)
         assertEquals(listOf(firstExpected, secondExpected), values1)
     }

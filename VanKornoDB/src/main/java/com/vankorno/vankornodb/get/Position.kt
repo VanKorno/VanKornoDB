@@ -20,7 +20,8 @@ fun SQLiteDatabase.getLastPosition(                                   table: Str
 fun SQLiteDatabase.getNextPositions(                                  table: String,
                                                                       count: Int,
                                                                    reserved: Set<Long> = emptySet(),
-): List<Long> = getNextLongs(table, cPosition, count, 1L, reserved)
+                                                                      where: WhereDsl.()->Unit = {},
+): List<Long> = getNextLongs(table, cPosition, count, 1L, reserved, where)
 
 
 
@@ -29,7 +30,8 @@ fun SQLiteDatabase.getNextPositions(                                  table: Str
  */
 fun SQLiteDatabase.getNextPosition(                                   table: String,
                                                                    reserved: Set<Long> = emptySet(),
-): Long = getNextLong(table, cPosition, 1L, reserved)
+                                                                      where: WhereDsl.()->Unit = {},
+): Long = getNextLong(table, cPosition, 1L, reserved, where)
 
 
 

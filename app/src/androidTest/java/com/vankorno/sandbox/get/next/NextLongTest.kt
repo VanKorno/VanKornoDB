@@ -1,6 +1,8 @@
 package com.vankorno.sandbox.get.next
 
 import androidx.test.filters.MediumTest
+import com.vankorno.sandbox._entities.testEntity.CTest.Long1
+import com.vankorno.sandbox._entities.testEntity.CTest.Str1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
@@ -182,6 +184,102 @@ class NextLongTest {
         
         dbh.createTable(table using _Test)
         assertBothFun(table, 1L, 3L, reserved)
+        dbh.deleteTable(table)
+    }
+    
+    
+    /**
+     * With where filter:
+     * Values in rows not matching where clause are ignored,
+     * so getNextLong and getNextLongs return values larger than the largest matching row.
+     */
+    @Test
+    fun whereFilterStandard() {
+        val table = "whereFilterStandardLong"
+        val tableInfo = table using _Test
+
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(long1 = 10L, str1 = "cat"),
+            TestEntity(long1 = 20L, str1 = "cat"),
+            TestEntity(long1 = 100L, str1 = "dog")
+        ))
+
+        val catNext = dbh.getNextLong(table, Long1) { Str1 equal "cat" }
+        val catNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "cat" }
+        assertEquals(21L, catNext)
+        assertEquals(listOf(21L, 22L), catNexts)
+
+        val dogNext = dbh.getNextLong(table, Long1) { Str1 equal "dog" }
+        val dogNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "dog" }
+        assertEquals(101L, dogNext)
+        assertEquals(listOf(101L, 102L), dogNexts)
+
+        // Non-matching where condition behaves like empty table
+        val emptyNext = dbh.getNextLong(table, Long1) { Str1 equal "bird" }
+        val emptyNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "bird" }
+        assertEquals(1L, emptyNext)
+        assertEquals(listOf(1L, 2L), emptyNexts)
+
+        dbh.deleteTable(table)
+    }
+
+
+    /**
+     * With Long.MAX_VALUE and where filter:
+     * Fallback only considers values in matching rows as taken.
+     * Values from other rows are free to be assigned.
+     */
+    @Test
+    fun whereFilterWithFallback() {
+        val table = "whereFilterWithFallbackLong"
+        val tableInfo = table using _Test
+
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(long1 = 1L, str1 = "cat"),
+            TestEntity(long1 = 2L, str1 = "dog"), // 2L is taken by dog, not cat
+            TestEntity(long1 = 3L, str1 = "cat"),
+            TestEntity(long1 = Long.MAX_VALUE, str1 = "cat")
+        ))
+
+        // For cat, 1, 3, and MAX_VALUE are taken. 2 is free!
+        val catNext = dbh.getNextLong(table, Long1) { Str1 equal "cat" }
+        val catNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "cat" }
+        assertEquals(2L, catNext)
+        assertEquals(listOf(2L, 4L), catNexts)
+
+        // For dog, only 2 is taken, and dog does NOT have MAX_VALUE, so it allocates after 2
+        val dogNext = dbh.getNextLong(table, Long1) { Str1 equal "dog" }
+        val dogNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "dog" }
+        assertEquals(3L, dogNext)
+        assertEquals(listOf(3L, 4L), dogNexts)
+
+        dbh.deleteTable(table)
+    }
+
+
+    /**
+     * With where filter combined with reserved set and startFrom.
+     */
+    @Test
+    fun whereFilterWithReservedAndStartFrom() {
+        val table = "whereFilterWithReservedAndStartFromLong"
+        val tableInfo = table using _Test
+
+        dbh.createTable(tableInfo)
+        dbh.addObjects(tableInfo, listOf(
+            TestEntity(long1 = 5L, str1 = "cat"),
+            TestEntity(long1 = 10L, str1 = "cat"),
+            TestEntity(long1 = 50L, str1 = "dog")
+        ))
+
+        val reserved = setOf(11L, 12L)
+        val next = dbh.getNextLong(table, Long1, startFrom = 5L, reserved = reserved) { Str1 equal "cat" }
+        val nexts = dbh.getNextLongs(table, Long1, 2, startFrom = 5L, reserved = reserved) { Str1 equal "cat" }
+        assertEquals(13L, next)
+        assertEquals(listOf(13L, 14L), nexts)
+
         dbh.deleteTable(table)
     }
     
