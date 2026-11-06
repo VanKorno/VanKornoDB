@@ -220,6 +220,12 @@ abstract class DbHelperInternal(
         db.addObjects(tableInfo, objects)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.addObjects] */
+    inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
+                                                                 vararg objects: T,
+    ): List<Long> = readWrite(emptyList(), "addObjects") { db ->
+        db.addObjects(tableInfo, objects.toList())
+    }
     
     /** A wrapper fun for [SQLiteDatabase.addObjWithoutIdCheck] */
     inline fun <T : CurrEntity> addObjWithoutIdCheck(                 tableInfo: TableInfoNormal<T>,

@@ -127,6 +127,21 @@ fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo:
 }
 
 
+/**
+ * Inserts multiple objects into the specified database table.
+ * Converts each entity into ContentValues and performs the SQLite insert operation for each.
+ * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
+ * If object's id is less than 1, the new id is assigned automatically.
+ * 
+ * @param tableInfo The combination of a table name and its SchemaBundle.
+ * @param objects Objects to insert as vararg.
+ * @return The list of ROW IDs.
+ */
+fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
+                                                                 vararg objects: T,
+): List<Long> = addObjects(tableInfo, objects.toList())
+
+
 
 
 
