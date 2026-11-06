@@ -57,9 +57,9 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun useCursor(                                                 table: String,
                                                                  columns: Array<out TypedColumn<*>>,
-                                                                   where: WhereDsl.()->Unit = {},
                                                                  orderBy: OrderDsl.()->Unit = {},
                                                                    extra: ExtraDsl.()->Unit = {},
+                                                                   where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->Unit,
     ) = write("useCursor") { db ->
         db.useCursor(table, columns, orderBy, extra, where, block)
