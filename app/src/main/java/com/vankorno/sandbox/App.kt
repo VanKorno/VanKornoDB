@@ -9,13 +9,10 @@ import com.vankorno.sandbox._navig.BackNav
 import com.vankorno.sandbox._navig.Navigator
 import com.vankorno.sandbox._navig.ScreenUpdater
 import com.vankorno.vankornocompose.LibApp
-import com.vankorno.vankornocompose.navig.ScrHome
-import com.vankorno.vankornocompose.navig.Screen
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.createTables
-import com.vankorno.vankornodb.core.data.DbConstants.InMemoryDB
 import com.vankorno.vankornodb.dbManagement.data.using
 
 class App : LibApp( // Don't mind this. Just using my lib that has nothing to do with this project

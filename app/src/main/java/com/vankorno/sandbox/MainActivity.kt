@@ -7,6 +7,8 @@ import com.vankorno.sandbox.AppStart.logic.launchApp
 import com.vankorno.sandbox._vm.VmShared
 import com.vankorno.vankornocompose.LibMainActivity
 import com.vankorno.vankornocompose.navig.Navig.updateScreen
+import com.vankorno.vankornohelpers.values.LibGlobals.UserTester
+import com.vankorno.vankornohelpers.values.LibGlobals.appUser
 
 class MainActivity : LibMainActivity() {
     companion object {
@@ -18,6 +20,7 @@ class MainActivity : LibMainActivity() {
     
     override fun beforeStartup() {
         vm = ViewModelProvider(this)[VmShared::class.java]
+        appUser = UserTester
     }
     
     override fun startupLaunch() { launchApp() }
