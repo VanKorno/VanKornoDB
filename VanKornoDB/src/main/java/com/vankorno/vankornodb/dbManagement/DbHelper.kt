@@ -21,6 +21,7 @@ import com.vankorno.vankornodb.delete.*
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
 import com.vankorno.vankornodb.get.raw.getRawTableStr
+import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 import com.vankorno.vankornodb.set.*
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -239,15 +240,16 @@ abstract class DbHelperInternal(
     fun <T : CurrEntity> addWithNewIDsAndPositions(                   tableInfo: TableInfoNormal<T>,
                                                                        entities: List<T>,
                                                                setIdAndPosition: (T, Long, Long)->T,
-    ): List<List<Long>> = readWrite(emptyList(), "addWithNewIDsAndPositions") { db ->
-        db.addWithNewIDsAndPositions(tableInfo, entities, setIdAndPosition)
-    }
+    ): Pair<List<Long>, List<Long>> =
+        readWrite(Pair(emptyList(), emptyList()), "addWithNewIDsAndPositions") { db ->
+            db.addWithNewIDsAndPositions(tableInfo, entities, setIdAndPosition)
+        }
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
     fun <T : CurrEntity> addWithNewIdAndPosition(                     tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
                                                                setIdAndPosition: (T, Long, Long)->T,
-    ): Pair<Long, Long> = readWrite(Pair(-1L, -1L), "addWithNewIdAndPosition") { db ->
+    ): DbIdAndPosition = readWrite(DbIdAndPosition(), "addWithNewIdAndPosition") { db ->
         db.addWithNewIdAndPosition(tableInfo, entity, setIdAndPosition)
     }
     

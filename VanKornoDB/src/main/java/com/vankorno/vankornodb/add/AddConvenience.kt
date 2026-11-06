@@ -7,6 +7,8 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.get.getNextIDs
 import com.vankorno.vankornodb.get.getNextPositions
 
+import com.vankorno.vankornodb.misc.data.DbIdAndPosition
+
 /**
  * Inserts multiple entities while automatically assigning new IDs and positions.
  * Existing IDs and positions are always replaced.
@@ -18,7 +20,7 @@ import com.vankorno.vankornodb.get.getNextPositions
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(        tableInfo: TableInfoNormal<T>,
                                                                        entities: List<T>,
                                                                setIdAndPosition: (T, Long, Long)->T,
-): List<List<Long>> {
+): Pair<List<Long>, List<Long>> {
     val newIDs = getNextIDs(tableInfo.name, entities.size)
     val newPositions = getNextPositions(tableInfo.name, entities.size)
     
@@ -26,7 +28,7 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(        tableInfo:
         val newEntity = setIdAndPosition(entity, newIDs[idx], newPositions[idx])
         addObjWithoutIdCheck(tableInfo, newEntity)
     }
-    return listOf(newIDs, newPositions)
+    return Pair(newIDs, newPositions)
 }
 
 
@@ -41,10 +43,7 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(        tableInfo:
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
                                                                setIdAndPosition: (T, Long, Long)->T,
-): Pair<Long, Long> {
-    val (ids, positions) = addWithNewIDsAndPositions(tableInfo, listOf(entity), setIdAndPosition)
-    return (ids.firstOrNull() ?: -1L) to (positions.firstOrNull() ?: -1L)
-}
+): DbIdAndPosition = DbIdAndPosition(addWithNewIDsAndPositions(tableInfo, listOf(entity), setIdAndPosition))
 
 
 
