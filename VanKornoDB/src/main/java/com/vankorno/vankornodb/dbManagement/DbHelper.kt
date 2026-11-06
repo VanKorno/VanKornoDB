@@ -240,10 +240,9 @@ abstract class DbHelperInternal(
     fun <T : CurrEntity> addWithNewIDsAndPositions(                   tableInfo: TableInfoNormal<T>,
                                                                        entities: List<T>,
                                                                setIdAndPosition: (T, Long, Long)->T,
-    ): Pair<List<Long>, List<Long>> =
-        readWrite(Pair(emptyList(), emptyList()), "addWithNewIDsAndPositions") { db ->
-            db.addWithNewIDsAndPositions(tableInfo, entities, setIdAndPosition)
-        }
+    ): List<DbIdAndPosition> = readWrite(emptyList(), "addWithNewIDsAndPositions") { db ->
+        db.addWithNewIDsAndPositions(tableInfo, entities, setIdAndPosition)
+    }
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
     fun <T : CurrEntity> addWithNewIdAndPosition(                     tableInfo: TableInfoNormal<T>,

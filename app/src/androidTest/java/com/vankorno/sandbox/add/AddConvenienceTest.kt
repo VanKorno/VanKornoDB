@@ -4,6 +4,7 @@ import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRatQuant
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox.getLabRats
 import com.vankorno.sandbox.makeRatsTestNest
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
@@ -53,9 +54,13 @@ class AddConvenienceTest {
         val name = "new"
         val rat = TestEntity(name = name)
         
-        dbh.addWithNewIdAndPosition(_TestTable, rat) { entity, id, position ->
+        val result = dbh.addWithNewIdAndPosition(_TestTable, rat) { entity, id, position ->
             entity.copy(id = id, position = position)
         }
+        assertEquals(ratQuant + 1, result.id)
+        assertEquals(ratQuant + 1, result.position)
+        assertEquals(true, result.isValid)
+        
         testAndKillNewRat(name)
     }
     
@@ -63,10 +68,34 @@ class AddConvenienceTest {
         val name = "Splinter"
         val rat = TestEntity(777, name, 777)
         
-        dbh.addWithNewIdAndPosition(_TestTable, rat) { entity, id, position ->
+        val result = dbh.addWithNewIdAndPosition(_TestTable, rat) { entity, id, position ->
             entity.copy(id = id, position = position)
         }
+        assertEquals(ratQuant + 1, result.id)
+        assertEquals(ratQuant + 1, result.position)
+        assertEquals(true, result.isValid)
+        
         testAndKillNewRat(name)
+    }
+    
+    @Test
+    fun addWithNewIDsAndPositionsTest() {
+        val table = "addWithNewIDsAndPositionsTest"
+        val tableInfo = table using _Test
+        dbh.getLabRats(table)
+        
+        val rats = listOf(TestEntity(name = "Rat1"), TestEntity(name = "Rat2"))
+        val results = dbh.addWithNewIDsAndPositions(tableInfo, rats) { entity, id, position ->
+            entity.copy(id = id, position = position)
+        }
+        
+        assertEquals(2, results.size)
+        assertEquals(ratQuant + 1, results[0].id)
+        assertEquals(ratQuant + 1, results[0].position)
+        assertEquals(ratQuant + 2, results[1].id)
+        assertEquals(ratQuant + 2, results[1].position)
+        
+        dbh.deleteTable(TestTable)
     }
     
     

@@ -16,19 +16,24 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param entities Entities to insert.
  * @param setIdAndPosition Returns an entity with the specified ID and position.
+ * @return A list of [DbIdAndPosition] containing the assigned ID and position for each inserted entity.
  */
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(        tableInfo: TableInfoNormal<T>,
                                                                        entities: List<T>,
                                                                setIdAndPosition: (T, Long, Long)->T,
-): Pair<List<Long>, List<Long>> {
+): List<DbIdAndPosition> {
     val newIDs = getNextIDs(tableInfo.name, entities.size)
     val newPositions = getNextPositions(tableInfo.name, entities.size)
+    val result = ArrayList<DbIdAndPosition>(entities.size)
     
     entities.forEachIndexed { idx, entity ->
-        val newEntity = setIdAndPosition(entity, newIDs[idx], newPositions[idx])
+        val id = newIDs[idx]
+        val pos = newPositions[idx]
+        val newEntity = setIdAndPosition(entity, id, pos)
         addObjWithoutIdCheck(tableInfo, newEntity)
+        result.add(DbIdAndPosition(id, pos))
     }
-    return Pair(newIDs, newPositions)
+    return result
 }
 
 
@@ -39,11 +44,12 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(        tableInfo:
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param entity Entity to insert.
  * @param setIdAndPosition Returns an entity with the specified ID and position.
+ * @return The [DbIdAndPosition] containing the assigned ID and position.
  */
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
                                                                setIdAndPosition: (T, Long, Long)->T,
-): DbIdAndPosition = DbIdAndPosition(addWithNewIDsAndPositions(tableInfo, listOf(entity), setIdAndPosition))
+): DbIdAndPosition = addWithNewIDsAndPositions(tableInfo, listOf(entity), setIdAndPosition).firstOrNull() ?: DbIdAndPosition()
 
 
 
