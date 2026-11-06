@@ -42,15 +42,8 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo:
                                                                          entity: T,
                                                                setIdAndPosition: (T, Long, Long)->T,
 ): Pair<Long, Long> {
-    val idsPositions = addWithNewIDsAndPositions(tableInfo, listOf(entity), setIdAndPosition)
-    
-    val newIDs = idsPositions.getOrNull(0)
-    val newPositions = idsPositions.getOrNull(1)
-    
-    return  if (newIDs.isNullOrEmpty() || newPositions.isNullOrEmpty())
-                -1L to -1L
-            else
-                newIDs[0] to newPositions[0]
+    val (ids, positions) = addWithNewIDsAndPositions(tableInfo, listOf(entity), setIdAndPosition)
+    return (ids.firstOrNull() ?: -1L) to (positions.firstOrNull() ?: -1L)
 }
 
 
