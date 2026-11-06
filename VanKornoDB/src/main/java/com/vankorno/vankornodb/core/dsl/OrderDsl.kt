@@ -27,9 +27,15 @@ open class OrderDslInternal {
     operator fun DescendingColumn.invoke() {
         orderoids += this.name + DESCENDING
     }
+    fun AscendingColumn<*>.by() {
+        orderoids += this.name
+    }
     
-    fun col(vararg columns: BaseColumn) = columns.forEach {
-        orderoids += it.name + if (it is DescendingColumn) DESCENDING else ""
+    fun col(                                                              vararg columns: BaseColumn
+    ) {
+        for(col in columns) {
+            orderoids += col.name + if (col is DescendingColumn) DESCENDING else ""
+        }
     }
     
     fun flipAll(vararg columns: AscendingColumn<*>) = columns.forEach { orderoids += it.name + DESCENDING }
@@ -46,19 +52,29 @@ open class OrderDslInternal {
     
     fun raw(vararg strings: String) = strings.forEach { orderoids += it }
     
+    
     fun byId() { cID() }
+    fun orderById() { cID() }
     fun byIdFlipped() { cID.flip() }
+    fun orderByIdFlipped() { cID.flip() }
     
     fun byRowId() { cRowId() }
+    fun orderByRowId() { cRowId() }
     fun byRowIdFlipped() { cRowId.flip() }
+    fun orderByRowIdFlipped() { cRowId.flip() }
     
     fun byPosition() { cPosition() }
+    fun orderByPosition() { cPosition() }
     fun byPositionFlipped() { cPosition.flip() }
+    fun orderByPositionFlipped() { cPosition.flip() }
     
     fun byName() { cName() }
+    fun orderByName() { cName() }
     fun byNameFlipped() { cName.flip() }
+    fun orderByNameFlipped() { cName.flip() }
     
     fun random() { orderoids += RANDOM }
+    fun orderRandomly() { orderoids += RANDOM }
     
     
     fun case(encased: String) = "CASE$encased END" // TODO Find where to put

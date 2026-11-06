@@ -3,18 +3,25 @@ package com.vankorno.vankornodb.misc
 
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.*
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 
 fun orderBy(vararg columns: BaseColumn): OrderDsl.()->Unit = { col(*columns) }
 
 fun AscendingColumn<*>.by(): OrderDsl.()->Unit = { col(this@by) }
 
-fun orderById(): OrderDsl.()->Unit = { cID() }
-fun orderByIdFlipped(): OrderDsl.()->Unit = { cID.flip() }
+fun orderById(): OrderDsl.()->Unit = { orderById() }
+fun orderByIdFlipped(): OrderDsl.()->Unit = { orderByIdFlipped() }
 
-fun orderByRowId(): OrderDsl.()->Unit = { cRowId() }
-fun orderByRowIdFlipped(): OrderDsl.()->Unit = { cRowId.flip() }
+fun orderByRowId(): OrderDsl.()->Unit = { orderByRowId() }
+fun orderByRowIdFlipped(): OrderDsl.()->Unit = { orderByRowIdFlipped() }
+
+fun orderByPosition(): OrderDsl.()->Unit = { orderByPosition() }
+fun orderByPositionFlipped(): OrderDsl.()->Unit = { orderByPositionFlipped() }
+
+fun orderByName(): OrderDsl.()->Unit = { orderByName() }
+fun orderByNameFlipped(): OrderDsl.()->Unit = { orderByNameFlipped() }
+
+fun orderRandomly(): OrderDsl.()->Unit = { orderRandomly() }
+
 
 
 fun IntCol.flipped() = DescendingIntCol(this@flipped.name)

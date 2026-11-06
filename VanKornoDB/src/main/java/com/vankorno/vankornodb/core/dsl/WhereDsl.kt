@@ -191,14 +191,14 @@ open class WhereDslInternal : WhereDslBase() {
     
     var ID: Long
         get() = error("id is write-only")
-        set(value) {
-            condition(_ID, "=", value.toString())
-        }
+        set(value) { whereId(value) }
     
     var Name: String
         get() = error("Name is write-only")
-        set(value) {
-            condition(_Name, "=", value)
-        }
+        set(value) { whereName(value) }
+    
+    fun whereId(id: Long) { condition(_ID, "=", id.toString()) }
+    
+    fun whereName(name: String) { condition(_Name, "=", name) }
     
 }

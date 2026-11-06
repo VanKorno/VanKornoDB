@@ -11,6 +11,7 @@ import com.vankorno.vankornodb.get.internal.getTypedVal
 import com.vankorno.vankornodb.get.noty.useCursorNoty
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.limit
 import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
 
 fun SQLiteDatabase.getRandomInt(                                      table: String,
@@ -109,13 +110,7 @@ fun SQLiteDatabase.getRandomId(                                       table: Str
 private inline fun <reified T> SQLiteDatabase.getRandomValNoty(       table: String,
                                                                      column: String,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = useCursorNoty(
-    table = table,
-    columns = arrayOf(column),
-    orderBy = { random() },
-    extra = { limit = 1 },
-    where = where,
-) { cursor ->
+): T? = useCursorNoty(table, arrayOf(column), { random() }, limit(1), where) { cursor ->
     if (cursor.moveToFirst())
         cursor.getTypedVal<T>(0)
     else

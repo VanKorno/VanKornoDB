@@ -13,7 +13,7 @@ fun SQLiteDatabase.getTableTypesFromInitQuery(                                  
     val queryStr = getStrNoty(TABLE_Master, "sql",
         where = {
             cType equal DbTypeTable
-            and { cName equal table }
+            cName equal table
         }
     )
     if (queryStr.isBlank()) {

@@ -2,6 +2,7 @@
 package com.vankorno.vankornodb.misc
 
 import android.database.Cursor
+import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 /**
@@ -24,6 +25,9 @@ fun <T : TypedColumn<*>> typedColumns(vararg columns: T): Array<out T> = columns
 
 
 
-
+/**
+ * A convenience fun to pass limit for the db query
+ */
+fun limit(quant: Int): ExtraDsl.()->Unit = { limit = quant }
 
 

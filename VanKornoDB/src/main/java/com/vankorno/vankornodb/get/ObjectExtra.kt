@@ -7,6 +7,9 @@ import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.flipped
+import com.vankorno.vankornodb.misc.limit
+import com.vankorno.vankornodb.misc.orderBy
 import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
 
 /**
@@ -15,11 +18,8 @@ import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
  */
 fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo,
-    orderBy = { cRowId() },
-    extra = { limit = 1 },
-    where = where,
-).firstOrNull()
+): T? = getObjects(tableInfo, orderBy(cRowId), limit(1), where)
+    .firstOrNull()
 
 
 /**
@@ -45,7 +45,7 @@ fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: Tab
  */
 fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo, { cRowId.flip() }, { limit = 1 }, where)
+): T? = getObjects(tableInfo, orderBy(cRowId.flipped()), limit(1), where)
     .firstOrNull()
 
 
@@ -78,7 +78,7 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
 inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                                   tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo, { random() }, { limit = 1 }, where)
+): T? = getObjects(tableInfo, { random() }, limit(1), where)
     .firstOrNull()
 
 

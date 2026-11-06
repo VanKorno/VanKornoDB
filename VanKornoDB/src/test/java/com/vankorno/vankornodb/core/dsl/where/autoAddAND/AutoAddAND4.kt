@@ -3,11 +3,14 @@ package com.vankorno.vankornodb.core.dsl.where.autoAddAND
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.IN
 import com.vankorno.vankornodb.core.data.DbConstants.NOT_IN
+import com.vankorno.vankornodb.core.data.DbConstants._ID
+import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
+import com.vankorno.vankornodb.misc.data.SharedCol.cInt
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -258,5 +261,62 @@ class AutoAddAND4 {
             listOf("1", "2", "one", "two", "1", "0", "10", "20", "1.5", "2.5"),
             whereObj.args
         )
+    }
+    
+    
+    @Test
+    fun `ID setter`() {
+        val where: WhereDsl.() -> Unit = {
+            ID = 1L
+            ID = 2L
+        }
+        val whereObj = WhereDsl().apply(where)
+
+        assertEquals(
+            listOf(
+                _ID + "=?",
+                "AND " + _ID + "=?"
+            ),
+            whereObj.clauses
+        )
+        assertEquals(listOf("1", "2"), whereObj.args)
+    }
+
+    @Test
+    fun `Name setter`() {
+        val where: WhereDsl.() -> Unit = {
+            Name = "one"
+            Name = "two"
+        }
+        val whereObj = WhereDsl().apply(where)
+
+        assertEquals(
+            listOf(
+                _Name + "=?",
+                "AND " + _Name + "=?"
+            ),
+            whereObj.clauses
+        )
+        assertEquals(listOf("one", "two"), whereObj.args)
+    }
+
+    @Test
+    fun `ID and Name setters mixed with other conditions`() {
+        val where: WhereDsl.() -> Unit = {
+            ID = 1L
+            cInt equal 42
+            Name = "test"
+        }
+        val whereObj = WhereDsl().apply(where)
+
+        assertEquals(
+            listOf(
+                _ID + "=?",
+                "AND " + cInt.name + "=?",
+                "AND " + _Name + "=?"
+            ),
+            whereObj.clauses
+        )
+        assertEquals(listOf("1", "42", "test"), whereObj.args)
     }
 }
