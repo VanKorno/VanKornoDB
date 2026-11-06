@@ -15,6 +15,7 @@ import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateInts
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateLongs
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicatePosition
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicatePositionMult
 import com.vankorno.vankornodb.delete.*
 import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
@@ -690,13 +691,6 @@ abstract class DbHelperInternal(
     
     // ---------------------------------  F I X   D U P L I C A T E S  --------------------------------- \\
     
-    /** A wrapper fun for [SQLiteDatabase.fixDuplicatePosition] */
-    fun fixDuplicatePosition(                                         table: String,
-                                                                      where: WhereDsl.()->Unit = {},
-    ): Int = readWrite(0, "fixDuplicatePosition") { db ->
-        db.fixDuplicatePosition(table, where)
-    }
-    
     /** A wrapper fun for [SQLiteDatabase.fixDuplicateLongs] */
     fun fixDuplicateLongs(                                            table: String,
                                                                      column: LongCol,
@@ -713,6 +707,19 @@ abstract class DbHelperInternal(
         db.fixDuplicateInts(table, column, where)
     }
     
+    /** A wrapper fun for [SQLiteDatabase.fixDuplicatePosition] */
+    fun fixDuplicatePosition(                                         table: String,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Int = readWrite(0, "fixDuplicatePosition") { db ->
+        db.fixDuplicatePosition(table, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.fixDuplicatePosition] */
+    fun fixDuplicatePositionMult(                             vararg tables: String,
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Int = readWrite(0, "fixDuplicatePositionMult") { db ->
+        db.fixDuplicatePositionMult(*tables, where = where)
+    }
     
     
     

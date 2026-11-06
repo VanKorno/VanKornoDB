@@ -17,7 +17,7 @@ fun SQLiteDatabase.fixDuplicatePosition(                              table: Str
 /**
  * Multi-table variant of [fixDuplicatePosition]
  */
-fun SQLiteDatabase.fixDuplicatePositionMult(                         tables: List<String>,
+fun SQLiteDatabase.fixDuplicatePositionMult(                  vararg tables: String,
                                                                       where: WhereDsl.()->Unit = {},
 ) = tables.sumOf { table -> fixDuplicatePosition(table, where) }
 
