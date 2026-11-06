@@ -8,13 +8,13 @@ import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
+import com.vankorno.vankornodb.misc.orderByRowId
 
 /**
  * Retrieves a list of objects mapped from the given columns.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjects(         tableInfo: TableInfoBase<T>,
-                                                          orderBy: OrderDsl.()->Unit = { cRowId() },
+                                                          orderBy: OrderDsl.()->Unit = orderByRowId(),
                                                             extra: ExtraDsl.()->Unit = {},
                                                             where: WhereDsl.()->Unit = {},
 ): List<T> = useCursor(tableInfo.name, orderBy, extra, where) { cursor ->
@@ -35,7 +35,7 @@ fun <T : BaseEntity> SQLiteDatabase.getObjects(         tableInfo: TableInfoBase
  * Retrieves a map of objects from the given table.
  */
 fun <T : BaseEntity> SQLiteDatabase.getObjMap(          tableInfo: TableInfoBase<T>,
-                                                          orderBy: OrderDsl.()->Unit = { cRowId() },
+                                                          orderBy: OrderDsl.()->Unit = orderByRowId(),
                                                             extra: ExtraDsl.()->Unit = {},
                                                             where: WhereDsl.()->Unit = {},
 ): Map<Long, T> = useCursor(tableInfo.name, orderBy, extra, where) { cursor ->

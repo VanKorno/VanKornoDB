@@ -8,6 +8,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_Master
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cType
+import com.vankorno.vankornodb.misc.orderByName
 import java.io.File
 
 fun SQLiteDatabase.tableExists(                                                    table: String,
@@ -21,13 +22,11 @@ fun SQLiteDatabase.tableExists(                                                 
  * Gets the names of all tables in the database that are not "internal"
  */
 fun SQLiteDatabase.getAppTableNames(): List<String> = getColStrings(
-    table = TABLE_Master,
-    column = cName,
-    orderBy = { cName },
+    TABLE_Master, cName, orderByName(),
     where = {
         cType equal DbTypeTable
-        and { cName notLike "sqlite_%" }
-        and { cName.notEqualAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions) }
+        cName notLike "sqlite_%"
+        cName.notEqualAnyOf(TABLE_AndroidMetadata, TABLE_EntityVersions)
     },
 )
 
@@ -37,9 +36,7 @@ fun SQLiteDatabase.getAppTableNames(): List<String> = getColStrings(
  * that is managed by VanKornoDB
  */
 fun SQLiteDatabase.getInternalTableNames(): List<String> = getColStrings(
-    table = TABLE_Master,
-    column = cName,
-    orderBy = { cName },
+    TABLE_Master, cName, orderByName(),
     where = {
         cType equal DbTypeTable
         and {

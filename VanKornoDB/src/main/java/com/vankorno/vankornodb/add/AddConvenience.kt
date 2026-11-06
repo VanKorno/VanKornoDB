@@ -15,17 +15,18 @@ import com.vankorno.vankornodb.get.getNextPositions
  * @param entities Entities to insert.
  * @param setIdAndPosition Returns an entity with the specified ID and position.
  */
-fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo: TableInfoNormal<T>,
+fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(        tableInfo: TableInfoNormal<T>,
                                                                        entities: List<T>,
                                                                setIdAndPosition: (T, Long, Long)->T,
-) {
+): List<List<Long>> {
     val newIDs = getNextIDs(tableInfo.name, entities.size)
     val newPositions = getNextPositions(tableInfo.name, entities.size)
-
+    
     entities.forEachIndexed { idx, entity ->
         val newEntity = setIdAndPosition(entity, newIDs[idx], newPositions[idx])
         addObjWithoutIdCheck(tableInfo, newEntity)
     }
+    return listOf(newIDs, newPositions)
 }
 
 
@@ -40,12 +41,16 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo:
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIdAndPosition(          tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
                                                                setIdAndPosition: (T, Long, Long)->T,
-) {
-    addWithNewIdAndPosition(
-        tableInfo = tableInfo,
-        entities = listOf(entity),
-        setIdAndPosition = setIdAndPosition,
-    )
+): Pair<Long, Long> {
+    val idsPositions = addWithNewIDsAndPositions(tableInfo, listOf(entity), setIdAndPosition)
+    
+    val newIDs = idsPositions.getOrNull(0)
+    val newPositions = idsPositions.getOrNull(1)
+    
+    return  if (newIDs.isNullOrEmpty() || newPositions.isNullOrEmpty())
+                -1L to -1L
+            else
+                newIDs[0] to newPositions[0]
 }
 
 

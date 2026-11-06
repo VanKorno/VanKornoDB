@@ -8,6 +8,7 @@ import com.vankorno.vankornodb.add.addObj
 import com.vankorno.vankornodb.add.addObjWithoutIdCheck
 import com.vankorno.vankornodb.add.addObjects
 import com.vankorno.vankornodb.add.addObjectsWithoutIdCheck
+import com.vankorno.vankornodb.add.addWithNewIDsAndPositions
 import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
@@ -234,22 +235,20 @@ abstract class DbHelperInternal(
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
-    fun <T : CurrEntity> addWithNewIdAndPosition(                     tableInfo: TableInfoNormal<T>,
+    /** A wrapper fun for [SQLiteDatabase.addWithNewIDsAndPositions] */
+    fun <T : CurrEntity> addWithNewIDsAndPositions(                   tableInfo: TableInfoNormal<T>,
                                                                        entities: List<T>,
-                                                                          async: Boolean = false,
                                                                setIdAndPosition: (T, Long, Long)->T,
-    ) = write("addWithNewIdAndPosition", async) { db ->
-        db.addWithNewIdAndPosition(tableInfo, entities, setIdAndPosition)
+    ): List<List<Long>> = readWrite(emptyList(), "addWithNewIDsAndPositions") { db ->
+        db.addWithNewIDsAndPositions(tableInfo, entities, setIdAndPosition)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
     fun <T : CurrEntity> addWithNewIdAndPosition(                     tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
-                                                                          async: Boolean = false,
                                                                setIdAndPosition: (T, Long, Long)->T,
-    ) = write("addWithNewIdAndPosition", async) { db ->
-        db.addWithNewIdAndPosition(tableInfo, listOf(entity), setIdAndPosition)
+    ): Pair<Long, Long> = readWrite(Pair(-1L, -1L), "addWithNewIdAndPosition") { db ->
+        db.addWithNewIdAndPosition(tableInfo, entity, setIdAndPosition)
     }
     
     
@@ -275,55 +274,61 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.getInt] */
     fun getInt(                                                       table: String,
                                                                      column: IntCol,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
     ): Int = read(-1, "getInt") { db ->
-        db.getInt(table, column, extra, where)
+        db.getInt(table, column, orderBy, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getStr] */
     fun getStr(                                                       table: String,
                                                                      column: StrCol,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
     ): String = read("", "getStr") { db ->
-        db.getStr(table, column, extra, where)
+        db.getStr(table, column, orderBy, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBool] */
     fun getBool(                                                      table: String,
                                                                      column: BoolCol,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
     ): Boolean = read(false, "getBool") { db ->
-        db.getBool(table, column, extra, where)
+        db.getBool(table, column, orderBy, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getLong] */
     fun getLong(                                                      table: String,
                                                                      column: LongCol,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
     ): Long = read(-1L, "getLong") { db ->
-        db.getLong(table, column, extra, where)
+        db.getLong(table, column, orderBy, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getFloat] */
     fun getFloat(                                                     table: String,
                                                                      column: FloatCol,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
     ): Float = read(-1F, "getFloat") { db ->
-        db.getFloat(table, column, extra, where)
+        db.getFloat(table, column, orderBy, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getBlob] */
     fun getBlob(                                                      table: String,
                                                                      column: BlobCol,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
     ): ByteArray = read(ByteArray(0), "getBlob") { db ->
-        db.getBlob(table, column, extra, where)
+        db.getBlob(table, column, orderBy, extra, where)
     }
     
     
@@ -335,19 +340,21 @@ abstract class DbHelperInternal(
     
     /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit,
     ): T? = read(null, "getObj") { db ->
-        db.getObj(tableInfo, extra, where)
+        db.getObj(tableInfo, orderBy, extra, where)
     }
     
     /** A wrapper fun for [SQLiteDatabase.getObj] */
     fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
                                                                     default: T,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit,
     ): T = read(default, "getObj") { db ->
-        db.getObj(tableInfo, default, extra, where)
+        db.getObj(tableInfo, default, orderBy, extra, where)
     }
     
     

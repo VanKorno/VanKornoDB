@@ -5,11 +5,10 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 import com.vankorno.vankornodb.misc.eLog
-import com.vankorno.vankornodb.misc.flipped
-import com.vankorno.vankornodb.misc.limit
-import com.vankorno.vankornodb.misc.orderBy
+import com.vankorno.vankornodb.misc.orderByRowId
+import com.vankorno.vankornodb.misc.orderByRowIdFlipped
+import com.vankorno.vankornodb.misc.orderRandomly
 import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
 
 /**
@@ -18,8 +17,7 @@ import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
  */
 fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo, orderBy(cRowId), limit(1), where)
-    .firstOrNull()
+): T? = getObj(tableInfo, orderByRowId(), where = where)
 
 
 /**
@@ -45,8 +43,7 @@ fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: Tab
  */
 fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo, orderBy(cRowId.flipped()), limit(1), where)
-    .firstOrNull()
+): T? = getObj(tableInfo, orderByRowIdFlipped(), where = where)
 
 
 /**
@@ -78,8 +75,7 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
 inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
                                                                   tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getObjects(tableInfo, { random() }, limit(1), where)
-    .firstOrNull()
+): T? = getObj(tableInfo, orderRandomly(), where = where)
 
 
 /**

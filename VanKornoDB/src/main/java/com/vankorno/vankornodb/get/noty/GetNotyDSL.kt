@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.get.noty
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.ExtraDsl
+import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.getBoolean
@@ -14,11 +15,12 @@ fun <R> SQLiteDatabase.getValueNoty(                                  table: Str
                                                                      column: String,
                                                                     default: R,
                                                                     funName: String,
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
                                                              getCursorValue: (Cursor)->R,
 ): R {
-    return getCursorNoty(table, arrayOf(column), where = where,
+    return getCursorNoty(table, arrayOf(column), orderBy, where = where,
         extra = {
             applyDsl(extra)
             limit = 1
