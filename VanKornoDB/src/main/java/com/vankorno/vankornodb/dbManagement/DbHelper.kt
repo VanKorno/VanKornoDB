@@ -83,36 +83,36 @@ abstract class DbHelperInternal(
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                            table: String,
-                                                               defaultValue: T,
+                                                                    default: T,
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->T,
-    ): T = readWrite(defaultValue, "getFromCursor") { db ->
+    ): T = readWrite(default, "getFromCursor") { db ->
         db.useCursor(table, orderBy, extra, where, block)
     }
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                         table: String,
                                                                  columns: Array<out TypedColumn<*>>,
-                                                            defaultValue: T,
+                                                                 default: T,
                                                                  orderBy: OrderDsl.()->Unit = {},
                                                                    extra: ExtraDsl.()->Unit = {},
                                                                    where: WhereDsl.()->Unit = {},
                                                                    block: (Cursor)->T,
-    ): T = readWrite(defaultValue, "getFromCursor") { db ->
+    ): T = readWrite(default, "getFromCursor") { db ->
         db.useCursor(table, columns, orderBy, extra, where, block)
     }
     
     /** A wrapper fun for [SQLiteDatabase.useCursor] */
     fun <T> getFromCursor(                                            table: String,
                                                                      column: TypedColumn<*>,
-                                                               defaultValue: T,
+                                                                    default: T,
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
                                                                       block: (Cursor)->T,
-    ): T = readWrite(defaultValue, "getFromCursor") { db ->
+    ): T = readWrite(default, "getFromCursor") { db ->
         db.useCursor(table, column, orderBy, extra, where, block)
     }
     

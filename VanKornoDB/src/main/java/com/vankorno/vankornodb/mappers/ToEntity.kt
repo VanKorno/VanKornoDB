@@ -146,13 +146,13 @@ internal object EntityMapperUtils {
                                                                        defaultInstance: T,
                                                                                  clazz: KClass<T>,
     ): Int {
-        val defaultValue = clazz.memberProperties
+        val default = clazz.memberProperties
             .firstOrNull { it.name == param.name }
             ?.getter
             ?.call(defaultInstance)
             ?: error("List param must have a default value")
         
-        return (defaultValue as? List<*>)?.size
+        return (default as? List<*>)?.size
             ?: error("Default value is not a list for ${param.name}")
     }
     
@@ -187,13 +187,13 @@ internal object EntityMapperUtils {
     
     
     /**
-     * Returns the value at [index] using [getter], or null if the Cursor value is null.
+     * Returns the value at [idx] using [getter], or null if the Cursor value is null.
      */
-    inline fun <T> Cursor.getNullable(                                             index: Int,
+    inline fun <T> Cursor.getNullable(                                               idx: Int,
                                                                                   getter: (Int)->T,
-    ): T? = if (isNull(index))
+    ): T? = if (isNull(idx))
                 null
             else
-                getter(index)
+                getter(idx)
     
 }

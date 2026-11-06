@@ -50,7 +50,7 @@ abstract class DbReaderWriter(
     /**
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
      */
-    inline fun <T> read(                                          defaultValue: T,
+    inline fun <T> read(                                               default: T,
                                                                        funName: String = "read",
                                                              crossinline block: (SQLiteDatabase)->T,
     ): T {
@@ -62,7 +62,7 @@ abstract class DbReaderWriter(
             // region LOG
                 eLog("$funName() failed. Returning the default value. Details: ${e.message}", e)
             // endregion
-            defaultValue
+            default
         }
     }
     
@@ -108,7 +108,7 @@ abstract class DbReaderWriter(
     /**
      * All-mighty, but with writing overhead.
      */
-    inline fun <T> readWrite(                                    defaultValue: T,
+    inline fun <T> readWrite(                                         default: T,
                                                                       funName: String = "readWrite",
                                                             crossinline block: (SQLiteDatabase)->T,
     ): T {
@@ -120,7 +120,7 @@ abstract class DbReaderWriter(
             // region LOG
                 eLog("$funName() failed. Returning the default value. Details: ${e.message}", e)
             // endregion
-            defaultValue
+            default
         }
     }
     
@@ -134,11 +134,11 @@ abstract class DbReaderWriter(
      * Better reading performance, optimal for reading, but writing can also be done in a less safe way.
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun <T> readSusp(                                     defaultValue: T,
+    suspend fun <T> readSusp(                                          default: T,
                                                                        funName: String = "readSusp",
                                                                          block: (SQLiteDatabase)->T,
     ): T = withContext(Dispatchers.IO) {
-        read(defaultValue, funName, block)
+        read(default, funName, block)
     }
     
     
@@ -168,11 +168,11 @@ abstract class DbReaderWriter(
      * All-mighty, but with writing overhead.
      * Suspending non-blocking version (to be used inside coroutines)
      */
-    suspend fun <T> readWriteSusp(                           defaultValue: T,
+    suspend fun <T> readWriteSusp(                                default: T,
                                                                   funName: String = "readWriteSusp",
                                                                     block: (SQLiteDatabase)->T,
     ): T = withContext(Dispatchers.IO) {
-        readWrite(defaultValue, funName, block)
+        readWrite(default, funName, block)
     }
     
 }
