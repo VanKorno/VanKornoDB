@@ -23,8 +23,8 @@ class AddObjWithoutIdCheckTest {
         val id = 777L
         val rat = TestEntity(id, name, 777)
         
-        val insertedId = dbh.addObjWithoutIdCheck(_TestTable, rat)
-        assertEquals(id, insertedId)
+        val insertedRowId = dbh.addObjWithoutIdCheck(_TestTable, rat)
+        assertEquals(true, insertedRowId > 0L)
         
         val storedId = dbh.getLong(TestTable, cID) { Name = name }
         assertEquals(id, storedId)
@@ -39,11 +39,12 @@ class AddObjWithoutIdCheckTest {
         val rat1 = TestEntity(777, "Splinter", 777)
         val rat2 = TestEntity(778, "Ratatouille", 778)
         
-        val insertedIds = dbh.addObjectsWithoutIdCheck(
+        val insertedRowIds = dbh.addObjectsWithoutIdCheck(
             _TestTable,
             listOf(rat1, rat2),
         )
-        assertEquals(listOf(777L, 778L), insertedIds)
+        assertEquals(2, insertedRowIds.size)
+        assertEquals(true, insertedRowIds.all { it > 0L })
         
         val storedId1 = dbh.getLong(TestTable, cID) { Name = rat1.name }
         val storedId2 = dbh.getLong(TestTable, cID) { Name = rat2.name }

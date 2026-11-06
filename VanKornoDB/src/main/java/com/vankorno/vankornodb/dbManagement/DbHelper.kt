@@ -209,14 +209,14 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.addObj] */
     inline fun <T : CurrEntity> addObj(                               tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
-    ) = readWrite(-1L, "addObj") { db ->
+    ): Long = readWrite(-1L, "addObj") { db ->
         db.addObj(tableInfo, obj)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addObjects] */
     inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
-    ) = readWrite(emptyList(), "addObjects") { db ->
+    ): List<Long> = readWrite(emptyList(), "addObjects") { db ->
         db.addObjects(tableInfo, objects)
     }
     
@@ -224,14 +224,14 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.addObjWithoutIdCheck] */
     inline fun <T : CurrEntity> addObjWithoutIdCheck(                 tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
-    ) = readWrite(-1L, "addObjWithoutIdCheck") { db ->
+    ): Long = readWrite(-1L, "addObjWithoutIdCheck") { db ->
         db.addObjWithoutIdCheck(tableInfo, obj)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addObjectsWithoutIdCheck] */
     inline fun <T : CurrEntity> addObjectsWithoutIdCheck(             tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
-    ) = readWrite(emptyList(), "addObjectsWithoutIdCheck") { db ->
+    ): List<Long> = readWrite(emptyList(), "addObjectsWithoutIdCheck") { db ->
         db.addObjectsWithoutIdCheck(tableInfo, objects)
     }
     
@@ -258,9 +258,8 @@ abstract class DbHelperInternal(
     /** A wrapper fun for [SQLiteDatabase.setObj] */
     fun <T : CurrEntity> setObj(                                      tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
-                                                                          async: Boolean = false,
                                                                           where: WhereDsl.()->Unit,
-    ) = write("setObj", async) { db ->
+    ): Int = readWrite(0, "setObj") { db ->
         db.setObj(tableInfo, obj, where)
     }
     

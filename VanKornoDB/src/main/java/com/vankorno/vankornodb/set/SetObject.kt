@@ -16,7 +16,7 @@ import com.vankorno.vankornodb.misc.wLog
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param obj The entity object with updated data.
  * @param where DSL conditions.
- * @return The number of rows affected.
+ * @return The number of updated rows.
  */
 inline fun <T : CurrEntity> SQLiteDatabase.setObj(                    tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
@@ -28,13 +28,13 @@ inline fun <T : CurrEntity> SQLiteDatabase.setObj(                    tableInfo:
     val whereArgs = whereDsl.args.toTypedArray()
     val table = tableInfo.name
     
-    val affected = update(table, cv, whereClause, whereArgs)
-    if (affected > 1) {
+    val updatedRowCount = update(table, cv, whereClause, whereArgs)
+    if (updatedRowCount > 1) {
         // region LOG
-        wLog("setObj: $affected rows updated in '$table'. You may want to set more specific conditions if you want to update a single row.")
+        wLog("setObj: $updatedRowCount rows updated in '$table'. You may want to set more specific conditions if you want to update a single row.")
         // endregion
     }
-    return affected
+    return updatedRowCount
 }
 
 

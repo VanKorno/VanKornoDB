@@ -35,7 +35,7 @@ import com.vankorno.vankornodb.misc.wLog
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param obj The entity object to insert.
- * @return The ID of the newly inserted row, or -1 if an error occurred.
+ * @return The ROW ID of the newly inserted row, or -1 if an error occurred.
  */
 fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo: TableInfoNormal<T>,
                                                                             obj: T,
@@ -50,9 +50,8 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
         // region LOG
             wLog("addObj() FAILED to insert object: $modified")
         // endregion
-        return -1L
     }
-    return modified.id
+    return rowId
 }
 
 
@@ -61,7 +60,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param obj The entity object to insert.
- * @return The ID of the inserted row, or -1 if an error occurred.
+ * @return The ROW ID of the inserted row, or -1 if an error occurred.
  */
 fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
                                                                       tableInfo: TableInfoNormal<T>,
@@ -78,7 +77,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param objects The entities to insert.
- * @return A list of IDs of the inserted rows, with -1 indicating insertion failures.
+ * @return A list of ROW IDs of the inserted rows, with -1 indicating insertion failures.
  */
 fun <T : NormalEntity> SQLiteDatabase.addObjectsWithoutIdCheck(       tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
@@ -96,7 +95,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObjectsWithoutIdCheck(       tableInfo:
  * 
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param objects The list of entity objects to insert.
- * @return The list of successfully inserted obj IDs.
+ * @return The list of ROW IDs.
  */
 fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
                                                                         objects: List<T>,
@@ -107,7 +106,7 @@ fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo:
         reservedIDs = objects.filter { it.id > 0L }.map { it.id }.toSet()
     ).iterator()
     
-    val addedIDs = mutableListOf<Long>()
+    val rowIDs = mutableListOf<Long>()
     
     for (obj in objects) {
         val modifiedObj = if (obj.id < 1L)
@@ -117,14 +116,14 @@ fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo:
         
         val rowId = addObjWithoutIdCheck(tableInfo, modifiedObj)
         
+        rowIDs.add(rowId)
+        
         if (rowId == -1L)
             // region LOG
                 wLog("addObjects() FAILED to insert object: $modifiedObj")
             // endregion
-        else
-            addedIDs.add(modifiedObj.id)
     }
-    return addedIDs
+    return rowIDs
 }
 
 
