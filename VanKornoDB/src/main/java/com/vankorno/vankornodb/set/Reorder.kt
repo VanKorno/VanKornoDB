@@ -3,13 +3,14 @@ package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.get.getCursor
 import com.vankorno.vankornodb.get.getLastPosition
 import com.vankorno.vankornodb.get.getLong
+import com.vankorno.vankornodb.get.useCursor
 import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
+import com.vankorno.vankornodb.misc.limit
 
 fun SQLiteDatabase.reorder(                                           table: String,
                                                                          id: Long,
@@ -20,13 +21,12 @@ fun SQLiteDatabase.reorder(                                           table: Str
     // region LOG
     dLog("reorder(table = $table, id = $id, moveUpOrBack = $moveUpOrBack, makeFirstOrLast = $makeFirstOrLast")
     // endregion
-    if (makeFirstOrLast) {
-        val successful = reorderToStartEnd(table, id, moveUpOrBack)
-        return successful //\/\/\/\/\/\
-    }
+    if (makeFirstOrLast)
+        return reorderToStartEnd(table, id, moveUpOrBack) //\/\/\/\/\/\
+    
     val position = getLong(table, cPosition) { ID = id }
     
-    getCursor(table, columns(cID, cPosition),
+    useCursor(table, columns(cID, cPosition),
         where = {
             if (moveUpOrBack)
                 cPosition less position
@@ -36,8 +36,8 @@ fun SQLiteDatabase.reorder(                                           table: Str
             and(where)
         },
         orderBy = { cPosition.flipIf(moveUpOrBack) },
-        extra = { limit = 1 }
-    ).use { cursor ->
+        extra = limit(1),
+    ) { cursor ->
         if (!cursor.moveToFirst()) return false //\/\/\/\/\/\
         
         val neighbourID = cursor.getLong(0)
@@ -65,16 +65,11 @@ private fun SQLiteDatabase.reorderToStartEnd(                         table: Str
         setLong(newPosition, table, cPosition) { ID = id }
     }
     else {
-        if (position < 2L) return false
+        if (position < 2L) return false //\/\/\/\/\/\
         
-        set(
-            table,
-            where = {
-                cPosition less position
-                and(where)
-            }
-        ) {
-            cPosition add 1L
+        addToLong(1L, table, cPosition) {
+            cPosition less position
+            and(where)
         }
         setLong(1L, table, cPosition) { ID = id }
     }
