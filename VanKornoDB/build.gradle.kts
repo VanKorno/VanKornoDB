@@ -38,6 +38,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     implementation(libs.kotlin.reflect)
+    
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.runner)
 }
 
 val versionTag = providers.environmentVariable("VERSION").orNull
