@@ -1,6 +1,12 @@
 package com.vankorno.vankornodb.core.dsl.where.noty
 
-import com.vankorno.vankornodb.TestConstants.*
+import com.vankorno.vankornodb.TestConstants.Posts
+import com.vankorno.vankornodb.TestConstants.UserID
+import com.vankorno.vankornodb.TestConstants.Users
+import com.vankorno.vankornodb.core.data.DbConstants._ID
+import com.vankorno.vankornodb.core.data.DbConstants._Name
+import com.vankorno.vankornodb.core.data.DbConstants.comma
+import com.vankorno.vankornodb.core.data.DbConstants.countAll
 import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.misc.columns
 import org.junit.Assert

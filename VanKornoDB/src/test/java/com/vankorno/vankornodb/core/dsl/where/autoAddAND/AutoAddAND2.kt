@@ -1,11 +1,11 @@
 package com.vankorno.vankornodb.core.dsl.where.autoAddAND
 
+import com.vankorno.vankornodb.TestConstants.cFloat
+import com.vankorno.vankornodb.TestConstants.cInt
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
 import com.vankorno.vankornodb.misc.data.SharedCol.cEnabled
-import com.vankorno.vankornodb.misc.data.SharedCol.cFloat
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
-import com.vankorno.vankornodb.misc.data.SharedCol.cInt
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cText

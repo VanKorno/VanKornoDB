@@ -1,12 +1,12 @@
 package com.vankorno.vankornodb.core.dsl.where
 
 import com.vankorno.vankornodb.TestConstants.DirtyTable
-import com.vankorno.vankornodb.TestConstants.SELECT_ALL_FROM
-import com.vankorno.vankornodb.TestConstants.WHERE
-import com.vankorno.vankornodb.TestConstants._Name
+import com.vankorno.vankornodb.TestConstants.cInt
+import com.vankorno.vankornodb.core.data.DbConstants.SELECT_ALL_FROM
+import com.vankorno.vankornodb.core.data.DbConstants.WHERE
+import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
-import com.vankorno.vankornodb.misc.data.SharedCol.cInt
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cText

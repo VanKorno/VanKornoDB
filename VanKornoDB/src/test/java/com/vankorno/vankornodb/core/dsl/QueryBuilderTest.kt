@@ -1,8 +1,9 @@
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.TestConstants.*
-import com.vankorno.vankornodb.core.data.DbConstants.WHERE
-import com.vankorno.vankornodb.core.data.DbConstants._Name
+import com.vankorno.vankornodb.TestConstants.BestName
+import com.vankorno.vankornodb.TestConstants.Bool1
+import com.vankorno.vankornodb.TestConstants.DirtyTable
+import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import org.junit.Assert.assertEquals

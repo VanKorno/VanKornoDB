@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.TestConstants.*
+import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import org.junit.Assert.assertEquals

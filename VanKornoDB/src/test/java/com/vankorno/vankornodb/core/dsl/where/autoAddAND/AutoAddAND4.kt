@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.where.autoAddAND
 
+import com.vankorno.vankornodb.TestConstants.cInt
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.IN
 import com.vankorno.vankornodb.core.data.DbConstants.NOT_IN
@@ -10,7 +11,6 @@ import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
-import com.vankorno.vankornodb.misc.data.SharedCol.cInt
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

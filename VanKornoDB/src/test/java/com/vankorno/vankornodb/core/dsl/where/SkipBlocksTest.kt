@@ -2,6 +2,9 @@ package com.vankorno.vankornodb.core.dsl.where
 
 import com.vankorno.vankornodb.TestConstants.BestName
 import com.vankorno.vankornodb.TestConstants.DirtyTable
+import com.vankorno.vankornodb.TestConstants.cFloat
+import com.vankorno.vankornodb.TestConstants.cInfo
+import com.vankorno.vankornodb.TestConstants.cInt
 import com.vankorno.vankornodb.core.data.DbConstants.SELECT_ALL_FROM
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.core.data.DbConstants._ID
@@ -10,10 +13,7 @@ import com.vankorno.vankornodb.core.dsl.getQuery
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
 import com.vankorno.vankornodb.misc.data.SharedCol.cDescr
 import com.vankorno.vankornodb.misc.data.SharedCol.cEnabled
-import com.vankorno.vankornodb.misc.data.SharedCol.cFloat
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
-import com.vankorno.vankornodb.misc.data.SharedCol.cInfo
-import com.vankorno.vankornodb.misc.data.SharedCol.cInt
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 import com.vankorno.vankornodb.misc.data.SharedCol.cText
