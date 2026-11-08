@@ -67,18 +67,14 @@ getCursor() - a function that's often used by other functions under the hood. It
 ```kotlin
 db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals value 'userName' 
 
-db.getCursor(
-    table = SomeTable,
-    columns = columns(Name, Position),
-    where = {
-        ID notEqual 1
-        and { Order equal 1 } // condition clause and value in one place
-        and { Volume greater 1.1F }
-        or  { Time less 1L }
-    },
-    orderBy = { orderByPosition() },
-    extra = { limit = 10 }
-)
+db.getCursor(SomeTable, columns(Name, Position), orderByPosition(), limit(10) {
+    // Conditions (where)
+    ID notEqual 1
+    Order equal 1 // condition clause and value in one place
+    Volume greater 1.1F
+    or { Time less 1L }
+}
+
 ```
 
 getObj() - gets a whole db table row as an object of the entity data class
@@ -116,11 +112,11 @@ db.getCursor(
             }
         ) greater 10
         
-        and { ID notEqual 3 }
+        ID notEqual 3
         
-        andGroup {  // Nested conditions
+        and {  // Nested conditions
             ID notEqual 4
-            orGroup {
+            or {
                 ID notEqual 5
                 if (someBool) // Custom logic inside
                     ID less someInt
