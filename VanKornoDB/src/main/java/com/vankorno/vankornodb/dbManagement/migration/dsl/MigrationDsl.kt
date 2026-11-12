@@ -16,7 +16,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 /**
  * Encapsulates a column modification rule for a milestone migration step.
  */
-class ColumnModification(val fieldName: String, val block: TransformColDslInternal.FieldOverride.()->Unit)
+class ColModification(val colName: String, val block: TransformColDslInternal.ColOverride.()->Unit)
 
 
 /**
@@ -29,12 +29,12 @@ internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: In
     val defBuilder = MigrationDsl()
     defBuilder.block()
     
-    val latestVersionKlassAbsent = !defBuilder.versionedSpecs.containsKey(latestVersion)
-    if (latestVersionKlassAbsent)
-        defBuilder.versionedSpecs[latestVersion] = latestSchemaBundle
+    val latestVersionAbsent = !defBuilder.versionedSchemaBundles.containsKey(latestVersion)
+    if (latestVersionAbsent)
+        defBuilder.versionedSchemaBundles[latestVersion] = latestSchemaBundle
     
     return MigrationBundle(
-        versionedSchemaBundles = defBuilder.versionedSpecs,
+        versionedSchemaBundles = defBuilder.versionedSchemaBundles,
         renameHistory = defBuilder.renameHistory,
         milestones = defBuilder.milestones
     )
@@ -49,7 +49,7 @@ internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: In
  * require explicit milestone steps via [VersionBuilder.milestone].
  */
 abstract class MigrationDslInternal {
-    val versionedSpecs = mutableMapOf<Int, NormalSchemaBundle<out NormalEntity>>()
+    val versionedSchemaBundles = mutableMapOf<Int, NormalSchemaBundle<out NormalEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
@@ -68,7 +68,7 @@ abstract class MigrationDslInternal {
         verBuilder.block()
         
         // Class
-        versionedSpecs[version] = schemaBundle
+        versionedSchemaBundles[version] = schemaBundle
         
         // Renames
         for (record in verBuilder.pendingRenames) {
@@ -125,12 +125,12 @@ abstract class MigrationDslInternal {
         /**
          * Creates a column modification rule by column name for use in a milestone step.
          */
-        infix fun String.modify(block: TransformColDslInternal.FieldOverride.()->Unit): ColumnModification = ColumnModification(this, block)
+        infix fun String.modify(block: TransformColDslInternal.ColOverride.()->Unit): ColModification = ColModification(this, block)
         
         /**
          * Creates a column modification rule by [TypedColumn] for use in a milestone step.
          */
-        infix fun TypedColumn<*>.modify(block: TransformColDslInternal.FieldOverride.()->Unit): ColumnModification = ColumnModification(this.name, block)
+        infix fun TypedColumn<*>.modify(block: TransformColDslInternal.ColOverride.()->Unit): ColModification = ColModification(this.name, block)
         
         
         /**
@@ -143,11 +143,11 @@ abstract class MigrationDslInternal {
          * @param processFinalObj Optional post-processing lambda to transform the entity after column values are mapped.
          */
         fun milestone(
-               vararg modifications: ColumnModification,
+               vararg modifications: ColModification,
                     processFinalObj: ((oldObj: NormalEntity, newObj: NormalEntity)->NormalEntity)? = null,
         ) {
             val overrideBlock: TransformColDsl.() -> Unit = {
-                modifications.forEach { modify(it.fieldName, it.block) }
+                modifications.forEach { modify(it.colName, it.block) }
             }
             milestone = MilestoneLambdas(
                 transformColVal = overrideBlock,

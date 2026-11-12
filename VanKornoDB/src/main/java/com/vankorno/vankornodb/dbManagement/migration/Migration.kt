@@ -114,14 +114,14 @@ open class MigrationUtils {
     internal fun convertEntity(                       oldObject: NormalEntity,
                                                        newClass: KClass<out NormalEntity>,
                                                  renameSnapshot: Map<String, String> = emptyMap(),
-                                                 overrideColVal: (TransformColDsl.()->Unit)? = null,
+                                                transformColVal: (TransformColDsl.()->Unit)? = null,
     ): NormalEntity {
         val fromProps = oldObject::class.memberProperties.associateBy { it.name }
         
         val constructor = newClass.primaryConstructor
             ?: error("Target class ${newClass.simpleName} must have a primary constructor")
         
-        val dsl = TransformColDsl().apply { overrideColVal?.invoke(this) }
+        val dsl = TransformColDsl().apply { transformColVal?.invoke(this) }
         
         val args = constructor.parameters.associateWith { param ->
             val toName = param.name ?: error("Constructor parameter must have a name")

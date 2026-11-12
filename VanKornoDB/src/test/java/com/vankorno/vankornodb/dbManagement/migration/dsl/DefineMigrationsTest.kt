@@ -116,7 +116,7 @@ class DefineMigrationsTest {
     
     @Test
     fun `transform returns original if no function is set`() {
-        val override = TransformColDslInternal.FieldOverride()
+        val override = TransformColDslInternal.ColOverride()
         val result = override.apply(123)
         assertEquals(123, result)
     }
@@ -125,7 +125,7 @@ class DefineMigrationsTest {
     fun `returns original for unknown input types`() {
         data class Unknown(val x: Int)
         
-        val override = TransformColDslInternal.FieldOverride()
+        val override = TransformColDslInternal.ColOverride()
         val result = override.apply(Unknown(1))
         assertEquals(Unknown(1), result)
     }

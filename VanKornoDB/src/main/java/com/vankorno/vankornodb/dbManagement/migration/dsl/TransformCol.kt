@@ -8,32 +8,32 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
  * or when custom transformation logic is required between versions.
  */
 open class TransformColDslInternal {
-    private val overrides = mutableMapOf<String, FieldOverride>()
+    private val overrides = mutableMapOf<String, ColOverride>()
     
     /**
      * Configures value transformation rules for the specified field.
      *
-     * @param fieldName The name of the column or property to transform.
+     * @param colName The name of the column or property to transform.
      * @param block Configuration block setting type-specific mapping lambdas or a fallback.
      */
-    fun modify(                                                   fieldName: String,
-                                                                      block: FieldOverride.()->Unit,
+    fun modify(                                                       colName: String,
+                                                                        block: ColOverride.()->Unit,
     ) {
-        val override = FieldOverride()
+        val override = ColOverride()
         block.invoke(override)
-        overrides[fieldName] = override
+        overrides[colName] = override
     }
     
     /**
-     * Returns the [FieldOverride] registered for the given field, or null if none exists.
+     * Returns the [ColOverride] registered for the given field, or null if none exists.
      */
-    fun getOverride(fieldName: String): FieldOverride? = overrides[fieldName]
+    fun getOverride(colName: String): ColOverride? = overrides[colName]
     
     
     /**
      * Defines type-specific transformation lambdas and fallback values for a single field during migration.
      */
-    class FieldOverride {
+    class ColOverride {
         /** Fallback supplier invoked when the source value is null. */
         var fallback: (() -> Any?)? = null // default value when missing
         /** Transform lambda called when the source value is an [Int]. */
