@@ -2,6 +2,7 @@ package com.vankorno.sandbox.theme_main
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -12,13 +13,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox._navig.ScrHome
 import com.vankorno.sandbox._navig.Screen
-import com.vankorno.vankornocompose.values.MOD_MaxSize
 import com.vankorno.vankornohelpers.values.LibLambdas.clearFocus
 import com.vankorno.vankornohelpers.values.LibLambdas.hideKeyboard
 import com.vankorno.vankornohelpers.values.LibLambdas.showKeyboard
@@ -35,7 +36,7 @@ fun LibMainScaffold(                              statusBarColor: Color = LibCol
         typography = typography
     ) {
         Surface(
-            modifier = MOD_MaxSize
+            modifier = Modifier.fillMaxSize()
                 .windowInsetsPadding(
                     WindowInsets.systemBars.add(WindowInsets.ime)
                 ),

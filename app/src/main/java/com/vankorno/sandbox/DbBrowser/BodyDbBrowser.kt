@@ -4,29 +4,29 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox._navig.Navigator.goToScreen
 import com.vankorno.sandbox._navig.ScrTable
 import com.vankorno.sandbox.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.composables.Spa_______________cer
-import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.composables.barTop.LibTopBarIconBtn
 import com.vankorno.vankornocompose.db.LibDbVals.TTTMisc
 import com.vankorno.vankornocompose.navig.Navig
-import com.vankorno.vankornocompose.sp1
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LibIcon
-import com.vankorno.vankornocompose.values.MOD_W90
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 
 
@@ -61,7 +61,7 @@ fun BodyDbBrowser() {
     DbInfoSection()
     
     
-    Spa_______________cerEndScr()
+    Spa_______________cer(150)
 }
 
 
@@ -73,7 +73,7 @@ private fun TableBtn(                                                       tabl
     val btnFree = isInternal || table == TTTMisc
     
     Row(
-        MOD_W90
+        Modifier.fillMaxWidth(0.9f)
             .padding(vertical = 3.dp)
             .background(color, RoundedCornerShape(10.dp))
             .clickable(
@@ -97,7 +97,7 @@ private fun TableBtn(                                                       tabl
         Text(
             text = table,
             color = LibColor.WhiteText.color,
-            fontSize = 16.sp1(),
+            fontSize = 16.sp,
             maxLines = 3,
         )
         if (!btnFree)
@@ -121,7 +121,7 @@ private fun TableListTitle(                                                     
     Text(
         text = text,
         color = LibColor.WhiteText.color,
-        fontSize = 24.sp1(),
+        fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         maxLines = 2,
         textAlign = TextAlign.Center,

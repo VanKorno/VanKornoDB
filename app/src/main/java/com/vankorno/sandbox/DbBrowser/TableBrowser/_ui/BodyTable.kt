@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -20,13 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vankorno.sandbox.MainActivity.Companion.vm
+import com.vankorno.sandbox._ui.composables.Spa_______________cer
 import com.vankorno.sandbox.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.ScrType
-import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LocalScrType
-import com.vankorno.vankornocompose.values.MOD_MaxSize
-import com.vankorno.vankornocompose.values.MOD_MaxW
 import kotlin.math.ceil
 
 
@@ -38,7 +37,7 @@ fun BodyTable(                                                          columns:
     
     if (columns.isEmpty()) {
         Text("This table is as empty as a head of a russian fascist", color = Color.White)
-        Spa_______________cerEndScr()
+        Spa_______________cer(150)
         return
     }
     
@@ -71,9 +70,9 @@ fun BodyTable(                                                          columns:
         val pageColumns = columns.subList(colStart, colEnd)
         val pageTypes = columnTypes.subList(colStart, colEnd)
         
-        Column(MOD_MaxSize) {
+        Column(Modifier.fillMaxSize()) {
             Row(
-                MOD_MaxW
+                Modifier.fillMaxWidth()
                     .background(LibAccentColor.Blue.color)
             ) {
                 pageTypes.forEach { type ->
@@ -92,7 +91,7 @@ fun BodyTable(                                                          columns:
                 }
             }
             Row(
-                MOD_MaxW
+                Modifier.fillMaxWidth()
                     .background(LibAccentColor.Yellow.color)
             ) {
                 pageColumns.forEach { col ->
@@ -114,7 +113,7 @@ fun BodyTable(                                                          columns:
             
             
             Column(
-                modifier = MOD_MaxSize
+                modifier = Modifier.fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
                 rows.forEach { row ->
@@ -134,7 +133,7 @@ fun BodyTable(                                                          columns:
                         }
                     }
                 }
-                Spa_______________cerEndScr()
+                Spa_______________cer(150)
             }
         }
     }
