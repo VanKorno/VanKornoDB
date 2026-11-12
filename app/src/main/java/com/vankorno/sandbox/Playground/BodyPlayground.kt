@@ -3,11 +3,11 @@ package com.vankorno.sandbox.Playground
 import androidx.compose.runtime.Composable
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._navig.Navigator.goToScreen
 import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._ui.LargeBtn
-import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
-import com.vankorno.vankornocompose.navig.Navig
-import com.vankorno.vankornocompose.theme_main.LibAccentColor
+import com.vankorno.sandbox._ui.composables.Spa_______________cer
+import com.vankorno.sandbox.theme_main.LibAccentColor
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 
@@ -23,7 +23,7 @@ fun BodyPlayground() {
             (TestTable + it) using _Test
         }
         dbh.createTables(*tables)
-        Navig.goTo(ScrDbBrowser)
+        goToScreen(ScrDbBrowser)
     }
     
     LargeBtn(
@@ -32,11 +32,11 @@ fun BodyPlayground() {
     ) {
         val appTables = dbh.getAppTableNames()
         dbh.deleteTables(appTables)
-        Navig.goTo(ScrDbBrowser)
+        goToScreen(ScrDbBrowser)
     }
     
     
-    Spa_______________cerEndScr()
+    Spa_______________cer(100)
 }
 
 

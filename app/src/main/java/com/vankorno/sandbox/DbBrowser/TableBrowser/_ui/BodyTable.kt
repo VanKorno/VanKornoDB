@@ -20,14 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vankorno.sandbox.MainActivity.Companion.vm
+import com.vankorno.sandbox.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.ScrType
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
-import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LocalScrType
 import com.vankorno.vankornocompose.values.MOD_MaxSize
 import com.vankorno.vankornocompose.values.MOD_MaxW
-import com.vankorno.vankornocompose.vm.state
 import kotlin.math.ceil
 
 

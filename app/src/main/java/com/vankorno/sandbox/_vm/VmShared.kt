@@ -1,8 +1,6 @@
 package com.vankorno.sandbox._vm
 
 import androidx.lifecycle.ViewModel
-import com.vankorno.sandbox._menus.popup._data.PopupOFF
-import com.vankorno.sandbox._menus.popup._data.PopupState
 import com.vankorno.sandbox._navig.ScrHome
 import com.vankorno.sandbox._navig.Screen
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
@@ -14,7 +12,6 @@ class VmShared : ViewModel() {
     
     val currScreen = VmVal<Screen>(ScrHome)
     val previousScreen = VmVal<Screen>(ScrHome)
-    val popupState = VmVal<PopupState>(PopupOFF)
     
     var internalTables = VmVal(emptyList<String>())
     var appTables = VmVal(emptyList<String>())

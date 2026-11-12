@@ -4,13 +4,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.vankorno.sandbox.AppStart._data.LibLayoutModifiers
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornocompose.composables.barBot.BackBtn
 import com.vankorno.vankornocompose.composables.barBot.LibBotBar
 import com.vankorno.vankornocompose.composables.barTop.LibTopBarShadow
 import com.vankorno.vankornocompose.composables.body.LibBody
-import com.vankorno.vankornocompose.values.LibLayoutModifiers
-import com.vankorno.vankornocompose.vm.state
 
 
 @Composable

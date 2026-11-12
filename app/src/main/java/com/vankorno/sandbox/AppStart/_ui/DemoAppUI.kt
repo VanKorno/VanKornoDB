@@ -1,78 +1,59 @@
 package com.vankorno.sandbox.AppStart._ui
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.vankorno.sandbox.AppStart._data.LibLayoutModifiers
 import com.vankorno.sandbox.DbBrowser.LayoutsDbBrowser
 import com.vankorno.sandbox.DbBrowser.TableBrowser._ui.LayoutsTable
 import com.vankorno.sandbox.H_O_M_E.LayoutsHome
-import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox.Playground.LayoutsPlayground
-import com.vankorno.sandbox._menus.popup.PopupMaker
 import com.vankorno.sandbox._navig.ScrDbBrowser
+import com.vankorno.sandbox._navig.ScrHome
 import com.vankorno.sandbox._navig.ScrPlayground
 import com.vankorno.sandbox._navig.ScrTable
-import com.vankorno.vankornocompose.navig.PopupOFF
-import com.vankorno.vankornocompose.navig.ScrHome
-import com.vankorno.vankornocompose.values.LibLayoutModifiers
-import com.vankorno.vankornocompose.values.LocalScreen
-import com.vankorno.vankornocompose.values.MOD_MaxH
-import com.vankorno.vankornocompose.values.MOD_MaxSize
-import com.vankorno.vankornocompose.values.MOD_MaxW
+import com.vankorno.sandbox.theme_main.LocalScreen
 
 
 @Composable
 fun DemoAppUI() {
-    ConstraintLayout(MOD_MaxSize) {
-        val (barTop, topShadow, body, barBottom, popup) = createRefs()
+    ConstraintLayout(Modifier.fillMaxSize()) {
+        val (barTop, topShadow, body, barBottom) = createRefs()
         
-        val popupState by vm.popupState.state()
-        
-        val modifTop = MOD_MaxW
+        val modifTop = Modifier.fillMaxWidth()
             .constrainAs(barTop) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
         
-        val modifBody = MOD_MaxH
+        val modifBody = Modifier.fillMaxHeight()
             .constrainAs(body) {
                 top.linkTo(barTop.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
         
-        val modifTopShadow = MOD_MaxW
+        val modifTopShadow = Modifier.fillMaxWidth()
             .constrainAs(topShadow) {
                 top.linkTo(barTop.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
         
-        val modifBot = MOD_MaxW
+        val modifBot = Modifier.fillMaxWidth()
             .constrainAs(barBottom) {
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
         
-        
-        val modifPopup = MOD_MaxSize
-            .constrainAs(popup) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        
-        val modifiers = LibLayoutModifiers(modifBody, modifTop, modifTopShadow, modifBot, modifPopup)
+        val modifiers = LibLayoutModifiers(modifBody, modifTop, modifTopShadow, modifBot)
         
         ScrNavig(modifiers)
-        
-        AnimatedVisibility(popupState != PopupOFF) {
-            PopupMaker(popupState, modifPopup)
-        }
     }
 }
 

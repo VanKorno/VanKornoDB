@@ -1,37 +1,134 @@
 package com.vankorno.sandbox
 
-import androidx.compose.runtime.Composable
+import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.vankorno.sandbox.AppStart._ui.DemoAppUI
 import com.vankorno.sandbox.AppStart.logic.launchApp
+import com.vankorno.sandbox._navig.BackNav.goBack
 import com.vankorno.sandbox._vm.VmShared
-import com.vankorno.vankornocompose.LibMainActivity
-import com.vankorno.vankornocompose.navig.Navig.updateScreen
-import com.vankorno.vankornohelpers.values.LibGlobals.UserTester
-import com.vankorno.vankornohelpers.values.LibGlobals.appUser
+import com.vankorno.sandbox.theme_main.LibColor
+import com.vankorno.sandbox.theme_main.LibMainScaffold
+import com.vankorno.vankornocompose.db.LibDbVals.TTTMisc
+import com.vankorno.vankornocompose.values.LibLambdas2.exitApp
+import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornohelpers.LibMisc
+import com.vankorno.vankornohelpers.LibUI
+import com.vankorno.vankornohelpers.values.LibGlobals.actExists
+import com.vankorno.vankornohelpers.values.LibGlobals.actPaused
+import com.vankorno.vankornohelpers.values.LibGlobals.actRunning
+import com.vankorno.vankornohelpers.values.LibGlobals.appStarted
+import com.vankorno.vankornohelpers.values.LibGlobals.configChangeJustHappened
+import com.vankorno.vankornohelpers.values.LibLambdas.longToast
+import com.vankorno.vankornohelpers.values.LibLambdas.minimizeApp
+import com.vankorno.vankornohelpers.values.LibLambdas.shortToast
 
-class MainActivity : LibMainActivity() {
+class MainActivity : ComponentActivity() {
     companion object {
         lateinit var vm: VmShared
     }
     
-    @Composable
-    override fun AppUI() { DemoAppUI() }
-    
-    override fun beforeStartup() {
+    override fun onCreate(                                            savedInstanceState: Bundle?
+    ) {
+        super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        actExists = true
+        
+        enableEdgeToEdge()
+        
+        LibUI().setWindowBackgroundColor(this, LibColor.Background.argb)
+        
         vm = ViewModelProvider(this)[VmShared::class.java]
-        appUser = UserTester
+        
+        initLibLambdas()
+        
+        startup(savedInstanceState)
+        
+        setBackBtn()
+        
+        setContent {
+            LibMainScaffold {
+                DemoAppUI()
+            }
+        }
     }
     
-    override fun startupLaunch() { launchApp() }
+    private fun startup(                                              savedInstanceState: Bundle?
+    ) {
+        launchApp()
+        when {
+            savedInstanceState == null -> {
+                val miscTableExists = dbh.tableExists(TTTMisc)
+                
+                if (!miscTableExists) {
+                    startupFirstLaunch()
+                } else {
+                    startupNotFirstLaunch()
+                }
+                startupLaunch()
+            }
+            configChangeJustHappened -> {
+                startupConfigChange()
+            }
+            else -> {
+                startupAfterProcessDeath()
+            }
+        }
+        configChangeJustHappened = false // Just in case
+        appStarted = true
+    }
+    
+    fun startupFirstLaunch() {}
+    fun startupNotFirstLaunch() {}
+    fun startupLaunch() {}
+    fun startupConfigChange() {}
+    
+    private fun startupAfterProcessDeath() {
+        startupNotFirstLaunch()
+        startupLaunch()
+    }
     
     
-    override fun doEveryMinute() { updateScreen.async() }
+    private fun initLibLambdas() {
+        minimizeApp = { finishAffinity() }
+        exitApp = { finishAndRemoveTask() }
+        
+        longToast = { LibMisc().makeToast(this, it, Toast.LENGTH_LONG) }
+        shortToast = { LibMisc().makeToast(this, it, Toast.LENGTH_SHORT) }
+    }
+    
+    
+    private fun setBackBtn() {
+        onBackPressedDispatcher.addCallback(this) { goBack() }
+    }
     
     
     
     
-    
-    
+    override fun onPause() {
+        super.onPause()
+        actRunning = false
+        actPaused = true
+    }
+    override fun onStop() {
+        super.onStop()
+        actRunning = false
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        actExists = false
+        configChangeJustHappened = isChangingConfigurations
+    }
+    override fun onResume() {
+        super.onResume()
+        actRunning = true
+        actPaused = false
+    }
     
 }
