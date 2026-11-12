@@ -1,37 +1,32 @@
 package com.vankorno.sandbox
 
+import android.app.Application
 import com.vankorno.sandbox._entities.DbName
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities.testEntity._Test
-import com.vankorno.sandbox._navig.BackNav
-import com.vankorno.sandbox._navig.Navigator
-import com.vankorno.sandbox._navig.ScreenUpdater
-import com.vankorno.vankornocompose.LibApp
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornohelpers.values.LibGlobals.androidTestsRun
 
-class App : LibApp( // Don't mind this. Just using my lib that has nothing to do with this project
-    dbName = DbName,
-    navigator = Navigator,
-    backNavigator = BackNav,
-    screenUpdater = ScreenUpdater,
-) {
+class App : Application() {
     companion object {
         var dbFileNameFromDb = "" // useless shit for the demo
-        
-        var androidTestRun = false
     }
     
-    override fun dbInit(                                                    actualDbName: String
-    ) {
+    override fun onCreate() {
+        super.onCreate()
+        dbInit()
+    }
+    
+    fun dbInit() {
         dbh = DbHelper( // Create the DB for the whole app to use if you want
             context = this,
-            dbName = actualDbName, // Or whatever you're getting your db filename from...
+            dbName = if (androidTestsRun) ":memory:" else DbName,
             dbVersion = DbVersion,
             entityMeta = EntityMeta.entries,
             createExclusiveTables = true,
@@ -46,5 +41,8 @@ class App : LibApp( // Don't mind this. Just using my lib that has nothing to do
         )
     }
     
-    
+    override fun onTerminate() {
+        dbh.closeDb()
+        super.onTerminate()
+    }
 }

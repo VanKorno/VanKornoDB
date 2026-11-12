@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vankorno.sandbox.MainActivity.Companion.vm
+import com.vankorno.sandbox._navig.Navigator.goToScreen
 import com.vankorno.sandbox._navig.ScrTable
 import com.vankorno.vankornocompose.composables.Spa_______________cer
 import com.vankorno.vankornocompose.composables.Spa_______________cerEndScr
@@ -26,7 +27,6 @@ import com.vankorno.vankornocompose.theme_main.LibAccentColor
 import com.vankorno.vankornocompose.theme_main.LibColor
 import com.vankorno.vankornocompose.values.LibIcon
 import com.vankorno.vankornocompose.values.MOD_W90
-import com.vankorno.vankornocompose.vm.state
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 
 
@@ -79,7 +79,7 @@ private fun TableBtn(                                                       tabl
             .clickable(
                 onClick = {
                     vm.currTable.value = table
-                    Navig.goTo.async(ScrTable)
+                    goToScreen(ScrTable)
                 }
             )
             .padding(vertical = 15.dp, horizontal = 10.dp)

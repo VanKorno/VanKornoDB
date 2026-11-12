@@ -1,21 +1,39 @@
 package com.vankorno.sandbox._navig
 
 import com.vankorno.sandbox.MainActivity.Companion.vm
-import com.vankorno.vankornocompose.navig.BaseNavigator
-import com.vankorno.vankornocompose.navig.Screen
-import com.vankorno.vankornocompose.values.LibGlobals2.libVm
-import com.vankorno.vankornocompose.vm.reset
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornohelpers.values.LibGlobals.navigating
+import com.vankorno.vankornohelpers.values.LibLambdas.hideKeyboard
 
-object Navigator : BaseNavigator() {
+object Navigator {
     
-    override fun runBeforeGoing(                                          previousScreen: Screen,
+    fun goToScreen(                                                   targetScreen: Screen,
+                                                                  autoHideKeyboard: Boolean = true,
+    ) {
+        navigating = true
+        
+        if (autoHideKeyboard)
+            hideKeyboard()
+        
+        val previousScreen = vm.currScreen.value
+        vm.previousScreen.value = previousScreen
+        
+        runBeforeGoing(previousScreen, targetScreen)
+        
+        vm.currScreen.value = targetScreen
+        
+        runAfterGoing(previousScreen, targetScreen)
+        
+        navigating = false
+    }
+    
+    fun onGoToStart() {
+        goToScreen(ScrHome)
+    }
+    
+    fun runBeforeGoing(                                                   previousScreen: Screen,
                                                                             targetScreen: Screen,
     ) {
-        /*when (previousScreen) {
-            
-            else -> {}
-        }*/
         when (targetScreen) {
             ScrDbBrowser -> {
                 vm.internalTables.value = dbh.getInternalTableNames()
@@ -24,13 +42,11 @@ object Navigator : BaseNavigator() {
             ScrTable -> {
                 vm.setRawTableData(dbh.getRawTableStr(vm.currTable.value))
             }
-            
             else -> {}
         }
     }
     
-    
-    override fun runAfterGoing(                                           previousScreen: Screen,
+    fun runAfterGoing(                                                    previousScreen: Screen,
                                                                             targetScreen: Screen,
     ) {
         when (previousScreen) {
@@ -38,27 +54,10 @@ object Navigator : BaseNavigator() {
                 vm.internalTables.reset()
                 vm.appTables.reset()
             }
-            ScrTable -> { vm.clearRawTableData() }
+            ScrTable -> {
+                vm.clearRawTableData()
+            }
             else -> {}
         }
-        
-        /*when (targetScreen) {
-            
-            else -> {}
-        }*/
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
