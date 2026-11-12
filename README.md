@@ -220,6 +220,8 @@ fun migrationsTaskoid() = defineMigrations(
 Normal migrations get skipped, their differences are handled automatically. There's no need to migrate through each of them. The system is smarter: calculates the differences based on the data you keep, then migrates to the latest class it can.
 You define milestones when you want to make the migration non-skippable, it'll become a step in the migration chain, at which you can run more advanced data transformations using the DSL for popular actions or provide your own lambda to modify data the way you want.
 
+Simple type conversions between numeric primitives and Boolean (Int, Long, Float, Double, Boolean) are handled automatically between entity versions without requiring migration DSL configuration. Conversions involving String, ByteArray, or collection element types are not performed automatically and require explicit milestone transformations; otherwise, they fall back to the parameter's default constructor value.
+
 
 ## Lists
 As already stated, a unique feature of VanKornoDB is how it handles lists of an entity data class - it expands the elements to individual columns which makes look-up, sorting/filtering operations extremely efficient.
