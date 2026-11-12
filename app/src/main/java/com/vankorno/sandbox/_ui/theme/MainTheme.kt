@@ -1,4 +1,4 @@
-package com.vankorno.sandbox.theme_main
+package com.vankorno.sandbox._ui.theme
 
 import android.app.Activity
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
 @Composable
-fun LibMainTheme(                                              statusBarColor: Color,
+fun MainTheme(                                              statusBarColor: Color,
                                                                    typography: Typography,
                                                                       content: @Composable ()->Unit,
 ) {

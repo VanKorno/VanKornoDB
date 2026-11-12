@@ -4,16 +4,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.vankorno.sandbox.AppStart._data.LibLayoutModifiers
+import com.vankorno.sandbox.AppStart._data.LayoutModifiers
 import com.vankorno.sandbox.MainActivity.Companion.vm
-import com.vankorno.vankornocompose.composables.barBot.BackBtn
-import com.vankorno.vankornocompose.composables.barBot.LibBotBar
-import com.vankorno.vankornocompose.composables.barTop.LibTopBarShadow
-import com.vankorno.vankornocompose.composables.body.LibBody
+import com.vankorno.sandbox._ui.composables.Body
+import com.vankorno.sandbox._ui.composables.BotBar
+import com.vankorno.sandbox._ui.composables.TopBarShadow
 
 
 @Composable
-fun LayoutsTable(                                                      modifiers: LibLayoutModifiers
+fun LayoutsTable(                                                      modifiers: LayoutModifiers
 ) {
     val columns by vm.rawColumns.state()
     val rows by vm.rawRows.state()
@@ -21,21 +20,20 @@ fun LayoutsTable(                                                      modifiers
     val modifBody = modifiers.body
                         .fillMaxWidth()
     
-    LibBody(modifBody) {
+    Body(modifBody) {
         BodyTable(columns, rows)
     }
-    LibTopBarShadow(modifiers.topShadow)
+    TopBarShadow(modifiers.topShadow)
     
     TopTable(modifiers.top)
     
-    LibBotBar(modifiers.bottom) {
+    BotBar(modifiers.bottom) {
         BottomTable()
     }
 }
 
 @Composable
 fun BottomTable() {
-    BackBtn()
 }
 
 @Composable

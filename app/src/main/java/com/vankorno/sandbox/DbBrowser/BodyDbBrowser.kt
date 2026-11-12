@@ -17,16 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vankorno.sandbox.DbBrowser._ui.TopBarIconBtn
 import com.vankorno.sandbox.MainActivity.Companion.vm
+import com.vankorno.sandbox.R
 import com.vankorno.sandbox._navig.Navigator.goToScreen
 import com.vankorno.sandbox._navig.ScrTable
-import com.vankorno.sandbox.theme_main.LibAccentColor
-import com.vankorno.vankornocompose.composables.Spa_______________cer
-import com.vankorno.vankornocompose.composables.barTop.LibTopBarIconBtn
-import com.vankorno.vankornocompose.db.LibDbVals.TTTMisc
-import com.vankorno.vankornocompose.navig.Navig
-import com.vankorno.vankornocompose.theme_main.LibColor
-import com.vankorno.vankornocompose.values.LibIcon
+import com.vankorno.sandbox._navig.ScreenUpdater.updateScreen
+import com.vankorno.sandbox._ui.composables.Spa_______________cer
+import com.vankorno.sandbox._ui.theme.AccentColor
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 
 
@@ -42,7 +40,7 @@ fun BodyDbBrowser() {
     Spa_______________cer(lessSpace)
     
     internalTables.forEach { table ->
-        TableBtn(table, LibAccentColor.LightGreen.color, true)
+        TableBtn(table, AccentColor.LightGreen.color, true)
     }
     Spa_______________cer(moreSpace)
     
@@ -52,7 +50,7 @@ fun BodyDbBrowser() {
     Spa_______________cer(lessSpace)
     
     appTables.forEach { table ->
-        TableBtn(table, LibAccentColor.LightBlue.color)
+        TableBtn(table, AccentColor.LightBlue.color)
     }
     
     
@@ -70,7 +68,7 @@ private fun TableBtn(                                                       tabl
                                                                             color: Color,
                                                                        isInternal: Boolean = false,
 ) {
-    val btnFree = isInternal || table == TTTMisc
+    val btnFree = isInternal
     
     Row(
         Modifier.fillMaxWidth(0.9f)
@@ -96,7 +94,7 @@ private fun TableBtn(                                                       tabl
         
         Text(
             text = table,
-            color = LibColor.WhiteText.color,
+            color = Color.White,
             fontSize = 16.sp,
             maxLines = 3,
         )
@@ -108,9 +106,9 @@ private fun TableBtn(                                                       tabl
 @Composable
 fun DeleteBtn(                                                                     table: String
 ) {
-    LibTopBarIconBtn(true, LibIcon.Delete) {
+    TopBarIconBtn(true, R.drawable.ic_delete) {
         dbh.deleteTable(table)
-        Navig.updateScreen()
+        updateScreen()
     }
 }
 
@@ -120,7 +118,7 @@ private fun TableListTitle(                                                     
 ) {
     Text(
         text = text,
-        color = LibColor.WhiteText.color,
+        color = Color.White,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         maxLines = 2,

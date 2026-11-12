@@ -6,7 +6,7 @@ import com.vankorno.vankornohelpers.values.LibGlobals.updatingScreen
 
 object ScreenUpdater {
     
-    fun updateScr() {
+    fun updateScreen() {
         updatingScreen = true
         val currScreen = vm.currScreen.value
         

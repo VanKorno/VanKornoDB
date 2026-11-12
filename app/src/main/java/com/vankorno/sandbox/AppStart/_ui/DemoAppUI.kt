@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.vankorno.sandbox.AppStart._data.LibLayoutModifiers
+import com.vankorno.sandbox.AppStart._data.LayoutModifiers
 import com.vankorno.sandbox.DbBrowser.LayoutsDbBrowser
 import com.vankorno.sandbox.DbBrowser.TableBrowser._ui.LayoutsTable
 import com.vankorno.sandbox.H_O_M_E.LayoutsHome
@@ -15,7 +15,7 @@ import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._navig.ScrHome
 import com.vankorno.sandbox._navig.ScrPlayground
 import com.vankorno.sandbox._navig.ScrTable
-import com.vankorno.sandbox.theme_main.LocalScreen
+import com.vankorno.sandbox._ui.LocalScreen
 
 
 @Composable
@@ -51,7 +51,7 @@ fun DemoAppUI() {
                 end.linkTo(parent.end)
             }
         
-        val modifiers = LibLayoutModifiers(modifBody, modifTop, modifTopShadow, modifBot)
+        val modifiers = LayoutModifiers(modifBody, modifTop, modifTopShadow, modifBot)
         
         ScrNavig(modifiers)
     }
@@ -59,7 +59,7 @@ fun DemoAppUI() {
 
 
 @Composable
-fun ScrNavig(                                                          bodyModif: LibLayoutModifiers
+fun ScrNavig(                                                          bodyModif: LayoutModifiers
 ) {
     when (LocalScreen.current) {
         ScrHome -> LayoutsHome(bodyModif)

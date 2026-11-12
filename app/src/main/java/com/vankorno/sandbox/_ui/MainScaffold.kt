@@ -1,4 +1,4 @@
-package com.vankorno.sandbox.theme_main
+package com.vankorno.sandbox._ui
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
@@ -20,6 +20,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox._navig.ScrHome
 import com.vankorno.sandbox._navig.Screen
+import com.vankorno.sandbox._ui.theme.AppColor
+import com.vankorno.sandbox._ui.theme.MainTheme
 import com.vankorno.vankornohelpers.values.LibLambdas.clearFocus
 import com.vankorno.vankornohelpers.values.LibLambdas.hideKeyboard
 import com.vankorno.vankornohelpers.values.LibLambdas.showKeyboard
@@ -27,11 +29,11 @@ import com.vankorno.vankornohelpers.values.LibLambdas.showKeyboard
 val LocalScreen = compositionLocalOf<Screen> { ScrHome }
 
 @Composable
-fun LibMainScaffold(                              statusBarColor: Color = LibColor.BlackSurf.color,
-                                                      typography: Typography = Typography(),
-                                                         content: @Composable ()->Unit,
+fun MainScaffold(                                  statusBarColor: Color = AppColor.BlackSurf.color,
+                                                       typography: Typography = Typography(),
+                                                          content: @Composable ()->Unit,
 ) {
-    LibMainTheme(
+    MainTheme(
         statusBarColor = statusBarColor,
         typography = typography
     ) {
@@ -40,7 +42,7 @@ fun LibMainScaffold(                              statusBarColor: Color = LibCol
                 .windowInsetsPadding(
                     WindowInsets.systemBars.add(WindowInsets.ime)
                 ),
-            color = LibColor.Background.color
+            color = AppColor.Background.color
         ) {
             KeyboardActions()
             

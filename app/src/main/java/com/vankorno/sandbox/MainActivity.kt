@@ -10,13 +10,13 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.vankorno.sandbox.AppStart._ui.DemoAppUI
 import com.vankorno.sandbox.AppStart.logic.launchApp
+import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox._navig.BackNav.goBack
+import com.vankorno.sandbox._ui.MainScaffold
+import com.vankorno.sandbox._ui.theme.AppColor
 import com.vankorno.sandbox._vm.VmShared
-import com.vankorno.sandbox.theme_main.LibColor
-import com.vankorno.sandbox.theme_main.LibMainScaffold
-import com.vankorno.vankornocompose.db.LibDbVals.TTTMisc
-import com.vankorno.vankornocompose.values.LibLambdas2.exitApp
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornohelpers.LibMisc
 import com.vankorno.vankornohelpers.LibUI
 import com.vankorno.vankornohelpers.values.LibGlobals.actExists
@@ -31,6 +31,8 @@ import com.vankorno.vankornohelpers.values.LibLambdas.shortToast
 class MainActivity : ComponentActivity() {
     companion object {
         lateinit var vm: VmShared
+        val DummyTableName = "DummyTable"
+        val _DummyTable = DummyTableName using _Test
     }
     
     override fun onCreate(                                            savedInstanceState: Bundle?
@@ -42,7 +44,7 @@ class MainActivity : ComponentActivity() {
         
         enableEdgeToEdge()
         
-        LibUI().setWindowBackgroundColor(this, LibColor.Background.argb)
+        LibUI().setWindowBackgroundColor(this, AppColor.Background.argb)
         
         vm = ViewModelProvider(this)[VmShared::class.java]
         
@@ -53,7 +55,7 @@ class MainActivity : ComponentActivity() {
         setBackBtn()
         
         setContent {
-            LibMainScaffold {
+            MainScaffold {
                 DemoAppUI()
             }
         }
@@ -64,9 +66,9 @@ class MainActivity : ComponentActivity() {
         launchApp()
         when {
             savedInstanceState == null -> {
-                val miscTableExists = dbh.tableExists(TTTMisc)
+                val dummyExists = dbh.tableExists(DummyTableName)
                 
-                if (!miscTableExists) {
+                if (!dummyExists) {
                     startupFirstLaunch()
                 } else {
                     startupNotFirstLaunch()
@@ -84,7 +86,9 @@ class MainActivity : ComponentActivity() {
         appStarted = true
     }
     
-    fun startupFirstLaunch() {}
+    fun startupFirstLaunch() {
+        dbh.createTable(_DummyTable)
+    }
     fun startupNotFirstLaunch() {}
     fun startupLaunch() {}
     fun startupConfigChange() {}
@@ -97,7 +101,6 @@ class MainActivity : ComponentActivity() {
     
     private fun initLibLambdas() {
         minimizeApp = { finishAffinity() }
-        exitApp = { finishAndRemoveTask() }
         
         longToast = { LibMisc().makeToast(this, it, Toast.LENGTH_LONG) }
         shortToast = { LibMisc().makeToast(this, it, Toast.LENGTH_SHORT) }

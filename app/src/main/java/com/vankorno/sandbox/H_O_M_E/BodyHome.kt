@@ -23,10 +23,10 @@ import com.vankorno.sandbox._navig.Navigator.goToScreen
 import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._navig.ScrPlayground
 import com.vankorno.sandbox._navig.Screen
-import com.vankorno.sandbox._ui.LargeBtn
+import com.vankorno.sandbox._ui.composables.LargeBtn
 import com.vankorno.sandbox._ui.composables.Spa_______________cer
-import com.vankorno.sandbox.theme_main.LibAccentColor
-import com.vankorno.sandbox.theme_main.LibColor
+import com.vankorno.sandbox._ui.theme.AccentColor
+import com.vankorno.sandbox._ui.theme.AppColor
 
 
 @Composable
@@ -41,16 +41,16 @@ fun BodyHome() {
 
 @Composable
 private fun NavBtns() {
-    NavBtn(ScrPlayground, "Playground", LibAccentColor.Pink)
+    NavBtn(ScrPlayground, "Playground", AccentColor.Pink)
     
-    NavBtn(ScrDbBrowser, "DB Browser", LibAccentColor.Green)
+    NavBtn(ScrDbBrowser, "DB Browser", AccentColor.Green)
 }
 
 
 @Composable
 private fun NavBtn(                                                      targetScr: Screen,
                                                                               text: String,
-                                                                       accentColor: LibAccentColor,
+                                                                       accentColor: AccentColor,
 ) {
     LargeBtn(text, accentColor) { goToScreen(targetScr) }
 }
@@ -65,7 +65,7 @@ private fun DbInfoSection() {
         Modifier
             .fillMaxWidth()
             .padding(vertical = 15.dp, horizontal = 30.dp) // TODO Merge
-            .background(LibColor.Surface.color)
+            .background(AppColor.Surface.color)
             .padding(vertical = 18.dp, horizontal = 12.dp)
         ,
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -22,10 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.sandbox._ui.composables.Spa_______________cer
-import com.vankorno.sandbox.theme_main.LibAccentColor
-import com.vankorno.vankornocompose.ScrType
-import com.vankorno.vankornocompose.theme_main.LibColor
-import com.vankorno.vankornocompose.values.LocalScrType
+import com.vankorno.sandbox._ui.theme.AccentColor
+import com.vankorno.sandbox._ui.theme.AppColor
 import kotlin.math.ceil
 
 
@@ -41,21 +39,7 @@ fun BodyTable(                                                          columns:
         return
     }
     
-    val scrType = LocalScrType.current
-    val colOnPage = when(scrType) {
-        ScrType.PortraitMicro,
-        ScrType.PortraitSmall -> 2
-        
-        ScrType.PortraitMedium,
-        ScrType.LandscapeMicro -> 3
-        
-        ScrType.PortraitLarge,
-        ScrType.LandscapeSmall -> 4
-        
-        ScrType.LandscapeMedium -> 5
-        
-        ScrType.LandscapeLarge -> 6
-    }
+    val colOnPage = 3
     
     val pageCount = ceil(columns.size / colOnPage.toFloat()).toInt()
     val pagerState = rememberPagerState(pageCount = { pageCount })
@@ -73,14 +57,14 @@ fun BodyTable(                                                          columns:
         Column(Modifier.fillMaxSize()) {
             Row(
                 Modifier.fillMaxWidth()
-                    .background(LibAccentColor.Blue.color)
+                    .background(AccentColor.Blue.color)
             ) {
                 pageTypes.forEach { type ->
                     Text(
                         type,
                         modifier = Modifier
                             .weight(1f)
-                            .border(1.dp, LibColor.Background.color)
+                            .border(1.dp, AppColor.Background.color)
                         ,
                         color = Color.White,
                         fontSize = 9.sp,
@@ -92,14 +76,14 @@ fun BodyTable(                                                          columns:
             }
             Row(
                 Modifier.fillMaxWidth()
-                    .background(LibAccentColor.Yellow.color)
+                    .background(AccentColor.Yellow.color)
             ) {
                 pageColumns.forEach { col ->
                     Text(
                         col,
                         modifier = Modifier
                             .weight(1f)
-                            .border(1.dp, LibColor.Background.color)
+                            .border(1.dp, AppColor.Background.color)
                             .padding(4.dp)
                         ,
                         color = Color.White,

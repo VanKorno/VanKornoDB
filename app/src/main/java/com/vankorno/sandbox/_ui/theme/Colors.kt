@@ -1,4 +1,4 @@
-package com.vankorno.sandbox.theme_main
+package com.vankorno.sandbox._ui.theme
 
 import androidx.compose.ui.graphics.Color
 import com.vankorno.vankornohelpers.values.LibColors.*
@@ -18,7 +18,7 @@ private const val IntColorBlackSurfBorderDisabled = 0x1AFFFFFF.toInt()
 
 
 
-enum class LibColor(                                                           val color: Color,
+enum class AppColor(                                                           val color: Color,
                                                                                 val argb: Int,
 ) {
     Background(Color(IntColorBackground), IntColorBackground),
@@ -36,7 +36,7 @@ enum class LibColor(                                                           v
 }
 
 
-enum class LibAccentColor(                                                     val color: Color,
+enum class AccentColor(                                                        val color: Color,
                                                                                 val argb: Int,
 ) {
     Black(Color(PlainBlack), PlainBlack),

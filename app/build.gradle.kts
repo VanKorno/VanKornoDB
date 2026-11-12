@@ -38,8 +38,28 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    
+    implementation(libs.androidx.constraintlayout.compose)
+    
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
+    
+    // SavedStateHandle API for ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    // For direct access from a composable and other stuff
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    
+    implementation(libs.kotlinx.coroutines.core) // for StateFlow
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -48,8 +68,6 @@ dependencies {
     
     implementation(project(":VanKornoDB"))
     implementation(libs.vankornohelpers)
-    
-    implementation(libs.vankornocompose)
     
     androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
