@@ -1,7 +1,6 @@
 package com.vankorno.sandbox._vm
 
 import androidx.lifecycle.ViewModel
-import com.vankorno.vankornocompose.vm.VmVal
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
 import com.vankorno.vankornohelpers.dLog
 

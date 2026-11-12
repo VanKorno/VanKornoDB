@@ -8,6 +8,8 @@ espressoCore = "3.7.0"
 runner = "1.7.0"
 composeBom = "2026.09.00"
 testManifest = "1.12.1"
+vankornoHelpers = "2.109"
+
 vankornoCompose = "2.186"
 
 
@@ -22,6 +24,8 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "testManifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+vankornohelpers = { module = "com.github.VanKorno:VanKornoHelpers", version.ref = "vankornoHelpers" }
+
 vankornocompose = { module = "com.github.VanKorno:VanKornoCompose", version.ref = "vankornoCompose" }
 
 [plugins]

@@ -47,6 +47,8 @@ dependencies {
     androidTestImplementation(libs.androidx.runner)
     
     implementation(project(":VanKornoDB"))
+    implementation(libs.vankornohelpers)
+    
     implementation(libs.vankornocompose)
     
     androidTestImplementation(composeBom)
