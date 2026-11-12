@@ -68,7 +68,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     
     val steps = relevantMilestones.map { it.first }
     // region LOG
-        dLog("migrateMultiStep() Steps (to-versions) = ${steps.joinToString(", ")}")
+        dLog("migrateMultiStep() Milestone count: ${steps.size}. Milestone ver numbers: ${steps.joinToString(", ")}")
     // endregion
     val lambdas = relevantMilestones.toMap()
     

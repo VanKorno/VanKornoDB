@@ -39,7 +39,8 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
         val newVer = entityMeta.currVersion
         val table = entityMeta.limitedToTable ?: return //\/\/\
         // region LOG
-            dLog("migrateSingleTableEntity() table = $table, oldVer = $oldVer, newVer = $newVer")
+        if (oldVer != newVer)
+            dLog("Migrating $table. oldVer = $oldVer, newVer = $newVer")
         // endregion
         db.migrateMultiStep(table, oldVer, entityMeta)
         
@@ -55,6 +56,12 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
                                                                     entityMeta: BaseEntityMeta,
                                                               doAfterEachTable: (String)->Unit = {},
     ) {
+        if (tables.isEmpty()) {
+            // region LOG
+                dLog("migrateTables() did not receive any tables. Returns without doing anything.")
+            // endregion
+            return //\/\/\/\/\/\
+        }
         val dbRowName = entityMeta.dbRowName
         // region LOG
             dLog("migrateTables(): Migrating tables that use the $dbRowName entity...")
