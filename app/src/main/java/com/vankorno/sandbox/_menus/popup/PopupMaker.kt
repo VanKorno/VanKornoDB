@@ -11,7 +11,7 @@ import com.vankorno.vankornocompose.values.LocalScrType
 fun PopupMaker(                                                               popState: PopupState,
                                                                               modifier: Modifier,
 ) {
-    LibPopup(modifier, LocalScrType.current,
+    LibPopup(popState, modifier, LocalScrType.current,
         scrimColor = LibColor.BlackScrim.color,
         cardColor = LibColor.Surface.color,
     ) {

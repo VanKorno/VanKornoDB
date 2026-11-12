@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
 }
@@ -39,7 +38,8 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -49,7 +49,7 @@ dependencies {
     implementation(project(":VanKornoDB"))
     implementation(libs.vankornocompose)
     
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

@@ -4,7 +4,7 @@ import com.vankorno.sandbox.App.Companion.dbFileNameFromDb
 import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.vankornocompose.values.LibGlobals2.lops
+import com.vankorno.vankornocompose.values.LibGlobals2.ops
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 
 fun launchApp() {
@@ -14,7 +14,7 @@ fun launchApp() {
 }
 
 
-private fun createTestTableAsync() = lops.async { createTestTableIfAbsent() }
+private fun createTestTableAsync() = ops.async { createTestTableIfAbsent() }
 
 private fun createTestTableIfAbsent() {
     if (!dbh.tableExists(TestTable)) {
