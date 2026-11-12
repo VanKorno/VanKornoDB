@@ -15,7 +15,10 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
  * @param entities Entities to insert.
- * @param setIdAndPosition Returns an entity with the specified ID and position.
+ * 
+ * @param setIdAndPosition Returns an entity with the specified ID and position. Looks this:
+ * { entity, id, position -> entity.copy(id = id, position = position) }
+ * 
  * @return A list of [DbIdAndPosition] containing the assigned ID and position for each inserted entity.
  */
 fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(        tableInfo: TableInfoNormal<T>,
