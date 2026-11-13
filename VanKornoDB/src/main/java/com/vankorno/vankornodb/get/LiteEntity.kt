@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.api.LiteEntity
 import com.vankorno.vankornodb.api.OrderDsl
@@ -15,55 +16,87 @@ import com.vankorno.vankornodb.misc.orderByRowId
 import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
 
 /**
- * Gets data from specific columns of a db row and returns it as a LiteEntity object.
- * Columns must go in the same order and have the same names as the lite entity fields.
- * 
- * Returns [default] if no result found.
+ * Gets data from a db row as a LiteEntity, selecting the columns declared by its schema.
+ * Every selected column must exist with the same type in [originalColumns].
+ *
+ * Returns [default] if no result is found.
  */
-fun <T : LiteEntity> SQLiteDatabase.getLiteEntity(             tableInfo: TableInfoLite<T>,
-                                                                 columns: Array<out TypedColumn<*>>,
-                                                                 default: T,
-                                                                 orderBy: OrderDsl.()->Unit = {},
-                                                                   extra: ExtraDsl.()->Unit = {},
-                                                                   where: WhereDsl.()->Unit,
-): T = useCursor(tableInfo.name, columns, orderBy, where = where,
-    extra = {
+fun <T : LiteEntity> SQLiteDatabase.getLiteEntity(                tableInfo: TableInfoLite<T>,
+                                                            originalColumns: EntityColumns,
+                                                                    default: T,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
+): T {
+    val columns = checkedLiteColumns(tableInfo, originalColumns)
+    
+    return useCursor(tableInfo.name, columns, orderBy, where = where, extra = {
         applyDsl(extra)
         limit = 1
+    }) { cursor ->
+        if (!cursor.moveToFirst()) {
+            // region LOG
+            if (!suppressEntityGetterErrorLog)
+                eLog("getLiteEntity(): The requested row doesn't exist in ${tableInfo.name}, returning default")
+            // endregion
+            return default
+        }
+        cursor.toEntt(tableInfo.schema)
     }
-) { cursor ->
-    if (!cursor.moveToFirst()) {
-        // region LOG
-        if (!suppressEntityGetterErrorLog)
-            eLog("getLiteEntity(): The requested row doesn't exist in ${tableInfo.name}, returning default")
-        // endregion
-        return default //\/\/\/\/\/\ 
-    }
-    cursor.toEntt(tableInfo.schema)
 }
 
-
 /**
- * Retrieves a list of entity objects mapped from the given columns.
- * Returns an empty List if no result found.
+ * Retrieves entities using the columns declared by the lite schema.
+ * Every selected column must exist with the same type in [originalColumns].
+ * Returns an empty list if no result is found.
  */
 fun <T : LiteEntity> SQLiteDatabase.getLiteEntities(
                                                       tableInfo: TableInfoLite<T>,
-                                                        columns: Array<out TypedColumn<*>>,
+                                                originalColumns: EntityColumns,
                                                         orderBy: OrderDsl.()->Unit = orderByRowId(),
                                                           extra: ExtraDsl.()->Unit = {},
                                                           where: WhereDsl.()->Unit = {},
-): List<T> = useCursor(tableInfo.name, columns, orderBy, extra, where) { cursor ->
-    buildList {
-        if (cursor.moveToFirst()) {
-            do {
-                add(cursor.toEntity(tableInfo.schema))
-            } while (cursor.moveToNext())
-        } else {
-            // region LOG
-            if (!suppressEntityGetterErrorLog)
-                dLog("getLiteEntity(): Can't find rows in ${tableInfo.name}, returning an empty List.")
-            // endregion
+): List<T> {
+    val columns = checkedLiteColumns(tableInfo, originalColumns)
+    
+    return useCursor(tableInfo.name, columns, orderBy, extra, where) { cursor ->
+        buildList {
+            if (cursor.moveToFirst()) {
+                do {
+                    add(cursor.toEntity(tableInfo.schema))
+                } while (cursor.moveToNext())
+            }
+            else {
+                // region LOG
+                if (!suppressEntityGetterErrorLog)
+                    dLog("getLiteEntities(): Can't find rows in ${tableInfo.name}, returning an empty List.")
+                // endregion
+            }
         }
     }
+}
+
+internal fun <T : LiteEntity> checkedLiteColumns(                        tableInfo: TableInfoLite<T>,
+                                                                  originalColumns: EntityColumns,
+): Array<TypedColumn<*>> {
+    val liteColumns = tableInfo.schema.columns?.columns
+        ?: error("Lite schema for ${tableInfo.schema.clazz.simpleName} must declare columns")
+    val sourceColumnsByName = originalColumns.columns.associateBy { it.name }
+    
+    require(liteColumns.isNotEmpty()) {
+        "Lite schema for ${tableInfo.schema.clazz.simpleName} declares no columns"
+    }
+    require(liteColumns.map { it.name }.distinct().size == liteColumns.size) {
+        "Lite schema for ${tableInfo.schema.clazz.simpleName} declares duplicate column names"
+    }
+    
+    for (liteColumn in liteColumns) {
+        val sourceColumn = sourceColumnsByName[liteColumn.name]
+            ?: error("Lite column '${liteColumn.name}' is not present in the original entity columns")
+        require(liteColumn::class == sourceColumn::class) {
+            "Lite column '${liteColumn.name}' has type ${liteColumn::class.simpleName}, " +
+                "but the original entity column has type ${sourceColumn::class.simpleName}"
+        }
+    }
+    return liteColumns.toTypedArray()
 }

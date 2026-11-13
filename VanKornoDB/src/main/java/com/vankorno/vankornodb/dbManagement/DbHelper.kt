@@ -22,6 +22,7 @@ import com.vankorno.vankornodb.get.*
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
 import com.vankorno.vankornodb.get.raw.getRawTableStr
 import com.vankorno.vankornodb.misc.data.DbIdAndPosition
+import com.vankorno.vankornodb.misc.orderByRowId
 import com.vankorno.vankornodb.set.*
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -442,6 +443,30 @@ abstract class DbHelperInternal(
         db.getEntityMap(tableInfo, orderBy, extra, where)
     }
     
+    
+    
+    // =============================  L I T E   E N T I T I E S  ============================= \\
+    
+    /** A wrapper fun for [SQLiteDatabase.getLiteEntity] */
+    fun <T : LiteEntity> getLiteEntity(                           tableInfo: TableInfoLite<T>,
+                                                            originalColumns: EntityColumns,
+                                                                    default: T,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
+    ): T = read(default, "getLiteEntity") { db ->
+        db.getLiteEntity(tableInfo, originalColumns, default, orderBy, extra, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getLiteEntities] */
+    fun <T : LiteEntity> getLiteEntities(             tableInfo: TableInfoLite<T>,
+                                                originalColumns: EntityColumns,
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
+                                                          where: WhereDsl.()->Unit = {},
+    ): List<T> = read(emptyList(), "getLiteEntities") { db ->
+        db.getLiteEntities(tableInfo, originalColumns, orderBy, extra, where)
+    }
     
     
     
