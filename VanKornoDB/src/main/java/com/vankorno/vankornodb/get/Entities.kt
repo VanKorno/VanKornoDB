@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.misc.orderByRowId
 
 /**
- * Retrieves a list of entity objects mapped from the given columns.
+ * Retrieves a list of entity objects mapped from the given table.
  */
 fun <T : BaseEntity> SQLiteDatabase.getEntities(      tableInfo: TableInfoBase<T>,
                                                         orderBy: OrderDsl.()->Unit = orderByRowId(),

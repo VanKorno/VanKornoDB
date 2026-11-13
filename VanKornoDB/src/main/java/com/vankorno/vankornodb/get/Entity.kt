@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
-import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.mappers.toEntt
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
 
@@ -37,15 +37,15 @@ fun <T : BaseEntity> SQLiteDatabase.getEntity(                    tableInfo: Tab
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit,
-): T? = getCursor(tableInfo.name, orderBy, where = where,
+): T? = useCursor(tableInfo.name, orderBy, where = where,
     extra = {
         applyDsl(extra)
         limit = 1
     }
-).use { cursor ->
+) { cursor ->
     if (!cursor.moveToFirst()) return null //\/\/\/\/\/\
     
-    cursor.toEntity(tableInfo.schema)
+    cursor.toEntt(tableInfo.schema)
 }
 
 
