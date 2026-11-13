@@ -72,6 +72,7 @@ abstract class DbManager(        context: Context,
 ) : SQLiteOpenHelper(context, dbName, null, dbVersion) {
     
     private var db: SQLiteDatabase? = null
+    private var versionTableHandled = false
     
     val dbScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     
@@ -83,7 +84,8 @@ abstract class DbManager(        context: Context,
     init {
         db = writableDatabase
         lock.withLock {
-            handleVersionTable(currDb)
+            if (!versionTableHandled)
+                handleVersionTable(currDb)
         }
     }
     
@@ -95,6 +97,7 @@ abstract class DbManager(        context: Context,
         // endregion
         lock.withLock {
             db.createTable(_TTTEntityVersion)
+            handleVersionTable(db)
             
             if (createExclusiveTables)
                 db.createExclusiveTablesInternal(entityMeta)
@@ -116,6 +119,7 @@ abstract class DbManager(        context: Context,
         lock.withLock {
             db.beginTransaction()
             try {
+                handleVersionTable(db)
                 runOnUpgrade(db, oldVersion)
                 db.setTransactionSuccessful()
             } catch (e: Exception) {
@@ -147,6 +151,7 @@ abstract class DbManager(        context: Context,
         // region LOG
             dLog("handleVersionTable() runs")
         // endregion
+        versionTableHandled = true
         ensureEnttVerTableExists(db)
         
         val empty = db.isTableEmpty(TABLE_EntityVersions)
