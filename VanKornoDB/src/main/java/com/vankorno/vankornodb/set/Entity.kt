@@ -9,20 +9,20 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.misc.wLog
 
 /**
- * Updates the row with the specified WhereDsl conditions in the given table with the values from [obj].
+ * Updates the row with the specified WhereDsl conditions in the given table with the values from [entity].
  * Converts the entity into ContentValues and performs the SQLite update operation.
  * If [tableInfo]'s schema bundle doesn't have a setter - reflection-based mapping is used.
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
- * @param obj The entity object with updated data.
+ * @param entity The entity object with updated data.
  * @param where DSL conditions.
  * @return The number of updated rows.
  */
-inline fun <T : CurrEntity> SQLiteDatabase.setObj(                    tableInfo: TableInfoNormal<T>,
-                                                                            obj: T,
+inline fun <T : CurrEntity> SQLiteDatabase.setEntity(                 tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
                                                                           where: WhereDsl.()->Unit,
 ): Int {
-    val cv = toContentValues(obj, tableInfo.schema)
+    val cv = toContentValues(entity, tableInfo.schema)
     val whereDsl = WhereDsl().apply(where)
     val whereClause = whereDsl.clauses.joinToString(" ")
     val whereArgs = whereDsl.args.toTypedArray()
@@ -31,7 +31,7 @@ inline fun <T : CurrEntity> SQLiteDatabase.setObj(                    tableInfo:
     val updatedRowCount = update(table, cv, whereClause, whereArgs)
     if (updatedRowCount > 1) {
         // region LOG
-        wLog("setObj: $updatedRowCount rows updated in '$table'. You may want to set more specific conditions if you want to update a single row.")
+        wLog("setEntity: $updatedRowCount rows updated in '$table'. You may want to set more specific conditions if you want to update a single row.")
         // endregion
     }
     return updatedRowCount

@@ -38,9 +38,9 @@ class FixDuplicatesTest {
         val tableInfo = table using _Test
         dbh.createTable(table using _Test)
         
-        dbh.addObj(tableInfo, TestEntity(1L, "1", 10L, int1 = 100, long1 = 1000L))
-        dbh.addObj(tableInfo, TestEntity(2L, "2", 20L, int1 = 200, long1 = 2000L))
-        dbh.addObj(tableInfo, TestEntity(3L, "3", 30L, int1 = 300, long1 = 3000L))
+        dbh.addEntity(tableInfo, TestEntity(1L, "1", 10L, int1 = 100, long1 = 1000L))
+        dbh.addEntity(tableInfo, TestEntity(2L, "2", 20L, int1 = 200, long1 = 2000L))
+        dbh.addEntity(tableInfo, TestEntity(3L, "3", 30L, int1 = 300, long1 = 3000L))
         
         assertAllFixFuns(table, 0, 0, 0)
         dbh.deleteTable(table)
@@ -57,8 +57,8 @@ class FixDuplicatesTest {
         val tableInfo = table using _Test
         dbh.createTable(tableInfo)
         
-        dbh.addObj(tableInfo, TestEntity(position = 10L, int1 = 100, long1 = 1000L))
-        dbh.addObj(tableInfo, TestEntity(position = 10L, int1 = 100, long1 = 1000L))
+        dbh.addEntity(tableInfo, TestEntity(position = 10L, int1 = 100, long1 = 1000L))
+        dbh.addEntity(tableInfo, TestEntity(position = 10L, int1 = 100, long1 = 1000L))
         assertEquals(2, dbh.getRowCount(table))
         
         assertAllFixFuns(table, 1, 1, 1)
@@ -74,7 +74,7 @@ class FixDuplicatesTest {
         val tableInfo = table using _Test
         dbh.createTable(tableInfo)
         
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(position = 10L, int1 = 100, long1 = 1000L),
             TestEntity(position = 10L, int1 = 200, long1 = 1000L),
             TestEntity(position = 20L, int1 = 100, long1 = 2000L),
@@ -98,7 +98,7 @@ class FixDuplicatesTest {
         val tableInfo = table using _Test
         dbh.createTable(tableInfo)
         
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(position = 10L, int1 = 100, long1 = 1000L),
             TestEntity(position = 10L, int1 = 100, long1 = 1000L),
             TestEntity(position = 10L, int1 = 100, long1 = 1000L),
@@ -121,7 +121,7 @@ class FixDuplicatesTest {
         val tableInfo = table using _Test
         dbh.createTable(tableInfo)
     
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(position = 10L, int1 = 100, long1 = 1000L, int2 = 1),
             TestEntity(position = 10L, int1 = 100, long1 = 1000L, int2 = 1),
             TestEntity(position = 20L, int1 = 200, long1 = 2000L, int2 = 2),

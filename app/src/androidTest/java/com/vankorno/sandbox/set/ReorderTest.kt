@@ -39,7 +39,7 @@ class ReorderTest : BaseAndroidTest() {
                     position = idx + 1L,
                 )
             }
-            dbh.addObjects(table using _Test, objects)
+            dbh.addEntities(table using _Test, objects)
         }
         // sanity
         assertTrue(dbh.tableExists(RoundKnightTable + 1))

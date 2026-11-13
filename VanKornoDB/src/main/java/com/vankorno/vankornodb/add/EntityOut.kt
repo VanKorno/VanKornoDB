@@ -10,10 +10,10 @@ import com.vankorno.vankornodb.misc.wLog
 /**
  *  For migration / polymorphic use
 */
-private fun <T : NormalEntity> SQLiteDatabase.addObjOut(          tableInfo: TableInfoNormal<out T>,
-                                                                        obj: T,
+private fun <T : NormalEntity> SQLiteDatabase.addEntityOut(       tableInfo: TableInfoNormal<out T>,
+                                                                     entity: T,
 ): Long {
-    val cv = toContentValues(obj, tableInfo.schema)
+    val cv = toContentValues(entity, tableInfo.schema)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
@@ -21,16 +21,16 @@ private fun <T : NormalEntity> SQLiteDatabase.addObjOut(          tableInfo: Tab
 /**
  *  For migration / polymorphic use
 */
-internal fun <T : NormalEntity> SQLiteDatabase.addObjectsOut(     tableInfo: TableInfoNormal<out T>,
-                                                                    objects: List<T>,
+internal fun <T : NormalEntity> SQLiteDatabase.addEntitiesOut(    tableInfo: TableInfoNormal<out T>,
+                                                                   entities: List<T>,
 ): Int {
     var count = 0
     
-    for (obj in objects) {
-        val rowId = addObjOut(tableInfo, obj)
+    for (entity in entities) {
+        val rowId = addEntityOut(tableInfo, entity)
         if (rowId == -1L) {
             // region LOG
-                wLog("addObjectsOut() FAILED to insert object: $obj")
+                wLog("addEntitiesOut() FAILED to insert entity: $entity")
             // endregion
         } else {
             count++

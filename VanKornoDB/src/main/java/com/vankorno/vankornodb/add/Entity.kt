@@ -28,27 +28,27 @@ import com.vankorno.vankornodb.misc.wLog
 
 
 /**
- * Inserts the given object into the specified database table.
+ * Inserts the given entity object into the specified database table.
  * Converts the entity into ContentValues and performs the SQLite insert operation.
  * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
  * If object's id is less than 1, the new id is assigned automatically.
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
- * @param obj The entity object to insert.
+ * @param entity The entity object to insert.
  * @return The ROW ID of the newly inserted row, or -1 if an error occurred.
  */
-fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo: TableInfoNormal<T>,
-                                                                            obj: T,
+fun <T : NormalEntity> SQLiteDatabase.addEntity(                      tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
 ): Long {
-    val modified =  if (obj.id < 1L)
-                        tableInfo.schema.withId(obj, getNextId(tableInfo.name))
+    val modified =  if (entity.id < 1L)
+                        tableInfo.schema.withId(entity, getNextId(tableInfo.name))
                     else
-                        obj
+                        entity
     
-    val rowId = addObjWithoutIdCheck(tableInfo, modified)
+    val rowId = addEntityWithoutIdCheck(tableInfo, modified)
     if (rowId == -1L) {
         // region LOG
-            wLog("addObj() FAILED to insert object: $modified")
+            wLog("addEntity() FAILED to insert entity: $modified")
         // endregion
     }
     return rowId
@@ -56,71 +56,70 @@ fun <T : NormalEntity> SQLiteDatabase.addObj(                         tableInfo:
 
 
 /**
- * Inserts the given object into the specified database table without checking or modifying its ID.
+ * Inserts the given entity object into the specified database table without checking or modifying its ID.
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
- * @param obj The entity object to insert.
+ * @param entity Entity object to insert.
  * @return The ROW ID of the inserted row, or -1 if an error occurred.
  */
-fun <T : NormalEntity> SQLiteDatabase.addObjWithoutIdCheck(
-                                                                      tableInfo: TableInfoNormal<T>,
-                                                                            obj: T,
+fun <T : NormalEntity> SQLiteDatabase.addEntityWithoutIdCheck(        tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
 ): Long {
-    val cv = toContentValues(obj, tableInfo.schema)
+    val cv = toContentValues(entity, tableInfo.schema)
     if (cv.size() == 0) return -1L //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
 
 
 /**
- * Inserts multiple objects into the specified database table without checking or modifying their IDs.
+ * Inserts multiple entity objects into the specified database table without checking or modifying their IDs.
  *
  * @param tableInfo The combination of a table name and its SchemaBundle.
- * @param objects The entities to insert.
+ * @param entities Entity objects to insert.
  * @return A list of ROW IDs of the inserted rows, with -1 indicating insertion failures.
  */
-fun <T : NormalEntity> SQLiteDatabase.addObjectsWithoutIdCheck(       tableInfo: TableInfoNormal<T>,
-                                                                        objects: List<T>,
-): List<Long> = objects.map {
-    addObjWithoutIdCheck(tableInfo, it)
+fun <T : NormalEntity> SQLiteDatabase.addEntitiesWithoutIdCheck(      tableInfo: TableInfoNormal<T>,
+                                                                       entities: List<T>,
+): List<Long> = entities.map {
+    addEntityWithoutIdCheck(tableInfo, it)
 }
 
 
 
 /**
- * Inserts multiple objects into the specified database table.
+ * Inserts multiple entity objects into the specified database table.
  * Converts each entity into ContentValues and performs the SQLite insert operation for each.
  * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
- * If object's id is less than 1, the new id is assigned automatically.
+ * If entity's id is less than 1, the new id is assigned automatically.
  * 
  * @param tableInfo The combination of a table name and its SchemaBundle.
- * @param objects The list of entity objects to insert.
+ * @param entities The list of entity objects to insert.
  * @return The list of ROW IDs.
  */
-fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
-                                                                        objects: List<T>,
+fun <T : NormalEntity> SQLiteDatabase.addEntities(                    tableInfo: TableInfoNormal<T>,
+                                                                       entities: List<T>,
 ): List<Long> {
     val newIDs = getNextIDs(
         table = tableInfo.name,
-        count = objects.count { it.id < 1L },
-        reservedIDs = objects.filter { it.id > 0L }.map { it.id }.toSet()
+        count = entities.count { it.id < 1L },
+        reservedIDs = entities.filter { it.id > 0L }.map { it.id }.toSet()
     ).iterator()
     
     val rowIDs = mutableListOf<Long>()
     
-    for (obj in objects) {
-        val modifiedObj = if (obj.id < 1L)
-            tableInfo.schema.withId(obj, newIDs.next())
+    for (entity in entities) {
+        val modifiedEntity = if (entity.id < 1L)
+            tableInfo.schema.withId(entity, newIDs.next())
         else
-            obj
+            entity
         
-        val rowId = addObjWithoutIdCheck(tableInfo, modifiedObj)
+        val rowId = addEntityWithoutIdCheck(tableInfo, modifiedEntity)
         
         rowIDs.add(rowId)
         
         if (rowId == -1L)
             // region LOG
-                wLog("addObjects() FAILED to insert object: $modifiedObj")
+                wLog("addEntities() FAILED to insert entity: $modifiedEntity")
             // endregion
     }
     return rowIDs
@@ -128,18 +127,18 @@ fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo:
 
 
 /**
- * Inserts multiple objects into the specified database table.
+ * Inserts multiple entity objects into the specified database table.
  * Converts each entity into ContentValues and performs the SQLite insert operation for each.
  * If a schema bundle of [tableInfo] doesn't have a setter - reflection-based mapping is used.
- * If object's id is less than 1, the new id is assigned automatically.
+ * If entity's id is less than 1, the new id is assigned automatically.
  * 
  * @param tableInfo The combination of a table name and its SchemaBundle.
- * @param objects Objects to insert as vararg.
+ * @param entities Entity objects to insert as vararg.
  * @return The list of ROW IDs.
  */
-fun <T : NormalEntity> SQLiteDatabase.addObjects(                     tableInfo: TableInfoNormal<T>,
-                                                                 vararg objects: T,
-): List<Long> = addObjects(tableInfo, objects.toList())
+fun <T : NormalEntity> SQLiteDatabase.addEntities(                    tableInfo: TableInfoNormal<T>,
+                                                                vararg entities: T,
+): List<Long> = addEntities(tableInfo, entities.toList())
 
 
 

@@ -36,7 +36,7 @@ class NextIntTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, List(20) { idx ->
+        dbh.addEntities(tableInfo, List(20) { idx ->
             TestEntity(int1 = idx + 1)
         })
         
@@ -48,7 +48,7 @@ class NextIntTest {
         dbh.deleteRows(table) { Int1 less 10 }
         assertBothFun(table, 21, 22)
         
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = 999990))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(int1 = 999990))
         assertBothFun(table, 999991, 999992)
         
         dbh.deleteTable(table)
@@ -75,7 +75,7 @@ class NextIntTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, List(10) { idx ->
+        dbh.addEntities(tableInfo, List(10) { idx ->
             TestEntity(int1 = idx + 1)
         })
         
@@ -103,7 +103,7 @@ class NextIntTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE))
         
         assertBothFun(table, 1, 2)
         dbh.deleteTable(table)
@@ -131,7 +131,7 @@ class NextIntTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
         
         val value1 = dbh.getNextInt(table, Int1)
         val values1 = dbh.getNextInts(table, Int1, 2)
@@ -154,7 +154,7 @@ class NextIntTest {
         val reserved = setOf(100, Int.MAX_VALUE - 1)
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
         
         val value1 = dbh.getNextInt(table, Int1, reserved = reserved)
         val values1 = dbh.getNextInts(table, Int1, 2, reserved = reserved)
@@ -172,7 +172,7 @@ class NextIntTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(int1 = 2),
             TestEntity(int1 = 4),
             TestEntity(int1 = 6),
@@ -207,7 +207,7 @@ class NextIntTest {
         val tableInfo = table using _Test
 
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(int1 = 10, str1 = "cat"),
             TestEntity(int1 = 20, str1 = "cat"),
             TestEntity(int1 = 100, str1 = "dog")
@@ -244,7 +244,7 @@ class NextIntTest {
         val tableInfo = table using _Test
 
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(int1 = 1, str1 = "cat"),
             TestEntity(int1 = 2, str1 = "dog"), // 2 is taken by dog, not cat
             TestEntity(int1 = 3, str1 = "cat"),
@@ -276,7 +276,7 @@ class NextIntTest {
         val tableInfo = table using _Test
 
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(int1 = 5, str1 = "cat"),
             TestEntity(int1 = 10, str1 = "cat"),
             TestEntity(int1 = 50, str1 = "dog")

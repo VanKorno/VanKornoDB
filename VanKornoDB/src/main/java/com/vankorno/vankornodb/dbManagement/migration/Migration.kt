@@ -2,7 +2,7 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.add.addObjectsOut
+import com.vankorno.vankornodb.add.addEntitiesOut
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
@@ -15,7 +15,7 @@ import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.delete.deleteTable
-import com.vankorno.vankornodb.get.getObjects
+import com.vankorno.vankornodb.get.getEntities
 import com.vankorno.vankornodb.misc.dLog
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -74,7 +74,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
     
     val utils = MigrationUtils()
     
-    val oldObjects = utils.getObjectsByVersion(this, table, oldVersion, versionedBundles)
+    val oldObjects = utils.getEntitiesByVersion(this, table, oldVersion, versionedBundles)
     
     val migratedObjects = oldObjects.map { original ->
         utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedBundles, lambdas)
@@ -88,7 +88,7 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
         dLog("migrateMultiStep() Fresh $table is supposed to be recreated at this point. Starting to insert rows...")
     // endregion
     
-    addObjectsOut(table using schemaBundle, migratedObjects)
+    addEntitiesOut(table using schemaBundle, migratedObjects)
     // region LOG
         dLog("migrateMultiStep() Done inserting rows. Starting onNewDbFilled()...")
     // endregion
@@ -104,19 +104,19 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
 
 open class MigrationUtils {
     /**
-     * Converts an [oldObject] to a new instance of [newClass], applying renaming rules and type matching.
+     * Converts an [oldEntity] to a new instance of [newClass], applying renaming rules and type matching.
      *
-     * @param oldObject The object to convert.
+     * @param oldEntity The entity object to convert.
      * @param newClass The target class to construct.
      * @param renameSnapshot Maps new properties to their old names.
      * @return A new instance of [newClass] with mapped or defaulted values.
      */
-    internal fun convertEntity(                       oldObject: NormalEntity,
+    internal fun convertEntity(                       oldEntity: NormalEntity,
                                                        newClass: KClass<out NormalEntity>,
                                                  renameSnapshot: Map<String, String> = emptyMap(),
                                                 transformColVal: (TransformColDsl.()->Unit)? = null,
     ): NormalEntity {
-        val fromProps = oldObject::class.memberProperties.associateBy { it.name }
+        val fromProps = oldEntity::class.memberProperties.associateBy { it.name }
         
         val constructor = newClass.primaryConstructor
             ?: error("Target class ${newClass.simpleName} must have a primary constructor")
@@ -128,7 +128,7 @@ open class MigrationUtils {
             val fromName = renameSnapshot[toName] ?: toName
             val fromProp = fromProps[fromName]
             
-            val rawValue = fromProp?.getter?.call(oldObject)
+            val rawValue = fromProp?.getter?.call(oldEntity)
             val fromType = fromProp?.returnType
             val toType = param.type
             
@@ -162,20 +162,20 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    internal fun getObjectsByVersion(            db: SQLiteDatabase,
+    internal fun getEntitiesByVersion(           db: SQLiteDatabase,
                                               table: String,
                                             version: Int,
                                       schemaBundles: Map<Int, NormalSchemaBundle<out NormalEntity>>,
     ): List<NormalEntity> {
         // region LOG
-            dLog("readEntitiesFromVersion() starts. Table = $table, version = $version")
+            dLog("getEntitiesByVersion() starts. Table = $table, version = $version")
         // endregion
         val fromBundle = schemaBundles[version]
             ?: error("Missing schemaBundle for version $version")
         
-        val elements = db.getObjects(table using fromBundle)
+        val elements = db.getEntities(table using fromBundle)
         // region LOG
-            dLog("readEntitiesFromVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
+            dLog("getEntitiesByVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
         return elements
     }
@@ -192,7 +192,7 @@ open class MigrationUtils {
                                       schemaBundles: Map<Int, NormalSchemaBundle<out NormalEntity>>,
                                             lambdas: Map<Int, MilestoneLambdas>,
     ): NormalEntity {
-        var currentObj = original
+        var currentEntity = original
         var currentVer = oldVersion
         
         for (nextVer in steps) {
@@ -200,13 +200,13 @@ open class MigrationUtils {
             
             val nextClass = schemaBundles[nextVer]?.clazz ?: error("Missing entity class for version $nextVer")
             
-            val previousObj = currentObj
-            currentObj = convertEntity(currentObj, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
+            val previousEntity = currentEntity
+            currentEntity = convertEntity(currentEntity, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
             
-            currentObj = lambdas[nextVer]?.processFinalObj?.invoke(previousObj, currentObj) ?: currentObj
+            currentEntity = lambdas[nextVer]?.processFinalEntity?.invoke(previousEntity, currentEntity) ?: currentEntity
             currentVer = nextVer
         }
-        return currentObj
+        return currentEntity
     }
     
     
@@ -352,9 +352,9 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(
         dLog("migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = getObjects(table)
+        val rows = getEntities(table)
         dropAndCreateEmptyTablesInternal(table)
-        addObjectsOut(table, rows)
+        addEntitiesOut(table, rows)
     }
     // region LOG
         dLog("migrateWithoutChange(): Migration complete.")

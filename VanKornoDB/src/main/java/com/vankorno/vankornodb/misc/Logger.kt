@@ -22,7 +22,7 @@ internal val unitTestCase: Boolean by lazy {
 }
 
 var suppressValGetterErrorLog = false
-var suppressObjGetterErrorLog = false
+var suppressEntityGetterErrorLog = false
 
 
 

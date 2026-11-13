@@ -44,7 +44,7 @@ class NextLongTest {
         dbh.deleteRows(table) { cID less 10 }
         assertBothFun(table, 51L, 52L)
         
-        dbh.addObjWithoutIdCheck(table using _Test, TestEntity(999990))
+        dbh.addEntityWithoutIdCheck(table using _Test, TestEntity(999990))
         assertBothFun(table, 999991L, 999992L)
         
         dbh.deleteTable(table)
@@ -95,7 +95,7 @@ class NextLongTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE, name = "Max"))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE, name = "Max"))
         
         assertBothFun(table, 1L, 2L)
         dbh.deleteTable(table)
@@ -123,7 +123,7 @@ class NextLongTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
         val value1 = dbh.getNextLong(table, cID)
         val values1 = dbh.getNextLongs(table, cID, 2)
@@ -146,7 +146,7 @@ class NextLongTest {
         val reserved = setOf(100L, Long.MAX_VALUE - 1)
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
         val value1 = dbh.getNextLong(table, cID, reserved = reserved)
         val values1 = dbh.getNextLongs(table, cID, 2, reserved = reserved)
@@ -164,7 +164,7 @@ class NextLongTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(2L),
             TestEntity(4L),
             TestEntity(6L),
@@ -199,7 +199,7 @@ class NextLongTest {
         val tableInfo = table using _Test
 
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(long1 = 10L, str1 = "cat"),
             TestEntity(long1 = 20L, str1 = "cat"),
             TestEntity(long1 = 100L, str1 = "dog")
@@ -236,7 +236,7 @@ class NextLongTest {
         val tableInfo = table using _Test
 
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(long1 = 1L, str1 = "cat"),
             TestEntity(long1 = 2L, str1 = "dog"), // 2L is taken by dog, not cat
             TestEntity(long1 = 3L, str1 = "cat"),
@@ -268,7 +268,7 @@ class NextLongTest {
         val tableInfo = table using _Test
 
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(long1 = 5L, str1 = "cat"),
             TestEntity(long1 = 10L, str1 = "cat"),
             TestEntity(long1 = 50L, str1 = "dog")

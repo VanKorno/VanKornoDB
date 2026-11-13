@@ -37,7 +37,7 @@ fun <T : CurrEntity> SQLiteDatabase.addWithNewIDsAndPositions(    tableInfo: Tab
         val id = newIDs[idx]
         val pos = newPositions[idx]
         val newEntity = setIdAndPosition(entity, id, pos)
-        addObjWithoutIdCheck(tableInfo, newEntity)
+        addEntityWithoutIdCheck(tableInfo, newEntity)
         result.add(DbIdAndPosition(id, pos))
     }
     return result

@@ -9,28 +9,28 @@ import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.orderByRowId
 import com.vankorno.vankornodb.misc.orderByRowIdFlipped
 import com.vankorno.vankornodb.misc.orderRandomly
-import com.vankorno.vankornodb.misc.suppressObjGetterErrorLog
+import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
 
 /**
  * Gets the first row as an object of an entity class using WhereDsl.
  * Returns null if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: TableInfoBase<out T>,
+fun <T : BaseEntity> SQLiteDatabase.getFirstEntity(               tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObj(tableInfo, orderByRowId(), where = where)
+): T? = getEntity(tableInfo, orderByRowId(), where = where)
 
 
 /**
  * Gets the first row as an object of an entity class using WhereDsl.
  * Returns [default] and logs error if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: TableInfoBase<out T>,
+fun <T : BaseEntity> SQLiteDatabase.getFirstEntity(               tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-): T = getFirstObj(tableInfo, where) ?: run {
+): T = getFirstEntity(tableInfo, where) ?: run {
     // region LOG
-    if (!suppressObjGetterErrorLog)
-        eLog("getFirstObj(): No fitting rows exist in ${tableInfo.name}, returning default")
+    if (!suppressEntityGetterErrorLog)
+        eLog("getFirstEntity(): No fitting rows exist in ${tableInfo.name}, returning default")
     // endregion
     default
 }
@@ -41,22 +41,22 @@ fun <T : BaseEntity> SQLiteDatabase.getFirstObj(                  tableInfo: Tab
  * Gets the last row as an object of an entity class using WhereDsl.
  * Returns null if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
+fun <T : BaseEntity> SQLiteDatabase.getLastEntity(                tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-): T? = getObj(tableInfo, orderByRowIdFlipped(), where = where)
+): T? = getEntity(tableInfo, orderByRowIdFlipped(), where = where)
 
 
 /**
  * Gets the last row as an object of an entity class using WhereDsl.
  * Returns [default] and logs error if no result found.
  */
-fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: TableInfoBase<out T>,
+fun <T : BaseEntity> SQLiteDatabase.getLastEntity(                tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-): T = getLastObj(tableInfo, where) ?: run {
+): T = getLastEntity(tableInfo, where) ?: run {
     // region LOG
-    if (!suppressObjGetterErrorLog)
-        eLog("getLastObj(): No fitting rows exist in ${tableInfo.name}, returning default")
+    if (!suppressEntityGetterErrorLog)
+        eLog("getLastEntity(): No fitting rows exist in ${tableInfo.name}, returning default")
     // endregion
     default
 }
@@ -65,40 +65,40 @@ fun <T : BaseEntity> SQLiteDatabase.getLastObj(                   tableInfo: Tab
 
 
 /**
- * Retrieves a single random object (row) from the specified table and maps it to an entity class.
+ * Retrieves a single random entity object (row) from the specified table and maps it to an entity class.
  *
  * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
  * @param tableInfo Contains table name and a schema bundle of any entity type.
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or null if no rows match.
  */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
+inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomEntity(
                                                                   tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T? = getObj(tableInfo, orderRandomly(), where = where)
+): T? = getEntity(tableInfo, orderRandomly(), where = where)
 
 
 /**
- * Retrieves a single random object (row) from the specified table and maps it to an entity class.
+ * Retrieves a single random entity object (row) from the specified table and maps it to an entity class.
  *
  * @param T The type of the object to retrieve. Must be a Kotlin class representing the table structure.
  * @param tableInfo Contains table name and a schema bundle of any entity type.
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or [default] if no rows match.
  */
-inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomObj(
+inline fun <reified T : BaseEntity> SQLiteDatabase.getRandomEntity(
                                                                   tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                              noinline where: WhereDsl.()->Unit = {},
-): T = getRandomObj(tableInfo, where) ?: run {
+): T = getRandomEntity(tableInfo, where) ?: run {
     // region LOG
-    if (!suppressObjGetterErrorLog)
-        eLog("getRandomObj(): No fitting rows exist in ${tableInfo.name}, returning default")
+    if (!suppressEntityGetterErrorLog)
+        eLog("getRandomEntity(): No fitting rows exist in ${tableInfo.name}, returning default")
     // endregion
     default
 }
 
 
-// TODO getRandomObjects maybe
+// TODO getRandomEntities maybe
 
 

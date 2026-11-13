@@ -5,8 +5,8 @@ import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 
 data class MilestoneLambdas(
-    val processFinalObj: MigrProcessFinalObj? = null,
+    val processFinalEntity: MigrProcessFinalEntity? = null,
     val transformColVal: (TransformColDsl.()->Unit)? = null,
 )
 
-typealias MigrProcessFinalObj = (oldObj: NormalEntity, newObj: NormalEntity) -> NormalEntity
+typealias MigrProcessFinalEntity = (oldEntity: NormalEntity, newEntity: NormalEntity) -> NormalEntity

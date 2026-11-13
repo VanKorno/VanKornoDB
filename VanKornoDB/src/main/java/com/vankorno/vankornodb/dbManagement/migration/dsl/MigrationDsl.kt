@@ -71,9 +71,7 @@ abstract class MigrationDslInternal {
         versionedSchemaBundles[version] = schemaBundle
         
         // Renames
-        for (record in verBuilder.pendingRenames) {
-            val keyName = record.key
-            val colRenames = record.value
+        for ((keyName, colRenames) in verBuilder.pendingRenames) {
             
             if (renameHistory.containsKey(keyName)  &&  !renameHistory[keyName].isNullOrEmpty()) {
                 for (rename in colRenames) {
@@ -107,9 +105,7 @@ abstract class MigrationDslInternal {
         ) {
             val renameBuilder = RenameBuilder(version).apply(block)
             
-            for (record in renameBuilder.records) {
-                val keyName = record.key
-                val colRenames = record.value
+            for ((keyName, colRenames) in renameBuilder.records) {
                 
                 if (pendingRenames.containsKey(keyName)  &&  !pendingRenames[keyName].isNullOrEmpty()) {
                     for (rename in colRenames) {
@@ -140,18 +136,18 @@ abstract class MigrationDslInternal {
          * or post-processing the entire migrated entity object.
          *
          * @param modifications Column modification rules applied during this step.
-         * @param processFinalObj Optional post-processing lambda to transform the entity after column values are mapped.
+         * @param processFinalEntity Optional post-processing lambda to transform the entity after column values are mapped.
          */
         fun milestone(
                vararg modifications: ColModification,
-                    processFinalObj: ((oldObj: NormalEntity, newObj: NormalEntity)->NormalEntity)? = null,
+                    processFinalEntity: ((oldEntity: NormalEntity, newEntity: NormalEntity)->NormalEntity)? = null,
         ) {
             val overrideBlock: TransformColDsl.() -> Unit = {
                 modifications.forEach { modify(it.colName, it.block) }
             }
             milestone = MilestoneLambdas(
                 transformColVal = overrideBlock,
-                processFinalObj = processFinalObj
+                processFinalEntity = processFinalEntity
             )
         }
         

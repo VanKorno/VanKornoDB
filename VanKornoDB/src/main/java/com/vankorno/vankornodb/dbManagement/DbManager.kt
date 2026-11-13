@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.dbManagement
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.vankorno.vankornodb.add.addObj
+import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
@@ -176,7 +176,7 @@ abstract class DbManager(        context: Context,
     private fun addAllEntityMeta(                                                db: SQLiteDatabase
     ) {
         for (meta in entityMeta) {
-            db.addObj(
+            db.addEntity(
                 _TTTEntityVersion,
                 EntityVersion(meta.dbRowName, meta.currVersion)
             )
@@ -204,7 +204,7 @@ abstract class DbManager(        context: Context,
             if (rowExists)
                 continue //\/\/\
             
-            db.addObj(
+            db.addEntity(
                 _TTTEntityVersion,
                 EntityVersion(dbName, meta.currVersion)
             )

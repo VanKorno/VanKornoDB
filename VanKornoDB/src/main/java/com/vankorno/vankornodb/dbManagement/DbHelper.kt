@@ -4,10 +4,10 @@ package com.vankorno.vankornodb.dbManagement
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.add.addObj
-import com.vankorno.vankornodb.add.addObjWithoutIdCheck
-import com.vankorno.vankornodb.add.addObjects
-import com.vankorno.vankornodb.add.addObjectsWithoutIdCheck
+import com.vankorno.vankornodb.add.addEntities
+import com.vankorno.vankornodb.add.addEntitiesWithoutIdCheck
+import com.vankorno.vankornodb.add.addEntity
+import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
 import com.vankorno.vankornodb.add.addWithNewIDsAndPositions
 import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.*
@@ -206,39 +206,39 @@ abstract class DbHelperInternal(
     
     // -----------------------------------  O B J E C T  ----------------------------------- \\
     
-    /** A wrapper fun for [SQLiteDatabase.addObj] */
-    inline fun <T : CurrEntity> addObj(                               tableInfo: TableInfoNormal<T>,
-                                                                            obj: T,
-    ): Long = readWrite(-1L, "addObj") { db ->
-        db.addObj(tableInfo, obj)
+    /** A wrapper fun for [SQLiteDatabase.addEntity] */
+    inline fun <T : CurrEntity> addEntity(                            tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
+    ): Long = readWrite(-1L, "addEntity") { db ->
+        db.addEntity(tableInfo, entity)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.addObjects] */
-    inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
-                                                                        objects: List<T>,
-    ): List<Long> = readWrite(emptyList(), "addObjects") { db ->
-        db.addObjects(tableInfo, objects)
+    /** A wrapper fun for [SQLiteDatabase.addEntities] */
+    inline fun <T : CurrEntity> addEntities(                          tableInfo: TableInfoNormal<T>,
+                                                                       entities: List<T>,
+    ): List<Long> = readWrite(emptyList(), "addEntities") { db ->
+        db.addEntities(tableInfo, entities)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.addObjects] */
-    inline fun <T : CurrEntity> addObjects(                           tableInfo: TableInfoNormal<T>,
-                                                                 vararg objects: T,
-    ): List<Long> = readWrite(emptyList(), "addObjects") { db ->
-        db.addObjects(tableInfo, objects.toList())
+    /** A wrapper fun for [SQLiteDatabase.addEntities] */
+    inline fun <T : CurrEntity> addEntities(                          tableInfo: TableInfoNormal<T>,
+                                                                vararg entities: T,
+    ): List<Long> = readWrite(emptyList(), "addEntities") { db ->
+        db.addEntities(tableInfo, entities.toList())
     }
     
-    /** A wrapper fun for [SQLiteDatabase.addObjWithoutIdCheck] */
-    inline fun <T : CurrEntity> addObjWithoutIdCheck(                 tableInfo: TableInfoNormal<T>,
-                                                                            obj: T,
-    ): Long = readWrite(-1L, "addObjWithoutIdCheck") { db ->
-        db.addObjWithoutIdCheck(tableInfo, obj)
+    /** A wrapper fun for [SQLiteDatabase.addEntityWithoutIdCheck] */
+    inline fun <T : CurrEntity> addEntityWithoutIdCheck(              tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
+    ): Long = readWrite(-1L, "addEntityWithoutIdCheck") { db ->
+        db.addEntityWithoutIdCheck(tableInfo, entity)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.addObjectsWithoutIdCheck] */
-    inline fun <T : CurrEntity> addObjectsWithoutIdCheck(             tableInfo: TableInfoNormal<T>,
-                                                                        objects: List<T>,
-    ): List<Long> = readWrite(emptyList(), "addObjectsWithoutIdCheck") { db ->
-        db.addObjectsWithoutIdCheck(tableInfo, objects)
+    /** A wrapper fun for [SQLiteDatabase.addEntitiesWithoutIdCheck] */
+    inline fun <T : CurrEntity> addEntitiesWithoutIdCheck(            tableInfo: TableInfoNormal<T>,
+                                                                       entities: List<T>,
+    ): List<Long> = readWrite(emptyList(), "addEntitiesWithoutIdCheck") { db ->
+        db.addEntitiesWithoutIdCheck(tableInfo, entities)
     }
     
     
@@ -267,12 +267,12 @@ abstract class DbHelperInternal(
     
     // ---------------------------------------  S E T  --------------------------------------- \\
     
-    /** A wrapper fun for [SQLiteDatabase.setObj] */
-    fun <T : CurrEntity> setObj(                                      tableInfo: TableInfoNormal<T>,
-                                                                            obj: T,
+    /** A wrapper fun for [SQLiteDatabase.setEntity] */
+    fun <T : CurrEntity> setEntity(                                   tableInfo: TableInfoNormal<T>,
+                                                                         entity: T,
                                                                           where: WhereDsl.()->Unit,
-    ): Int = readWrite(0, "setObj") { db ->
-        db.setObj(tableInfo, obj, where)
+    ): Int = readWrite(0, "setEntity") { db ->
+        db.setEntity(tableInfo, entity, where)
     }
     
     
@@ -348,98 +348,98 @@ abstract class DbHelperInternal(
     
     
     
-    // ==============================  G E T   O B J E C T S  ============================== \\
+    // ==============================  G E T   E N T I T I E S  ============================== \\
     
-    /** A wrapper fun for [SQLiteDatabase.getObj] */
-    fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
+    /** A wrapper fun for [SQLiteDatabase.getEntity] */
+    fun <T : BaseEntity> getEntity(                               tableInfo: TableInfoBase<T>,
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit,
-    ): T? = read(null, "getObj") { db ->
-        db.getObj(tableInfo, orderBy, extra, where)
+    ): T? = read(null, "getEntity") { db ->
+        db.getEntity(tableInfo, orderBy, extra, where)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getObj] */
-    fun <T : BaseEntity> getObj(                                  tableInfo: TableInfoBase<T>,
+    /** A wrapper fun for [SQLiteDatabase.getEntity] */
+    fun <T : BaseEntity> getEntity(                               tableInfo: TableInfoBase<T>,
                                                                     default: T,
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit,
-    ): T = read(default, "getObj") { db ->
-        db.getObj(tableInfo, default, orderBy, extra, where)
+    ): T = read(default, "getEntity") { db ->
+        db.getEntity(tableInfo, default, orderBy, extra, where)
     }
     
     
     
-    /** A wrapper fun for [SQLiteDatabase.getFirstObj] */
-    fun <T : BaseEntity> getFirstObj(                             tableInfo: TableInfoBase<out T>,
+    /** A wrapper fun for [SQLiteDatabase.getFirstEntity] */
+    fun <T : BaseEntity> getFirstEntity(                          tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): T? = read(null, "getFirstObj") { db ->
-        db.getFirstObj(tableInfo, where)
+    ): T? = read(null, "getFirstEntity") { db ->
+        db.getFirstEntity(tableInfo, where)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getFirstObj] */
-    fun <T : BaseEntity> getFirstObj(                             tableInfo: TableInfoBase<out T>,
+    /** A wrapper fun for [SQLiteDatabase.getFirstEntity] */
+    fun <T : BaseEntity> getFirstEntity(                          tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-    ): T = read(default, "getFirstObj") { db ->
-        db.getFirstObj(tableInfo, default, where)
+    ): T = read(default, "getFirstEntity") { db ->
+        db.getFirstEntity(tableInfo, default, where)
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
-    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
+    /** A wrapper fun for [SQLiteDatabase.getLastEntity] */
+    fun <T : BaseEntity> getLastEntity(                           tableInfo: TableInfoBase<out T>,
                                                                       where: WhereDsl.()->Unit = {},
-    ): T? = read(null, "getLastObj") { db ->
-        db.getLastObj(tableInfo, where)
+    ): T? = read(null, "getLastEntity") { db ->
+        db.getLastEntity(tableInfo, where)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getLastObj] */
-    fun <T : BaseEntity> getLastObj(                              tableInfo: TableInfoBase<out T>,
+    /** A wrapper fun for [SQLiteDatabase.getLastEntity] */
+    fun <T : BaseEntity> getLastEntity(                           tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                                       where: WhereDsl.()->Unit = {},
-    ): T = read(default, "getLastObj") { db ->
-        db.getLastObj(tableInfo, default, where)
+    ): T = read(default, "getLastEntity") { db ->
+        db.getLastEntity(tableInfo, default, where)
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.getRandomObj] */
-    inline fun <reified T : BaseEntity> getRandomObj(             tableInfo: TableInfoBase<out T>,
+    /** A wrapper fun for [SQLiteDatabase.getRandomEntity] */
+    inline fun <reified T : BaseEntity> getRandomEntity(          tableInfo: TableInfoBase<out T>,
                                                              noinline where: WhereDsl.()->Unit = {},
-    ): T? = read(null, "getRandomObj") { db ->
-        db.getRandomObj<T>(tableInfo, where)
+    ): T? = read(null, "getRandomEntity") { db ->
+        db.getRandomEntity<T>(tableInfo, where)
     }
     
-    /** A wrapper fun for [SQLiteDatabase.getRandomObj] */
-    inline fun <reified T : BaseEntity> getRandomObj(             tableInfo: TableInfoBase<out T>,
+    /** A wrapper fun for [SQLiteDatabase.getRandomEntity] */
+    inline fun <reified T : BaseEntity> getRandomEntity(          tableInfo: TableInfoBase<out T>,
                                                                     default: T,
                                                              noinline where: WhereDsl.()->Unit = {},
-    ): T = read(default, "getRandomObj") { db ->
-        db.getRandomObj<T>(tableInfo, default, where)
+    ): T = read(default, "getRandomEntity") { db ->
+        db.getRandomEntity<T>(tableInfo, default, where)
     }
     
     
     
     
-    // =========================  M U L T I P L E   O B J E C T S  ========================= \\
+    // =========================  M U L T I P L E   E N T I T I E S  ========================= \\
     
-    /** A wrapper fun for [SQLiteDatabase.getObjects] */
-    fun <T : BaseEntity> getObjects(                              tableInfo: TableInfoBase<T>,
+    /** A wrapper fun for [SQLiteDatabase.getEntities] */
+    fun <T : BaseEntity> getEntities(                             tableInfo: TableInfoBase<T>,
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
-    ): List<T> = read(emptyList(), "getObjects") { db ->
-        db.getObjects(tableInfo, orderBy, extra, where)
+    ): List<T> = read(emptyList(), "getEntities") { db ->
+        db.getEntities(tableInfo, orderBy, extra, where)
     }
     
     
-    /** A wrapper fun for [SQLiteDatabase.getObjMap] */
-    fun <T : BaseEntity> getObjMap(                               tableInfo: TableInfoBase<T>,
+    /** A wrapper fun for [SQLiteDatabase.getEntityMap] */
+    fun <T : BaseEntity> getEntityMap(                            tableInfo: TableInfoBase<T>,
                                                                     orderBy: OrderDsl.()->Unit = {},
                                                                       extra: ExtraDsl.()->Unit = {},
                                                                       where: WhereDsl.()->Unit = {},
-    ): Map<Long, T> = read(emptyMap(), "getObjMap") { db ->
-        db.getObjMap(tableInfo, orderBy, extra, where)
+    ): Map<Long, T> = read(emptyMap(), "getEntityMap") { db ->
+        db.getEntityMap(tableInfo, orderBy, extra, where)
     }
     
     

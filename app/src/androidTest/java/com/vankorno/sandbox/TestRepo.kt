@@ -2,7 +2,7 @@ package com.vankorno.sandbox
 
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
-import com.vankorno.vankornodb.add.addObjects
+import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.createTable
@@ -21,7 +21,7 @@ fun Dbh.getLabRats(                                                             
         val testSubjects = List(LabRatQuant) { idx ->
             TestEntity(name = LabRat + (idx + 1), position = idx + 1L)
         }
-        db.addObjects(table using _Test, testSubjects)
+        db.addEntities(table using _Test, testSubjects)
     }
 }
 

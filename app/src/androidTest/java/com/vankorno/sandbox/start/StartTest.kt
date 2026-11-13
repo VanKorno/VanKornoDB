@@ -21,13 +21,13 @@ class StartTest() : BaseAndroidTest() {
     
     @Test
     fun rowCreated() {
-        val firstRow = dbh.getFirstObj(_TTTEntityVersion)
+        val firstRow = dbh.getFirstEntity(_TTTEntityVersion)
         assertTrue(firstRow != null)
     }
     
     @Test
     fun correctVersionVals() {
-        val firstRow = dbh.getFirstObj(_TTTEntityVersion, default = EntityVersion())
+        val firstRow = dbh.getFirstEntity(_TTTEntityVersion, default = EntityVersion())
         
         val target = EntityVersion(
             name = EntityMeta.TestEntt.dbRowName,

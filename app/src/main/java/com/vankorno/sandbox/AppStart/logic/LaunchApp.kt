@@ -21,6 +21,6 @@ fun createTestTableIfAbsent() {
         val testSubjects = List(50) {
             TestEntity(name = "Name" + it, position = it + 1L)
         }
-        dbh.addObjects(_TestTable, testSubjects)
+        dbh.addEntities(_TestTable, testSubjects)
     }
 }

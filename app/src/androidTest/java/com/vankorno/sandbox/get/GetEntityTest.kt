@@ -23,22 +23,22 @@ private object OrmTestWrongGetter : CurrSchemaBundle<TestEntity>(
     }
 )
 
-private const val GetObjTestTable = "GetObjTestTable"
+private const val GetEntityTestTable = "GetEntityTestTable"
 
 
 @MediumTest
-class GetObjectTest {
+class GetEntityTest {
     @Test
-    fun getObjectTest() {
-        makeRatsTestNest(GetObjTestTable)
+    fun getEntityTest() {
+        makeRatsTestNest(GetEntityTestTable)
         
-        getObjWithGeneratedGetter()
-        getObjWithNullGetter()
+        getEntityWithGeneratedGetter()
+        getEntityWithNullGetter()
         getterHasPriorityOverReflection()
     }
     
-    private fun getObjWithGeneratedGetter() {
-        val obj = dbh.getObj(GetObjTestTable using _Test) { ID = 1L }
+    private fun getEntityWithGeneratedGetter() {
+        val obj = dbh.getEntity(GetEntityTestTable using _Test) { ID = 1L }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)
@@ -46,8 +46,8 @@ class GetObjectTest {
     }
     
     
-    private fun getObjWithNullGetter() {
-        val obj = dbh.getObj(GetObjTestTable using DummySchema) { ID = 1L }
+    private fun getEntityWithNullGetter() {
+        val obj = dbh.getEntity(GetEntityTestTable using DummySchema) { ID = 1L }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)
@@ -56,7 +56,7 @@ class GetObjectTest {
     
     @Test
     fun getterHasPriorityOverReflection() {
-        val obj = dbh.getObj(GetObjTestTable using OrmTestWrongGetter) { ID = 1L }
+        val obj = dbh.getEntity(GetEntityTestTable using OrmTestWrongGetter) { ID = 1L }
         
         assertNotNull(obj)
         assertEquals(999, obj!!.id)

@@ -115,7 +115,7 @@ class GetLargestLastTest {
         val tableInfo = table using _Test
 
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(
+        dbh.addEntities(tableInfo, listOf(
             TestEntity(position = 5L, str1 = "cat"),
             TestEntity(position = 10L, str1 = "cat"),
             TestEntity(position = 50L, str1 = "dog")

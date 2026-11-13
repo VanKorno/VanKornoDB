@@ -14,16 +14,16 @@ private const val TestTable = "AddWithoutIdCheckTable"
 private val _TestTable = TestTable using _Test
 
 @MediumTest
-class AddObjWithoutIdCheckTest {
+class AddEntityWithoutIdCheckTest {
     @Test
-    fun addObjWithoutIdCheckTest() {
+    fun addEntityWithoutIdCheckTest() {
         makeRatsTestNest(TestTable)
         
         val name = "Splinter"
         val id = 777L
         val rat = TestEntity(id, name, 777)
         
-        val insertedRowId = dbh.addObjWithoutIdCheck(_TestTable, rat)
+        val insertedRowId = dbh.addEntityWithoutIdCheck(_TestTable, rat)
         assertEquals(true, insertedRowId > 0L)
         
         val storedId = dbh.getLong(TestTable, cID) { Name = name }
@@ -33,13 +33,13 @@ class AddObjWithoutIdCheckTest {
     }
     
     @Test
-    fun addObjectsWithoutIdCheckTest() {
+    fun addEntitiesWithoutIdCheckTest() {
         makeRatsTestNest(TestTable)
         
         val rat1 = TestEntity(777, "Splinter", 777)
         val rat2 = TestEntity(778, "Ratatouille", 778)
         
-        val insertedRowIds = dbh.addObjectsWithoutIdCheck(
+        val insertedRowIds = dbh.addEntitiesWithoutIdCheck(
             _TestTable,
             listOf(rat1, rat2),
         )

@@ -60,7 +60,7 @@ class NextIdTest {
         assertBothFun(table, 51L, 52L)
         
         // Add larger num ID
-        dbh.addObjWithoutIdCheck(table using _Test, TestEntity(999990))
+        dbh.addEntityWithoutIdCheck(table using _Test, TestEntity(999990))
         assertBothFun(table, 999991L, 999992L)
         
         dbh.deleteTable(table)
@@ -113,7 +113,7 @@ class NextIdTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE, name = "Max"))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE, name = "Max"))
         
         assertBothFun(table, 1L, 2L)
         dbh.deleteTable(table)
@@ -141,7 +141,7 @@ class NextIdTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
         val id1 = dbh.getNextId(table)
         val ids1 = dbh.getNextIDs(table, 2)
@@ -164,7 +164,7 @@ class NextIdTest {
         val reserved = setOf(100L, Long.MAX_VALUE - 1)
         
         dbh.createTable(tableInfo)
-        dbh.addObjWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
+        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
         val id1 = dbh.getNextId(table, reserved)
         val ids1 = dbh.getNextIDs(table, 2, reserved)
@@ -182,7 +182,7 @@ class NextIdTest {
         val tableInfo = table using _Test
         
         dbh.createTable(tableInfo)
-        dbh.addObjects(tableInfo, listOf(TestEntity(2L), TestEntity(4L), TestEntity(6L), TestEntity(Long.MAX_VALUE)))
+        dbh.addEntities(tableInfo, listOf(TestEntity(2L), TestEntity(4L), TestEntity(6L), TestEntity(Long.MAX_VALUE)))
         
         assertBothFun(table, 1L, 3L)
         dbh.deleteTable(table)

@@ -84,12 +84,12 @@ class DefineMigrationsTest {
     data class Dummy(val value: String) : CurrEntityWithId()
     
     @Test
-    fun `stores milestone with processFinalObj`() {
-        val migrationFunc: (oldObj: NormalEntity, newObj: NormalEntity) -> NormalEntity = { old, _ -> old }
+    fun `stores milestone with processFinalEntity`() {
+        val migrationFunc: (oldEntity: NormalEntity, newEntity: NormalEntity) -> NormalEntity = { old, _ -> old }
         
         val bundle = defineMigrations(2, OrmCurr) {
             version(1, OrmV1) {
-                milestone(processFinalObj = migrationFunc)
+                milestone(processFinalEntity = migrationFunc)
             }
         }
         
@@ -98,7 +98,7 @@ class DefineMigrationsTest {
         val old = Dummy("OLD")
         val new = Dummy("NEW")
         
-        assertEquals(old, milestone.processFinalObj?.invoke(old, new))
+        assertEquals(old, milestone.processFinalEntity?.invoke(old, new))
     }
     
     
