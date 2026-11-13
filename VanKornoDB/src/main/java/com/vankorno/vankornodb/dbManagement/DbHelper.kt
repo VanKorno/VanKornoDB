@@ -243,19 +243,25 @@ abstract class DbHelperInternal(
     
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIDsAndPositions] */
-    fun <T : CurrEntity> addWithNewIDsAndPositions(                   tableInfo: TableInfoNormal<T>,
-                                                                       entities: List<T>,
-                                                               setIdAndPosition: (T, Long, Long)->T,
-    ): List<DbIdAndPosition> = readWrite(emptyList(), "addWithNewIDsAndPositions") { db ->
-        db.addWithNewIDsAndPositions(tableInfo, entities, setIdAndPosition)
+    fun <T : CurrEntity> addWithNewIDsAndPositions(               tableInfo: TableInfoNormal<T>,
+                                                                   entities: List<T>,
+                                                         positionConditions: WhereDsl.()->Unit = {},
+                                                           setIdAndPosition: (T, Long, Long)->T,
+    ): List<DbIdAndPosition> = readWrite(
+        emptyList(), "addWithNewIDsAndPositions"
+    ) { db ->
+        db.addWithNewIDsAndPositions(tableInfo, entities, positionConditions, setIdAndPosition)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
-    fun <T : CurrEntity> addWithNewIdAndPosition(                     tableInfo: TableInfoNormal<T>,
-                                                                         entity: T,
-                                                               setIdAndPosition: (T, Long, Long)->T,
-    ): DbIdAndPosition = readWrite(DbIdAndPosition(), "addWithNewIdAndPosition") { db ->
-        db.addWithNewIdAndPosition(tableInfo, entity, setIdAndPosition)
+    fun <T : CurrEntity> addWithNewIdAndPosition(                 tableInfo: TableInfoNormal<T>,
+                                                                     entity: T,
+                                                         positionConditions: WhereDsl.()->Unit = {},
+                                                           setIdAndPosition: (T, Long, Long)->T,
+    ): DbIdAndPosition = readWrite(
+        DbIdAndPosition(), "addWithNewIdAndPosition"
+    ) { db ->
+        db.addWithNewIdAndPosition(tableInfo, entity, positionConditions, setIdAndPosition)
     }
     
     
