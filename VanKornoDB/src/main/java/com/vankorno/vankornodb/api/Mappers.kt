@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.dbManagement.data.BaseSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.NormalSchemaBundle
 import com.vankorno.vankornodb.mappers.toCV
-import com.vankorno.vankornodb.mappers.toEntt
+import com.vankorno.vankornodb.mappers.toEntity
 
 /**
  * Maps the current row of the Cursor to an instance of the specified data class [T].
@@ -16,7 +16,7 @@ import com.vankorno.vankornodb.mappers.toEntt
  *
  * @return An instance of [T] constructed from the current row of the Cursor.
  */
-fun <T : BaseEntity> Cursor.toEntity(schemaBundle: BaseSchemaBundle<T>): T = toEntt(schemaBundle)
+fun <T : BaseEntity> Cursor.toEntity(schemaBundle: BaseSchemaBundle<T>): T = toEntity(schemaBundle)
 
 
 
