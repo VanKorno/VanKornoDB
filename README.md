@@ -77,16 +77,16 @@ db.getCursor(SomeTable, columns(Name, Position), orderByPosition(), limit(10)) {
 
 ```
 
-getObj() - gets a whole db table row as an object of the entity data class
+getEntity() - gets a whole db table row as an object of an entity data class
 
 ```kotlin
-db.getObj(_RoundTable) { KnightState notEqual drunk }
+db.getEntity(_RoundTable) { KnightState notEqual drunk }
 ```
 
-getObjects() or getObjMap() - for getting multiple objects from a db table.
+getEntities() or getEntityMap() - for getting multiple entity objects from a db table.
 
 ```kotlin
-db.getObjects(_RoundTable) { KnightState less hammered }
+db.getEntities(_RoundTable) { KnightState less hammered }
 ```
 
 getInt() (same for other types) - for getting single values from a particular cell.
@@ -137,7 +137,7 @@ db.getCursor(
 )
 ```
 
-There are multiple setter functions as well. Single value setters, like setInt(), setString(), object setters, like setObj(), different convenience functions like addToInt(), flipBool()...
+There are multiple setter functions as well. Single value setters, like setInt(), setString(), entity setters, like setEntity(), different convenience functions like addToInt(), flipBool()...
 
 set() - is a universal value setter function that uses its own DSL to modify multiple values, perform different operations, joining them all in a single db query under the hood, optimizing performance.
 
