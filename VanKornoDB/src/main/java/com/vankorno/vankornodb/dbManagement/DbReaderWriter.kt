@@ -8,10 +8,20 @@ import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.unitTestCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * Extends [DbManager] to provide high-level, thread-safe read and write operation primitives
+ * with automatic transaction management, error handling, and unit test auto-mocking.
+ *
+ * Key features:
+ * - Synchronous and asynchronous read (`read`, `voidRead`, `readSusp`, `voidReadSusp`) and write (`write`, `writeSusp`, `readWrite`, `readWriteSusp`) APIs.
+ * - Automatic thread synchronization via [DbLock] and transaction wrapping.
+ * - Built-in unit test auto-mocking (`unitTestCase`), safely bypassing database operations and returning defaults during JVM unit tests.
+ */
 abstract class DbReaderWriter(
                                  context: Context,
                                   dbName: String,
@@ -35,6 +45,7 @@ abstract class DbReaderWriter(
     private inline fun writeBase(                                   funName: String = "write",
                                                           crossinline block: (SQLiteDatabase)->Unit,
     ) {
+        if (unitTestCase) return //\/\/\/\/\/\
         try {
             lock.withLock {
                 currDb.transaction { block(this) }
@@ -54,6 +65,7 @@ abstract class DbReaderWriter(
                                                                        funName: String = "read",
                                                              crossinline block: (SQLiteDatabase)->T,
     ): T {
+        if (unitTestCase) return default //\/\/\/\/\/\
         return try {
             lock.withLock {
                 block(currDb)
@@ -112,6 +124,7 @@ abstract class DbReaderWriter(
                                                                       funName: String = "readWrite",
                                                             crossinline block: (SQLiteDatabase)->T,
     ): T {
+        if (unitTestCase) return default //\/\/\/\/\/\
         return try {
             lock.withLock {
                 currDb.transaction { block(this) }

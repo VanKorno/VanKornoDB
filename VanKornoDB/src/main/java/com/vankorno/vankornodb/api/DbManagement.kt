@@ -12,6 +12,9 @@ import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 import com.vankorno.vankornodb.newTable.createTablesInternal
 
 
+/**
+ * Public entry-point class for database management, inheriting from [DbHelperInternal].
+ */
 open class DbHelper(             context: Context,
                                   dbName: String,
                                dbVersion: Int,

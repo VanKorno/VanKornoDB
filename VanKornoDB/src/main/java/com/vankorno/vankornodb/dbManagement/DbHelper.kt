@@ -25,6 +25,19 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 import com.vankorno.vankornodb.misc.orderByRowId
 import com.vankorno.vankornodb.set.*
 
+/**
+ * The primary entry-point class for database operations, schema access, and query execution.
+ *
+ * It builds upon [DbReaderWriter], which handles thread-safe transactional read/write primitives
+ * and unit test auto-mocking, which in turn extends [DbManager], which manages SQLite database lifecycle,
+ * versioning, entity version tables, and automatic migrations.
+ *
+ * [DbHelperInternal] adds comprehensive high-level convenience wrappers and query/mutation helpers:
+ * - **Under-the-Hood Delegation**: All helper functions cleanly delegate to base read/write execution primitives (`read`, `write`, `readWrite`) from [DbReaderWriter].
+ * - **Consistent API Patterns**: Functions follow predictable argument ordering conventions, placing DSL builders and `where`-blocks last where applicable for clean DSL usage.
+ * - **Async Support**: Write and setter functions provide an optional `async` parameter to launch operations asynchronously on `dbScope`.
+ * - **Convenience APIs**: Includes wrappers for cursor traversal (`useCursor`, `getFromCursor`), single-value/column getters, and targeted property setters (`setInt`, `setStr`, etc.).
+ */
 @Suppress("NOTHING_TO_INLINE", "unused")
 abstract class DbHelperInternal(
                                  context: Context,

@@ -20,6 +20,7 @@ import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.unitTestCase
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,10 +83,12 @@ abstract class DbManager(        context: Context,
     
     
     init {
-        db = writableDatabase
-        lock.withLock {
-            if (!versionTableHandled)
-                handleVersionTable(currDb)
+        if (!unitTestCase) {
+            db = writableDatabase
+            lock.withLock {
+                if (!versionTableHandled)
+                    handleVersionTable(currDb)
+            }
         }
     }
     
