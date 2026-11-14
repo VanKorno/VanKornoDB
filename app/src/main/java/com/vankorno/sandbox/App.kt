@@ -8,7 +8,6 @@ import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornohelpers.values.LibGlobals.androidTestsRun
 
 class App : Application() {
@@ -28,10 +27,9 @@ class App : Application() {
             context = this,
             entityMeta = EntityMeta.entries,
             createExclusiveTables = true,
+            mustHaveTables = listOf(_TestTable),
             onCreate = { db ->
-                db.createTables(
-                    _TestTable
-                )
+                
             },
             onUpgrade = { db, _ ->
                 DbMigrator(db, EntityMeta.entries).migrateSingleTableEntities()

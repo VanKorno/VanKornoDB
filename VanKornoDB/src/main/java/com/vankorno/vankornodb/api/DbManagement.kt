@@ -21,6 +21,7 @@ open class DbHelper(              dbName: String,
                                  context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
+                          mustHaveTables: List<TableInfoNormal<out NormalEntity>> = emptyList(),
                                     lock: DbLock = DbLock(),
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
@@ -30,6 +31,7 @@ open class DbHelper(              dbName: String,
     context = context,
     entityMeta = entityMeta,
     createExclusiveTables = createExclusiveTables,
+    mustHaveTables = mustHaveTables,
     lock = lock,
     onCreate = onCreate,
     onUpgrade = onUpgrade
@@ -67,6 +69,7 @@ object DbRuntime {
                     dbVersion = 1,
                     context = null,
                     entityMeta = emptyList(),
+                    mustHaveTables = emptyList(),
                 )
             }
             return _dbh ?: error("DbRuntime.dbh has not been initialized")

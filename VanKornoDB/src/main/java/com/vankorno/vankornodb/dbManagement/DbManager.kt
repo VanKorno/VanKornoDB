@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.createTable
+import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
+import com.vankorno.vankornodb.dbManagement.data.NormalEntity
+import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data._TTTEntityVersion
 import com.vankorno.vankornodb.delete.deleteRows
@@ -54,19 +57,30 @@ import kotlinx.coroutines.cancel
  * - Ensures the version table matches the current schema definitions.
  *
  * @property lock a [DbLock] instance that guarantees thread-safe access to the database.
+ * 
  * @property entityMeta the collection of all entity metadata used for version tracking
  *   and automatic migration.
+ * 
  * @property createExclusiveTables if true, [onCreate] automatically creates exclusive tables
- *   for entities defined in [entityMeta].
+ *   for entities defined in [entityMeta]. Just define tables in Meta, and you don't have to put them
+ *   anywhere else to ensure they are created whenever the db gets initialized (if they don't already exist).
+ * 
+ * @property mustHaveTables Additional tables that have to be created with the db
+ *   (the ones you'd usually put in onCreate and maybe somewhere else, to ensure their existence).
+ *   These tables might not be a part of [entityMeta], therefore not being covered by [createExclusiveTables].
+ *   But if they are covered by [createExclusiveTables], then there's no need to put them here.
+ * 
  * @property runOnCreate lambda executed during database creation for custom logic.
+ * 
  * @property runOnUpgrade lambda executed during database upgrade for custom logic.
  */
 
-abstract class DbManager(          dbName: String,
+abstract class DbManager(         dbName: String,
                                dbVersion: Int,
-                            context: Context? = null,
+                                 context: Context? = null,
                           val entityMeta: Collection<BaseEntityMeta>,
                val createExclusiveTables: Boolean = true,
+                      val mustHaveTables: List<TableInfoNormal<out NormalEntity>> = emptyList(),
                                 val lock: DbLock,
                          val runOnCreate: (SQLiteDatabase)->Unit = {},
                         val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
@@ -87,9 +101,21 @@ abstract class DbManager(          dbName: String,
             db = writableDatabase
             lock.withLock {
                 if (!versionTableHandled)
-                    handleVersionTable(currDb)
+                    ensureDbStructure(currDb)
             }
         }
+    }
+    
+    
+    private fun ensureDbStructure(                                               db: SQLiteDatabase
+    ) {
+        handleVersionTable(db)
+        
+        if (createExclusiveTables)
+            db.createExclusiveTablesInternal(entityMeta)
+        
+        if (mustHaveTables.isNotEmpty())
+            db.createTables(mustHaveTables)
     }
     
     
@@ -100,10 +126,7 @@ abstract class DbManager(          dbName: String,
         // endregion
         lock.withLock {
             db.createTable(_TTTEntityVersion)
-            handleVersionTable(db)
-            
-            if (createExclusiveTables)
-                db.createExclusiveTablesInternal(entityMeta)
+            ensureDbStructure(db)
             
             runOnCreate(db)
         }
@@ -122,8 +145,10 @@ abstract class DbManager(          dbName: String,
         lock.withLock {
             db.beginTransaction()
             try {
-                handleVersionTable(db)
+                ensureDbStructure(db)
+                
                 runOnUpgrade(db, oldVersion)
+                
                 db.setTransactionSuccessful()
             } catch (e: Exception) {
                 // region LOG

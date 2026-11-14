@@ -1,5 +1,6 @@
 package com.vankorno.vankornodb.dbManagement
 
+import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import org.junit.Assert.*
@@ -61,6 +62,18 @@ class DbAutoMockingTest {
         assertEquals(0, dbh.getRowCount("TestTable"))
         
         dbh.setInt(42, "TestTable", iCol("score")) { ID = 1L }
+    }
+    
+    
+    @Test
+    fun `DbHelper accepts tables collection parameter`() {
+        val helper = DbHelper(
+            dbName = ":memory:",
+            dbVersion = 1,
+            entityMeta = emptyList(),
+            mustHaveTables = emptyList(),
+        )
+        assertNotNull(helper)
     }
     
     
