@@ -24,6 +24,16 @@ fun orderRandomly(): OrderDsl.()->Unit = { orderRandomly() }
 
 
 
+fun AscendingColumn<*>.flip(): OrderDsl.()->Unit = { this@flip.flip() }
+
+fun AscendingColumn<*>.flipIf(                                             condition: Boolean
+): OrderDsl.()->Unit = {
+    if (condition)
+        this@flipIf.flip()
+    else
+        col(this@flipIf)
+}
+
 fun IntCol.flipped() = DescendingIntCol(this@flipped.name)
 fun StrCol.flipped() = DescendingStrCol(this@flipped.name)
 fun BoolCol.flipped() = DescendingBoolCol(this@flipped.name)

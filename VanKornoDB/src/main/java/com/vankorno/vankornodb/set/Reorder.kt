@@ -10,6 +10,7 @@ import com.vankorno.vankornodb.misc.columns
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
+import com.vankorno.vankornodb.misc.flipIf
 import com.vankorno.vankornodb.misc.limit
 
 fun SQLiteDatabase.reorder(                                           table: String,
@@ -35,7 +36,7 @@ fun SQLiteDatabase.reorder(                                           table: Str
             
             and(where)
         },
-        orderBy = { cPosition.flipIf(moveUpOrBack) },
+        orderBy = cPosition.flipIf(moveUpOrBack),
         extra = limit(1),
     ) { cursor ->
         if (!cursor.moveToFirst()) return false //\/\/\/\/\/\
