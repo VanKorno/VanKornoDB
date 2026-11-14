@@ -62,9 +62,9 @@ import kotlinx.coroutines.cancel
  * @property runOnUpgrade lambda executed during database upgrade for custom logic.
  */
 
-abstract class DbManager(        context: Context,
-                                  dbName: String,
+abstract class DbManager(          dbName: String,
                                dbVersion: Int,
+                            context: Context? = null,
                           val entityMeta: Collection<BaseEntityMeta>,
                val createExclusiveTables: Boolean = true,
                                 val lock: DbLock,

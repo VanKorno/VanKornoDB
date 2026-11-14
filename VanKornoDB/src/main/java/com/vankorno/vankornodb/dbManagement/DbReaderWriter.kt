@@ -23,18 +23,18 @@ import kotlinx.coroutines.withContext
  * - Built-in unit test auto-mocking (`unitTestCase`), safely bypassing database operations and returning defaults during JVM unit tests.
  */
 abstract class DbReaderWriter(
-                                 context: Context,
                                   dbName: String,
                                dbVersion: Int,
+                                 context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
                                     lock: DbLock = dbLock,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbManager(
-    context = context,
     dbName = dbName,
     dbVersion = dbVersion,
+    context = context,
     entityMeta = entityMeta,
     createExclusiveTables = createExclusiveTables,
     lock = lock,

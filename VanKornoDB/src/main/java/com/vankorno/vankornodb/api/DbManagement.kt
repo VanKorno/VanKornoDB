@@ -8,6 +8,7 @@ import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.dbManagement.lock.DbLockInternal
+import com.vankorno.vankornodb.misc.unitTestCase
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
 import com.vankorno.vankornodb.newTable.createTablesInternal
 
@@ -15,18 +16,18 @@ import com.vankorno.vankornodb.newTable.createTablesInternal
 /**
  * Public entry-point class for database management, inheriting from [DbHelperInternal].
  */
-open class DbHelper(             context: Context,
-                                  dbName: String,
+open class DbHelper(              dbName: String,
                                dbVersion: Int,
+                                 context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
                                     lock: DbLock = DbLock(),
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbHelperInternal(
-    context = context,
     dbName = dbName,
     dbVersion = dbVersion,
+    context = context,
     entityMeta = entityMeta,
     createExclusiveTables = createExclusiveTables,
     lock = lock,
@@ -44,6 +45,7 @@ open class DbHelper(             context: Context,
 typealias Dbh = DbHelper
 
 
+
 class DbLock {
     private val internalLock = DbLockInternal()
     
@@ -52,10 +54,26 @@ class DbLock {
 
 
 object DbRuntime {
+    private var _dbh: DbHelper? = null
+    
     /**
      * Holds the main app DbHelper
      */
-    lateinit var dbh: DbHelper
+    var dbh: DbHelper
+        get() {
+            if (_dbh == null && unitTestCase) {
+                _dbh = DbHelper(
+                    dbName = ":memory:",
+                    dbVersion = 1,
+                    context = null,
+                    entityMeta = emptyList(),
+                )
+            }
+            return _dbh ?: error("DbRuntime.dbh has not been initialized")
+        }
+        set(value) {
+            _dbh = value
+        }
     
     var dbLock = DbLock()
 }

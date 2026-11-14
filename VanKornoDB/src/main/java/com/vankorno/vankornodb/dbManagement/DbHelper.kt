@@ -40,18 +40,18 @@ import com.vankorno.vankornodb.set.*
  */
 @Suppress("NOTHING_TO_INLINE", "unused")
 abstract class DbHelperInternal(
-                                 context: Context,
                                   dbName: String,
                                dbVersion: Int,
+                                 context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
                                     lock: DbLock = dbLock,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
 ) : DbReaderWriter(
-    context = context,
     dbName = dbName,
     dbVersion = dbVersion,
+    context = context,
     entityMeta = entityMeta,
     createExclusiveTables = createExclusiveTables,
     lock = lock,
