@@ -32,6 +32,7 @@ If you want more control - you can have it. If you want more automation - you ca
 - Works with unconventional or highly dynamic schemas
 - Can be used with more diverse architecture types than the usual Android ORMs, for example, heavier db-layer logic, etc.
 - Built-in database lifecycle and migration system
+- Built-in unit test auto-mocking (automatically bypasses database operations and returns defaults during JVM unit tests without needing external mocking libraries)
 
 
 ## Extremely unique features
