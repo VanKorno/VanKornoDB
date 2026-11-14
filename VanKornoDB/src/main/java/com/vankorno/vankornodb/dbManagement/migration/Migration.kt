@@ -17,6 +17,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.getEntities
 import com.vankorno.vankornodb.misc.dLog
+import com.vankorno.vankornodb.misc.eLog
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -47,7 +48,13 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
 ) {
     val newVersion = entityMeta.currVersion
     
-    if (newVersion <= oldVersion) return //\/\/\/\/\/\
+    if (oldVersion < 1 || newVersion < 1) {
+        // region LOG
+            eLog("migrateMultiStepInternal(): Invalid version detected for table $table (oldVersion = $oldVersion, newVersion = $newVersion). Aborting migration.")
+        // endregion
+        return //\/\/\/\/\/\
+    }
+    if (newVersion <= oldVersion)  return  //\/\/\/\/\/\
     
     val migrationBundle = entityMeta.migrationBundle.value
     val schemaBundle = entityMeta.schemaBundle

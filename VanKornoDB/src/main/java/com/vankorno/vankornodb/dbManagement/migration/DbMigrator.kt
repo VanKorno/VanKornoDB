@@ -9,6 +9,7 @@ import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.get.noty.getIntNoty
 import com.vankorno.vankornodb.misc.dLog
+import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.set.noty.setNoty
 
 abstract class DbMigratorInternal(                               val db: SQLiteDatabase,
@@ -38,6 +39,12 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
         val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, _Name, entityMeta.dbRowName)
         val newVer = entityMeta.currVersion
         val table = entityMeta.limitedToTable ?: return //\/\/\
+        if (oldVer < 1 || newVer < 1) {
+            // region LOG
+                eLog("migrateSingleTableEntity(): Invalid version detected for table $table (oldVer = $oldVer, newVer = $newVer). Aborting migration.")
+            // endregion
+            return //\/\/\/\/\/\
+        }
         // region LOG
         if (oldVer != newVer)
             dLog("Migrating $table. oldVer = $oldVer, newVer = $newVer")
@@ -67,11 +74,17 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
             dLog("migrateTables(): Migrating tables that use the $dbRowName entity...")
         // endregion
         val oldVer = db.getIntNoty(TABLE_EntityVersions, EntityVersion, _Name, dbRowName)
+        val newVer = entityMeta.currVersion
+        if (oldVer < 1 || newVer < 1) {
+            // region LOG
+                eLog("migrateTables(): Invalid version detected for entity $dbRowName (oldVer = $oldVer, newVer = $newVer). Aborting migration.")
+            // endregion
+            return //\/\/\/\/\/\
+        }
         
         for (tableName in tables) {
             migrateTable(tableName, oldVer, entityMeta, doAfterEachTable)
         }
-        val newVer = entityMeta.currVersion
         // region LOG
             dLog("migrateTables(): Finished migrating $dbRowName tables. Setting the new entity version ($newVer)...")
         // endregion
@@ -84,6 +97,13 @@ abstract class DbMigratorInternal(                               val db: SQLiteD
                                                                     entityMeta: BaseEntityMeta,
                                                               doAfterEachTable: (String)->Unit = {},
     ) {
+        val newVer = entityMeta.currVersion
+        if (oldVer < 1 || newVer < 1) {
+            // region LOG
+                eLog("migrateTable(): Invalid version detected for table $table (oldVer = $oldVer, newVer = $newVer). Aborting migration.")
+            // endregion
+            return //\/\/\/\/\/\
+        }
         db.migrateMultiStep(table, oldVer, entityMeta)
         
         doAfterEachTable(table)
