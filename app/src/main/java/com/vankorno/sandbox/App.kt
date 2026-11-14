@@ -4,13 +4,11 @@ import android.app.Application
 import com.vankorno.sandbox._entities.DbName
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
-import com.vankorno.sandbox._entities.TestTable
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities._TestTable
 import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.createTables
-import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornohelpers.values.LibGlobals.androidTestsRun
 
 class App : Application() {
@@ -23,16 +21,16 @@ class App : Application() {
         dbInit()
     }
     
-    fun dbInit() {
-        dbh = DbHelper( // Create the DB for the whole app to use if you want
-            context = this,
+    fun dbInit() { // Create the DB for the whole app to use if you want
+        dbh = DbHelper(
             dbName = if (androidTestsRun) ":memory:" else DbName,
             dbVersion = DbVersion,
+            context = this,
             entityMeta = EntityMeta.entries,
             createExclusiveTables = true,
             onCreate = { db ->
                 db.createTables(
-                    TestTable using _Test
+                    _TestTable
                 )
             },
             onUpgrade = { db, _ ->

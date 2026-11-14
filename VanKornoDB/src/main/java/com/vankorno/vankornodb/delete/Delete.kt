@@ -5,16 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 
-fun SQLiteDatabase.deleteRowById(                                                     id: Long,
-                                                                                   table: String,
-): Int = delete(table, "$_ID = ?", arrayOf(id.toString()))
-
-
-fun <T> SQLiteDatabase.deleteRows(                                                 table: String,
-                                                                                   where: String,
-                                                                                  equals: T,
-): Int = delete(table, "$where = ?", arrayOf(equals.toString()))
-
 
 fun SQLiteDatabase.deleteRows(                                             table: String,
                                                                            where: WhereDsl.()->Unit,
@@ -72,13 +62,13 @@ fun SQLiteDatabase.clearTables(tables: List<String>) = tables.forEach { clearTab
 
 
 
-/** Deletes the specified table from the database. */
+/** Deletes the specified table from the database if it exists. */
 fun SQLiteDatabase.deleteTable(table: String) { execSQL("DROP TABLE IF EXISTS " + table) }
 
-/** Deletes the specified tables from the database. Takes tables as vararg */
+/** Deletes the specified tables if they exist. Takes tables as vararg */
 fun SQLiteDatabase.deleteTables(vararg tables: String) = tables.forEach { deleteTable(it) }
 
-/** Deletes the specified tables from the database. Takes table list. */
+/** Deletes the specified tables if they exist. Takes table list. */
 fun SQLiteDatabase.deleteTables(tables: List<String>) = tables.forEach { deleteTable(it) }
 
 
@@ -86,6 +76,18 @@ fun SQLiteDatabase.deleteTables(tables: List<String>) = tables.forEach { deleteT
 
 
 
+
+// TODO check if needed
+
+internal fun SQLiteDatabase.deleteRowById(                                            id: Long,
+                                                                                   table: String,
+): Int = delete(table, "$_ID = ?", arrayOf(id.toString()))
+
+
+internal fun <T> SQLiteDatabase.deleteRows(                                        table: String,
+                                                                                whereStr: String,
+                                                                                  equals: T,
+): Int = delete(table, "$whereStr = ?", arrayOf(equals.toString()))
 
 
 
