@@ -459,6 +459,83 @@ abstract class DbHelperInternal(
     }
     
     
+    // ===========================  E N T I T Y   P A I R S  =========================== \\
+    
+    /** A wrapper fun for [SQLiteDatabase.getEntityPair] */
+    fun <A : BaseEntity, B : BaseEntity> getEntityPair(                    tableA: TableInfoBase<A>,
+                                                                           tableB: TableInfoBase<B>,
+                                                                               id: Long,
+    ): Pair<A, B>? = read(null, "getEntityPair") { db ->
+        db.getEntityPair(tableA, tableB, id)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getEntityPair] */
+    fun <A : BaseEntity, B : BaseEntity> getEntityPair(              tableA: TableInfoBase<A>,
+                                                                     tableB: TableInfoBase<B>,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
+    ): Pair<A, B>? = read(null, "getEntityPair") { db ->
+        db.getEntityPair(tableA, tableB, orderBy, extra, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getEntityPairs] */
+    fun <A : BaseEntity, B : BaseEntity> getEntityPairs(
+                                                         tableA: TableInfoBase<A>,
+                                                         tableB: TableInfoBase<B>,
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
+                                                          where: WhereDsl.()->Unit = {},
+    ): List<Pair<A, B>> = read(emptyList(), "getEntityPairs") { db ->
+        db.getEntityPairs(tableA, tableB, orderBy, extra, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getEntityPairMap] */
+    fun <A : BaseEntity, B : BaseEntity> getEntityPairMap(
+                                                         tableA: TableInfoBase<A>,
+                                                         tableB: TableInfoBase<B>,
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
+                                                          where: WhereDsl.()->Unit = {},
+    ): Map<Long, Pair<A, B>> = read(emptyMap(), "getEntityPairMap") { db ->
+        db.getEntityPairMap(tableA, tableB, orderBy, extra, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getEntityTriple] */
+    fun <A : BaseEntity, B : BaseEntity, C : BaseEntity> getEntityTriple(
+                                                                           tableA: TableInfoBase<A>,
+                                                                           tableB: TableInfoBase<B>,
+                                                                           tableC: TableInfoBase<C>,
+                                                                               id: Long,
+    ): Triple<A, B, C>? = read(null, "getEntityTriple") { db ->
+        db.getEntityTriple(tableA, tableB, tableC, id)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getEntityTriple] */
+    fun <A : BaseEntity, B : BaseEntity, C : BaseEntity> getEntityTriple(
+                                                                     tableA: TableInfoBase<A>,
+                                                                     tableB: TableInfoBase<B>,
+                                                                     tableC: TableInfoBase<C>,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit,
+    ): Triple<A, B, C>? = read(null, "getEntityTriple") { db ->
+        db.getEntityTriple(tableA, tableB, tableC, orderBy, extra, where)
+    }
+    
+    /** A wrapper fun for [SQLiteDatabase.getEntityTriples] */
+    fun <A : BaseEntity, B : BaseEntity, C : BaseEntity> getEntityTriples(
+                                                         tableA: TableInfoBase<A>,
+                                                         tableB: TableInfoBase<B>,
+                                                         tableC: TableInfoBase<C>,
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
+                                                          where: WhereDsl.()->Unit = {},
+    ): List<Triple<A, B, C>> = read(emptyList(), "getEntityTriples") { db ->
+        db.getEntityTriples(tableA, tableB, tableC, orderBy, extra, where)
+    }
+    
+    
     
     // =============================  L I T E   E N T I T I E S  ============================= \\
     
