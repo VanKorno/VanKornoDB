@@ -7,7 +7,7 @@ import com.vankorno.sandbox._entities.testEntity.CTest.Int1
 import com.vankorno.sandbox._entities.testEntity.CTest.Position
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
-import com.vankorno.sandbox.makeRatsTestNest
+import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -28,7 +28,7 @@ class GetIdTest {
 
     @Test
     fun testGetLastId() {
-        makeRatsTestNest(GetLastIdTable)
+        dbh.getLabRats(GetLastIdTable)
 
         val lastId = dbh.getLastId(GetLastIdTable)
         assertEquals(ratQuant, lastId)
@@ -52,7 +52,7 @@ class GetIdTest {
 
     @Test
     fun testGetId() {
-        makeRatsTestNest(GetIdTable)
+        dbh.getLabRats(GetIdTable)
         
         // Existent by name
         val idByName = dbh.getId(GetIdTable) { Name = LabRat + "5" }
@@ -74,7 +74,7 @@ class GetIdTest {
 
     @Test
     fun testGetIDs() {
-        makeRatsTestNest(GetIDsTable)
+        dbh.getLabRats(GetIDsTable)
 
         // Filter single ID
         val idsSingle = dbh.getIDs(GetIDsTable) { ID = 10L }
@@ -108,7 +108,7 @@ class GetIdTest {
 
     @Test
     fun testGetAllIDs() {
-        makeRatsTestNest(GetAllIDsTable)
+        dbh.getLabRats(GetAllIDsTable)
 
         // Default ascending order
         val allIds = dbh.getAllIDs(GetAllIDsTable)

@@ -3,7 +3,7 @@ package com.vankorno.sandbox.add
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
-import com.vankorno.sandbox.makeRatsTestNest
+import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -17,7 +17,7 @@ private val _TestTable = TestTable using _Test
 class AddEntityWithoutIdCheckTest {
     @Test
     fun addEntityWithoutIdCheckTest() {
-        makeRatsTestNest(TestTable)
+        dbh.getLabRats(TestTable)
         
         val name = "Splinter"
         val id = 777L
@@ -34,7 +34,7 @@ class AddEntityWithoutIdCheckTest {
     
     @Test
     fun addEntitiesWithoutIdCheckTest() {
-        makeRatsTestNest(TestTable)
+        dbh.getLabRats(TestTable)
         
         val rat1 = TestEntity(777, "Splinter", 777)
         val rat2 = TestEntity(778, "Ratatouille", 778)

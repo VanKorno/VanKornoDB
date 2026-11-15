@@ -12,7 +12,6 @@ import com.vankorno.sandbox._entities.testEntity.CTest.Long3
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
-import com.vankorno.sandbox.makeRatsTestNest
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -28,7 +27,7 @@ class GetLargestLastTest {
     @Test
     fun getLargestLong() {
         val table = "getLargestLong"
-        makeRatsTestNest(table)
+        dbh.getLabRats(table)
         
         testIdPosition(table)
         test0L(table)

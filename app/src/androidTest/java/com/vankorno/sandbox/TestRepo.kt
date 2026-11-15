@@ -3,12 +3,9 @@ package com.vankorno.sandbox
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.add.addEntities
-import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.dbManagement.data.using
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 
 const val LabRat = "Lab rat "
 const val LabRatQuant = 50
@@ -23,14 +20,6 @@ fun Dbh.getLabRats(                                                             
         }
         db.addEntities(table using _Test, testSubjects)
     }
-}
-
-
-fun makeRatsTestNest(                                                              table: String
-) {
-    dbh.getLabRats(table)
-    assertTrue(dbh.tableExists(table))
-    assertFalse(dbh.isTableEmpty(table))
 }
 
 

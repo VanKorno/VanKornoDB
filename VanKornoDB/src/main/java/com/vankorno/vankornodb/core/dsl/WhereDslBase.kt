@@ -79,6 +79,63 @@ abstract class WhereDslBase() {
         )
     }
     
+    
+    internal fun conditionSubquery(                                               column: String,
+                                                                                operator: String,
+                                                                                subquery: com.vankorno.vankornodb.core.data.Subquery,
+    ) {
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        
+        clauses.add(missingAnd + column + operator + "(" + subquery.query + ")")
+        args.addAll(subquery.args)
+    }
+    
+    
+    internal fun subqueryCondition(                                             subquery: com.vankorno.vankornodb.core.data.Subquery,
+                                                                                operator: String,
+                                                                                   value: String,
+    ) {
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        
+        clauses.add(missingAnd + "(" + subquery.query + ")" + operator + "?")
+        args.addAll(subquery.args)
+        args.add(value)
+    }
+    
+    
+    internal fun subqueryConditionRaw(                                          subquery: com.vankorno.vankornodb.core.data.Subquery,
+                                                                                operator: String,
+                                                                             otherColumn: String,
+    ) {
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        
+        clauses.add(missingAnd + "(" + subquery.query + ")" + operator + otherColumn)
+        args.addAll(subquery.args)
+    }
+    
+    
+    internal fun subqueryConditionSubquery(                                     subquery: com.vankorno.vankornodb.core.data.Subquery,
+                                                                                operator: String,
+                                                                           otherSubquery: com.vankorno.vankornodb.core.data.Subquery,
+    ) {
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        
+        clauses.add(missingAnd + "(" + subquery.query + ")" + operator + "(" + otherSubquery.query + ")")
+        args.addAll(subquery.args)
+        args.addAll(otherSubquery.args)
+    }
+    
+    
+    internal fun subqueryIn(                                                      column: String,
+                                                                                operator: String,
+                                                                                subquery: com.vankorno.vankornodb.core.data.Subquery,
+    ) {
+        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
+        
+        clauses.add(missingAnd + column + operator + "(" + subquery.query + ")")
+        args.addAll(subquery.args)
+    }
+    
 }
 
 

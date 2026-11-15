@@ -105,13 +105,42 @@ db.getCursor(
     table = Users,
     columns = columns(Name, Address, Phone),
     where = {
-        subquery( // subqueries
+        // Scalar subquery comparison
+        subquery(
             table = Posts,
             columns = columns(countAll), // COUNT(*)
             where = {
-                (Posts dot user_id)  equal  (Users dot ID)
+                (Posts dot user_id) equalCol (Users dot ID)
             }
         ) greater 10
+        
+        // IN subquery
+        ID inSubquery subquery(
+            table = ActiveVIPs,
+            column = CVip.UserId,
+            where = { Points greater 100 }
+        )
+        
+        // Correlated EXISTS subquery
+        exists(
+            subquery(
+                table = Subscriptions,
+                column = "1",
+                where = {
+                    (Subscriptions dot CSub.UserId) equalCol (Users dot ID)
+                    Active equal true
+                }
+            )
+        )
+        
+        // Direct column comparison to scalar subquery
+        VisibleAtHome equal subquery(
+            table = VisibilityConditions,
+            column = CVis.VisibleAtHome,
+            where = {
+                (VisibilityConditions dot CVis.Id) equalCol (Users dot ID)
+            }
+        )
         
         ID notEqual 3
         

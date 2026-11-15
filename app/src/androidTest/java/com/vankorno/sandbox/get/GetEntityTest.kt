@@ -4,7 +4,7 @@ import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
-import com.vankorno.sandbox.makeRatsTestNest
+import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.using
@@ -30,7 +30,7 @@ private const val GetEntityTestTable = "GetEntityTestTable"
 class GetEntityTest {
     @Test
     fun getEntityTest() {
-        makeRatsTestNest(GetEntityTestTable)
+        dbh.getLabRats(GetEntityTestTable)
         
         getEntityWithGeneratedGetter()
         getEntityWithNullGetter()

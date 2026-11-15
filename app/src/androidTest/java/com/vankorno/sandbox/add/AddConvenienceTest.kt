@@ -5,7 +5,6 @@ import com.vankorno.sandbox.LabRatQuant
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
-import com.vankorno.sandbox.makeRatsTestNest
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -21,7 +20,7 @@ class AddConvenienceTest {
     
     @Test
     fun addWithNewIdAndPositionTest() {
-        makeRatsTestNest(TestTable)
+        dbh.getLabRats(TestTable)
         
         sanityCheck()
         simpleNew()

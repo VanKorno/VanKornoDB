@@ -7,6 +7,8 @@ import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.comma
 import com.vankorno.vankornodb.core.data.QueryWithArgs
+import com.vankorno.vankornodb.dbManagement.data.TypedColumn
+import com.vankorno.vankornodb.misc.getColNames
 
 
 internal fun getQuery(                                      table: String,
@@ -67,16 +69,17 @@ internal fun getQuery(                                      table: String,
 }
 
 
+internal fun getQuery(                                      table: String,
+                                                          columns: Array<out TypedColumn<*>>,
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
+): QueryWithArgs = getQuery(table, getColNames(columns), orderBy, extra, where)
 
 
-
-
-
-
-
-
-
-
-
-
-
+internal fun getQuery(                                      table: String,
+                                                           column: TypedColumn<*>,
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
+): QueryWithArgs = getQuery(table, arrayOf(column.name), orderBy, extra, where)

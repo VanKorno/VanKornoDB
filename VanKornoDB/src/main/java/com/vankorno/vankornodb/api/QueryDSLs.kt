@@ -2,11 +2,14 @@
 package com.vankorno.vankornodb.api
 
 import com.vankorno.vankornodb.core.data.OrderWhen
+import com.vankorno.vankornodb.core.data.Subquery
 import com.vankorno.vankornodb.core.dsl.ExtraDslInternal
 import com.vankorno.vankornodb.core.dsl.JoinDslInternal
 import com.vankorno.vankornodb.core.dsl.OrderDslInternal
 import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
 import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
+
+typealias Subquery = Subquery
 
 class ExtraDsl : ExtraDslInternal() {
     fun applyDsl(opts: ExtraDsl.()->Unit) { this.opts() }

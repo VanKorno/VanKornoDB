@@ -440,20 +440,20 @@ abstract class DbHelperInternal(
     // =========================  M U L T I P L E   E N T I T I E S  ========================= \\
     
     /** A wrapper fun for [SQLiteDatabase.getEntities] */
-    fun <T : BaseEntity> getEntities(                             tableInfo: TableInfoBase<T>,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
+    fun <T : BaseEntity> getEntities(                 tableInfo: TableInfoBase<T>,
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
+                                                          where: WhereDsl.()->Unit = {},
     ): List<T> = read(emptyList(), "getEntities") { db ->
         db.getEntities(tableInfo, orderBy, extra, where)
     }
     
     
     /** A wrapper fun for [SQLiteDatabase.getEntityMap] */
-    fun <T : BaseEntity> getEntityMap(                            tableInfo: TableInfoBase<T>,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
+    fun <T : BaseEntity> getEntityMap(                tableInfo: TableInfoBase<T>,
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
+                                                          where: WhereDsl.()->Unit = {},
     ): Map<Long, T> = read(emptyMap(), "getEntityMap") { db ->
         db.getEntityMap(tableInfo, orderBy, extra, where)
     }
