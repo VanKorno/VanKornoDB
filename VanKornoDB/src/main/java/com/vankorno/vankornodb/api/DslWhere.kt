@@ -4,7 +4,6 @@ package com.vankorno.vankornodb.api
 import com.vankorno.vankornodb.core.data.Subquery
 import com.vankorno.vankornodb.core.dsl.WhereDslInternal
 import com.vankorno.vankornodb.core.dsl.getQuery
-import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.misc.getColNames
 
@@ -49,197 +48,176 @@ class WhereDsl : WhereDslInternal() {
         appendGroup(innerBuilder)
     }
     
-    fun exists(                                                            subquery: Subquery
+    
+    
+    // ----------------------------------  S U B Q U E R Y  ---------------------------------- \\
+    
+    fun subquery(                                                  table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                                 orderBy: OrderDsl.()->Unit = {},
+                                                                   extra: ExtraDsl.()->Unit = {},
+                                                                   where: WhereDsl.()->Unit = {},
+    ): Subquery {
+        val innerBuilder = getQuery(table, getColNames(columns), orderBy, extra, where)
+        return Subquery(innerBuilder.query, innerBuilder.args)
+    }
+    
+    fun subquery(                                                     table: String,
+                                                                     column: TypedColumn<*>,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Subquery {
+        val innerBuilder = getQuery(table, arrayOf(column.name), orderBy, extra, where)
+        return Subquery(innerBuilder.query, innerBuilder.args)
+    }
+    
+    fun subquery(                                           table: String,
+                                                          columns: Array<out String> = arrayOf("*"),
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
+    ): Subquery {
+        val innerBuilder = getQuery(table, columns, orderBy, extra, where)
+        return Subquery(innerBuilder.query, innerBuilder.args)
+    }
+    
+    fun subquery(                                                     table: String,
+                                                                     column: String,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+    ): Subquery {
+        val innerBuilder = getQuery(table, arrayOf(column), orderBy, extra, where)
+        return Subquery(innerBuilder.query, innerBuilder.args)
+    }
+    
+    
+    // --------------------------------  I N   S U B Q U E R Y  -------------------------------- \\
+    
+    fun <T> TypedColumn<T>.inSubquery(                                table: String,
+                                                                     column: TypedColumn<*> = this, // TODO Check default
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+    ) {
+        val sub = subquery(table, column, orderBy, extra, where)
+        this inSubquery sub
+    }
+    
+    fun <T> TypedColumn<T>.notInSubquery(                             table: String,
+                                                                     column: TypedColumn<*> = this, // TODO Check default
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+    ) {
+        val sub = subquery(table, column, orderBy, extra, where)
+        this notInSubquery sub
+    }
+    
+    
+    
+    // -------------------------------------  E X I S T S  ------------------------------------- \\
+    
+    fun exists(                                                                 subquery: Subquery
     ) {
         val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
         clauses.add("${missingAnd}EXISTS (${subquery.query})")
         args.addAll(subquery.args)
     }
     
-    fun notExists(                                                         subquery: Subquery
+    fun exists(                                                       table: String,
+                                                                     column: TypedColumn<*>,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+    ) {
+        exists(subquery(table, column, orderBy, extra, where))
+    }
+    
+    fun exists(                                                       table: String,
+                                                                     column: String = "1",
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
+    ) {
+        exists(subquery(table, column, orderBy, extra, where))
+    }
+    
+    
+    // ---------------------------------  N O T   E X I S T S  --------------------------------- \\
+    
+    fun notExists(                                                              subquery: Subquery
     ) {
         val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
         clauses.add("${missingAnd}NOT EXISTS (${subquery.query})")
         args.addAll(subquery.args)
     }
     
-    fun subquery(                                                           table: String,
-                                                                          columns: Array<out TypedColumn<*>>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery {
-        val innerBuilder = getQuery(table, getColNames(columns), orderBy, extra, where)
-        return Subquery(innerBuilder.query, innerBuilder.args)
-    }
-    
-    fun subquery(                                                           table: String,
-                                                                           column: TypedColumn<*>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery {
-        val innerBuilder = getQuery(table, arrayOf(column.name), orderBy, extra, where)
-        return Subquery(innerBuilder.query, innerBuilder.args)
-    }
-    
-    fun subquery(                                                           table: String,
-                                                                          columns: Array<out String> = arrayOf("*"),
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery {
-        val innerBuilder = getQuery(table, columns, orderBy, extra, where)
-        return Subquery(innerBuilder.query, innerBuilder.args)
-    }
-    
-    fun subquery(                                                           table: String,
-                                                                           column: String,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery {
-        val innerBuilder = getQuery(table, arrayOf(column), orderBy, extra, where)
-        return Subquery(innerBuilder.query, innerBuilder.args)
-    }
-    
-    fun subquery(                                                           table: TableInfoBase<*>,
-                                                                          columns: Array<out TypedColumn<*>>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery = subquery(table.name, columns, orderBy, extra, where)
-    
-    fun subquery(                                                           table: TableInfoBase<*>,
-                                                                           column: TypedColumn<*>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery = subquery(table.name, column, orderBy, extra, where)
-    
-    fun subquery(                                                           table: TableInfoBase<*>,
-                                                                          columns: Array<out String> = arrayOf("*"),
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery = subquery(table.name, columns, orderBy, extra, where)
-    
-    fun subquery(                                                           table: TableInfoBase<*>,
-                                                                           column: String,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ): Subquery = subquery(table.name, column, orderBy, extra, where)
-    
-    
-    // Direct inSubquery / notInSubquery on TypedColumn
-    
-    fun <T> TypedColumn<T>.inSubquery(                                      table: String,
-                                                                           column: TypedColumn<*> = this,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
+    fun notExists(                                                    table: String,
+                                                                     column: TypedColumn<*>,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ) {
-        val sub = subquery(table, column, orderBy, extra, where)
-        this inSubquery sub
+        notExists(subquery(table, column, orderBy, extra, where))
     }
     
-    fun <T> TypedColumn<T>.inSubquery(                                      table: TableInfoBase<*>,
-                                                                           column: TypedColumn<*> = this,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
+    fun notExists(                                                    table: String,
+                                                                     column: String = "1",
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
     ) {
-        val sub = subquery(table.name, column, orderBy, extra, where)
-        this inSubquery sub
+        notExists(subquery(table, column, orderBy, extra, where))
     }
     
-    fun <T> TypedColumn<T>.notInSubquery(                                   table: String,
-                                                                           column: TypedColumn<*> = this,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ) {
-        val sub = subquery(table, column, orderBy, extra, where)
-        this notInSubquery sub
-    }
-    
-    fun <T> TypedColumn<T>.notInSubquery(                                   table: TableInfoBase<*>,
-                                                                           column: TypedColumn<*> = this,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-    ) {
-        val sub = subquery(table.name, column, orderBy, extra, where)
-        this notInSubquery sub
-    }
 }
 
 
-fun subquery(                                                               table: String,
-                                                                          columns: Array<out TypedColumn<*>>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
+
+// ------------------------------------  S U B Q U E R Y  ------------------------------------ \\
+
+fun subquery(                                                      table: String,
+                                                                 columns: Array<out TypedColumn<*>>,
+                                                                 orderBy: OrderDsl.()->Unit = {},
+                                                                   extra: ExtraDsl.()->Unit = {},
+                                                                   where: WhereDsl.()->Unit = {},
 ): Subquery {
     val innerBuilder = getQuery(table, getColNames(columns), orderBy, extra, where)
     return Subquery(innerBuilder.query, innerBuilder.args)
 }
 
-fun subquery(                                                               table: String,
-                                                                           column: TypedColumn<*>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
+
+fun subquery(                                                         table: String,
+                                                                     column: TypedColumn<*>,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): Subquery {
     val innerBuilder = getQuery(table, arrayOf(column.name), orderBy, extra, where)
     return Subquery(innerBuilder.query, innerBuilder.args)
 }
 
-fun subquery(                                                               table: String,
-                                                                          columns: Array<out String> = arrayOf("*"),
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
+
+fun subquery(                                               table: String,
+                                                          columns: Array<out String> = arrayOf("*"),
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
+                                                            where: WhereDsl.()->Unit = {},
 ): Subquery {
     val innerBuilder = getQuery(table, columns, orderBy, extra, where)
     return Subquery(innerBuilder.query, innerBuilder.args)
 }
 
-fun subquery(                                                               table: String,
-                                                                           column: String,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
+
+fun subquery(                                                         table: String,
+                                                                     column: String,
+                                                                    orderBy: OrderDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
+                                                                      where: WhereDsl.()->Unit = {},
 ): Subquery {
     val innerBuilder = getQuery(table, arrayOf(column), orderBy, extra, where)
     return Subquery(innerBuilder.query, innerBuilder.args)
 }
 
-fun subquery(                                                               table: TableInfoBase<*>,
-                                                                          columns: Array<out TypedColumn<*>>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-): Subquery = subquery(table.name, columns, orderBy, extra, where)
-
-fun subquery(                                                               table: TableInfoBase<*>,
-                                                                           column: TypedColumn<*>,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-): Subquery = subquery(table.name, column, orderBy, extra, where)
-
-fun subquery(                                                               table: TableInfoBase<*>,
-                                                                          columns: Array<out String> = arrayOf("*"),
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-): Subquery = subquery(table.name, columns, orderBy, extra, where)
-
-fun subquery(                                                               table: TableInfoBase<*>,
-                                                                           column: String,
-                                                                          orderBy: OrderDsl.()->Unit = {},
-                                                                            extra: ExtraDsl.()->Unit = {},
-                                                                            where: WhereDsl.()->Unit = {},
-): Subquery = subquery(table.name, column, orderBy, extra, where)
