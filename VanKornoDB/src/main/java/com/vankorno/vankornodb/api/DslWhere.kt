@@ -130,6 +130,49 @@ class WhereDsl : WhereDslInternal() {
                                                                             extra: ExtraDsl.()->Unit = {},
                                                                             where: WhereDsl.()->Unit = {},
     ): Subquery = subquery(table.name, column, orderBy, extra, where)
+    
+    
+    // Direct inSubquery / notInSubquery on TypedColumn
+    
+    fun <T> TypedColumn<T>.inSubquery(                                      table: String,
+                                                                           column: TypedColumn<*> = this,
+                                                                          orderBy: OrderDsl.()->Unit = {},
+                                                                            extra: ExtraDsl.()->Unit = {},
+                                                                            where: WhereDsl.()->Unit = {},
+    ) {
+        val sub = subquery(table, column, orderBy, extra, where)
+        this inSubquery sub
+    }
+    
+    fun <T> TypedColumn<T>.inSubquery(                                      table: TableInfoBase<*>,
+                                                                           column: TypedColumn<*> = this,
+                                                                          orderBy: OrderDsl.()->Unit = {},
+                                                                            extra: ExtraDsl.()->Unit = {},
+                                                                            where: WhereDsl.()->Unit = {},
+    ) {
+        val sub = subquery(table.name, column, orderBy, extra, where)
+        this inSubquery sub
+    }
+    
+    fun <T> TypedColumn<T>.notInSubquery(                                   table: String,
+                                                                           column: TypedColumn<*> = this,
+                                                                          orderBy: OrderDsl.()->Unit = {},
+                                                                            extra: ExtraDsl.()->Unit = {},
+                                                                            where: WhereDsl.()->Unit = {},
+    ) {
+        val sub = subquery(table, column, orderBy, extra, where)
+        this notInSubquery sub
+    }
+    
+    fun <T> TypedColumn<T>.notInSubquery(                                   table: TableInfoBase<*>,
+                                                                           column: TypedColumn<*> = this,
+                                                                          orderBy: OrderDsl.()->Unit = {},
+                                                                            extra: ExtraDsl.()->Unit = {},
+                                                                            where: WhereDsl.()->Unit = {},
+    ) {
+        val sub = subquery(table.name, column, orderBy, extra, where)
+        this notInSubquery sub
+    }
 }
 
 

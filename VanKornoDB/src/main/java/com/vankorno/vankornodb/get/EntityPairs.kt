@@ -57,7 +57,7 @@ fun <A : BaseEntity, B : BaseEntity> SQLiteDatabase.getEntityPairs(
     if (mapA.isEmpty()) return emptyList() //\/\/\/\/\/\
     
     val mapB = getEntityMap(tableB) {
-        cID inSubquery subquery(tableA.name, cID, orderBy, extra, where)
+        cID.inSubquery(tableA, cID, orderBy, extra, where)
     }
     
     return mapA.mapNotNull { (id, a) ->
@@ -83,7 +83,7 @@ fun <A : BaseEntity, B : BaseEntity> SQLiteDatabase.getEntityPairMap(
     if (mapA.isEmpty()) return emptyMap() //\/\/\/\/\/\
     
     val mapB = getEntityMap(tableB) {
-        cID inSubquery subquery(tableA.name, cID, orderBy, extra, where)
+        cID.inSubquery(tableA, cID, orderBy, extra, where)
     }
     
     return buildMap {
@@ -147,10 +147,10 @@ fun <A : BaseEntity, B : BaseEntity, C : BaseEntity> SQLiteDatabase.getEntityTri
     if (mapA.isEmpty()) return emptyList() //\/\/\/\/\/\
     
     val mapB = getEntityMap(tableB) {
-        cID inSubquery subquery(tableA.name, cID, orderBy, extra, where)
+        cID.inSubquery(tableA, cID, orderBy, extra, where)
     }
     val mapC = getEntityMap(tableC) {
-        cID inSubquery subquery(tableA.name, cID, orderBy, extra, where)
+        cID.inSubquery(tableA, cID, orderBy, extra, where)
     }
     
     return mapA.mapNotNull { (id, a) ->

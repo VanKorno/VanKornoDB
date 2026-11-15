@@ -42,6 +42,54 @@ class WhereSubqueryTest {
     }
     
     @Test
+    fun `Direct inSubquery and notInSubquery on TypedColumn`() {
+        val resultExplicitCol = getQuery(
+            table = "Items",
+            columns = columns(cLong),
+            where = {
+                cLong.inSubquery("Conditions", cLong) {
+                    cBool equal true
+                }
+            },
+        )
+        assertEquals(
+            "SELECT cLong FROM Items WHERE cLong IN (SELECT cLong FROM Conditions WHERE cBool=?)",
+            resultExplicitCol.query,
+        )
+        assertEquals("1", resultExplicitCol.args.joinToString(comma))
+        
+        val resultDefaultCol = getQuery(
+            table = "Items",
+            columns = columns(cLong),
+            where = {
+                cLong.inSubquery("Conditions") {
+                    cBool equal true
+                }
+            },
+        )
+        assertEquals(
+            "SELECT cLong FROM Items WHERE cLong IN (SELECT cLong FROM Conditions WHERE cBool=?)",
+            resultDefaultCol.query,
+        )
+        assertEquals("1", resultDefaultCol.args.joinToString(comma))
+        
+        val resultNotIn = getQuery(
+            table = "Items",
+            columns = columns(cLong),
+            where = {
+                cLong.notInSubquery("Blocked") {
+                    cBool equal true
+                }
+            },
+        )
+        assertEquals(
+            "SELECT cLong FROM Items WHERE cLong NOT IN (SELECT cLong FROM Blocked WHERE cBool=?)",
+            resultNotIn.query,
+        )
+        assertEquals("1", resultNotIn.args.joinToString(comma))
+    }
+    
+    @Test
     fun `Subquery with inSubquery using String`() {
         val result = getQuery(
             table = "Items",

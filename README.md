@@ -114,12 +114,10 @@ db.getCursor(
             }
         ) greater 10
         
-        // IN subquery
-        ID inSubquery subquery(
-            table = ActiveVIPs,
-            column = CVip.UserId,
-            where = { Points greater 100 }
-        )
+        // IN subquery (defaults to same column name, or pass a target column)
+        ID.inSubquery(ActiveVIPs, CVip.UserId) {
+            Points greater 100
+        }
         
         // Correlated EXISTS subquery
         exists(
