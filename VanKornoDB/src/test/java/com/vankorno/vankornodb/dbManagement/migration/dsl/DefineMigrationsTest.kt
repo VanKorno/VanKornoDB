@@ -1,12 +1,10 @@
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
-import com.vankorno.vankornodb.dbManagement.data.CurrEntityWithId
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.OldEntityWithId
-import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.DbEntityWithId
+import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -14,13 +12,13 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DefineMigrationsTest {
-    class V1 : OldEntityWithId()
-    object OrmV1 : OldSchemaBundle<V1>(V1::class)
-    class V2 : OldEntityWithId()
-    object OrmV2 : OldSchemaBundle<V2>(V2::class)
+    class V1 : DbEntityWithId()
+    object OrmV1 : SchemaBundle<V1>(V1::class)
+    class V2 : DbEntityWithId()
+    object OrmV2 : SchemaBundle<V2>(V2::class)
     
-    class CurrV : CurrEntityWithId()
-    object OrmCurr: CurrSchemaBundle<CurrV>(CurrV::class)
+    class CurrV : DbEntityWithId()
+    object OrmCurr: SchemaBundle<CurrV>(CurrV::class)
     
     
     @Test
@@ -81,11 +79,11 @@ class DefineMigrationsTest {
         assertEquals("123", override?.fromInt?.invoke(123))
     }
     
-    data class Dummy(val value: String) : CurrEntityWithId()
+    data class Dummy(val value: String) : DbEntityWithId()
     
     @Test
     fun `stores milestone with processFinalEntity`() {
-        val migrationFunc: (oldEntity: NormalEntity, newEntity: NormalEntity) -> NormalEntity = { old, _ -> old }
+        val migrationFunc: (oldEntity: DbEntity, newEntity: DbEntity) -> DbEntity = { old, _ -> old }
         
         val bundle = defineMigrations(2, OrmCurr) {
             version(1, OrmV1) {

@@ -1,12 +1,10 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.migration.dsl
 
-import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.MigrationDsl
 import com.vankorno.vankornodb.api.TransformColDsl
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.NormalSchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
@@ -22,8 +20,8 @@ class ColModification(val colName: String, val block: TransformColDslInternal.Co
 /**
  * Builds a [MigrationBundle] from the version specifications and milestone rules configured in [block].
  */
-internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: Int,
-                                                          latestSchemaBundle: CurrSchemaBundle<T>,
+internal fun <T: DbEntity> defineMigrationsInternal(         latestVersion: Int,
+                                                          latestSchemaBundle: SchemaBundle<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle {
     val defBuilder = MigrationDsl()
@@ -49,7 +47,7 @@ internal fun <T: CurrEntity> defineMigrationsInternal(         latestVersion: In
  * require explicit milestone steps via [VersionBuilder.milestone].
  */
 abstract class MigrationDslInternal {
-    val versionedSchemaBundles = mutableMapOf<Int, NormalSchemaBundle<out NormalEntity>>()
+    val versionedSchemaBundles = mutableMapOf<Int, SchemaBundle<out DbEntity>>()
     val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
@@ -60,8 +58,8 @@ abstract class MigrationDslInternal {
      * @param schemaBundle The schema bundle defining this version's entity class and structure.
      * @param block Configuration block for renames and milestones at this version.
      */
-    fun <T : NormalEntity> version(                           version: Int,
-                                                         schemaBundle: NormalSchemaBundle<T>,
+    fun <T : DbEntity> version(                           version: Int,
+                                                         schemaBundle: SchemaBundle<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
@@ -140,7 +138,7 @@ abstract class MigrationDslInternal {
          */
         fun milestone(
                vararg modifications: ColModification,
-                    processFinalEntity: ((oldEntity: NormalEntity, newEntity: NormalEntity)->NormalEntity)? = null,
+                    processFinalEntity: ((oldEntity: DbEntity, newEntity: DbEntity)->DbEntity)? = null,
         ) {
             val overrideBlock: TransformColDsl.() -> Unit = {
                 modifications.forEach { modify(it.colName, it.block) }

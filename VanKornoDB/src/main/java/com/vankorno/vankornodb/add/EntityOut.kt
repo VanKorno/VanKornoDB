@@ -2,27 +2,27 @@
 package com.vankorno.vankornodb.add
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.toContentValues
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.misc.wLog
 
-/**
- *  For migration / polymorphic use
+// TODO Move to "internal"
+
+/** For migration / polymorphic use
 */
-private fun <T : NormalEntity> SQLiteDatabase.addEntityOut(       tableInfo: TableInfoNormal<out T>,
-                                                                     entity: T,
+private fun <T : DbEntity> SQLiteDatabase.addEntityOut(                 tableInfo: TableInfo<out T>,
+                                                                           entity: T,
 ): Long {
     val cv = toContentValues(entity, tableInfo.schema)
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
 
-/**
- *  For migration / polymorphic use
+/** For migration / polymorphic use
 */
-internal fun <T : NormalEntity> SQLiteDatabase.addEntitiesOut(    tableInfo: TableInfoNormal<out T>,
-                                                                   entities: List<T>,
+internal fun <T : DbEntity> SQLiteDatabase.addEntitiesOut(              tableInfo: TableInfo<out T>,
+                                                                         entities: List<T>,
 ): Int {
     var count = 0
     

@@ -1,26 +1,8 @@
 package com.vankorno.vankornodb.dbManagement.data
 
-import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.OldEntity
+import com.vankorno.vankornodb.api.DbEntity
 
-
-interface BaseEntity {
-    val id: Long
-}
-
-interface NormalEntity : BaseEntity
-
-
-
-
-
-/** Mainly for tests */
-abstract class CurrEntityWithId : CurrEntity {
+/** Convenience base for test fixtures. */
+abstract class DbEntityWithId : DbEntity {
     override val id: Long = -1L
 }
-
-/** Mainly for tests */
-abstract class OldEntityWithId : OldEntity {
-    override val id: Long = -1L
-}
-

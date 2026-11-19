@@ -9,7 +9,7 @@ import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
 import com.vankorno.vankornodb.add.addWithNewIDsAndPositions
 import com.vankorno.vankornodb.add.addWithNewIdAndPosition
-import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.core.dsl.WhereDsl
@@ -33,7 +33,7 @@ abstract class DbHelperInternal(
                                  context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
-                          mustHaveTables: List<TableInfoNormal<out NormalEntity>> = emptyList(),
+                          mustHaveTables: List<TableInfo<out DbEntity>> = emptyList(),
                                     lock: DbLock = dbLock,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
@@ -70,35 +70,35 @@ abstract class DbHelperInternal(
     // -----------------------------------  O B J E C T  ----------------------------------- \\
     
     /** A wrapper fun for [SQLiteDatabase.addEntity] */
-    inline fun <T : CurrEntity> addEntity(                            tableInfo: TableInfoNormal<T>,
+    inline fun <T : DbEntity> addEntity(                            tableInfo: TableInfo<T>,
                                                                          entity: T,
     ): Long = readWrite(-1L, "addEntity") { db ->
         db.addEntity(tableInfo, entity)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addEntities] */
-    inline fun <T : CurrEntity> addEntities(                          tableInfo: TableInfoNormal<T>,
+    inline fun <T : DbEntity> addEntities(                          tableInfo: TableInfo<T>,
                                                                        entities: List<T>,
     ): List<Long> = readWrite(emptyList(), "addEntities") { db ->
         db.addEntities(tableInfo, entities)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addEntities] */
-    inline fun <T : CurrEntity> addEntities(                          tableInfo: TableInfoNormal<T>,
+    inline fun <T : DbEntity> addEntities(                          tableInfo: TableInfo<T>,
                                                                 vararg entities: T,
     ): List<Long> = readWrite(emptyList(), "addEntities") { db ->
         db.addEntities(tableInfo, entities.toList())
     }
     
     /** A wrapper fun for [SQLiteDatabase.addEntityWithoutIdCheck] */
-    inline fun <T : CurrEntity> addEntityWithoutIdCheck(              tableInfo: TableInfoNormal<T>,
+    inline fun <T : DbEntity> addEntityWithoutIdCheck(              tableInfo: TableInfo<T>,
                                                                          entity: T,
     ): Long = readWrite(-1L, "addEntityWithoutIdCheck") { db ->
         db.addEntityWithoutIdCheck(tableInfo, entity)
     }
     
     /** A wrapper fun for [SQLiteDatabase.addEntitiesWithoutIdCheck] */
-    inline fun <T : CurrEntity> addEntitiesWithoutIdCheck(            tableInfo: TableInfoNormal<T>,
+    inline fun <T : DbEntity> addEntitiesWithoutIdCheck(            tableInfo: TableInfo<T>,
                                                                        entities: List<T>,
     ): List<Long> = readWrite(emptyList(), "addEntitiesWithoutIdCheck") { db ->
         db.addEntitiesWithoutIdCheck(tableInfo, entities)
@@ -106,7 +106,7 @@ abstract class DbHelperInternal(
     
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIDsAndPositions] */
-    fun <T : CurrEntity> addWithNewIDsAndPositions(               tableInfo: TableInfoNormal<T>,
+    fun <T : DbEntity> addWithNewIDsAndPositions(               tableInfo: TableInfo<T>,
                                                                    entities: List<T>,
                                                          positionConditions: WhereDsl.()->Unit = {},
                                                            setIdAndPosition: (T, Long, Long)->T,
@@ -117,7 +117,7 @@ abstract class DbHelperInternal(
     }
     
     /** A wrapper fun for [SQLiteDatabase.addWithNewIdAndPosition] */
-    fun <T : CurrEntity> addWithNewIdAndPosition(                 tableInfo: TableInfoNormal<T>,
+    fun <T : DbEntity> addWithNewIdAndPosition(                 tableInfo: TableInfo<T>,
                                                                      entity: T,
                                                          positionConditions: WhereDsl.()->Unit = {},
                                                            setIdAndPosition: (T, Long, Long)->T,
@@ -187,21 +187,21 @@ abstract class DbHelperInternal(
     
     
     /** A wrapper fun for [SQLiteDatabase.createTable] */
-    inline fun createTable(                            tableInfo: TableInfoNormal<out NormalEntity>,
+    inline fun createTable(                            tableInfo: TableInfo<out DbEntity>,
                                                            async: Boolean = false,
     ) = write("createTable", async) { db ->
         db.createTable(tableInfo)
     }
     
     /** A wrapper fun for [SQLiteDatabase.createTables] */
-    inline fun createTables(                       vararg tables: TableInfoNormal<out NormalEntity>,
+    inline fun createTables(                       vararg tables: TableInfo<out DbEntity>,
                                                            async: Boolean = false,
     ) = write("createTables", async) { db ->
         db.createTables(*tables)
     }
     
     /** A wrapper fun for [SQLiteDatabase.createTables] */
-    inline fun createTables(                        tables: List<TableInfoNormal<out NormalEntity>>,
+    inline fun createTables(                        tables: List<TableInfo<out DbEntity>>,
                                                      async: Boolean = false,
     ) = write("createTables", async) { db ->
         db.createTables(tables)

@@ -2,11 +2,9 @@
 package com.vankorno.vankornodb.api
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.dropAndCreateEmptyTablesInternal
@@ -16,7 +14,7 @@ import com.vankorno.vankornodb.dbManagement.migration.dsl.defineMigrationsIntern
 import com.vankorno.vankornodb.dbManagement.migration.migrateMultiStepInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeInternal
 
-class MigrationDsl() : MigrationDslInternal()
+class MigrationDsl : MigrationDslInternal()
 
 
 /** Defines migrations for the given entity metadata. */
@@ -30,8 +28,8 @@ fun defineMigrations(                                             entityMeta: Ba
 
 
 /** Defines migrations for the given entity metadata. Takes explicit version and schema bundle. */
-fun <T: CurrEntity> defineMigrations(                          latestVersion: Int,
-                                                          latestSchemaBundle: CurrSchemaBundle<T>,
+fun <T: DbEntity> defineMigrations(                            latestVersion: Int,
+                                                          latestSchemaBundle: SchemaBundle<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(
     latestVersion = latestVersion,
@@ -82,7 +80,7 @@ open class DbMigrator(                                               db: SQLiteD
 fun SQLiteDatabase.migrateMultiStep(                           table: String,
                                                           oldVersion: Int,
                                                           entityMeta: BaseEntityMeta,
-                                                       onNewDbFilled: (List<BaseEntity>)->Unit = {},
+                                                       onNewDbFilled: (List<DbEntity>)->Unit = {},
 ) {
     this.migrateMultiStepInternal(
         table = table,
@@ -101,7 +99,7 @@ fun SQLiteDatabase.migrateMultiStep(                           table: String,
  * 
  * @param tables A list of table names and entity data classes
  */
-fun SQLiteDatabase.dropAndCreateEmptyTables(        vararg tables: TableInfoNormal<out NormalEntity>
+fun SQLiteDatabase.dropAndCreateEmptyTables(                  vararg tables: TableInfo<out DbEntity>
 ) = this.dropAndCreateEmptyTablesInternal(*tables)
 
 
@@ -111,7 +109,7 @@ fun SQLiteDatabase.dropAndCreateEmptyTables(        vararg tables: TableInfoNorm
  * 
  * @param tables A list of table names and entity data classes
  */
-fun SQLiteDatabase.migrateWithoutChange(            vararg tables: TableInfoNormal<out NormalEntity>
+fun SQLiteDatabase.migrateWithoutChange(                      vararg tables: TableInfo<out DbEntity>
 ) = this.migrateWithoutChangeInternal(*tables)
 
 

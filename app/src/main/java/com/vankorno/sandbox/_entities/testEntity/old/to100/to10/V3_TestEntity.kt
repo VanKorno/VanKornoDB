@@ -1,6 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.OldEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
@@ -31,13 +31,13 @@ data class V3_TestEntity(
                                 val float1: Float = 0F,
                                 val float2: Float = 0F,
                                 val float3: Float = 0F,
-) : OldEntity
+) : DbEntity
 
 
 
 
 
-object _V3_Test : OldSchemaBundle<V3_TestEntity>(
+object _V3_Test : SchemaBundle<V3_TestEntity>(
     clazz = V3_TestEntity::class,
     columns = buildColList {
         +V3_TestFields.Id
@@ -85,6 +85,29 @@ object _V3_Test : OldSchemaBundle<V3_TestEntity>(
             float2 = cursor.getFloat(idx++),
             float3 = cursor.getFloat(idx++)
         )
+    },
+
+    setter = { e, cv ->
+        cv.put("id", e.id)
+        cv.put("name", e.name)
+        cv.put("position", e.position)
+        cv.put("enabled", e.enabled)
+        cv.put("int1", e.int1)
+        cv.put("int2", e.int2)
+        cv.put("int3", e.int3)
+        cv.put("str1", e.str1)
+        cv.put("str2", e.str2)
+        cv.put("str3", e.str3)
+        cv.put("bool1", e.bool1)
+        cv.put("bool2", e.bool2)
+        cv.put("bool3", e.bool3)
+        cv.put("long1", e.long1)
+        cv.put("long2", e.long2)
+        cv.put("long3", e.long3)
+        cv.put("float1", e.float1)
+        cv.put("float2", e.float2)
+        cv.put("float3", e.float3)
+        cv
     },
 
     withId = { obj, newId -> obj.copy(id = newId) }

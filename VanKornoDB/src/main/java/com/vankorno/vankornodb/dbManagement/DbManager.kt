@@ -5,11 +5,11 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.vankorno.vankornodb.add.addEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data.TEntityVersions
 import com.vankorno.vankornodb.dbManagement.migration.data._TTTEntityVersion
@@ -79,7 +79,7 @@ abstract class DbManager(         dbName: String,
                                  context: Context? = null,
                           val entityMeta: Collection<BaseEntityMeta>,
                val createExclusiveTables: Boolean = true,
-                      val mustHaveTables: List<TableInfoNormal<out NormalEntity>> = emptyList(),
+                      val mustHaveTables: List<TableInfo<out DbEntity>> = emptyList(),
                                 val lock: DbLock,
                          val runOnCreate: (SQLiteDatabase)->Unit = {},
                         val runOnUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },

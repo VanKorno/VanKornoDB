@@ -7,8 +7,7 @@ import com.vankorno.vankornodb.dbManagement.DbHelperInternal
 import com.vankorno.vankornodb.dbManagement.DbManager
 import com.vankorno.vankornodb.dbManagement.DbReaderWriter
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.lock.DbLockInternal
 import com.vankorno.vankornodb.misc.unitTestCase
 
@@ -31,7 +30,7 @@ open class Dbh(                   dbName: String,
                                  context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
-                          mustHaveTables: List<TableInfoNormal<out NormalEntity>> = emptyList(),
+                          mustHaveTables: List<TableInfo<out DbEntity>> = emptyList(),
                                     lock: DbLock = DbLock(),
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },

@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.newTable
 
-import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DbEntity
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -11,7 +11,7 @@ class NewTableReflectTest {
         val name: String = "default",
         val isActive: Boolean = true,
         val age: Int = 25
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testSimpleEntityTableCreation() {
@@ -32,7 +32,7 @@ class NewTableReflectTest {
         val data: ByteArray? = null,
         val name: String = "blob",
         val flags: Int = 0
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testComplexEntityTableCreation() {
@@ -47,7 +47,7 @@ class NewTableReflectTest {
         override val id: Long = 0L,
         val note: String? = "some", // nullable, should NOT emit DEFAULT
         val enabled: Boolean? = null
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testNullableDefaultsEntity() {
@@ -66,7 +66,7 @@ class NewTableReflectTest {
         override val id: Long = 0L,
         val numbers: List<Int> = emptyList(), // should be skipped
         val values: Array<String> = emptyArray() // should be skipped
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testUnsupportedTypesEntity() {
@@ -83,7 +83,7 @@ class NewTableReflectTest {
         override val id: Long = 0L,
         val name: String? = null,
         val score: Float? = null
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testAllNullableEntity() {
@@ -102,7 +102,7 @@ class NewTableReflectTest {
         val name: String = "middle",
         override val id: Long = 0L,
         val active: Boolean = false
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testIdInMiddleEntity() {
@@ -121,7 +121,7 @@ class NewTableReflectTest {
     data class ListEntitySingle(
         override val id: Long = 0L,
         val scoresList: List<Int> = listOf(1, 2, 3)
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testListEntitySingle() {
@@ -141,7 +141,7 @@ class NewTableReflectTest {
         override val id: Long = 0L,
         val flagsList: List<Boolean> = listOf(true, false),
         val namesList: List<String> = listOf("alpha", "beta")
-    ) : CurrEntity
+    ) : DbEntity
     
     @Test
     fun testListEntityMixed() {

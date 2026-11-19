@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.*
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.set.dsl.SetDsl
@@ -12,13 +12,13 @@ data class EntityVersion(
                                  val notes: String = "",
 
                            override val id: Long = -1L,
-) : CurrEntity
+) : DbEntity
 
 
 
 
 
-object _EntityVersion : CurrSchemaBundle<EntityVersion>(
+object _EntityVersion : SchemaBundle<EntityVersion>(
     clazz = EntityVersion::class,
     columns = buildColList {
         +EntityVersionFields.Name
@@ -48,7 +48,7 @@ object _EntityVersion : CurrSchemaBundle<EntityVersion>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String): UpdateTable<TableInfoCurr<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl, EntityVersionSetDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl, ::EntityVersionSetDsl)
+    fun table(name: String): UpdateTable<TableInfo<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl, EntityVersionSetDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl, ::EntityVersionSetDsl)
 }
 
 

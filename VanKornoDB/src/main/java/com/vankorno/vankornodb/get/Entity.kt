@@ -2,12 +2,12 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.mappers.toEntt
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
@@ -15,8 +15,8 @@ import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
 /** Gets one db table row as an object of an entity class using VanKorno DSL parameters.
  *  Returns [default] if no result found.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                      orderBy: O.()->Unit = {},
                                                        extra: X.()->Unit = {},
@@ -25,8 +25,8 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
     db.getEntity(tableInfo, default, orderBy, extra, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                      orderBy: O.()->Unit = {},
                                                        extra: X.()->Unit = {},
@@ -43,8 +43,8 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getE
 /** Gets one db table row as an object of an entity class using VanKorno DSL parameters.
  * Returns null if no result found.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      orderBy: O.()->Unit = {},
                                                        extra: X.()->Unit = {},
                                                        where: W.()->Unit,
@@ -52,8 +52,8 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
     db.getEntity(tableInfo, orderBy, extra, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      orderBy: O.()->Unit = {},
                                                        extra: X.()->Unit = {},
                                                        where: W.()->Unit,

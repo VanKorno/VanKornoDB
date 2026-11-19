@@ -1,6 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity
 
-import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
@@ -31,7 +31,7 @@ data class TestEntity(
                                 val float1: Float = 0F,
                                 val float2: Float = 0F,
                                 val float3: Float = 0F,
-) : CurrEntity
+) : DbEntity
 
 
 
@@ -42,7 +42,7 @@ data class TestEntity(
 
 
 
-object _Test : CurrSchemaBundle<TestEntity>(
+object _Test : SchemaBundle<TestEntity>(
     clazz = TestEntity::class,
     columns = buildColList {
         +TestFields.Id

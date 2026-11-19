@@ -2,29 +2,29 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 
 /**
  * Retrieves a pair of entities from two tables sharing the specified [id].
  * Returns null if either entity is not found.
  */
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPair(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPair(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                       id: Long,
 ): Pair<A, B>? = read(null, "getEntityPair") { db ->
     db.getEntityPair(tableA, tableB, id)
 }
 
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPair(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPair(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                       id: Long,
 ): Pair<A, B>? {
     val a = getEntity(tableA) { rawClause("id=?", id.toString()) } ?: return null //\/\/\/\/\/\
@@ -37,9 +37,9 @@ fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, X
  * where [where] conditions match an entity in [tableA].
  * Returns null if no matching entity is found in [tableA] or if the corresponding entity in [tableB] is missing.
  */
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPair(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPair(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                  orderBy: OA.()->Unit = {},
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit,
@@ -47,9 +47,9 @@ fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, X
     db.getEntityPair(tableA, tableB, orderBy, extra, where)
 }
 
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPair(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPair(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                  orderBy: OA.()->Unit = {},
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit,
@@ -65,9 +65,9 @@ fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, X
  * corresponding entities from [tableB].
  * Only pairs where both entities exist are included in the result.
  */
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPairs(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPairs(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                  orderBy: OA.()->Unit = { raw("ROWID") },
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit = {},
@@ -75,9 +75,9 @@ fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, X
     db.getEntityPairs(tableA, tableB, orderBy, extra, where)
 }
 
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPairs(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPairs(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                  orderBy: OA.()->Unit = { raw("ROWID") },
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit = {},
@@ -99,9 +99,9 @@ fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, X
  * corresponding entities from [tableB].
  * Only pairs where both entities exist are included in the result.
  */
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPairMap(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPairMap(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                  orderBy: OA.()->Unit = { raw("ROWID") },
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit = {},
@@ -109,9 +109,9 @@ fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, X
     db.getEntityPairMap(tableA, tableB, orderBy, extra, where)
 }
 
-fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPairMap(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
+fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPairMap(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
                                                  orderBy: OA.()->Unit = { raw("ROWID") },
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit = {},
@@ -133,19 +133,19 @@ fun <A : BaseEntity, B : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, X
  * Retrieves a triple of entities from three tables sharing the specified [id].
  * Returns null if any entity is not found.
  */
-fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriple(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
-                                                  tableC: QueryTable<TableInfoBase<C>, WC, OC, XC>,
+fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriple(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
+                                                  tableC: QueryTable<TableInfo<C>, WC, OC, XC>,
                                                       id: Long,
 ): Triple<A, B, C>? = read(null, "getEntityTriple") { db ->
     db.getEntityTriple(tableA, tableB, tableC, id)
 }
 
-fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriple(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
-                                                  tableC: QueryTable<TableInfoBase<C>, WC, OC, XC>,
+fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriple(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
+                                                  tableC: QueryTable<TableInfo<C>, WC, OC, XC>,
                                                       id: Long,
 ): Triple<A, B, C>? {
     val a = getEntity(tableA) { rawClause("id=?", id.toString()) } ?: return null //\/\/\/\/\/\
@@ -159,10 +159,10 @@ fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : Ord
  * where [where] conditions match an entity in [tableA].
  * Returns null if no matching entity is found in [tableA] or if corresponding entities in [tableB] or [tableC] are missing.
  */
-fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriple(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
-                                                  tableC: QueryTable<TableInfoBase<C>, WC, OC, XC>,
+fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriple(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
+                                                  tableC: QueryTable<TableInfo<C>, WC, OC, XC>,
                                                  orderBy: OA.()->Unit = {},
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit,
@@ -170,10 +170,10 @@ fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : Ord
     db.getEntityTriple(tableA, tableB, tableC, orderBy, extra, where)
 }
 
-fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriple(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
-                                                  tableC: QueryTable<TableInfoBase<C>, WC, OC, XC>,
+fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriple(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
+                                                  tableC: QueryTable<TableInfo<C>, WC, OC, XC>,
                                                  orderBy: OA.()->Unit = {},
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit,
@@ -190,10 +190,10 @@ fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : Ord
  * corresponding entities from [tableB] and [tableC].
  * Only triples where all three entities exist are included in the result.
  */
-fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriples(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
-                                                  tableC: QueryTable<TableInfoBase<C>, WC, OC, XC>,
+fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriples(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
+                                                  tableC: QueryTable<TableInfo<C>, WC, OC, XC>,
                                                  orderBy: OA.()->Unit = { raw("ROWID") },
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit = {},
@@ -201,10 +201,10 @@ fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : Ord
     db.getEntityTriples(tableA, tableB, tableC, orderBy, extra, where)
 }
 
-fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriples(
-                                                  tableA: QueryTable<TableInfoBase<A>, WA, OA, XA>,
-                                                  tableB: QueryTable<TableInfoBase<B>, WB, OB, XB>,
-                                                  tableC: QueryTable<TableInfoBase<C>, WC, OC, XC>,
+fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriples(
+                                                  tableA: QueryTable<TableInfo<A>, WA, OA, XA>,
+                                                  tableB: QueryTable<TableInfo<B>, WB, OB, XB>,
+                                                  tableC: QueryTable<TableInfo<C>, WC, OC, XC>,
                                                  orderBy: OA.()->Unit = { raw("ROWID") },
                                                    extra: XA.()->Unit = {},
                                                    where: WA.()->Unit = {},
@@ -222,8 +222,8 @@ fun <A : BaseEntity, B : BaseEntity, C : BaseEntity, WA : WhereDsl<WA>, OA : Ord
     }
 }
 
-private fun <T : BaseEntity, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.entitiesByIds(
-                                                    table: QueryTable<TableInfoBase<T>, W, O, X>,
+private fun <T : DbEntity, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.entitiesByIds(
+                                                    table: QueryTable<TableInfo<T>, W, O, X>,
                                                       ids: Set<Long>,
 ): Map<Long, T> = buildMap {
     for (batch in ids.chunked(900)) {

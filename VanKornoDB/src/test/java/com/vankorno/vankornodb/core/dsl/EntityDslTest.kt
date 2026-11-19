@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersionDsl
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
@@ -125,9 +125,9 @@ private data class Flag(
                                val ownerId: Long,
                                 val active: Boolean,
                             val scoresList: List<Int> = List(2) { 0 },
-) : CurrEntity
+) : DbEntity
 
-private object FlagSchema : CurrSchemaBundle<Flag>(Flag::class, columns = buildColList {
+private object FlagSchema : SchemaBundle<Flag>(Flag::class, columns = buildColList {
         +FlagFields.Id
         +FlagFields.OwnerId
         +FlagFields.Active

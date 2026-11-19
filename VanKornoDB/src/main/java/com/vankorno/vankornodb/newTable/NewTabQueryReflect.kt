@@ -1,6 +1,8 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.newTable
 
+import com.vankorno.vankornodb.api.DbEntity
+
 import com.vankorno.vankornodb.core.data.DbConstants.CREATE_TABLE
 import com.vankorno.vankornodb.core.data.DbConstants.DEFAULT
 import com.vankorno.vankornodb.dbManagement.data.*
@@ -34,7 +36,7 @@ import kotlin.reflect.full.primaryConstructor
  */
 
 internal fun newTableQuery(                                           table: String,
-                                                                entityClass: KClass<out BaseEntity>,
+                                                                entityClass: KClass<out DbEntity>,
 ): String {
     val constructor = entityClass.primaryConstructor
         ?: error("Class ${entityClass.simpleName} must have a primary constructor")

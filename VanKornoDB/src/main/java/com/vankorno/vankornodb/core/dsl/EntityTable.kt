@@ -1,10 +1,10 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.core.dsl
 
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 import com.vankorno.vankornodb.core.data.Subquery
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.set.dsl.SetDsl
 
@@ -34,7 +34,7 @@ class DslContext<W> internal constructor(                     internal val table
 
 /** A physical table, its mapping, and the factory for its generated entity receiver.
  */
-open class EntityTable<out I : TableInfoBase<*>, W> internal constructor(
+open class EntityTable<out I : TableInfo<*>, W> internal constructor(
                                                                      val info: I,
                                                           internal val factory: (DslContext<W>)->W,
 ) {
@@ -73,7 +73,7 @@ open class EntityTable<out I : TableInfoBase<*>, W> internal constructor(
 }
 
 
-open class QueryTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
+open class QueryTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
                                                                            info: I,
                                                                         factory: (DslContext<W>)->W,
                                                        private val orderFactory: (W)->O,
@@ -117,7 +117,7 @@ open class QueryTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : Extra
 }
 
 
-class UpdateTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> internal constructor(
+class UpdateTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> internal constructor(
                                                                                 info: I,
                                                                                where: (DslContext<W>)->W,
                                                                                order: (W)->O,
@@ -125,13 +125,13 @@ class UpdateTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<
                                                              internal val setFactory: (W)->S,
 ) : QueryTable<I, W, O, X>(info, where, order, extra)
 
-fun <E : BaseEntity, I : TableInfoBase<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> I.withDsl(
+fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> I.withDsl(
                                                                           where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
 ) = QueryTable(this, where, order, extra)
 
-fun <E : BaseEntity, I : TableInfoBase<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> I.withDsl(
+fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> I.withDsl(
                                                                                where: (DslContext<W>)->W,
                                                                                order: (W)->O,
                                                                                extra: (W)->X,

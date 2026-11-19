@@ -1,21 +1,21 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
-import com.vankorno.vankornodb.dbManagement.data.CurrEntityWithId
+import com.vankorno.vankornodb.dbManagement.data.DbEntityWithId
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class DbMigrationListHandlingTest : MigrationUtils() {
-    data class OldWithList(val ids: List<Int> = listOf(1, 2, 3)) : CurrEntityWithId()
-    data class NewWithList(val ids: List<Int> = listOf(0, 0, 0)) : CurrEntityWithId()
+    data class OldWithList(val ids: List<Int> = listOf(1, 2, 3)) : DbEntityWithId()
+    data class NewWithList(val ids: List<Int> = listOf(0, 0, 0)) : DbEntityWithId()
     
-    data class OldWithStringList(val tags: List<String> = listOf("a", "b", "c")) : CurrEntityWithId()
-    data class NewWithStringList(val tags: List<String> = listOf("", "", "")) : CurrEntityWithId()
+    data class OldWithStringList(val tags: List<String> = listOf("a", "b", "c")) : DbEntityWithId()
+    data class NewWithStringList(val tags: List<String> = listOf("", "", "")) : DbEntityWithId()
     
-    data class OldWithDifferentListTypes(val nums: List<Int> = listOf(1, 2), val strs: List<String> = listOf("x", "y")) : CurrEntityWithId()
-    data class NewWithDifferentListTypes(val nums: List<Int> = listOf(0, 0), val strs: List<String> = listOf("", "")) : CurrEntityWithId()
+    data class OldWithDifferentListTypes(val nums: List<Int> = listOf(1, 2), val strs: List<String> = listOf("x", "y")) : DbEntityWithId()
+    data class NewWithDifferentListTypes(val nums: List<Int> = listOf(0, 0), val strs: List<String> = listOf("", "")) : DbEntityWithId()
     
-    data class OldWithListRename(val oldIds: List<Int> = listOf(9, 8, 7)) : CurrEntityWithId()
-    data class NewWithListRename(val newIds: List<Int> = listOf(0, 0, 0)) : CurrEntityWithId()
+    data class OldWithListRename(val oldIds: List<Int> = listOf(9, 8, 7)) : DbEntityWithId()
+    data class NewWithListRename(val newIds: List<Int> = listOf(0, 0, 0)) : DbEntityWithId()
     
     @Test
     fun `list of ints is copied as is`() {
@@ -49,8 +49,8 @@ class DbMigrationListHandlingTest : MigrationUtils() {
     
     @Test
     fun `list with different element types fallback to default`() {
-        data class Old(val items: List<Int> = listOf(1, 2)) : CurrEntityWithId()
-        data class New(val items: List<String> = listOf("default")) : CurrEntityWithId()
+        data class Old(val items: List<Int> = listOf(1, 2)) : DbEntityWithId()
+        data class New(val items: List<String> = listOf("default")) : DbEntityWithId()
         
         val old = Old()
         val new = convertEntity(old, New::class) as New

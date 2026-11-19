@@ -2,27 +2,27 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
 
 /** Gets the first row as an object of an entity class using WhereDsl.
  *  Returns null if no result found.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFirstEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFirstEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                        where: W.()->Unit = {},
 ): T? = read(null, "getFirstEntity") { db ->
     db.getFirstEntity(tableInfo, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFirstEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFirstEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                        where: W.()->Unit = {},
 ): T? = getEntity(tableInfo, { raw("ROWID") }, where = where)
 
@@ -30,16 +30,16 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getF
 /** Gets the first row as an object of an entity class using WhereDsl.
  *  Returns [default] and logs error if no result found.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFirstEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFirstEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                        where: W.()->Unit = {},
 ): T = read(default, "getFirstEntity") { db ->
     db.getFirstEntity(tableInfo, default, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFirstEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFirstEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                        where: W.()->Unit = {},
 ): T = getFirstEntity(tableInfo, where) ?: run {
@@ -56,15 +56,15 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getF
 /** Gets the last row as an object of an entity class using WhereDsl.
  *  Returns null if no result found.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                        where: W.()->Unit = {},
 ): T? = read(null, "getLastEntity") { db ->
     db.getLastEntity(tableInfo, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                        where: W.()->Unit = {},
 ): T? = getEntity(tableInfo, { raw("ROWID DESC") }, where = where)
 
@@ -72,16 +72,16 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getL
 /** Gets the last row as an object of an entity class using WhereDsl.
  *  Returns [default] and logs error if no result found.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                        where: W.()->Unit = {},
 ): T = read(default, "getLastEntity") { db ->
     db.getLastEntity(tableInfo, default, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                        where: W.()->Unit = {},
 ): T = getLastEntity(tableInfo, where) ?: run {
@@ -102,15 +102,15 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getL
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or null if no rows match.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                        where: W.()->Unit = {},
 ): T? = read(null, "getRandomEntity") { db ->
     db.getRandomEntity(tableInfo, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                        where: W.()->Unit = {},
 ): T? = getEntity(tableInfo, { random() }, where = where)
 
@@ -123,16 +123,16 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getR
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random object of type [T] from the table, or [default] if no rows match.
  */
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                        where: W.()->Unit = {},
 ): T = read(default, "getRandomEntity") { db ->
     db.getRandomEntity(tableInfo, default, where)
 }
 
-fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomEntity(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomEntity(
+                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
                                                      default: T,
                                                        where: W.()->Unit = {},
 ): T = getRandomEntity(tableInfo, where) ?: run {

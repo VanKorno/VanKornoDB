@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.get
 
-import com.vankorno.vankornodb.api.LiteEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.dbManagement.data.*
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -44,7 +44,7 @@ class LiteEntityColumnsTest {
 
     @Test
     fun `rejects empty lite schema columns`() {
-        val emptyLiteTable = TableInfoLite("test", LiteSchemaBundle(LiteFixture::class, columns = emptyList()))
+        val emptyLiteTable = TableInfo("test", SchemaBundle(LiteFixture::class, columns = emptyList()))
 
         val error = assertThrows(IllegalArgumentException::class.java) {
             checkedLiteColumns(emptyLiteTable.schema, sourceColumns)
@@ -56,9 +56,9 @@ class LiteEntityColumnsTest {
     @Test
     fun `rejects duplicate lite column names`() {
         val duplicateColumns = listOf(SourceColumns.Id, SourceColumns.Name, sCol("name"))
-        val duplicateLiteTable = TableInfoLite(
+        val duplicateLiteTable = TableInfo(
             "test",
-            LiteSchemaBundle(LiteFixture::class, columns = duplicateColumns)
+            SchemaBundle(LiteFixture::class, columns = duplicateColumns)
         )
 
         val error = assertThrows(IllegalArgumentException::class.java) {
@@ -70,7 +70,7 @@ class LiteEntityColumnsTest {
 
     @Test
     fun `requires lite schema columns metadata`() {
-        val noColumnsTable = TableInfoLite("test", LiteSchemaBundle(LiteFixture::class))
+        val noColumnsTable = TableInfo("test", SchemaBundle(LiteFixture::class))
 
         val error = assertThrows(IllegalStateException::class.java) {
             checkedLiteColumns(noColumnsTable.schema, sourceColumns)
@@ -83,7 +83,7 @@ class LiteEntityColumnsTest {
         override val id: Long = -1L,
         val name: String = "",
         val enabled: Boolean = false,
-    ) : LiteEntity
+    ) : DbEntity
 
     private object SourceColumns {
         val Id = lCol("id", -1L)
@@ -103,9 +103,9 @@ class LiteEntityColumnsTest {
 
     private val liteColumns = listOf(SourceColumns.Id, SourceColumns.Name, SourceColumns.Enabled)
 
-    private val liteTable = TableInfoLite(
+    private val liteTable = TableInfo(
         "test",
-        LiteSchemaBundle(LiteFixture::class, columns = liteColumns)
+        SchemaBundle(LiteFixture::class, columns = liteColumns)
     )
 
 }

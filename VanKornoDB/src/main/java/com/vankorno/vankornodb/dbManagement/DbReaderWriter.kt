@@ -4,11 +4,11 @@ package com.vankorno.vankornodb.dbManagement
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import androidx.core.database.sqlite.transaction
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.unitTestCase
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ abstract class DbReaderWriter(
                                  context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
                    createExclusiveTables: Boolean = true,
-                          mustHaveTables: List<TableInfoNormal<out NormalEntity>> = emptyList(),
+                          mustHaveTables: List<TableInfo<out DbEntity>> = emptyList(),
                                     lock: DbLock = dbLock,
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },

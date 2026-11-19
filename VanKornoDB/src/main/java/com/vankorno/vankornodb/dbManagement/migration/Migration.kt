@@ -3,12 +3,11 @@ package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addEntitiesOut
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
-import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.NormalSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
@@ -44,7 +43,7 @@ import kotlin.reflect.full.starProjectedType
 internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
                                                           oldVersion: Int,
                                                           entityMeta: BaseEntityMeta,
-                                                       onNewDbFilled: (List<BaseEntity>)->Unit = {},
+                                                       onNewDbFilled: (List<DbEntity>)->Unit = {},
 ) {
     val newVersion = entityMeta.currVersion
     
@@ -118,11 +117,11 @@ open class MigrationUtils {
      * @param renameSnapshot Maps new properties to their old names.
      * @return A new instance of [newClass] with mapped or defaulted values.
      */
-    internal fun convertEntity(                       oldEntity: NormalEntity,
-                                                       newClass: KClass<out NormalEntity>,
+    internal fun convertEntity(                       oldEntity: DbEntity,
+                                                       newClass: KClass<out DbEntity>,
                                                  renameSnapshot: Map<String, String> = emptyMap(),
                                                 transformColVal: (TransformColDsl.()->Unit)? = null,
-    ): NormalEntity {
+    ): DbEntity {
         val fromProps = oldEntity::class.memberProperties.associateBy { it.name }
         
         val constructor = newClass.primaryConstructor
@@ -172,8 +171,8 @@ open class MigrationUtils {
     internal fun getEntitiesByVersion(           db: SQLiteDatabase,
                                               table: String,
                                             version: Int,
-                                      schemaBundles: Map<Int, NormalSchemaBundle<out NormalEntity>>,
-    ): List<NormalEntity> {
+                                      schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
+    ): List<DbEntity> {
         // region LOG
             dLog("getEntitiesByVersion() starts. Table = $table, version = $version")
         // endregion
@@ -192,13 +191,13 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    internal fun convertThroughSteps(      original: NormalEntity,
+    internal fun convertThroughSteps(      original: DbEntity,
                                          oldVersion: Int,
                                               steps: List<Int>,
                                       renameHistory: Map<String, List<RenameRecord>>,
-                                      schemaBundles: Map<Int, NormalSchemaBundle<out NormalEntity>>,
+                                      schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
                                             lambdas: Map<Int, MilestoneLambdas>,
-    ): NormalEntity {
+    ): DbEntity {
         var currentEntity = original
         var currentVer = oldVersion
         
@@ -335,7 +334,7 @@ open class MigrationUtils {
 
 
 internal fun SQLiteDatabase.dropAndCreateEmptyTablesInternal(
-                                                    vararg tables: TableInfoNormal<out NormalEntity>
+                                                    vararg tables: TableInfo<out DbEntity>
 ) {
     val size = tables.size
     // region LOG
@@ -353,7 +352,7 @@ internal fun SQLiteDatabase.dropAndCreateEmptyTablesInternal(
 
 
 internal fun SQLiteDatabase.migrateWithoutChangeInternal(
-                                                    vararg tables: TableInfoNormal<out NormalEntity>
+                                                    vararg tables: TableInfo<out DbEntity>
 ) {
     // region LOG
         dLog("migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")

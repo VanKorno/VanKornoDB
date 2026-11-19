@@ -2,16 +2,16 @@
 package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.api.LiteEntity
 import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.core.dsl.ColumnSelector
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
-import com.vankorno.vankornodb.dbManagement.data.LiteSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.mappers.toEntt
 import com.vankorno.vankornodb.misc.dLog
@@ -19,29 +19,29 @@ import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
 
 /**
- * Gets data from a db row as a LiteEntity, selecting the columns declared by its schema.
+ * Gets data from a db row as a DbEntity, selecting the columns declared by its schema.
  * Every selected column must exist with the same type in the source [table].
  *
  * Returns [default] if no result is found.
  */
-fun <T : LiteEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLiteEntity(
-                                                   table: QueryTable<TableInfoNormal<*>, W, O, X>,
-                                             liteSchema: LiteSchemaBundle<T>,
-                                                     default: T,
-                                                     orderBy: O.()->Unit = {},
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLiteEntity(
+                                                           table: QueryTable<TableInfo<*>, W, O, X>,
+                                                      liteSchema: SchemaBundle<T>,
+                                                         default: T,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit,
 ): T = read(default, "getLiteEntity") { db ->
     db.getLiteEntity(table, liteSchema, default, orderBy, extra, where)
 }
 
-fun <T : LiteEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLiteEntity(
-                                                   table: QueryTable<TableInfoNormal<*>, W, O, X>,
-                                             liteSchema: LiteSchemaBundle<T>,
-                                                     default: T,
-                                                     orderBy: O.()->Unit = {},
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit,
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLiteEntity(
+                                                           table: QueryTable<TableInfo<*>, W, O, X>,
+                                                      liteSchema: SchemaBundle<T>,
+                                                         default: T,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit,
 ): T {
     val columns = checkedLiteColumns(liteSchema, table.info.schema.columns).map { definition ->
         val select: ColumnSelector<W, TypedColumn<*>> = { EntityColumn(definition) }
@@ -71,22 +71,22 @@ fun <T : LiteEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getL
  * Every selected column must exist with the same type in the source [table].
  * Returns an empty list if no result is found.
  */
-fun <T : LiteEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLiteEntities(
-                                                   table: QueryTable<TableInfoNormal<*>, W, O, X>,
-                                             liteSchema: LiteSchemaBundle<T>,
-                                                     orderBy: O.()->Unit = { raw("ROWID") },
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit = {},
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLiteEntities(
+                                                           table: QueryTable<TableInfo<*>, W, O, X>,
+                                                      liteSchema: SchemaBundle<T>,
+                                                         orderBy: O.()->Unit = { raw("ROWID") },
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit = {},
 ): List<T> = read(emptyList(), "getLiteEntities") { db ->
     db.getLiteEntities(table, liteSchema, orderBy, extra, where)
 }
 
-fun <T : LiteEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLiteEntities(
-                                                   table: QueryTable<TableInfoNormal<*>, W, O, X>,
-                                             liteSchema: LiteSchemaBundle<T>,
-                                                     orderBy: O.()->Unit = { raw("ROWID") },
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit = {},
+fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLiteEntities(
+                                                           table: QueryTable<TableInfo<*>, W, O, X>,
+                                                      liteSchema: SchemaBundle<T>,
+                                                         orderBy: O.()->Unit = { raw("ROWID") },
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit = {},
 ): List<T> {
     val columns = checkedLiteColumns(liteSchema, table.info.schema.columns).map { definition ->
         val select: ColumnSelector<W, TypedColumn<*>> = { EntityColumn(definition) }
@@ -114,8 +114,8 @@ fun <T : LiteEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getL
 
 
 
-internal fun <T : LiteEntity> checkedLiteColumns(                       liteSchema: LiteSchemaBundle<T>,
-                                                                  sourceColumns: List<TypedColumn<*>>?,
+internal fun <T : DbEntity> checkedLiteColumns(                   liteSchema: SchemaBundle<T>,
+                                                               sourceColumns: List<TypedColumn<*>>?,
 ): Array<TypedColumn<*>> {
     val liteColumns = liteSchema.columns
         ?: error("Lite schema for ${liteSchema.clazz.simpleName} must declare columns")

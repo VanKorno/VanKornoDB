@@ -2,54 +2,57 @@
 package com.vankorno.vankornodb.newTable
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.NormalEntity
-import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
+import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.dLog
 
 
 /** Creates the physical table described by [table]. */
-fun Dbh.createTable(                                              table: QueryTable<TableInfoNormal<out NormalEntity>, *, *, *>,
-                                                                  async: Boolean = false,
+fun Dbh.createTable(                            table: QueryTable<TableInfo<out DbEntity>, *, *, *>,
+                                                async: Boolean = false,
 ) = write("createTable", async) { db -> db.createTable(table) }
 
-fun SQLiteDatabase.createTable(table: QueryTable<TableInfoNormal<out NormalEntity>, *, *, *>) = createTable(table.info)
+
+fun SQLiteDatabase.createTable(table: QueryTable<TableInfo<out DbEntity>, *, *, *>) = createTable(table.info)
 
 
 /** Creates each physical table in [tables]. */
-fun Dbh.createTables(                                     vararg tables: QueryTable<TableInfoNormal<out NormalEntity>, *, *, *>,
-                                                                  async: Boolean = false,
+fun Dbh.createTables(                   vararg tables: QueryTable<TableInfo<out DbEntity>, *, *, *>,
+                                                async: Boolean = false,
 ) = write("createTables", async) { db -> db.createTables(*tables) }
 
-fun SQLiteDatabase.createTables(vararg tables: QueryTable<TableInfoNormal<out NormalEntity>, *, *, *>) =
-    tables.forEach { createTable(it) }
+
+fun SQLiteDatabase.createTables(         vararg tables: QueryTable<TableInfo<out DbEntity>, *, *, *>
+) = tables.forEach { createTable(it) }
 
 
 /** Creates each physical table in [tables]. */
-fun Dbh.createTables(                                            tables: List<QueryTable<TableInfoNormal<out NormalEntity>, *, *, *>>,
-                                                                  async: Boolean = false,
+fun Dbh.createTables(                    tables: List<QueryTable<TableInfo<out DbEntity>, *, *, *>>,
+                                          async: Boolean = false,
 ) = write("createTables", async) { db -> db.createTables(tables) }
 
-// Both vararg overloads accept zero arguments.
+
 fun SQLiteDatabase.createTables() = Unit
 
+
 @JvmName("createQueryTables")
-fun SQLiteDatabase.createTables(tables: List<QueryTable<TableInfoNormal<out NormalEntity>, *, *, *>>) =
-    tables.forEach { createTable(it) }
+fun SQLiteDatabase.createTables(          tables: List<QueryTable<TableInfo<out DbEntity>, *, *, *>>
+) = tables.forEach { createTable(it) }
 
 
 /** Creates a single table in db.
  */
-fun SQLiteDatabase.createTable(tableInfo: TableInfoNormal<out NormalEntity>) = createTables(tableInfo)
+fun SQLiteDatabase.createTable(tableInfo: TableInfo<out DbEntity>) = createTables(tableInfo)
 
 
 
 /** Creates multiple tables in the database given a list of TableInfo (table name + schema bundle).
  */
-fun SQLiteDatabase.createTables(                     tables: List<TableInfoNormal<out NormalEntity>>
+fun SQLiteDatabase.createTables(                               tables: List<TableInfo<out DbEntity>>
 ) = createTables(*tables.toTypedArray())
 
 
@@ -69,7 +72,7 @@ fun SQLiteDatabase.createTables(                     tables: List<TableInfoNorma
  *
  * @param tables One or more table descriptors containing table name and schema source.
  */
-fun SQLiteDatabase.createTables(                    vararg tables: TableInfoNormal<out NormalEntity>
+fun SQLiteDatabase.createTables(                              vararg tables: TableInfo<out DbEntity>
 ) {
     for (table in tables) {
         val schemaBundle = table.schema

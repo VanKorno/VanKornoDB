@@ -1,6 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.OldEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
@@ -19,13 +19,13 @@ data class V1_TestEntity(
                                  val long1: Long = 0L,
                                 val float1: Float = 0F,
                            override val id: Long = -1L,
-) : OldEntity
+) : DbEntity
 
 
 
 
 
-object _V1_Test : OldSchemaBundle<V1_TestEntity>(
+object _V1_Test : SchemaBundle<V1_TestEntity>(
     clazz = V1_TestEntity::class,
     columns = buildColList {
         +V1_TestFields.Name
@@ -51,6 +51,16 @@ object _V1_Test : OldSchemaBundle<V1_TestEntity>(
         )
     },
 
+    setter = { e, cv ->
+        cv.put("name", e.name)
+        cv.put("boo", e.boo)
+        cv.put("int1", e.int1)
+        cv.put("str1", e.str1)
+        cv.put("long1", e.long1)
+        cv.put("float1", e.float1)
+        cv.put("id", e.id)
+        cv
+    },
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
     fun table(name: String) = (name using this).withDsl(::V1_TestDsl, ::V1_TestOrderDsl, ::V1_TestExtraDsl, ::V1_TestSetDsl)

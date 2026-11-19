@@ -6,17 +6,18 @@ import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.get.getEntity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-private object DummySchema : CurrSchemaBundle<TestEntity>(
+private object DummySchema : SchemaBundle<TestEntity>(
     clazz = TestEntity::class
 )
-private object OrmTestWrongGetter : CurrSchemaBundle<TestEntity>(
+private object OrmTestWrongGetter : SchemaBundle<TestEntity>(
     clazz = TestEntity::class,
     getter = { _ ->
         TestEntity(id = 999, name = "WRONG")

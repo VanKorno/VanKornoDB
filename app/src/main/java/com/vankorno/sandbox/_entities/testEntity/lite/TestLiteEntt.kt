@@ -1,6 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity.lite
 
-import com.vankorno.vankornodb.api.LiteEntity
+import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
@@ -16,13 +16,13 @@ data class TestLiteEntt(
                                   val name: String = "",
                               val position: Long = 0L,
                                val enabled: Boolean = false,
-) : LiteEntity
+) : DbEntity
 
 
 
 
 
-object _TestLite : LiteSchemaBundle<TestLiteEntt>(
+object _TestLite : SchemaBundle<TestLiteEntt>(
     clazz = TestLiteEntt::class,
     columns = buildColList {
         +TestLiteFields.Id
@@ -41,6 +41,14 @@ object _TestLite : LiteSchemaBundle<TestLiteEntt>(
             enabled = cursor.getBoolean(idx++)
         )
     },
+    setter = { e, cv ->
+        cv.put("id", e.id)
+        cv.put("name", e.name)
+        cv.put("position", e.position)
+        cv.put("enabled", e.enabled)
+        cv
+    },
+    withId = { obj, id -> obj.copy(id = id) },
 ) {
     fun table(name: String) = (name using this).withDsl(::TestLiteDsl, ::TestLiteOrderDsl, ::TestLiteExtraDsl, ::TestLiteSetDsl)
 }
