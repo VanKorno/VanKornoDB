@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.dbManagement
 
-import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import org.junit.Assert.*
 import org.junit.Test
@@ -67,7 +67,7 @@ class DbAutoMockingTest {
     
     @Test
     fun `DbHelper accepts tables collection parameter`() {
-        val helper = DbHelper(
+        val helper = Dbh(
             dbName = ":memory:",
             dbVersion = 1,
             entityMeta = emptyList(),

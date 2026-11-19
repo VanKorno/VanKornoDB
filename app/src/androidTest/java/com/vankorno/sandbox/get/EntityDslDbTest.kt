@@ -1,13 +1,15 @@
 package com.vankorno.sandbox.get
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.vankorno.sandbox._entities.testEntity.CTest.Int1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
-import com.vankorno.vankornodb.api.DbHelper
+import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.nio.file.Files.exists
 import java.util.UUID
 
 class EntityDslDbTest {
@@ -17,7 +19,7 @@ class EntityDslDbTest {
         val dbName = "entity-where-${UUID.randomUUID()}.db"
         val items = _Test.table("Items")
         val versions = _EntityVersion.table("Versions")
-        val dbh = DbHelper(dbName, 1, context, emptyList(), mustHaveTables = listOf(items.info, versions.info))
+        val dbh = Dbh(dbName, 1, context, emptyList(), mustHaveTables = listOf(items.info, versions.info))
         
         try {
             val name = "O'Brien"

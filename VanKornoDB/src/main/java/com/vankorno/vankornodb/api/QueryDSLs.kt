@@ -11,16 +11,17 @@ import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
 
 typealias Subquery = Subquery
 
+@DslInject
 class ExtraDsl : ExtraDslInternal() {
     fun applyDsl(opts: ExtraDsl.()->Unit) { this.opts() }
 }
 
-
+@DslInject
 class JoinDsl : JoinDslInternal()
 
 
 
-
+@DslInject
 class OrderDsl : OrderDslInternal() {
     
     fun and(                                                             orderDsl: OrderDsl.()->Unit

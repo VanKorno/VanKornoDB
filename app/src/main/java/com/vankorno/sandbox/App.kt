@@ -5,9 +5,9 @@ import com.vankorno.sandbox._entities.DbName
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
 import com.vankorno.sandbox._entities._TestTable
-import com.vankorno.vankornodb.api.DbHelper
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornohelpers.values.LibGlobals.androidTestsRun
 
 class App : Application() {
@@ -21,7 +21,7 @@ class App : Application() {
     }
     
     fun dbInit() { // Create the DB for the whole app to use if you want
-        dbh = DbHelper(
+        dbh = Dbh(
             dbName = if (androidTestsRun) ":memory:" else DbName,
             dbVersion = DbVersion,
             context = this,

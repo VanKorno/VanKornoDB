@@ -4,6 +4,8 @@ package com.vankorno.vankornodb.api
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.DbHelperInternal
+import com.vankorno.vankornodb.dbManagement.DbManager
+import com.vankorno.vankornodb.dbManagement.DbReaderWriter
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
@@ -14,9 +16,19 @@ import com.vankorno.vankornodb.newTable.createTablesInternal
 
 
 /**
- * Public entry-point class for database management, inheriting from [DbHelperInternal].
+ * The primary entry-point class for database operations, schema access, and query execution.
+ *
+ * It builds upon [DbReaderWriter], which handles thread-safe transactional read/write primitives
+ * and unit test auto-mocking, which in turn extends [DbManager], which manages SQLite database lifecycle,
+ * versioning, entity version tables, and automatic migrations.
+ *
+ * [DbHelperInternal] adds comprehensive high-level convenience wrappers and query/mutation helpers:
+ * - **Under-the-Hood Delegation**: All helper functions cleanly delegate to base read/write execution primitives (`read`, `write`, `readWrite`) from [DbReaderWriter].
+ * - **Consistent API Patterns**: Functions follow predictable argument ordering conventions, placing DSL builders and `where`-blocks last where applicable for clean DSL usage.
+ * - **Async Support**: Write and setter functions provide an optional `async` parameter to launch operations asynchronously on `dbScope`.
+ * - **Convenience APIs**: Includes wrappers for cursor traversal (`useCursor`, `getFromCursor`), single-value/column getters, and targeted property setters (`setInt`, `setStr`, etc.).
  */
-open class DbHelper(              dbName: String,
+open class Dbh(                   dbName: String,
                                dbVersion: Int,
                                  context: Context? = null,
                               entityMeta: Collection<BaseEntityMeta>,
@@ -25,7 +37,7 @@ open class DbHelper(              dbName: String,
                                     lock: DbLock = DbLock(),
                                 onCreate: (SQLiteDatabase)->Unit = {},
                                onUpgrade: (db: SQLiteDatabase, oldVersion: Int)->Unit = { _, _ -> },
-) : DbHelperInternal(
+) : DbReaderWriter(
     dbName = dbName,
     dbVersion = dbVersion,
     context = context,
@@ -38,14 +50,6 @@ open class DbHelper(              dbName: String,
 )
 
 
-/**
- * An optional shorter name for DbHelper for those who prefer it.
- * The repos are basically files with extension functions on the DbHelper (unless you make your own wrapper),
- * so, having a shorter name will affect every fun in every repo. And some people might prefer a shorter,
- * but less descriptive name in this case.
- */
-typealias Dbh = DbHelper
-
 
 
 class DbLock {
@@ -56,15 +60,15 @@ class DbLock {
 
 
 object DbRuntime {
-    private var _dbh: DbHelper? = null
+    private var _dbh: Dbh? = null
     
     /**
      * Holds the main app DbHelper
      */
-    var dbh: DbHelper
+    var dbh: Dbh
         get() {
             if (_dbh == null && unitTestCase) {
-                _dbh = DbHelper(
+                _dbh = Dbh(
                     dbName = ":memory:",
                     dbVersion = 1,
                     context = null,
