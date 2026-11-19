@@ -2,7 +2,6 @@
 package com.vankorno.vankornodb.dbManagement.migration.data
 
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.core.dsl.*
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.set.dsl.SetDsl
@@ -21,8 +20,12 @@ data class EntityVersion(
 
 object _EntityVersion : CurrSchemaBundle<EntityVersion>(
     clazz = EntityVersion::class,
-
-    columns = CEntityVersion,
+    columns = buildColList {
+        +EntityVersionFields.Name
+        +EntityVersionFields.Version
+        +EntityVersionFields.Notes
+        +EntityVersionFields.Id
+    },
 
     getter = { cursor ->
         var idx = 0
@@ -69,26 +72,15 @@ class EntityVersionSetDsl(                                         columns: Enti
 
 class EntityVersionDsl internal constructor(                  context: DslContext<EntityVersionDsl>
 ) : WhereDsl<EntityVersionDsl>(context), EntityVersionDslColumns {
-    override val Name get() = column(sCol("name", ""))
-    override val Version get() = column(iCol("version", 0))
-    override val Notes get() = column(sCol("notes", ""))
-    override val Id get() = column(lCol("id", -1L))
+    override val Name get() = column(EntityVersionFields.Name)
+    override val Version get() = column(EntityVersionFields.Version)
+    override val Notes get() = column(EntityVersionFields.Notes)
+    override val Id get() = column(EntityVersionFields.Id)
 }
 
-
-
-
-// Hopefully this won't be needed later
-object CEntityVersion : EntityColumns {
+private object EntityVersionFields {
     val Name = sCol("name", "")
     val Version = iCol("version", 0)
     val Notes = sCol("notes", "")
     val Id = lCol("id", -1L)
-
-    override val columns = buildColList {
-        +Name
-        +Version
-        +Notes
-        +Id
-    }
 }

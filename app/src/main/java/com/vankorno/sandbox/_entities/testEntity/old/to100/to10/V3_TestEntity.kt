@@ -39,6 +39,27 @@ data class V3_TestEntity(
 
 object _V3_Test : OldSchemaBundle<V3_TestEntity>(
     clazz = V3_TestEntity::class,
+    columns = buildColList {
+        +V3_TestFields.Id
+        +V3_TestFields.Name
+        +V3_TestFields.Position
+        +V3_TestFields.Enabled
+        +V3_TestFields.Int1
+        +V3_TestFields.Int2
+        +V3_TestFields.Int3
+        +V3_TestFields.Str1
+        +V3_TestFields.Str2
+        +V3_TestFields.Str3
+        +V3_TestFields.Bool1
+        +V3_TestFields.Bool2
+        +V3_TestFields.Bool3
+        +V3_TestFields.Long1
+        +V3_TestFields.Long2
+        +V3_TestFields.Long3
+        +V3_TestFields.Float1
+        +V3_TestFields.Float2
+        +V3_TestFields.Float3
+    },
 
     getter = { cursor ->
         var idx = 0
@@ -106,23 +127,45 @@ class V3_TestSetDsl(                                                   columns: 
 
 class V3_TestDsl internal constructor(                     context: DslContext<V3_TestDsl>
 ) : WhereDsl<V3_TestDsl>(context), V3_TestDslColumns {
-    override val Id get() = column(lCol("id", -1L))
-    override val Name get() = column(sCol("name", ""))
-    override val Position get() = column(lCol("position", 0L))
-    override val Enabled get() = column(bCol("enabled", false))
-    override val Int1 get() = column(iCol("int1", 0))
-    override val Int2 get() = column(iCol("int2", 0))
-    override val Int3 get() = column(iCol("int3", 0))
-    override val Str1 get() = column(sCol("str1", ""))
-    override val Str2 get() = column(sCol("str2", ""))
-    override val Str3 get() = column(sCol("str3", ""))
-    override val Bool1 get() = column(bCol("bool1", false))
-    override val Bool2 get() = column(bCol("bool2", false))
-    override val Bool3 get() = column(bCol("bool3", false))
-    override val Long1 get() = column(lCol("long1", 0L))
-    override val Long2 get() = column(lCol("long2", 0L))
-    override val Long3 get() = column(lCol("long3", 0L))
-    override val Float1 get() = column(fCol("float1", 0F))
-    override val Float2 get() = column(fCol("float2", 0F))
-    override val Float3 get() = column(fCol("float3", 0F))
+    override val Id get() = column(V3_TestFields.Id)
+    override val Name get() = column(V3_TestFields.Name)
+    override val Position get() = column(V3_TestFields.Position)
+    override val Enabled get() = column(V3_TestFields.Enabled)
+    override val Int1 get() = column(V3_TestFields.Int1)
+    override val Int2 get() = column(V3_TestFields.Int2)
+    override val Int3 get() = column(V3_TestFields.Int3)
+    override val Str1 get() = column(V3_TestFields.Str1)
+    override val Str2 get() = column(V3_TestFields.Str2)
+    override val Str3 get() = column(V3_TestFields.Str3)
+    override val Bool1 get() = column(V3_TestFields.Bool1)
+    override val Bool2 get() = column(V3_TestFields.Bool2)
+    override val Bool3 get() = column(V3_TestFields.Bool3)
+    override val Long1 get() = column(V3_TestFields.Long1)
+    override val Long2 get() = column(V3_TestFields.Long2)
+    override val Long3 get() = column(V3_TestFields.Long3)
+    override val Float1 get() = column(V3_TestFields.Float1)
+    override val Float2 get() = column(V3_TestFields.Float2)
+    override val Float3 get() = column(V3_TestFields.Float3)
+}
+
+private object V3_TestFields {
+    val Id = lCol("id", -1L)
+    val Name = sCol("name", "")
+    val Position = lCol("position", 0L)
+    val Enabled = bCol("enabled", false)
+    val Int1 = iCol("int1", 0)
+    val Int2 = iCol("int2", 0)
+    val Int3 = iCol("int3", 0)
+    val Str1 = sCol("str1", "")
+    val Str2 = sCol("str2", "")
+    val Str3 = sCol("str3", "")
+    val Bool1 = bCol("bool1", false)
+    val Bool2 = bCol("bool2", false)
+    val Bool3 = bCol("bool3", false)
+    val Long1 = lCol("long1", 0L)
+    val Long2 = lCol("long2", 0L)
+    val Long3 = lCol("long3", 0L)
+    val Float1 = fCol("float1", 0F)
+    val Float2 = fCol("float2", 0F)
+    val Float3 = fCol("float3", 0F)
 }

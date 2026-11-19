@@ -1,6 +1,5 @@
 package com.vankorno.vankornodb.get
 
-import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.api.LiteEntity
 import com.vankorno.vankornodb.dbManagement.data.*
 import org.junit.Assert.assertArrayEquals
@@ -11,16 +10,16 @@ import org.junit.Test
 class LiteEntityColumnsTest {
     @Test
     fun `returns lite schema columns in declared order`() {
-        val columns = checkedLiteColumns(liteTable, sourceColumns)
+        val columns = checkedLiteColumns(liteTable.schema, sourceColumns)
 
         assertEquals(listOf("id", "name", "enabled"), columns.map { it.name })
-        assertArrayEquals(liteColumns.columns.toTypedArray(), columns)
+        assertArrayEquals(liteColumns.toTypedArray(), columns)
     }
 
     @Test
     fun `rejects a lite column missing from original entity columns`() {
         val error = assertThrows(IllegalStateException::class.java) {
-            checkedLiteColumns(liteTable, EntityColumnsFixture(listOf(SourceColumns.Id)))
+            checkedLiteColumns(liteTable.schema, listOf(SourceColumns.Id))
         }
 
         assertEquals(
@@ -31,12 +30,10 @@ class LiteEntityColumnsTest {
 
     @Test
     fun `rejects a lite column with a different typed column class`() {
-        val wrongTypeColumns = EntityColumnsFixture(
-            listOf(SourceColumns.Id, iCol("name"), SourceColumns.Enabled)
-        )
+        val wrongTypeColumns = listOf(SourceColumns.Id, iCol("name"), SourceColumns.Enabled)
 
         val error = assertThrows(IllegalArgumentException::class.java) {
-            checkedLiteColumns(liteTable, wrongTypeColumns)
+            checkedLiteColumns(liteTable.schema, wrongTypeColumns)
         }
 
         assertEquals(
@@ -47,10 +44,10 @@ class LiteEntityColumnsTest {
 
     @Test
     fun `rejects empty lite schema columns`() {
-        val emptyLiteTable = TableInfoLite("test", LiteSchemaBundle(LiteFixture::class, columns = EntityColumnsFixture(emptyList())))
+        val emptyLiteTable = TableInfoLite("test", LiteSchemaBundle(LiteFixture::class, columns = emptyList()))
 
         val error = assertThrows(IllegalArgumentException::class.java) {
-            checkedLiteColumns(emptyLiteTable, sourceColumns)
+            checkedLiteColumns(emptyLiteTable.schema, sourceColumns)
         }
 
         assertEquals("Lite schema for LiteFixture declares no columns", error.message)
@@ -58,14 +55,14 @@ class LiteEntityColumnsTest {
 
     @Test
     fun `rejects duplicate lite column names`() {
-        val duplicateColumns = EntityColumnsFixture(listOf(SourceColumns.Id, SourceColumns.Name, sCol("name")))
+        val duplicateColumns = listOf(SourceColumns.Id, SourceColumns.Name, sCol("name"))
         val duplicateLiteTable = TableInfoLite(
             "test",
             LiteSchemaBundle(LiteFixture::class, columns = duplicateColumns)
         )
 
         val error = assertThrows(IllegalArgumentException::class.java) {
-            checkedLiteColumns(duplicateLiteTable, sourceColumns)
+            checkedLiteColumns(duplicateLiteTable.schema, sourceColumns)
         }
 
         assertEquals("Lite schema for LiteFixture declares duplicate column names", error.message)
@@ -76,7 +73,7 @@ class LiteEntityColumnsTest {
         val noColumnsTable = TableInfoLite("test", LiteSchemaBundle(LiteFixture::class))
 
         val error = assertThrows(IllegalStateException::class.java) {
-            checkedLiteColumns(noColumnsTable, sourceColumns)
+            checkedLiteColumns(noColumnsTable.schema, sourceColumns)
         }
 
         assertEquals("Lite schema for LiteFixture must declare columns", error.message)
@@ -88,13 +85,13 @@ class LiteEntityColumnsTest {
         val enabled: Boolean = false,
     ) : LiteEntity
 
-    private object SourceColumns : EntityColumns {
+    private object SourceColumns {
         val Id = lCol("id", -1L)
         val Name = sCol("name")
         val Enabled = bCol("enabled")
         val Unused = iCol("unused")
 
-        override val columns = buildColList {
+        val columns = buildColList {
             +Id
             +Name
             +Enabled
@@ -102,18 +99,13 @@ class LiteEntityColumnsTest {
         }
     }
 
-    private val sourceColumns = SourceColumns
+    private val sourceColumns = SourceColumns.columns
 
-    private val liteColumns = EntityColumnsFixture(
-        listOf(SourceColumns.Id, SourceColumns.Name, SourceColumns.Enabled)
-    )
+    private val liteColumns = listOf(SourceColumns.Id, SourceColumns.Name, SourceColumns.Enabled)
 
     private val liteTable = TableInfoLite(
         "test",
         LiteSchemaBundle(LiteFixture::class, columns = liteColumns)
     )
 
-    private class EntityColumnsFixture(
-        override val columns: List<TypedColumn<*>>,
-    ) : EntityColumns
 }

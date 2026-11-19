@@ -1,6 +1,5 @@
 package com.vankorno.sandbox._entities.testEntity.lite
 
-import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.api.LiteEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
 import com.vankorno.vankornodb.core.dsl.EntityColumn
@@ -25,8 +24,12 @@ data class TestLiteEntt(
 
 object _TestLite : LiteSchemaBundle<TestLiteEntt>(
     clazz = TestLiteEntt::class,
-
-    columns = CTestLite,
+    columns = buildColList {
+        +TestLiteFields.Id
+        +TestLiteFields.Name
+        +TestLiteFields.Position
+        +TestLiteFields.Enabled
+    },
 
     getter = { cursor ->
         var idx = 0
@@ -62,26 +65,15 @@ class TestLiteSetDsl(                                                 columns: T
 
 class TestLiteDsl internal constructor(                     context: DslContext<TestLiteDsl>
 ) : WhereDsl<TestLiteDsl>(context), TestLiteDslColumns {
-    override val Id get() = column(lCol("id", -1L))
-    override val Name get() = column(sCol("name", ""))
-    override val Position get() = column(lCol("position", 0L))
-    override val Enabled get() = column(bCol("enabled", false))
+    override val Id get() = column(TestLiteFields.Id)
+    override val Name get() = column(TestLiteFields.Name)
+    override val Position get() = column(TestLiteFields.Position)
+    override val Enabled get() = column(TestLiteFields.Enabled)
 }
 
-
-
-
-
-private object CTestLite : EntityColumns {
+private object TestLiteFields {
     val Id = lCol("id", -1L)
     val Name = sCol("name", "")
     val Position = lCol("position", 0L)
     val Enabled = bCol("enabled", false)
-
-    override val columns = buildColList {
-        +Id
-        +Name
-        +Position
-        +Enabled
-    }
 }

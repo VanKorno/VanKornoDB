@@ -13,28 +13,28 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfoBase
 /** Retrieves a list of entity objects mapped from the given table.
  */
 fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntities(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+                                                       table: QueryTable<TableInfoBase<T>, W, O, X>,
                                                      orderBy: O.()->Unit = { raw("ROWID") },
                                                        extra: X.()->Unit = {},
                                                        where: W.()->Unit = {},
 ): List<T> = read(emptyList(), "getEntities") { db ->
-    db.getEntities(tableInfo, orderBy, extra, where)
+    db.getEntities(table, orderBy, extra, where)
 }
 
 /** Retrieves a list of entity objects mapped from the given table.
  */
 fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntities(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+                                                       table: QueryTable<TableInfoBase<T>, W, O, X>,
                                                      orderBy: O.()->Unit = { raw("ROWID") },
                                                        extra: X.()->Unit = {},
                                                        where: W.()->Unit = {},
 ): List<T> = useCursor(
-    tableInfo, orderBy = orderBy, extra = extra, where = where
+    table, orderBy = orderBy, extra = extra, where = where
 ) { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
             do {
-                add(cursor.toEntity(tableInfo.info.schema))
+                add(cursor.toEntity(table.info.schema))
             } while (cursor.moveToNext())
         }
     }
@@ -46,29 +46,29 @@ fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getE
 /** Retrieves a map of entity objects from the given table.
  */
 fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntityMap(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+                                                       table: QueryTable<TableInfoBase<T>, W, O, X>,
                                                      orderBy: O.()->Unit = { raw("ROWID") },
                                                        extra: X.()->Unit = {},
                                                        where: W.()->Unit = {},
 ): Map<Long, T> = read(emptyMap(), "getEntityMap") { db ->
-    db.getEntityMap(tableInfo, orderBy, extra, where)
+    db.getEntityMap(table, orderBy, extra, where)
 }
 
 /** Retrieves a map of entity objects from the given table.
  */
 fun <T : BaseEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntityMap(
-                                                   tableInfo: QueryTable<TableInfoBase<T>, W, O, X>,
+                                                       table: QueryTable<TableInfoBase<T>, W, O, X>,
                                                      orderBy: O.()->Unit = { raw("ROWID") },
                                                        extra: X.()->Unit = {},
                                                        where: W.()->Unit = {},
 ): Map<Long, T> = useCursor(
-    tableInfo, orderBy = orderBy, extra = extra, where = where
+    table, orderBy = orderBy, extra = extra, where = where
 ) { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {
             val idColIdx = cursor.getColumnIndexOrThrow("id")
             do {
-                val entity = cursor.toEntity(tableInfo.info.schema)
+                val entity = cursor.toEntity(table.info.schema)
                 put(cursor.getLong(idColIdx), entity)
             } while (cursor.moveToNext())
         }

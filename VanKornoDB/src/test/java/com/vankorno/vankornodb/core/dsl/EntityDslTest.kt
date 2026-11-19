@@ -127,7 +127,12 @@ private data class Flag(
                             val scoresList: List<Int> = List(2) { 0 },
 ) : CurrEntity
 
-private object FlagSchema : CurrSchemaBundle<Flag>(Flag::class) {
+private object FlagSchema : CurrSchemaBundle<Flag>(Flag::class, columns = buildColList {
+        +FlagFields.Id
+        +FlagFields.OwnerId
+        +FlagFields.Active
+        +FlagFields.Scores
+    }) {
     fun table(name: String) = (name using this).withDsl(::FlagDsl, ::FlagOrderDsl, ::FlagExtraDsl, ::FlagSetDsl)
 }
 
@@ -149,7 +154,14 @@ private class FlagSetDsl(                                                 column
 
 private class FlagDsl(                     context: DslContext<FlagDsl>
 ) : WhereDsl<FlagDsl>(context), FlagDslColumns {
-    override val OwnerId get() = column(lCol("ownerId"))
-    override val Active get() = column(bCol("active"))
-    override val Scores get() = column(iListCol("score", 2))
+    override val OwnerId get() = column(FlagFields.OwnerId)
+    override val Active get() = column(FlagFields.Active)
+    override val Scores get() = column(FlagFields.Scores)
+}
+
+private object FlagFields {
+    val Id = lCol("id")
+    val OwnerId = lCol("ownerId")
+    val Active = bCol("active")
+    val Scores = iListCol("score", 2)
 }

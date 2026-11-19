@@ -60,7 +60,7 @@ fun SQLiteDatabase.createTables(                     tables: List<TableInfoNorma
  * Creates multiple tables in the database.
  *
  * For each table:
- * - If an explicit column list is provided via `EntityColumns`, the table schema
+ * - If an explicit column list is provided by the schema, the table schema
  *   is generated from that list.
  * - Otherwise, the schema is derived from the entity class using reflection.
  *
@@ -73,10 +73,10 @@ fun SQLiteDatabase.createTables(                    vararg tables: TableInfoNorm
 ) {
     for (table in tables) {
         val schemaBundle = table.schema
-        val hasColList = schemaBundle.columns != null  &&  schemaBundle.columns!!.columns.isNotEmpty()
+        val columns = schemaBundle.columns
         
-        val queryStr =  if (hasColList)
-                            newTableQuery(table.name, schemaBundle.columns!!.columns)
+        val queryStr =  if (!columns.isNullOrEmpty())
+                            newTableQuery(table.name, columns)
                         else
                             newTableQuery(table.name, schemaBundle.clazz)
         execSQL(queryStr)

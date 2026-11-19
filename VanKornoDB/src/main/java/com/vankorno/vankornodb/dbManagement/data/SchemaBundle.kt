@@ -4,7 +4,6 @@ package com.vankorno.vankornodb.dbManagement.data
 import android.content.ContentValues
 import android.database.Cursor
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.api.LiteEntity
 import com.vankorno.vankornodb.api.OldEntity
 import kotlin.reflect.KClass
@@ -12,7 +11,7 @@ import kotlin.reflect.KClass
 
 sealed interface BaseSchemaBundle<T : BaseEntity> {
     val clazz: KClass<out T>
-    val columns: EntityColumns?
+    val columns: List<TypedColumn<*>>?
     val getter: ((Cursor) -> T)?
 }
 
@@ -26,7 +25,7 @@ sealed interface NormalSchemaBundle<T : NormalEntity> : BaseSchemaBundle<T> {
 
 open class CurrSchemaBundle<T : CurrEntity>(
                                     override val clazz: KClass<out T>,
-                                  override val columns: EntityColumns? = null,
+                                  override val columns: List<TypedColumn<*>>? = null,
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
                                    override val withId: (T, Long)->T = { entity, _ -> entity },
@@ -39,7 +38,7 @@ open class OldSchemaBundle<T : OldEntity>(
                                     override val clazz: KClass<out T>,
                                    override val getter: ((Cursor)->T)? = null,
                                    override val setter: ((T, ContentValues)->ContentValues)? = null,
-                                  override val columns: EntityColumns? = null,
+                                  override val columns: List<TypedColumn<*>>? = null,
                                    override val withId: (T, Long)->T = { entity, _ -> entity },
 ) : NormalSchemaBundle<T>
 
@@ -48,7 +47,7 @@ open class OldSchemaBundle<T : OldEntity>(
 
 open class LiteSchemaBundle<T : LiteEntity>(              override val clazz: KClass<out T>,
                                                          override val getter: ((Cursor)->T)? = null,
-                                                        override val columns: EntityColumns? = null,
+                                                        override val columns: List<TypedColumn<*>>? = null,
 ) : BaseSchemaBundle<T>
 
 

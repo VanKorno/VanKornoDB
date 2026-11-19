@@ -2,12 +2,14 @@ package com.vankorno.sandbox.get
 
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRat
-import com.vankorno.sandbox._entities.testEntity.CTest
+import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox._entities.testEntity.lite.TestLiteEntt
 import com.vankorno.sandbox._entities.testEntity.lite._TestLite
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.delete.deleteTable
+import com.vankorno.vankornodb.get.getLiteEntities
+import com.vankorno.vankornodb.get.getLiteEntity
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -19,17 +21,17 @@ class GetLiteEntityTest {
         dbh.getLabRats(table)
         
         val entity = dbh.getLiteEntity(
-            table using _TestLite,
-            CTest,
+            _Test.table(table),
+            _TestLite,
             default = TestLiteEntt(),
-        ) { ID = 1L }
+        ) { Id equal 1L }
         
         assertEquals(1L, entity.id)
         assertEquals(LabRat + 1, entity.name)
         assertEquals(1L, entity.position)
         assertEquals(false, entity.enabled)
         
-        dbh.deleteTable(table)
+        dbh.deleteTable(_Test.table(table))
     }
     
     
@@ -40,14 +42,14 @@ class GetLiteEntityTest {
         val default = TestLiteEntt(id = -100L, name = "default")
         
         val entity = dbh.getLiteEntity(
-            table using _TestLite,
-            CTest,
+            _Test.table(table),
+            _TestLite,
             default = default,
-        ) { ID = -100L }
+        ) { Id equal -100L }
         
         assertEquals(default, entity)
         
-        dbh.deleteTable(table)
+        dbh.deleteTable(_Test.table(table))
     }
     
     
@@ -57,8 +59,8 @@ class GetLiteEntityTest {
         dbh.getLabRats(table)
         
         val entities = dbh.getLiteEntities(
-            table using _TestLite,
-            CTest,
+            _Test.table(table),
+            _TestLite,
         )
         
         assertEquals(50, entities.size)
@@ -66,7 +68,7 @@ class GetLiteEntityTest {
         assertEquals((1L..50L).map { LabRat + it }, entities.map { it.name })
         assertEquals((1L..50L).toList(), entities.map { it.position })
         
-        dbh.deleteTable(table)
+        dbh.deleteTable(_Test.table(table))
     }
     
     
@@ -76,12 +78,12 @@ class GetLiteEntityTest {
         dbh.getLabRats(table)
         
         val entities = dbh.getLiteEntities(
-            table using _TestLite,
-            CTest,
-        ) { ID = -100L }
+            _Test.table(table),
+            _TestLite,
+        ) { Id equal -100L }
         
         assertEquals(emptyList<TestLiteEntt>(), entities)
         
-        dbh.deleteTable(table)
+        dbh.deleteTable(_Test.table(table))
     }
 }

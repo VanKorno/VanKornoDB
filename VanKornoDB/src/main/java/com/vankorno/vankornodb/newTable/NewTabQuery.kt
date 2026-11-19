@@ -19,9 +19,6 @@ import com.vankorno.vankornodb.dbManagement.data.*
  * - Default values are included in the SQL definition when applicable.
  * - Unsupported or invalid column definitions are skipped.
  *
- * This function performs no reflection and relies entirely on the structure produced
- * by the EntityColumns / ColumnsBuilder DSL.
- *
  * @param table The name of the SQLite table to create.
  * @param columns The list of fully-defined columns used to build the table schema.
  * @return A complete `CREATE TABLE` SQL string.

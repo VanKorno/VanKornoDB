@@ -1,7 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity
 
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.core.dsl.DslContext
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
@@ -45,8 +44,27 @@ data class TestEntity(
 
 object _Test : CurrSchemaBundle<TestEntity>(
     clazz = TestEntity::class,
-
-    columns = testColumns,
+    columns = buildColList {
+        +TestFields.Id
+        +TestFields.Name
+        +TestFields.Position
+        +TestFields.Enabled
+        +TestFields.Int1
+        +TestFields.Int2
+        +TestFields.Int3
+        +TestFields.Str1
+        +TestFields.Str2
+        +TestFields.Str3
+        +TestFields.Bool1
+        +TestFields.Bool2
+        +TestFields.Bool3
+        +TestFields.Long1
+        +TestFields.Long2
+        +TestFields.Long3
+        +TestFields.Float1
+        +TestFields.Float2
+        +TestFields.Float3
+    },
 
     getter = { cursor ->
         var idx = 0
@@ -137,34 +155,28 @@ class TestSetDsl(                                                         column
 
 class TestDsl internal constructor(                     context: DslContext<TestDsl>
 ) : WhereDsl<TestDsl>(context), TestDslColumns {
-    override val Id get() = column(lCol("id", -1L))
-    override val Name get() = column(sCol("name", ""))
-    override val Position get() = column(lCol("position", 0L))
-    override val Enabled get() = column(bCol("enabled", false))
-    override val Int1 get() = column(iCol("int1", 0))
-    override val Int2 get() = column(iCol("int2", 0))
-    override val Int3 get() = column(iCol("int3", 0))
-    override val Str1 get() = column(sCol("str1", ""))
-    override val Str2 get() = column(sCol("str2", ""))
-    override val Str3 get() = column(sCol("str3", ""))
-    override val Bool1 get() = column(bCol("bool1", false))
-    override val Bool2 get() = column(bCol("bool2", false))
-    override val Bool3 get() = column(bCol("bool3", false))
-    override val Long1 get() = column(lCol("long1", 0L))
-    override val Long2 get() = column(lCol("long2", 0L))
-    override val Long3 get() = column(lCol("long3", 0L))
-    override val Float1 get() = column(fCol("float1", 0F))
-    override val Float2 get() = column(fCol("float2", 0F))
-    override val Float3 get() = column(fCol("float3", 0F))
+    override val Id get() = column(TestFields.Id)
+    override val Name get() = column(TestFields.Name)
+    override val Position get() = column(TestFields.Position)
+    override val Enabled get() = column(TestFields.Enabled)
+    override val Int1 get() = column(TestFields.Int1)
+    override val Int2 get() = column(TestFields.Int2)
+    override val Int3 get() = column(TestFields.Int3)
+    override val Str1 get() = column(TestFields.Str1)
+    override val Str2 get() = column(TestFields.Str2)
+    override val Str3 get() = column(TestFields.Str3)
+    override val Bool1 get() = column(TestFields.Bool1)
+    override val Bool2 get() = column(TestFields.Bool2)
+    override val Bool3 get() = column(TestFields.Bool3)
+    override val Long1 get() = column(TestFields.Long1)
+    override val Long2 get() = column(TestFields.Long2)
+    override val Long3 get() = column(TestFields.Long3)
+    override val Float1 get() = column(TestFields.Float1)
+    override val Float2 get() = column(TestFields.Float2)
+    override val Float3 get() = column(TestFields.Float3)
 }
 
-
-
-
-
-private val testColumns = TestColumnDefinitions()
-
-internal open class TestColumnDefinitions : EntityColumns {
+private object TestFields {
     val Id = lCol("id", -1L)
     val Name = sCol("name", "")
     val Position = lCol("position", 0L)
@@ -184,26 +196,4 @@ internal open class TestColumnDefinitions : EntityColumns {
     val Float1 = fCol("float1", 0F)
     val Float2 = fCol("float2", 0F)
     val Float3 = fCol("float3", 0F)
-
-    override val columns = buildColList {
-        +Id
-        +Name
-        +Position
-        +Enabled
-        +Int1
-        +Int2
-        +Int3
-        +Str1
-        +Str2
-        +Str3
-        +Bool1
-        +Bool2
-        +Bool3
-        +Long1
-        +Long2
-        +Long3
-        +Float1
-        +Float2
-        +Float3
-    }
 }

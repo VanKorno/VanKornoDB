@@ -1,7 +1,7 @@
 package com.vankorno.vankornodb.core
 
-import com.vankorno.vankornodb.api.EntityColumns
 import com.vankorno.vankornodb.dbManagement.data.IntCol
+import com.vankorno.vankornodb.dbManagement.data.buildColList
 import com.vankorno.vankornodb.dbManagement.data.iListCol
 import com.vankorno.vankornodb.dbManagement.data.sListCol
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
@@ -15,12 +15,10 @@ class EntityColumnsTest {
     
     @Test
     fun `Single columns added`() {
-        val cols = object : EntityColumns {
-            override val columns = buildColList {
-                +cID
-                +cName
-            }
-        }.columns
+        val cols = buildColList {
+            +cID
+            +cName
+        }
 
         assertEquals(2, cols.size)
         assertEquals(cID, cols[0])
@@ -30,11 +28,9 @@ class EntityColumnsTest {
     
     @Test
     fun `List columns expanded`() {
-        val cols = object : EntityColumns {
-            override val columns = buildColList {
-                +iListCol("num_", 3, 7)
-            }
-        }.columns
+        val cols = buildColList {
+            +iListCol("num_", 3, 7)
+        }
 
         assertEquals(3, cols.size)
 
@@ -48,13 +44,11 @@ class EntityColumnsTest {
 
     @Test
     fun `Mixed single and list columns`() {
-        val cols = object : EntityColumns {
-            override val columns = buildColList {
-                +cRowId
-                +sListCol("tag_", 2, "x")
-                +cActive
-            }
-        }.columns
+        val cols = buildColList {
+            +cRowId
+            +sListCol("tag_", 2, "x")
+            +cActive
+        }
 
         assertEquals(4, cols.size)
 

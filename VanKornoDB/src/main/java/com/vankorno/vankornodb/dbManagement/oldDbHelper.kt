@@ -12,7 +12,6 @@ import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
-import com.vankorno.vankornodb.core.dsl.EntityTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateInts
@@ -131,18 +130,6 @@ abstract class DbHelperInternal(
     
     // ---------------------------------------  S E T  --------------------------------------- \\
     
-    /** A wrapper fun for [SQLiteDatabase.setEntity] */
-    fun <T : CurrEntity> setEntity(                                   tableInfo: TableInfoNormal<T>,
-                                                                         entity: T,
-                                                                          where: W.()->Unit,
-    ): Int = readWrite(0, "setEntity") { db ->
-        db.setEntity(tableInfo, entity, where)
-    }
-    
-    fun <T : CurrEntity, W> setEntity(                tableInfo: EntityTable<TableInfoNormal<T>, W>,
-                                                         entity: T,
-                                                          where: W.()->Unit,
-    ): Int = setEntity(tableInfo.info, entity, tableInfo.where(where))
     
     
     

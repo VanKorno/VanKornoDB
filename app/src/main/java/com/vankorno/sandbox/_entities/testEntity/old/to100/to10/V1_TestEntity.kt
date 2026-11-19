@@ -27,6 +27,15 @@ data class V1_TestEntity(
 
 object _V1_Test : OldSchemaBundle<V1_TestEntity>(
     clazz = V1_TestEntity::class,
+    columns = buildColList {
+        +V1_TestFields.Name
+        +V1_TestFields.Boo
+        +V1_TestFields.Int1
+        +V1_TestFields.Str1
+        +V1_TestFields.Long1
+        +V1_TestFields.Float1
+        +V1_TestFields.Id
+    },
 
     getter = { cursor ->
         var idx = 0
@@ -70,11 +79,21 @@ class V1_TestSetDsl(                                                   columns: 
 
 class V1_TestDsl internal constructor(                     context: DslContext<V1_TestDsl>
 ) : WhereDsl<V1_TestDsl>(context), V1_TestDslColumns {
-    override val Name get() = column(sCol("name", ""))
-    override val Boo get() = column(bCol("boo", false))
-    override val Int1 get() = column(iCol("int1", 0))
-    override val Str1 get() = column(sCol("str1", ""))
-    override val Long1 get() = column(lCol("long1", 0L))
-    override val Float1 get() = column(fCol("float1", 0F))
-    override val Id get() = column(lCol("id", -1L))
+    override val Name get() = column(V1_TestFields.Name)
+    override val Boo get() = column(V1_TestFields.Boo)
+    override val Int1 get() = column(V1_TestFields.Int1)
+    override val Str1 get() = column(V1_TestFields.Str1)
+    override val Long1 get() = column(V1_TestFields.Long1)
+    override val Float1 get() = column(V1_TestFields.Float1)
+    override val Id get() = column(V1_TestFields.Id)
+}
+
+private object V1_TestFields {
+    val Name = sCol("name", "")
+    val Boo = bCol("boo", false)
+    val Int1 = iCol("int1", 0)
+    val Str1 = sCol("str1", "")
+    val Long1 = lCol("long1", 0L)
+    val Float1 = fCol("float1", 0F)
+    val Id = lCol("id", -1L)
 }
