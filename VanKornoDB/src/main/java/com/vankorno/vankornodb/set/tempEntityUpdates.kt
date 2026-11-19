@@ -4,7 +4,6 @@ package com.vankorno.vankornodb.set
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.ColumnSelector
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.DslInject
 import com.vankorno.vankornodb.api.EntityTable
 import com.vankorno.vankornodb.api.SetDsl
 import com.vankorno.vankornodb.dbManagement.data.*
@@ -48,7 +47,7 @@ fun <W> SQLiteDatabase.setBlob(                                   value: ByteArr
 
 fun <W> SQLiteDatabase.set(                                                table: EntityTable<*, W>,
                                                                            where: W.()->Unit = {},
-                                                                         actions: @DslInject SetDsl.()->Unit,
+                                                                         actions: SetDsl.()->Unit,
 ) = set(table.name, table.where(where), actions)
 
 fun <T : CurrEntity, W> SQLiteDatabase.setEntity(     tableInfo: EntityTable<TableInfoNormal<T>, W>,

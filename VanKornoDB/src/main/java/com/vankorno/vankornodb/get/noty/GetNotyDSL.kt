@@ -7,9 +7,9 @@ import com.vankorno.vankornodb.api.ExtraDsl
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.misc.eLog
-import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
 
+// TODO Make sure not used
 
 fun <R> SQLiteDatabase.getValueNoty(                                  table: String,
                                                                      column: String,
@@ -37,25 +37,6 @@ fun <R> SQLiteDatabase.getValueNoty(                                  table: Str
         }
     }
 }
-
-
-fun SQLiteDatabase.getIntNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, -1, "getInt", where = where) { it.getInt(0) }
-
-fun SQLiteDatabase.getStrNoty(table: String, column: String, where: WhereDsl.()->Unit): String =
-    getValueNoty(table, column, "", "getStr", where = where) { it.getString(0) }
-
-fun SQLiteDatabase.getBoolNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, false, "getBool", where = where) { it.getBoolean(0) }
-
-fun SQLiteDatabase.getLongNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, -1L, "getLong", where = where) { it.getLong(0) }
-
-fun SQLiteDatabase.getFloatNoty(table: String, column: String, where: WhereDsl.()->Unit) =
-    getValueNoty(table, column, -1F, "getFloat", where = where) { it.getFloat(0) }
-
-fun SQLiteDatabase.getBlobNoty(table: String, column: String, where: WhereDsl.()->Unit): ByteArray =
-    getValueNoty(table, column, ByteArray(0), "getBlob", where = where) { it.getBlob(0) }
 
 
 

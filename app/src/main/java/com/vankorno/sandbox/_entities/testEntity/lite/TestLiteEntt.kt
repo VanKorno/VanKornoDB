@@ -1,15 +1,7 @@
 package com.vankorno.sandbox._entities.testEntity.lite
 
-import com.vankorno.vankornodb.api.DslContext
-import com.vankorno.vankornodb.api.EntityColumns
-import com.vankorno.vankornodb.api.EntityDsl
-import com.vankorno.vankornodb.api.LiteEntity
-import com.vankorno.vankornodb.api.withDsl
-import com.vankorno.vankornodb.dbManagement.data.LiteSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.bCol
-import com.vankorno.vankornodb.dbManagement.data.lCol
-import com.vankorno.vankornodb.dbManagement.data.sCol
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class TestLiteEntt(
@@ -39,15 +31,25 @@ object _TestLite : LiteSchemaBundle<TestLiteEntt>(
         )
     },
 ) {
-    fun table(name: String) = (name using this).withDsl(::TestLiteDsl)
+    fun table(name: String) = (name using this).withDsl(::TestLiteDsl, ::TestLiteOrderDsl, ::TestLiteExtraDsl)
 }
 
 
-class TestLiteDsl internal constructor(context: DslContext<TestLiteDsl>) : EntityDsl<TestLiteEntt, TestLiteDsl>(context) {
-    val Id get() = column(CTestLite.Id)
-    val Name get() = column(CTestLite.Name)
-    val Position get() = column(CTestLite.Position)
-    val Enabled get() = column(CTestLite.Enabled)
+interface TestLiteDslColumns {
+    val Id: EntityColumn<TestLiteDsl, LongCol>
+    val Name: EntityColumn<TestLiteDsl, StrCol>
+    val Position: EntityColumn<TestLiteDsl, LongCol>
+    val Enabled: EntityColumn<TestLiteDsl, BoolCol>
+}
+
+class TestLiteOrderDsl internal constructor(columns: TestLiteDslColumns) : EntityOrderDsl<TestLiteDsl>(), TestLiteDslColumns by columns
+class TestLiteExtraDsl internal constructor(columns: TestLiteDslColumns) : EntityExtraDsl<TestLiteDsl>(), TestLiteDslColumns by columns
+
+class TestLiteDsl internal constructor(context: DslContext<TestLiteDsl>) : EntityDsl<TestLiteEntt, TestLiteDsl>(context), TestLiteDslColumns {
+    override val Id get() = column(CTestLite.Id)
+    override val Name get() = column(CTestLite.Name)
+    override val Position get() = column(CTestLite.Position)
+    override val Enabled get() = column(CTestLite.Enabled)
 }
 
 

@@ -1,18 +1,8 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.DslContext
-import com.vankorno.vankornodb.api.EntityColumns
-import com.vankorno.vankornodb.api.EntityDsl
-import com.vankorno.vankornodb.api.EntityTable
-import com.vankorno.vankornodb.api.withDsl
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.TableInfoCurr
-import com.vankorno.vankornodb.dbManagement.data.iCol
-import com.vankorno.vankornodb.dbManagement.data.lCol
-import com.vankorno.vankornodb.dbManagement.data.sCol
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.dbManagement.data.*
 
 data class EntityVersion(
                                   val name: String = "",
@@ -52,22 +42,36 @@ object _EntityVersion : CurrSchemaBundle<EntityVersion>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String): EntityTable<TableInfoCurr<EntityVersion>, EntityVersionDsl> = (name using this).withDsl(::EntityVersionDsl)
+    fun table(name: String): QueryTable<TableInfoCurr<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl)
 }
 
 
-class EntityVersionDsl internal constructor(                 context: DslContext<EntityVersionDsl>
-) : EntityDsl<EntityVersion, EntityVersionDsl>(context) {
-    val Name get() = column(CEntityVersion.Name)
-    val Version get() = column(CEntityVersion.Version)
-    val Notes get() = column(CEntityVersion.Notes)
-    val Id get() = column(CEntityVersion.Id)
+interface EntityVersionDslColumns {
+    val Name: EntityColumn<EntityVersionDsl, StrCol>
+    val Version: EntityColumn<EntityVersionDsl, IntCol>
+    val Notes: EntityColumn<EntityVersionDsl, StrCol>
+    val Id: EntityColumn<EntityVersionDsl, LongCol>
+}
+
+class EntityVersionOrderDsl internal constructor(                  columns: EntityVersionDslColumns
+) : EntityOrderDsl<EntityVersionDsl>(), EntityVersionDslColumns by columns
+
+class EntityVersionExtraDsl internal constructor(                  columns: EntityVersionDslColumns
+) : EntityExtraDsl<EntityVersionDsl>(), EntityVersionDslColumns by columns
+
+
+class EntityVersionDsl internal constructor(                  context: DslContext<EntityVersionDsl>
+) : EntityDsl<EntityVersion, EntityVersionDsl>(context), EntityVersionDslColumns {
+    override val Name get() = column(sCol("name", ""))
+    override val Version get() = column(iCol("version", 0))
+    override val Notes get() = column(sCol("notes", ""))
+    override val Id get() = column(lCol("id", -1L))
 }
 
 
 
 
-
+// Hopefully this won't be needed later
 object CEntityVersion : EntityColumns {
     val Name = sCol("name", "")
     val Version = iCol("version", 0)

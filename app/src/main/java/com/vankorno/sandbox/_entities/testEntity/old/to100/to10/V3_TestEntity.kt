@@ -1,9 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.DslContext
-import com.vankorno.vankornodb.api.EntityDsl
-import com.vankorno.vankornodb.api.OldEntity
-import com.vankorno.vankornodb.api.withDsl
+import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 
@@ -64,30 +61,55 @@ object _V3_Test : OldSchemaBundle<V3_TestEntity>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String) = (name using this).withDsl(::V3_TestDsl)
+    fun table(name: String) = (name using this).withDsl(::V3_TestDsl, ::V3_TestOrderDsl, ::V3_TestExtraDsl)
 }
 
 
-class V3_TestDsl internal constructor(context: DslContext<V3_TestDsl>) : EntityDsl<V3_TestEntity, V3_TestDsl>(context) {
-    val Id get() = column(CV3_Test.Id)
-    val Name get() = column(CV3_Test.Name)
-    val Position get() = column(CV3_Test.Position)
-    val Enabled get() = column(CV3_Test.Enabled)
-    val Int1 get() = column(CV3_Test.Int1)
-    val Int2 get() = column(CV3_Test.Int2)
-    val Int3 get() = column(CV3_Test.Int3)
-    val Str1 get() = column(CV3_Test.Str1)
-    val Str2 get() = column(CV3_Test.Str2)
-    val Str3 get() = column(CV3_Test.Str3)
-    val Bool1 get() = column(CV3_Test.Bool1)
-    val Bool2 get() = column(CV3_Test.Bool2)
-    val Bool3 get() = column(CV3_Test.Bool3)
-    val Long1 get() = column(CV3_Test.Long1)
-    val Long2 get() = column(CV3_Test.Long2)
-    val Long3 get() = column(CV3_Test.Long3)
-    val Float1 get() = column(CV3_Test.Float1)
-    val Float2 get() = column(CV3_Test.Float2)
-    val Float3 get() = column(CV3_Test.Float3)
+interface V3_TestDslColumns {
+    val Id: EntityColumn<V3_TestDsl, LongCol>
+    val Name: EntityColumn<V3_TestDsl, StrCol>
+    val Position: EntityColumn<V3_TestDsl, LongCol>
+    val Enabled: EntityColumn<V3_TestDsl, BoolCol>
+    val Int1: EntityColumn<V3_TestDsl, IntCol>
+    val Int2: EntityColumn<V3_TestDsl, IntCol>
+    val Int3: EntityColumn<V3_TestDsl, IntCol>
+    val Str1: EntityColumn<V3_TestDsl, StrCol>
+    val Str2: EntityColumn<V3_TestDsl, StrCol>
+    val Str3: EntityColumn<V3_TestDsl, StrCol>
+    val Bool1: EntityColumn<V3_TestDsl, BoolCol>
+    val Bool2: EntityColumn<V3_TestDsl, BoolCol>
+    val Bool3: EntityColumn<V3_TestDsl, BoolCol>
+    val Long1: EntityColumn<V3_TestDsl, LongCol>
+    val Long2: EntityColumn<V3_TestDsl, LongCol>
+    val Long3: EntityColumn<V3_TestDsl, LongCol>
+    val Float1: EntityColumn<V3_TestDsl, FloatCol>
+    val Float2: EntityColumn<V3_TestDsl, FloatCol>
+    val Float3: EntityColumn<V3_TestDsl, FloatCol>
+}
+
+class V3_TestOrderDsl internal constructor(columns: V3_TestDslColumns) : EntityOrderDsl<V3_TestDsl>(), V3_TestDslColumns by columns
+class V3_TestExtraDsl internal constructor(columns: V3_TestDslColumns) : EntityExtraDsl<V3_TestDsl>(), V3_TestDslColumns by columns
+
+class V3_TestDsl internal constructor(context: DslContext<V3_TestDsl>) : EntityDsl<V3_TestEntity, V3_TestDsl>(context), V3_TestDslColumns {
+    override val Id get() = column(CV3_Test.Id)
+    override val Name get() = column(CV3_Test.Name)
+    override val Position get() = column(CV3_Test.Position)
+    override val Enabled get() = column(CV3_Test.Enabled)
+    override val Int1 get() = column(CV3_Test.Int1)
+    override val Int2 get() = column(CV3_Test.Int2)
+    override val Int3 get() = column(CV3_Test.Int3)
+    override val Str1 get() = column(CV3_Test.Str1)
+    override val Str2 get() = column(CV3_Test.Str2)
+    override val Str3 get() = column(CV3_Test.Str3)
+    override val Bool1 get() = column(CV3_Test.Bool1)
+    override val Bool2 get() = column(CV3_Test.Bool2)
+    override val Bool3 get() = column(CV3_Test.Bool3)
+    override val Long1 get() = column(CV3_Test.Long1)
+    override val Long2 get() = column(CV3_Test.Long2)
+    override val Long3 get() = column(CV3_Test.Long3)
+    override val Float1 get() = column(CV3_Test.Float1)
+    override val Float2 get() = column(CV3_Test.Float2)
+    override val Float3 get() = column(CV3_Test.Float3)
 }
 
 

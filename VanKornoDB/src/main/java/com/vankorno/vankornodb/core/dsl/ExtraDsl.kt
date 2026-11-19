@@ -8,8 +8,7 @@ import com.vankorno.vankornodb.core.data.ExtraDslHolder
  *  Internal base — use [com.vankorno.vankornodb.api.ExtraDsl] from the api package instead
  */
 @Suppress("unused")
-open class ExtraDslInternal {
-    val query = ExtraDslHolder()
+open class ExtraDslInternal(val query: ExtraDslHolder = ExtraDslHolder()) {
     
     fun joins(joinDsl: JoinDsl.()->Unit) { query.joins = joinDsl }
     

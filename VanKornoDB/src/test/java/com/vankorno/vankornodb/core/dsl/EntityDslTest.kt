@@ -1,15 +1,7 @@
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.DslContext
-import com.vankorno.vankornodb.api.EntityDsl
-import com.vankorno.vankornodb.api.subquery
-import com.vankorno.vankornodb.api.withDsl
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.bCol
-import com.vankorno.vankornodb.dbManagement.data.iListCol
-import com.vankorno.vankornodb.dbManagement.data.lCol
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersionDsl
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
 import org.junit.Assert.*
@@ -17,6 +9,24 @@ import org.junit.Test
 
 class EntityDslTest {
     private val versions = _EntityVersion.table("Versions")
+    
+    @Test
+    fun `each query clause sees its own operations and the same entity columns`() {
+        val result = versions.query(
+            columns = arrayOf({ Name }),
+            orderBy = { Version.flip() },
+            extra = {
+                groupBy(Name)
+                limit = 1
+                offset = 2
+            },
+            where = { Version greater 3 },
+        )
+        
+        assertEquals("SELECT name FROM Versions WHERE version>? GROUP BY name ORDER BY version DESC LIMIT 1 OFFSET 2", result.query)
+        assertArrayEquals(arrayOf("3"), result.args)
+        assertEquals("SELECT * FROM Versions", versions.query(emptyArray(), {}, {}, {}).query)
+    }
     
     @Test
     fun `grouping keeps the entity receiver and preserves argument order`() {
@@ -114,13 +124,22 @@ private data class Flag(
 ) : CurrEntity
 
 private object FlagSchema : CurrSchemaBundle<Flag>(Flag::class) {
-    fun table(name: String) = (name using this).withDsl(::FlagDsl)
+    fun table(name: String) = (name using this).withDsl(::FlagDsl, ::FlagOrderDsl, ::FlagExtraDsl)
 }
 
-private class FlagDsl(context: DslContext<FlagDsl>) : EntityDsl<Flag, FlagDsl>(context) {
-    val OwnerId = column(lCol("ownerId"))
-    val Active = column(bCol("active"))
-    val Scores get() = column(scoreColumns)
+private interface FlagDslColumns {
+    val OwnerId: EntityColumn<FlagDsl, LongCol>
+    val Active: EntityColumn<FlagDsl, BoolCol>
+    val Scores: List<EntityColumn<FlagDsl, IntCol>>
+}
+
+private class FlagOrderDsl internal constructor(columns: FlagDslColumns) : EntityOrderDsl<FlagDsl>(), FlagDslColumns by columns
+private class FlagExtraDsl internal constructor(columns: FlagDslColumns) : EntityExtraDsl<FlagDsl>(), FlagDslColumns by columns
+
+private class FlagDsl(context: DslContext<FlagDsl>) : EntityDsl<Flag, FlagDsl>(context), FlagDslColumns {
+    override val OwnerId = column(lCol("ownerId"))
+    override val Active = column(bCol("active"))
+    override val Scores get() = column(scoreColumns)
     
     private companion object {
         val scoreColumns = iListCol("score", 2)

@@ -6,6 +6,7 @@ import com.vankorno.vankornodb.api.JoinDsl
 import com.vankorno.vankornodb.api.OrderDsl
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.comma
+import com.vankorno.vankornodb.core.data.ExtraDslHolder
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.misc.getColNames
@@ -19,8 +20,18 @@ internal fun getQuery(                                      table: String,
 ): QueryWithArgs {
     val extraDsl = ExtraDsl().apply(extra).query
     val whereDsl = WhereDsl().apply(where)
-    val joinDsl = JoinDsl().apply(extraDsl.joins)
     val orderDsl = OrderDsl().apply(orderBy)
+    return getQuery(table, columns, orderDsl, extraDsl, whereDsl)
+}
+
+
+internal fun getQuery(                                       table: String,
+                                                           columns: Array<out String>,
+                                                          orderDsl: OrderDsl,
+                                                          extraDsl: ExtraDslHolder,
+                                                          whereDsl: WhereDsl,
+): QueryWithArgs {
+    val joinDsl = JoinDsl().apply(extraDsl.joins)
     
     val query = buildString {
         append("SELECT ")

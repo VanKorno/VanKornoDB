@@ -50,47 +50,7 @@ abstract class DbHelperInternal(
 ) {
     // ===================================  C U R S O R  =================================== \\
     
-    /** A wrapper fun for [SQLiteDatabase.useCursor] */
-    fun useCursor(                                                    table: String,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                      block: (Cursor)->Unit,
-    ) = write("useCursor") { db ->
-        db.useCursor(table, orderBy, extra, where, block)
-    }
     
-    /** A wrapper fun for [SQLiteDatabase.useCursor] */
-    fun useCursor(                                                 table: String,
-                                                                 columns: Array<out TypedColumn<*>>,
-                                                                 orderBy: OrderDsl.()->Unit = {},
-                                                                   extra: ExtraDsl.()->Unit = {},
-                                                                   where: WhereDsl.()->Unit = {},
-                                                                   block: (Cursor)->Unit,
-    ) = write("useCursor") { db ->
-        db.useCursor(table, columns, orderBy, extra, where, block)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.useCursor] */
-    fun useCursor(                                                    table: String,
-                                                                     column: TypedColumn<*>,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                      block: (Cursor)->Unit,
-    ) = write("useCursor") { db ->
-        db.useCursor(table, column, orderBy, extra, where, block)
-    }
-    
-    fun <W> useCursor(                                table: EntityTable<*, W>,
-                                             vararg columns: ColumnSelector<W, TypedColumn<*>>,
-                                                    orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                      extra: @DslInject ExtraDsl.()->Unit = {},
-                                                      where: W.()->Unit = {},
-                                                      block: (Cursor)->Unit,
-    ) = write("useCursor") { db ->
-        db.useCursor(table, *columns, orderBy = orderBy, extra = extra, where = where, block = block)
-    }
     
     
     // -------------------------   R E T U R N I N G   V A L U E S   ------------------------- \\
@@ -130,11 +90,11 @@ abstract class DbHelperInternal(
         db.useCursor(table, column, orderBy, extra, where, block)
     }
     
-    fun <W, R> getFromCursor(                         table: EntityTable<*, W>,
+    fun <W, O : OrderDsl, X : ExtraDsl, R> getFromCursor(                         table: com.vankorno.vankornodb.api.QueryTable<*, W, O, X>,
                                                     default: R,
                                              vararg columns: ColumnSelector<W, TypedColumn<*>>,
-                                                    orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                      extra: @DslInject ExtraDsl.()->Unit = {},
+                                                    orderBy: O.()->Unit = {},
+                                                      extra: X.()->Unit = {},
                                                       where: W.()->Unit = {},
                                                       block: (Cursor)->R,
     ): R = readWrite(default, "getFromCursor") { db ->
@@ -284,7 +244,7 @@ abstract class DbHelperInternal(
     fun <W> set(                                             table: EntityTable<*, W>,
                                                              where: W.()->Unit = {},
                                                              async: Boolean = false,
-                                                           actions: @DslInject SetDsl.()->Unit,
+                                                           actions: SetDsl.()->Unit,
     ) = set(table.name, table.where(where), async, actions)
     
     
@@ -369,129 +329,6 @@ abstract class DbHelperInternal(
     
     
     
-    
-    
-    // ==================================   G E T T E R S  ================================== \\
-    
-    /** A wrapper fun for [SQLiteDatabase.getInt] */
-    fun getInt(                                                       table: String,
-                                                                     column: IntCol,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-    ): Int = read(-1, "getInt") { db ->
-        db.getInt(table, column, orderBy, extra, where)
-    }
-    
-    fun <W> getInt(                                                table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, IntCol>,
-                                                                 orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                   extra: @DslInject ExtraDsl.()->Unit = {},
-                                                                   where: W.()->Unit = {},
-    ): Int = read(-1, "getInt") { db ->
-        db.getInt(table, column, orderBy, extra, where)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getStr] */
-    fun getStr(                                                       table: String,
-                                                                     column: StrCol,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-    ): String = read("", "getStr") { db ->
-        db.getStr(table, column, orderBy, extra, where)
-    }
-    
-    fun <W> getStr(                                                table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, StrCol>,
-                                                                 orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                   extra: @DslInject ExtraDsl.()->Unit = {},
-                                                                   where: W.()->Unit = {},
-    ): String = read("", "getStr") { db ->
-        db.getStr(table, column, orderBy, extra, where)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getBool] */
-    fun getBool(                                                      table: String,
-                                                                     column: BoolCol,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-    ): Boolean = read(false, "getBool") { db ->
-        db.getBool(table, column, orderBy, extra, where)
-    }
-    
-    fun <W> getBool(                                              table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BoolCol>,
-                                                                orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                  extra: @DslInject ExtraDsl.()->Unit = {},
-                                                                  where: W.()->Unit = {},
-    ): Boolean = read(false, "getBool") { db ->
-        db.getBool(table, column, orderBy, extra, where)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getLong] */
-    fun getLong(                                                      table: String,
-                                                                     column: LongCol,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-    ): Long = read(-1L, "getLong") { db ->
-        db.getLong(table, column, orderBy, extra, where)
-    }
-    
-    fun <W> getLong(                                              table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, LongCol>,
-                                                                orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                  extra: @DslInject ExtraDsl.()->Unit = {},
-                                                                  where: W.()->Unit = {},
-    ): Long = read(-1L, "getLong") { db ->
-        db.getLong(table, column, orderBy, extra, where)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getFloat] */
-    fun getFloat(                                                     table: String,
-                                                                     column: FloatCol,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-    ): Float = read(-1F, "getFloat") { db ->
-        db.getFloat(table, column, orderBy, extra, where)
-    }
-    
-    fun <W> getFloat(                                            table: EntityTable<*, W>,
-                                                                column: ColumnSelector<W, FloatCol>,
-                                                               orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                 extra: @DslInject ExtraDsl.()->Unit = {},
-                                                                 where: W.()->Unit = {},
-    ): Float = read(-1F, "getFloat") { db ->
-        db.getFloat(table, column, orderBy, extra, where)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.getBlob] */
-    fun getBlob(                                                      table: String,
-                                                                     column: BlobCol,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-    ): ByteArray = read(ByteArray(0), "getBlob") { db ->
-        db.getBlob(table, column, orderBy, extra, where)
-    }
-    
-    fun <W> getBlob(                                              table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BlobCol>,
-                                                                orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                  extra: @DslInject ExtraDsl.()->Unit = {},
-                                                                  where: W.()->Unit = {},
-    ): ByteArray = read(ByteArray(0), "getBlob") { db ->
-        db.getBlob(table, column, orderBy, extra, where)
-    }
-    
-    
-    
-    
-    
-    
     // ==============================  G E T   E N T I T I E S  ============================== \\
     
     /** A wrapper fun for [SQLiteDatabase.getEntity] */
@@ -504,8 +341,8 @@ abstract class DbHelperInternal(
     }
     
     fun <T : BaseEntity, W> getEntity(                  tableInfo: EntityTable<TableInfoBase<T>, W>,
-                                                          orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                            extra: @DslInject ExtraDsl.()->Unit = {},
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
                                                             where: W.()->Unit,
     ): T? = getEntity(tableInfo.info, orderBy, extra, tableInfo.where(where))
     
@@ -521,8 +358,8 @@ abstract class DbHelperInternal(
     
     fun <T : BaseEntity, W> getEntity(                  tableInfo: EntityTable<TableInfoBase<T>, W>,
                                                           default: T,
-                                                          orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                            extra: @DslInject ExtraDsl.()->Unit = {},
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
                                                             where: W.()->Unit,
     ): T = getEntity(tableInfo.info, default, orderBy, extra, tableInfo.where(where))
     
@@ -590,8 +427,8 @@ abstract class DbHelperInternal(
     }
     
     fun <T : BaseEntity, W> getEntities(              tableInfo: EntityTable<TableInfoBase<T>, W>,
-                                                        orderBy: @DslInject OrderDsl.()->Unit = orderByRowId(),
-                                                          extra: @DslInject ExtraDsl.()->Unit = {},
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
                                                           where: W.()->Unit = {},
     ): List<T> = getEntities(tableInfo.info, orderBy, extra, tableInfo.where(where))
     
@@ -606,8 +443,8 @@ abstract class DbHelperInternal(
     }
     
     fun <T : BaseEntity, W> getEntityMap(             tableInfo: EntityTable<TableInfoBase<T>, W>,
-                                                        orderBy: @DslInject OrderDsl.()->Unit = orderByRowId(),
-                                                          extra: @DslInject ExtraDsl.()->Unit = {},
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
                                                           where: W.()->Unit = {},
     ): Map<Long, T> = getEntityMap(tableInfo.info, orderBy, extra, tableInfo.where(where))
     
@@ -706,8 +543,8 @@ abstract class DbHelperInternal(
     fun <T : LiteEntity, W> getLiteEntity(              tableInfo: EntityTable<TableInfoLite<T>, W>,
                                                   originalColumns: EntityColumns,
                                                           default: T,
-                                                          orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                            extra: @DslInject ExtraDsl.()->Unit = {},
+                                                          orderBy: OrderDsl.()->Unit = {},
+                                                            extra: ExtraDsl.()->Unit = {},
                                                             where: W.()->Unit,
     ): T = getLiteEntity(tableInfo.info, originalColumns, default, orderBy, extra, tableInfo.where(where))
     
@@ -723,8 +560,8 @@ abstract class DbHelperInternal(
     
     fun <T : LiteEntity, W> getLiteEntities(          tableInfo: EntityTable<TableInfoLite<T>, W>,
                                                 originalColumns: EntityColumns,
-                                                        orderBy: @DslInject OrderDsl.()->Unit = orderByRowId(),
-                                                          extra: @DslInject ExtraDsl.()->Unit = {},
+                                                        orderBy: OrderDsl.()->Unit = orderByRowId(),
+                                                          extra: ExtraDsl.()->Unit = {},
                                                           where: W.()->Unit = {},
     ): List<T> = getLiteEntities(tableInfo.info, originalColumns, orderBy, extra, tableInfo.where(where))
     
@@ -748,8 +585,8 @@ abstract class DbHelperInternal(
     
     fun <W> getColInts(                                            table: EntityTable<*, W>,
                                                                   column: ColumnSelector<W, IntCol>,
-                                                                 orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                   extra: @DslInject ExtraDsl.()->Unit = {},
+                                                                 orderBy: OrderDsl.()->Unit = {},
+                                                                   extra: ExtraDsl.()->Unit = {},
                                                                    where: W.()->Unit = {},
     ): List<Int> = read(emptyList(), "getColInts") { db ->
         db.getColInts(table, column, orderBy, extra, where)
@@ -768,8 +605,8 @@ abstract class DbHelperInternal(
     
     fun <W> getColStrings(                                         table: EntityTable<*, W>,
                                                                   column: ColumnSelector<W, StrCol>,
-                                                                 orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                   extra: @DslInject ExtraDsl.()->Unit = {},
+                                                                 orderBy: OrderDsl.()->Unit = {},
+                                                                   extra: ExtraDsl.()->Unit = {},
                                                                    where: W.()->Unit = {},
     ): List<String> = read(emptyList(), "getColStrings") { db ->
         db.getColStrings(table, column, orderBy, extra, where)
@@ -788,8 +625,8 @@ abstract class DbHelperInternal(
     
     fun <W> getColBools(                                          table: EntityTable<*, W>,
                                                                  column: ColumnSelector<W, BoolCol>,
-                                                                orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                  extra: @DslInject ExtraDsl.()->Unit = {},
+                                                                orderBy: OrderDsl.()->Unit = {},
+                                                                  extra: ExtraDsl.()->Unit = {},
                                                                   where: W.()->Unit = {},
     ): List<Boolean> = read(emptyList(), "getColBools") { db ->
         db.getColBools(table, column, orderBy, extra, where)
@@ -808,8 +645,8 @@ abstract class DbHelperInternal(
     
     fun <W> getColLongs(                                          table: EntityTable<*, W>,
                                                                  column: ColumnSelector<W, LongCol>,
-                                                                orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                  extra: @DslInject ExtraDsl.()->Unit = {},
+                                                                orderBy: OrderDsl.()->Unit = {},
+                                                                  extra: ExtraDsl.()->Unit = {},
                                                                   where: W.()->Unit = {},
     ): List<Long> = read(emptyList(), "getColLongs") { db ->
         db.getColLongs(table, column, orderBy, extra, where)
@@ -828,8 +665,8 @@ abstract class DbHelperInternal(
     
     fun <W> getColFloats(                                        table: EntityTable<*, W>,
                                                                 column: ColumnSelector<W, FloatCol>,
-                                                               orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                 extra: @DslInject ExtraDsl.()->Unit = {},
+                                                               orderBy: OrderDsl.()->Unit = {},
+                                                                 extra: ExtraDsl.()->Unit = {},
                                                                  where: W.()->Unit = {},
     ): List<Float> = read(emptyList(), "getColFloats") { db ->
         db.getColFloats(table, column, orderBy, extra, where)
@@ -848,8 +685,8 @@ abstract class DbHelperInternal(
     
     fun <W> getColBlobs(                                          table: EntityTable<*, W>,
                                                                  column: ColumnSelector<W, BlobCol>,
-                                                                orderBy: @DslInject OrderDsl.()->Unit = {},
-                                                                  extra: @DslInject ExtraDsl.()->Unit = {},
+                                                                orderBy: OrderDsl.()->Unit = {},
+                                                                  extra: ExtraDsl.()->Unit = {},
                                                                   where: W.()->Unit = {},
     ): List<ByteArray> = read(emptyList(), "getColBlobs") { db ->
         db.getColBlobs(table, column, orderBy, extra, where)
@@ -1184,7 +1021,7 @@ abstract class DbHelperInternal(
     }
     
     fun <W> getRowCount(                                              table: EntityTable<*, W>,
-                                                                      extra: @DslInject ExtraDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
                                                                       where: W.()->Unit = {},
     ): Int = getRowCount(table.name, extra, table.where(where))
     
@@ -1206,7 +1043,7 @@ abstract class DbHelperInternal(
     }
     
     fun <W> hasRows(                                                  table: EntityTable<*, W>,
-                                                                      extra: @DslInject ExtraDsl.()->Unit = {},
+                                                                      extra: ExtraDsl.()->Unit = {},
                                                                       where: W.()->Unit = {},
     ): Boolean = hasRows(table.name, extra, table.where(where))
     
@@ -1249,7 +1086,7 @@ abstract class DbHelperInternal(
     }
     
     fun <W> getIDs(                                                   table: EntityTable<*, W>,
-                                                                    orderBy: @DslInject OrderDsl.()->Unit = {},
+                                                                    orderBy: OrderDsl.()->Unit = {},
                                                                       where: W.()->Unit,
     ): List<Long> = getIDs(table.name, orderBy, table.where(where))
     

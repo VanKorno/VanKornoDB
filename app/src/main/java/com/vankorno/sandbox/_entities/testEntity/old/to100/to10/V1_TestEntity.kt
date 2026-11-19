@@ -1,9 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.DslContext
-import com.vankorno.vankornodb.api.EntityDsl
-import com.vankorno.vankornodb.api.OldEntity
-import com.vankorno.vankornodb.api.withDsl
+import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 
@@ -40,18 +37,31 @@ object _V1_Test : OldSchemaBundle<V1_TestEntity>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String) = (name using this).withDsl(::V1_TestDsl)
+    fun table(name: String) = (name using this).withDsl(::V1_TestDsl, ::V1_TestOrderDsl, ::V1_TestExtraDsl)
 }
 
 
-class V1_TestDsl internal constructor(context: DslContext<V1_TestDsl>) : EntityDsl<V1_TestEntity, V1_TestDsl>(context) {
-    val Name get() = column(CV1_Test.Name)
-    val Boo get() = column(CV1_Test.Boo)
-    val Int1 get() = column(CV1_Test.Int1)
-    val Str1 get() = column(CV1_Test.Str1)
-    val Long1 get() = column(CV1_Test.Long1)
-    val Float1 get() = column(CV1_Test.Float1)
-    val Id get() = column(CV1_Test.Id)
+interface V1_TestDslColumns {
+    val Name: EntityColumn<V1_TestDsl, StrCol>
+    val Boo: EntityColumn<V1_TestDsl, BoolCol>
+    val Int1: EntityColumn<V1_TestDsl, IntCol>
+    val Str1: EntityColumn<V1_TestDsl, StrCol>
+    val Long1: EntityColumn<V1_TestDsl, LongCol>
+    val Float1: EntityColumn<V1_TestDsl, FloatCol>
+    val Id: EntityColumn<V1_TestDsl, LongCol>
+}
+
+class V1_TestOrderDsl internal constructor(columns: V1_TestDslColumns) : EntityOrderDsl<V1_TestDsl>(), V1_TestDslColumns by columns
+class V1_TestExtraDsl internal constructor(columns: V1_TestDslColumns) : EntityExtraDsl<V1_TestDsl>(), V1_TestDslColumns by columns
+
+class V1_TestDsl internal constructor(context: DslContext<V1_TestDsl>) : EntityDsl<V1_TestEntity, V1_TestDsl>(context), V1_TestDslColumns {
+    override val Name get() = column(CV1_Test.Name)
+    override val Boo get() = column(CV1_Test.Boo)
+    override val Int1 get() = column(CV1_Test.Int1)
+    override val Str1 get() = column(CV1_Test.Str1)
+    override val Long1 get() = column(CV1_Test.Long1)
+    override val Float1 get() = column(CV1_Test.Float1)
+    override val Id get() = column(CV1_Test.Id)
 }
 
 

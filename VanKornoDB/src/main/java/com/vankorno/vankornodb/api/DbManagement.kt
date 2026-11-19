@@ -16,7 +16,7 @@ import com.vankorno.vankornodb.newTable.createTablesInternal
 
 
 /**
- * The primary entry-point class for database operations, schema access, and query execution.
+ * Db-Helper. The primary entry-point class for database operations, schema access, and query execution.
  *
  * It builds upon [DbReaderWriter], which handles thread-safe transactional read/write primitives
  * and unit test auto-mocking, which in turn extends [DbManager], which manages SQLite database lifecycle,

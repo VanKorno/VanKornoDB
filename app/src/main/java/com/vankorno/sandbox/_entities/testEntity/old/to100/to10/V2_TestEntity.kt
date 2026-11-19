@@ -1,9 +1,6 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.DslContext
-import com.vankorno.vankornodb.api.EntityDsl
-import com.vankorno.vankornodb.api.OldEntity
-import com.vankorno.vankornodb.api.withDsl
+import com.vankorno.vankornodb.api.*
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 
@@ -64,30 +61,55 @@ object _V2_Test : OldSchemaBundle<V2_TestEntity>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String) = (name using this).withDsl(::V2_TestDsl)
+    fun table(name: String) = (name using this).withDsl(::V2_TestDsl, ::V2_TestOrderDsl, ::V2_TestExtraDsl)
 }
 
 
-class V2_TestDsl internal constructor(context: DslContext<V2_TestDsl>) : EntityDsl<V2_TestEntity, V2_TestDsl>(context) {
-    val Id get() = column(CV2_Test.Id)
-    val Name get() = column(CV2_Test.Name)
-    val Position get() = column(CV2_Test.Position)
-    val Enabled get() = column(CV2_Test.Enabled)
-    val Int1 get() = column(CV2_Test.Int1)
-    val Int2 get() = column(CV2_Test.Int2)
-    val Int3 get() = column(CV2_Test.Int3)
-    val Str1 get() = column(CV2_Test.Str1)
-    val Str2 get() = column(CV2_Test.Str2)
-    val Str3 get() = column(CV2_Test.Str3)
-    val Bool1 get() = column(CV2_Test.Bool1)
-    val Bool2 get() = column(CV2_Test.Bool2)
-    val Bool3 get() = column(CV2_Test.Bool3)
-    val Long1 get() = column(CV2_Test.Long1)
-    val Long2 get() = column(CV2_Test.Long2)
-    val Long3 get() = column(CV2_Test.Long3)
-    val Float1 get() = column(CV2_Test.Float1)
-    val Float2 get() = column(CV2_Test.Float2)
-    val Float3 get() = column(CV2_Test.Float3)
+interface V2_TestDslColumns {
+    val Id: EntityColumn<V2_TestDsl, LongCol>
+    val Name: EntityColumn<V2_TestDsl, StrCol>
+    val Position: EntityColumn<V2_TestDsl, StrCol>
+    val Enabled: EntityColumn<V2_TestDsl, BoolCol>
+    val Int1: EntityColumn<V2_TestDsl, IntCol>
+    val Int2: EntityColumn<V2_TestDsl, IntCol>
+    val Int3: EntityColumn<V2_TestDsl, IntCol>
+    val Str1: EntityColumn<V2_TestDsl, StrCol>
+    val Str2: EntityColumn<V2_TestDsl, StrCol>
+    val Str3: EntityColumn<V2_TestDsl, StrCol>
+    val Bool1: EntityColumn<V2_TestDsl, BoolCol>
+    val Bool2: EntityColumn<V2_TestDsl, BoolCol>
+    val Bool3: EntityColumn<V2_TestDsl, BoolCol>
+    val Long1: EntityColumn<V2_TestDsl, LongCol>
+    val Long2: EntityColumn<V2_TestDsl, LongCol>
+    val Long3: EntityColumn<V2_TestDsl, LongCol>
+    val Float1: EntityColumn<V2_TestDsl, FloatCol>
+    val Float2: EntityColumn<V2_TestDsl, FloatCol>
+    val Float3: EntityColumn<V2_TestDsl, FloatCol>
+}
+
+class V2_TestOrderDsl internal constructor(columns: V2_TestDslColumns) : EntityOrderDsl<V2_TestDsl>(), V2_TestDslColumns by columns
+class V2_TestExtraDsl internal constructor(columns: V2_TestDslColumns) : EntityExtraDsl<V2_TestDsl>(), V2_TestDslColumns by columns
+
+class V2_TestDsl internal constructor(context: DslContext<V2_TestDsl>) : EntityDsl<V2_TestEntity, V2_TestDsl>(context), V2_TestDslColumns {
+    override val Id get() = column(CV2_Test.Id)
+    override val Name get() = column(CV2_Test.Name)
+    override val Position get() = column(CV2_Test.Position)
+    override val Enabled get() = column(CV2_Test.Enabled)
+    override val Int1 get() = column(CV2_Test.Int1)
+    override val Int2 get() = column(CV2_Test.Int2)
+    override val Int3 get() = column(CV2_Test.Int3)
+    override val Str1 get() = column(CV2_Test.Str1)
+    override val Str2 get() = column(CV2_Test.Str2)
+    override val Str3 get() = column(CV2_Test.Str3)
+    override val Bool1 get() = column(CV2_Test.Bool1)
+    override val Bool2 get() = column(CV2_Test.Bool2)
+    override val Bool3 get() = column(CV2_Test.Bool3)
+    override val Long1 get() = column(CV2_Test.Long1)
+    override val Long2 get() = column(CV2_Test.Long2)
+    override val Long3 get() = column(CV2_Test.Long3)
+    override val Float1 get() = column(CV2_Test.Float1)
+    override val Float2 get() = column(CV2_Test.Float2)
+    override val Float3 get() = column(CV2_Test.Float3)
 }
 
 

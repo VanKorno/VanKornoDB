@@ -12,8 +12,19 @@ import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
 typealias Subquery = Subquery
 
 @DslInject
-class ExtraDsl : ExtraDslInternal() {
+open class ExtraDsl : ExtraDslInternal() {
     fun applyDsl(opts: ExtraDsl.()->Unit) { this.opts() }
+}
+
+abstract class EntityOrderDsl<W> : OrderDsl() {
+    operator fun EntityColumn<W, AscendingColumn<*>>.invoke() = definition()
+    fun EntityColumn<W, AscendingColumn<*>>.by() = definition.by()
+    fun EntityColumn<W, AscendingColumn<*>>.flip() = definition.flip()
+    fun EntityColumn<W, AscendingColumn<*>>.flipIf(condition: Boolean) = definition.flipIf(condition)
+}
+
+abstract class EntityExtraDsl<W> : ExtraDsl() {
+    fun groupBy(vararg columns: EntityColumn<W, *>) = groupBy(columns.joinToString(", ") { it.definition.name })
 }
 
 @DslInject
@@ -22,7 +33,8 @@ class JoinDsl : JoinDslInternal()
 
 
 @DslInject
-class OrderDsl : OrderDslInternal() {
+open class OrderDsl : OrderDslInternal() {
+    
     
     fun and(                                                             orderDsl: OrderDsl.()->Unit
     ) {
