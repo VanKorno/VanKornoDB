@@ -73,7 +73,7 @@ open class EntityTable<out I : TableInfoBase<*>, W> internal constructor(
 }
 
 
-class QueryTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
+open class QueryTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
                                                                            info: I,
                                                                         factory: (DslContext<W>)->W,
                                                        private val orderFactory: (W)->O,
@@ -117,8 +117,23 @@ class QueryTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W
 }
 
 
+class UpdateTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> internal constructor(
+                                                                                info: I,
+                                                                               where: (DslContext<W>)->W,
+                                                                               order: (W)->O,
+                                                                               extra: (W)->X,
+                                                             internal val setFactory: (W)->S,
+) : QueryTable<I, W, O, X>(info, where, order, extra)
+
 fun <E : BaseEntity, I : TableInfoBase<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> I.withDsl(
                                                                           where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
 ) = QueryTable(this, where, order, extra)
+
+fun <E : BaseEntity, I : TableInfoBase<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> I.withDsl(
+                                                                               where: (DslContext<W>)->W,
+                                                                               order: (W)->O,
+                                                                               extra: (W)->X,
+                                                                                 set: (W)->S,
+) = UpdateTable(this, where, order, extra, set)

@@ -128,7 +128,7 @@ private data class Flag(
 ) : CurrEntity
 
 private object FlagSchema : CurrSchemaBundle<Flag>(Flag::class) {
-    fun table(name: String) = (name using this).withDsl(::FlagDsl, ::FlagOrderDsl, ::FlagExtraDsl)
+    fun table(name: String) = (name using this).withDsl(::FlagDsl, ::FlagOrderDsl, ::FlagExtraDsl, ::FlagSetDsl)
 }
 
 private interface FlagDslColumns {

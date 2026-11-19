@@ -45,7 +45,7 @@ object _EntityVersion : CurrSchemaBundle<EntityVersion>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String): QueryTable<TableInfoCurr<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl)
+    fun table(name: String): UpdateTable<TableInfoCurr<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl, EntityVersionSetDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl, ::EntityVersionSetDsl)
 }
 
 

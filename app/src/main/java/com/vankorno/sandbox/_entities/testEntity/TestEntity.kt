@@ -99,7 +99,7 @@ object _Test : CurrSchemaBundle<TestEntity>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String) = (name using this).withDsl(::TestDsl, ::TestOrderDsl, ::TestExtraDsl)
+    fun table(name: String) = (name using this).withDsl(::TestDsl, ::TestOrderDsl, ::TestExtraDsl, ::TestSetDsl)
 }
 
 

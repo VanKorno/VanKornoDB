@@ -1,10 +1,11 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.set
 
-import android.R.attr.value
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
-import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.core.data.QueryWithArgs
+import com.vankorno.vankornodb.core.dsl.UpdateTable
 import com.vankorno.vankornodb.set.dsl.SetDsl
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
@@ -13,15 +14,40 @@ import com.vankorno.vankornodb.set.dsl.data.MathOp
 import com.vankorno.vankornodb.set.dsl.data.SetColOp
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 import com.vankorno.vankornodb.set.noty.getBoolSafeVal
-import com.vankorno.vankornodb.set.noty.setRowValsNoty
 
-fun <W, S : SetDsl<W, S>> SQLiteDatabase.set(                                               table: String,
-                                                                      where: W.()->Unit = {},
-                                                                    actions: S.()->Unit,
+/** Applies [actions] in declaration order to the rows matching [where].
+ */
+fun <W, S : SetDsl<W>> Dbh.set(                                   table: UpdateTable<*, W, *, *, S>,
+                                                                  where: W.()->Unit = {},
+                                                                  async: Boolean = false,
+                                                                actions: S.()->Unit,
+) = write("set", async) { db -> db.set(table, where, actions) }
+
+
+fun <W, S : SetDsl<W>> SQLiteDatabase.set(                        table: UpdateTable<*, W, *, *, S>,
+                                                                  where: W.()->Unit = {},
+                                                                actions: S.()->Unit,
 ) {
-    val ops = SetDsl().apply(actions).ops
-    val builder = WhereDsl().apply(where)
+    val ops = table.set(table.setFactory, actions)
+    if (ops.isEmpty()) return //\/\/\/\/\/\
     
+    val predicate = table.where(where)
+    beginTransaction()
+    try {
+        applySetOps(table.name, ops, predicate)
+        setTransactionSuccessful()
+    } finally {
+        endTransaction()
+    }
+}
+
+
+
+
+private fun SQLiteDatabase.applySetOps(                                       table: String,
+                                                                                ops: List<SetOp>,
+                                                                          predicate: QueryWithArgs,
+) {
     val setParts = mutableListOf<String>()
     val args = mutableListOf<Any>()
     val usedCols = mutableSetOf<String>()
@@ -34,12 +60,12 @@ fun <W, S : SetDsl<W, S>> SQLiteDatabase.set(                                   
             append(table)
             append(" SET ")
             append(setParts.joinToString(", "))
-            if (builder.clauses.isNotEmpty()) {
+            if (predicate.query.isNotEmpty()) {
                 append(WHERE)
-                append(builder.buildStr())
+                append(predicate.query)
             }
         }
-        execSQL(sql, (args + builder.args).toTypedArray())
+        execSQL(sql, (args + predicate.args).toTypedArray())
         
         setParts.clear()
         args.clear()
@@ -47,16 +73,16 @@ fun <W, S : SetDsl<W, S>> SQLiteDatabase.set(                                   
     }
     
     
-    fun playTogether(                                      setCol: String,
-                                                           getCol: String? = null,
-                                                              run: (String)->Unit,
+    
+    fun playTogether(                                                       setCol: String,
+                                                                            getCol: String? = null,
+                                                                               run: (String)->Unit,
     ) {
         if (setCol in usedCols || (getCol != null && getCol in usedCols))
             flush()
         run(setCol)
         usedCols += setCol
     }
-    
     
     ops.forEach { op ->
         when (op) {
@@ -70,7 +96,7 @@ fun <W, S : SetDsl<W, S>> SQLiteDatabase.set(                                   
             }
             is SetOp.SetCV -> {
                 flush()
-                setRowValsNoty(table, op.cv, where)
+                update(table, op.cv, predicate.query.ifEmpty { null }, predicate.args)
             }
             
             is SetOp.Flip -> playTogether(op.col.name) { col ->
@@ -111,9 +137,9 @@ fun <W, S : SetDsl<W, S>> SQLiteDatabase.set(                                   
 private fun SetColOp.toSqlFragment(                                          args: MutableList<Any>
 ): String =
     when (this) {
-        is IntColOp -> buildMathPart(col, op, value, args)
-        is LongColOp -> buildMathPart(col, op, value, args)
-        is FloatColOp -> buildMathPart(col, op, value, args)
+        is IntColOp<*> -> buildMathPart(col, op, value, args)
+        is LongColOp<*> -> buildMathPart(col, op, value, args)
+        is FloatColOp<*> -> buildMathPart(col, op, value, args)
     }
 
 
@@ -131,14 +157,3 @@ private fun buildMathPart(                                                    co
         is MathOp.FloorAt -> "MAX($col, ?)".also { args += mathOp.floor }
         is MathOp.CoerceIn -> "MIN(MAX($col, ?), ?)".also { args += mathOp.min; args += mathOp.max }
     }
-
-
-
-
-
-
-
-
-
-
-

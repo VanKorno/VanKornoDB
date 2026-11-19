@@ -44,7 +44,7 @@ object _V1_Test : OldSchemaBundle<V1_TestEntity>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String) = (name using this).withDsl(::V1_TestDsl, ::V1_TestOrderDsl, ::V1_TestExtraDsl)
+    fun table(name: String) = (name using this).withDsl(::V1_TestDsl, ::V1_TestOrderDsl, ::V1_TestExtraDsl, ::V1_TestSetDsl)
 }
 
 

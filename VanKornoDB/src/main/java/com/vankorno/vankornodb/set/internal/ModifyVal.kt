@@ -2,34 +2,30 @@
 package com.vankorno.vankornodb.set.internal
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.data.DbConstants.WHERE
+import com.vankorno.vankornodb.core.dsl.ColumnSelector
+import com.vankorno.vankornodb.core.dsl.EntityTable
+import com.vankorno.vankornodb.dbManagement.data.NumberColumn
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
-internal fun SQLiteDatabase.baseAddTo(                               addend: Number,
-                                                                      table: String,
-                                                                     column: TypedColumn<*>,
-                                                                      where: W.()->Unit = {},
+internal fun <W> SQLiteDatabase.baseAddTo(               addend: Number,
+                                                          table: EntityTable<*, W>,
+                                                         column: ColumnSelector<W, NumberColumn<*>>,
+                                                          where: W.()->Unit,
 ) {
-    val sAddend = addend.toString()
+    if (addend.toDouble() == 0.0) return //\/\/\/\/\/\
     
-    if (sAddend == "0" || sAddend == "0.0") return //\/\/\/\/\/\
-    
-    val colName = column.name
-    val builder = WhereDsl().apply(where)
-    val args = mutableListOf(sAddend)
-    
-    val hasWhere = builder.clauses.isNotEmpty()
-    var wherePart = ""
-    
-    if (hasWhere) {
-        wherePart = WHERE + builder.buildStr()
-        args.addAll(builder.args)
-    }
-    execSQL("UPDATE $table SET $colName = $colName + ?" + wherePart,  args.toTypedArray())
+    modifyColumn(table, column, where, listOf(addend)) { "$it + ?" }
 }
 
 
-
-
-
-
+internal fun <W> SQLiteDatabase.modifyColumn(              table: EntityTable<*, W>,
+                                                          column: ColumnSelector<W, TypedColumn<*>>,
+                                                           where: W.()->Unit,
+                                                            args: List<Any>,
+                                                      expression: (String)->String,
+) {
+    val name = table.select(column).name
+    val predicate = table.where(where)
+    val filter = if (predicate.query.isEmpty()) "" else " WHERE ${predicate.query}"
+    execSQL("UPDATE ${table.name} SET $name = ${expression(name)}$filter", (args + predicate.args).toTypedArray())
+}

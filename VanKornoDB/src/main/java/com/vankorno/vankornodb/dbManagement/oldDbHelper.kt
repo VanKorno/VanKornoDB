@@ -12,7 +12,6 @@ import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
 import com.vankorno.vankornodb.core.dsl.EntityTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.*
@@ -26,7 +25,6 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 import com.vankorno.vankornodb.newTable.createTable
 import com.vankorno.vankornodb.newTable.createTables
 import com.vankorno.vankornodb.set.*
-import com.vankorno.vankornodb.set.dsl.SetDsl
 
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -53,141 +51,22 @@ abstract class DbHelperInternal(
 ) {
     // ===================================  S E T T E R S  =================================== \\
     
-    /** A wrapper fun for [SQLiteDatabase.setInt] */
-    fun setInt(                                                            value: Int,
-                                                                           table: String,
-                                                                          column: IntCol,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("setInt", async) { db ->
-        db.setInt(value, table, column, where)
-    }
     
-    fun <W> setInt(                                                value: Int,
-                                                                   table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, IntCol>,
-                                                                   async: Boolean = false,
-                                                                   where: W.()->Unit,
-    ) = write("setInt", async) { db ->
-        db.setInt(value, table, column, where)
-    }
     
-    /** A wrapper fun for [SQLiteDatabase.setStr] */
-    fun setStr(                                                            value: String,
-                                                                           table: String,
-                                                                          column: StrCol,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("setStr", async) { db ->
-        db.setStr(value, table, column, where)
-    }
     
-    fun <W> setStr(                                                value: String,
-                                                                   table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, StrCol>,
-                                                                   async: Boolean = false,
-                                                                   where: W.()->Unit,
-    ) = write("setStr", async) { db ->
-        db.setStr(value, table, column, where)
-    }
     
-    /** A wrapper fun for [SQLiteDatabase.setBool] */
-    fun setBool(                                                           value: Boolean,
-                                                                           table: String,
-                                                                          column: BoolCol,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("setBool", async) { db ->
-        db.setBool(value, table, column, where)
-    }
     
-    fun <W> setBool(                                              value: Boolean,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BoolCol>,
-                                                                  async: Boolean = false,
-                                                                  where: W.()->Unit,
-    ) = write("setBool", async) { db ->
-        db.setBool(value, table, column, where)
-    }
     
-    /** A wrapper fun for [SQLiteDatabase.setLong] */
-    fun setLong(                                                           value: Long,
-                                                                           table: String,
-                                                                          column: LongCol,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("setLong", async) { db ->
-        db.setLong(value, table, column, where)
-    }
     
-    fun <W> setLong(                                              value: Long,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, LongCol>,
-                                                                  async: Boolean = false,
-                                                                  where: W.()->Unit,
-    ) = write("setLong", async) { db ->
-        db.setLong(value, table, column, where)
-    }
     
-    /** A wrapper fun for [SQLiteDatabase.setFloat] */
-    fun setFloat(                                                          value: Float,
-                                                                           table: String,
-                                                                          column: FloatCol,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("setFloat", async) { db ->
-        db.setFloat(value, table, column, where)
-    }
     
-    fun <W> setFloat(                                            value: Float,
-                                                                 table: EntityTable<*, W>,
-                                                                column: ColumnSelector<W, FloatCol>,
-                                                                 async: Boolean = false,
-                                                                 where: W.()->Unit,
-    ) = write("setFloat", async) { db ->
-        db.setFloat(value, table, column, where)
-    }
     
-    /** A wrapper fun for [SQLiteDatabase.setBlob] */
-    fun setBlob(                                                           value: ByteArray,
-                                                                           table: String,
-                                                                          column: BlobCol,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("setBlob", async) { db ->
-        db.setBlob(value, table, column, where)
-    }
     
-    fun <W> setBlob(                                              value: ByteArray,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BlobCol>,
-                                                                  async: Boolean = false,
-                                                                  where: W.()->Unit,
-    ) = write("setBlob", async) { db ->
-        db.setBlob(value, table, column, where)
-    }
     
     
     
     
     // =============================  M U L T I - S E T T E R S  ============================= \\
-    
-    /** A wrapper fun for [SQLiteDatabase.set] */
-    fun set(                                                          table: String,
-                                                                      where: W.()->Unit = {},
-                                                                      async: Boolean = false,
-                                                                    actions: SetDsl.()->Unit,
-    ) = write("set", async) { db ->
-        db.set(table, where, actions)
-    }
-    
-    fun <W> set(                                             table: EntityTable<*, W>,
-                                                             where: W.()->Unit = {},
-                                                             async: Boolean = false,
-                                                           actions: SetDsl.()->Unit,
-    ) = set(table.name, table.where(where), async, actions)
-    
-    
     
     // -----------------------------------  O B J E C T  ----------------------------------- \\
     
@@ -271,47 +150,12 @@ abstract class DbHelperInternal(
     
     // ===================================   M O D I F Y   =================================== \\
     
-    /** A wrapper fun for [SQLiteDatabase.addToInt] */
-    fun addToInt(                                                    addend: Number,
-                                                                      table: String,
-                                                                     column: IntCol,
-                                                                      async: Boolean = false,
-                                                                      where: W.()->Unit = {},
-    ) = write("addToInt", async) { db ->
-        db.addToInt(addend, table, column, where)
-    }
     
     
-    /** A wrapper fun for [SQLiteDatabase.addToLong] */
-    fun addToLong(                                                   addend: Number,
-                                                                      table: String,
-                                                                     column: LongCol,
-                                                                      async: Boolean = false,
-                                                                      where: W.()->Unit = {},
-    ) = write("addToLong", async) { db ->
-        db.addToLong(addend, table, column, where)
-    }
     
     
-    /** A wrapper fun for [SQLiteDatabase.addToFloat] */
-    fun addToFloat(                                                  addend: Number,
-                                                                      table: String,
-                                                                     column: FloatCol,
-                                                                      async: Boolean = false,
-                                                                      where: W.()->Unit = {},
-    ) = write("addToFloat", async) { db ->
-        db.addToFloat(addend, table, column, where)
-    }
     
     
-    /** A wrapper fun for [SQLiteDatabase.flipBool] */
-    fun flipBool(                                                     table: String,
-                                                                     column: BoolCol,
-                                                                      async: Boolean = false,
-                                                                      where: W.()->Unit = {},
-    ) = write("flipBool", async) { db ->
-        db.flipBool(table, column, where)
-    }
     
     
     // ---------------------------------  F I X   D U P L I C A T E S  --------------------------------- \\
@@ -353,15 +197,6 @@ abstract class DbHelperInternal(
     
     
     
-    /** A wrapper fun for [SQLiteDatabase.reorder] */
-    fun reorder(                                                      table: String,
-                                                                         id: Long,
-                                                               moveUpOrBack: Boolean,
-                                                            makeFirstOrLast: Boolean = false,
-                                                                      where: W.()->Unit = {},
-    ): Boolean = readWrite(false, "reorder") { db ->
-        db.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
-    }
     
     
     /** A wrapper fun for [SQLiteDatabase.createTable] */

@@ -1,9 +1,11 @@
 package com.vankorno.vankornodb.set.dsl
 
+import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
+import com.vankorno.vankornodb.dbManagement.data.StrCol
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
 import com.vankorno.vankornodb.set.dsl.data.LongColOp
@@ -14,21 +16,23 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SetDslTest {
+    private class TestScope : SetDsl<TestScope>()
+
     
     // Base functionality
     
     @Test
     fun `simple set and add produce correct ops`() {
-        val a = IntCol("a")
+        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
         
-        val ops = SetDsl().apply {
+        val ops = TestScope().apply {
             a setTo 5
             a add 3
         }.ops
         
         assertEquals(
             listOf(
-                SetOp.Set(a, 5),
+                SetOp.Set(a.definition, 5),
                 SetOp.NumOp("a", 3, "+"),
             ),
             ops
@@ -38,9 +42,9 @@ class SetDslTest {
     
     @Test
     fun `int mult by one produces no op`() {
-        val a = IntCol("a")
+        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
         
-        val ops = SetDsl().apply { a mult 1 }.ops
+        val ops = TestScope().apply { a mult 1 }.ops
         
         assertTrue(ops.isEmpty())
     }
@@ -48,26 +52,26 @@ class SetDslTest {
     
     @Test
     fun `int mult by zero becomes set to zero`() {
-        val a = IntCol("a")
+        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
         
-        val ops = SetDsl().apply { a mult 0 }.ops
+        val ops = TestScope().apply { a mult 0 }.ops
         
-        assertEquals(listOf(SetOp.Set(a, 0)), ops )
+        assertEquals(listOf(SetOp.Set(a.definition, 0)), ops )
     }
     
     @Test
     fun `bool flip and setAs`() {
-        val a = BoolCol("a")
-        val b = BoolCol("b")
+        val a = EntityColumn<TestScope, BoolCol>(BoolCol("a"))
+        val b = EntityColumn<TestScope, BoolCol>(BoolCol("b"))
         
-        val ops = SetDsl().apply {
+        val ops = TestScope().apply {
             a.flip()
             a setAs b
         }.ops
         
         assertEquals(
             listOf(
-                SetOp.Flip(a),
+                SetOp.Flip(a.definition),
                 SetOp.SetAs("a", "b")
             ),
             ops
@@ -76,30 +80,30 @@ class SetDslTest {
     
     @Test
     fun `int setAs without math`() {
-        val a = IntCol("a")
-        val b = IntCol("b")
+        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
+        val b = EntityColumn<TestScope, IntCol>(IntCol("b"))
         
-        val ops = SetDsl().apply { a setAs b }.ops
+        val ops = TestScope().apply { a setAs b }.ops
         
         assertEquals(listOf(SetOp.SetAs("a", "b")), ops)
     }
     
     @Test
     fun `bool setAs`() {
-        val a = BoolCol("a")
-        val b = BoolCol("b")
+        val a = EntityColumn<TestScope, BoolCol>(BoolCol("a"))
+        val b = EntityColumn<TestScope, BoolCol>(BoolCol("b"))
         
-        val ops = SetDsl().apply { a setAs b }.ops
+        val ops = TestScope().apply { a setAs b }.ops
         
         assertEquals(listOf(SetOp.SetAs("a", "b")), ops)
     }
     
     @Test
     fun `mixed ops order preserved`() {
-        val a = IntCol("a")
-        val b = IntCol("b")
+        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
+        val b = EntityColumn<TestScope, IntCol>(IntCol("b"))
         
-        val ops = SetDsl().apply {
+        val ops = TestScope().apply {
             a setTo 1
             a setAs b
             a add 3
@@ -107,7 +111,7 @@ class SetDslTest {
         
         assertEquals(
             listOf(
-                SetOp.Set(a, 1),
+                SetOp.Set(a.definition, 1),
                 SetOp.SetAs("a", "b"),
                 SetOp.NumOp("a", 3, "+"),
             ),
@@ -119,10 +123,10 @@ class SetDslTest {
     
     @Test
     fun `col to col with math setAs produces correct ops`() {
-        val a = IntCol("a")
-        val b = IntCol("b")
+        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
+        val b = EntityColumn<TestScope, IntCol>(IntCol("b"))
         
-        val ops = SetDsl().apply {
+        val ops = TestScope().apply {
             a setAs (b andAdd 5)
             a setAs (b andMult 3)
             a setAs (b andCoerceIn 0..10)
@@ -132,11 +136,11 @@ class SetDslTest {
         
         assertEquals(
             listOf(
-                SetOp.SetAsModified(a.name, IntColOp("b", 5, MathOp.Add)),
-                SetOp.SetAsModified(a.name, IntColOp("b", 3, MathOp.Mult)),
-                SetOp.SetAsModified(a.name, IntColOp("b", 0, MathOp.CoerceIn(0, 10))),
-                SetOp.SetAsModified(a.name, IntColOp("b", 100, MathOp.CapAt(100))),
-                SetOp.SetAsModified(a.name, IntColOp("b", 50, MathOp.FloorAt(50))),
+                SetOp.SetAsModified(a.definition.name, IntColOp<TestScope>("b", 5, MathOp.Add)),
+                SetOp.SetAsModified(a.definition.name, IntColOp<TestScope>("b", 3, MathOp.Mult)),
+                SetOp.SetAsModified(a.definition.name, IntColOp<TestScope>("b", 0, MathOp.CoerceIn(0, 10))),
+                SetOp.SetAsModified(a.definition.name, IntColOp<TestScope>("b", 100, MathOp.CapAt(100))),
+                SetOp.SetAsModified(a.definition.name, IntColOp<TestScope>("b", 50, MathOp.FloorAt(50))),
             ),
             ops
         )
@@ -144,18 +148,18 @@ class SetDslTest {
     
     @Test
     fun `long col to col with math setAs produces correct ops`() {
-        val a = LongCol("a")
-        val b = LongCol("b")
+        val a = EntityColumn<TestScope, LongCol>(LongCol("a"))
+        val b = EntityColumn<TestScope, LongCol>(LongCol("b"))
         
-        val ops = SetDsl().apply {
+        val ops = TestScope().apply {
             a setAs (b andAdd 5L)
             a setAs (b andMult 3L)
         }.ops
         
         assertEquals(
             listOf(
-                SetOp.SetAsModified(a.name, LongColOp("b", 5L, MathOp.Add)),
-                SetOp.SetAsModified(a.name, LongColOp("b", 3L, MathOp.Mult)),
+                SetOp.SetAsModified(a.definition.name, LongColOp<TestScope>("b", 5L, MathOp.Add)),
+                SetOp.SetAsModified(a.definition.name, LongColOp<TestScope>("b", 3L, MathOp.Mult)),
             ),
             ops
         )
@@ -163,18 +167,18 @@ class SetDslTest {
     
     @Test
     fun `float col to col with math setAs produces correct ops`() {
-        val a = FloatCol("a")
-        val b = FloatCol("b")
+        val a = EntityColumn<TestScope, FloatCol>(FloatCol("a"))
+        val b = EntityColumn<TestScope, FloatCol>(FloatCol("b"))
         
-        val ops = SetDsl().apply {
+        val ops = TestScope().apply {
             a setAs (b andAdd 5.5F)
             a setAs (b andDiv 2F)
         }.ops
         
         assertEquals(
             listOf(
-                SetOp.SetAsModified(a.name, FloatColOp("b", 5.5F, MathOp.Add)),
-                SetOp.SetAsModified(a.name, FloatColOp("b", 2F, MathOp.Div)),
+                SetOp.SetAsModified(a.definition.name, FloatColOp<TestScope>("b", 5.5F, MathOp.Add)),
+                SetOp.SetAsModified(a.definition.name, FloatColOp<TestScope>("b", 2F, MathOp.Div)),
             ),
             ops
         )
@@ -189,46 +193,47 @@ class SetDslTest {
     
     // All functionality
     
-    private val bananas = IntCol("bananas")
-    private val unicorns = LongCol("unicorns")
-    private val magic = FloatCol("magic")
-    private val chaos = BoolCol("chaos")
+    private val bananas = EntityColumn<TestScope, IntCol>(IntCol("bananas"))
+    private val unicorns = EntityColumn<TestScope, LongCol>(LongCol("unicorns"))
+    private val magic = EntityColumn<TestScope, FloatCol>(FloatCol("magic"))
+    private val chaos = EntityColumn<TestScope, BoolCol>(BoolCol("chaos"))
 
     @Test
     fun `string column is set to cursed artifact`() {
-        val b = SetDsl().apply {
-            "mystery_box" setTo "💩42"
+        val mysteryBox = EntityColumn<TestScope, StrCol>(StrCol("mystery_box"))
+        val b = TestScope().apply {
+            mysteryBox setTo "💩42"
         }
         
         assertEquals(
-            listOf(SetOp.SetNoty("mystery_box", "💩42")),
+            listOf(SetOp.Set(mysteryBox.definition, "💩42")),
             b.ops
         )
     }
     
     @Test
     fun `chaos is turned OFF to save the universe`() {
-        val b = SetDsl().apply { OFF(chaos) }
+        val b = TestScope().apply { OFF(chaos) }
         
         assertEquals(
-            listOf(SetOp.Set(chaos, false)),
+            listOf(SetOp.Set(chaos.definition, false)),
             b.ops
         )
     }
     
     @Test
     fun `chaos is turned ON because nobody learned anything`() {
-        val b = SetDsl().apply { ON(chaos) }
+        val b = TestScope().apply { ON(chaos) }
         
         assertEquals(
-            listOf(SetOp.Set(chaos, true)),
+            listOf(SetOp.Set(chaos.definition, true)),
             b.ops
         )
     }
     
     @Test
     fun `bananas are subtracted for diet reasons`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             bananas sub 13
         }
 
@@ -240,7 +245,7 @@ class SetDslTest {
 
     @Test
     fun `unicorn population is reduced dramatically`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             unicorns sub 666L
         }
         
@@ -252,7 +257,7 @@ class SetDslTest {
     
     @Test
     fun `magic is drained slightly but catastrophically`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             magic sub 3.14f
         }
         
@@ -264,7 +269,7 @@ class SetDslTest {
     
     @Test
     fun `unicorns are multiplied beyond safe limits`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             unicorns mult 9001
         }
         
@@ -276,7 +281,7 @@ class SetDslTest {
     
     @Test
     fun `magic is multiplied until reality glitches`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             magic mult 1.618f
         }
         
@@ -288,7 +293,7 @@ class SetDslTest {
     
     @Test
     fun `bananas become absolute like forced positivity`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             bananas.abs()
         }
         
@@ -300,7 +305,7 @@ class SetDslTest {
     
     @Test
     fun `bananas are forced into acceptable social range`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             bananas coerceIn 1..10
         }
         
@@ -312,7 +317,7 @@ class SetDslTest {
     
     @Test
     fun `unicorns are capped because infinite unicorns are illegal`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             unicorns capAt 9999999L
         }
         
@@ -324,7 +329,7 @@ class SetDslTest {
     
     @Test
     fun `magic is humbled to minimum survivable amount`() {
-        val b = SetDsl().apply {
+        val b = TestScope().apply {
             magic floorAt 0.01f
         }
         
@@ -336,8 +341,8 @@ class SetDslTest {
     
     @Test
     fun `unicorns copy values from suspicious source`() {
-        val sourceOfTruth = LongCol("source_of_truth")
-        val b = SetDsl().apply {
+        val sourceOfTruth = EntityColumn<TestScope, LongCol>(LongCol("source_of_truth"))
+        val b = TestScope().apply {
             unicorns setAs sourceOfTruth
         }
         
@@ -349,8 +354,8 @@ class SetDslTest {
     
     @Test
     fun `magic steals power from neighbouring wizard`() {
-        val neighbourMagic = FloatCol("neighbour_magic")
-        val b = SetDsl().apply {
+        val neighbourMagic = EntityColumn<TestScope, FloatCol>(FloatCol("neighbour_magic"))
+        val b = TestScope().apply {
             magic setAs neighbourMagic
         }
         

@@ -100,8 +100,3 @@ fun SQLiteDatabase.createExclusiveTables(                  allEntityMeta: Collec
             createTables(table using entity.schemaBundle)
     }
 }
-
-
-
-
-

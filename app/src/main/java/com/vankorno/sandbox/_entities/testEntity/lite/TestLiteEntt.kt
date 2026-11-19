@@ -39,7 +39,7 @@ object _TestLite : LiteSchemaBundle<TestLiteEntt>(
         )
     },
 ) {
-    fun table(name: String) = (name using this).withDsl(::TestLiteDsl, ::TestLiteOrderDsl, ::TestLiteExtraDsl)
+    fun table(name: String) = (name using this).withDsl(::TestLiteDsl, ::TestLiteOrderDsl, ::TestLiteExtraDsl, ::TestLiteSetDsl)
 }
 
 
