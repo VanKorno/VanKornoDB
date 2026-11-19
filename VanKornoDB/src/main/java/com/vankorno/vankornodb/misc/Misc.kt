@@ -2,7 +2,7 @@
 package com.vankorno.vankornodb.misc
 
 import android.database.Cursor
-import com.vankorno.vankornodb.api.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 /**

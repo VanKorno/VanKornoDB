@@ -2,14 +2,13 @@
 package com.vankorno.vankornodb.set.internal
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 internal fun SQLiteDatabase.baseAddTo(                               addend: Number,
                                                                       table: String,
                                                                      column: TypedColumn<*>,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) {
     val sAddend = addend.toString()
     

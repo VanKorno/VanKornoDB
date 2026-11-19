@@ -3,9 +3,6 @@ package com.vankorno.vankornodb.get.noty
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.ExtraDsl
-import com.vankorno.vankornodb.api.OrderDsl
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.dsl.getQuery
 
 
@@ -15,9 +12,9 @@ import com.vankorno.vankornodb.core.dsl.getQuery
  */
 fun SQLiteDatabase.getCursorNoty(                                     table: String,
                                                                     columns: Array<out String>,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                    orderBy: O.()->Unit = {},
+                                                                      extra: X.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ): Cursor {
     val (query, args) = getQuery(table, columns, orderBy, extra, where)
     return rawQuery(query, args)
@@ -30,9 +27,9 @@ fun SQLiteDatabase.getCursorNoty(                                     table: Str
  */
 inline fun <R> SQLiteDatabase.useCursorNoty(                          table: String,
                                                                     columns: Array<out String>,
-                                                           noinline orderBy: OrderDsl.()->Unit = {},
-                                                             noinline extra: ExtraDsl.()->Unit = {},
-                                                             noinline where: WhereDsl.()->Unit = {},
+                                                           noinline orderBy: O.()->Unit = {},
+                                                             noinline extra: X.()->Unit = {},
+                                                             noinline where: W.()->Unit = {},
                                                                       block: (Cursor)->R,
 ): R = getCursorNoty(table, columns, orderBy, extra, where).use(block)
 

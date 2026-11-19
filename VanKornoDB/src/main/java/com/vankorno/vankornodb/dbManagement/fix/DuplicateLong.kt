@@ -2,7 +2,6 @@
 package com.vankorno.vankornodb.dbManagement.fix
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.get.getNextLongs
 import com.vankorno.vankornodb.get.getTableLongs
@@ -14,7 +13,7 @@ import com.vankorno.vankornodb.set.setLong
  */
 fun SQLiteDatabase.fixDuplicateLongsMult(                            tables: List<String>,
                                                                     columns: List<LongCol>,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) = tables.sumOf { table ->
     columns.sumOf { column -> fixDuplicateLongs(table, column, where) }
 }
@@ -28,7 +27,7 @@ fun SQLiteDatabase.fixDuplicateLongsMult(                            tables: Lis
  */
 fun SQLiteDatabase.fixDuplicateLongs(                                 table: String,
                                                                      column: LongCol,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ): Int {
     val rows = getTableLongs(table, arrayOf(cRowId, column), where = where)
     val seenValues = mutableSetOf<Long>()

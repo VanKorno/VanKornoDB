@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.orderBy
 
-import com.vankorno.vankornodb.api.OrderDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
 import com.vankorno.vankornodb.misc.by

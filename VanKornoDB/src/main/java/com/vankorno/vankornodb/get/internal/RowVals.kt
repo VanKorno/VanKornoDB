@@ -3,31 +3,32 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.ExtraDsl
-import com.vankorno.vankornodb.api.OrderDsl
-import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.core.dsl.ColumnSelector
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.QueryTable
+import com.vankorno.vankornodb.dbManagement.data.TypedColumn
+import com.vankorno.vankornodb.get.getCursor
 
 /**
- * For internal use with the type-safe getRowVals... functions.
+ * Reads the first matching row in projection order.
  */
-internal inline fun <T> SQLiteDatabase.getRowVals(                    table: String,
-                                                                    columns: Array<out String>,
-                                                           noinline orderBy: OrderDsl.()->Unit = {},
-                                                             noinline extra: ExtraDsl.()->Unit = {},
-                                                             noinline where: WhereDsl.()->Unit = {},
-                                                 crossinline getCursorValue: (Cursor, Int)->T,
-): List<T> = baseGetVals(table, columns, orderBy, where = where, 
+internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getRowVals(
+                                                           table: QueryTable<*, W, O, X>,
+                                                  vararg columns: ColumnSelector<W, TypedColumn<R>>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit = {},
+                                                  getCursorValue: (Cursor, Int)->R,
+): List<R> = getCursor(
+    table, *columns, orderBy = orderBy, where = where,
     extra = {
-        applyDsl(extra)
+        extra()
         limit = 1
-    }
-) { cursor, col ->
-    getCursorValue(cursor, col)
-}.flatten()
-
-
-
-
-
-
-
+    },
+).use { cursor ->
+    if (cursor.moveToFirst())
+        List(cursor.columnCount) { idx -> getCursorValue(cursor, idx) }
+    else
+        emptyList()
+}

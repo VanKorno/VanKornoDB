@@ -3,12 +3,12 @@ package com.vankorno.vankornodb.delete
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.EntityTable
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants._ID
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 
 
 fun SQLiteDatabase.deleteRows(                                             table: String,
-                                                                           where: WhereDsl.()->Unit,
+                                                                           where: W.()->Unit,
 ): Int {
     val builder = WhereDsl().apply(where)
     return delete(table, builder.buildStr(), builder.args.toTypedArray())
@@ -23,7 +23,7 @@ fun <W> SQLiteDatabase.deleteRows(                                         table
 
 /** Deletes rows from the specified tables matching the condition. */
 fun SQLiteDatabase.deleteRowsFromTables(                                  tables: List<String>,
-                                                                           where: WhereDsl.()->Unit,
+                                                                           where: W.()->Unit,
 ) {
     for (table in tables) {
         deleteRows(table, where)
@@ -32,7 +32,7 @@ fun SQLiteDatabase.deleteRowsFromTables(                                  tables
 
 /** Deletes rows from the specified tables matching the condition. (vararg-version) */
 fun SQLiteDatabase.deleteRowsFromTables(                           vararg tables: String,
-                                                                           where: WhereDsl.()->Unit,
+                                                                           where: W.()->Unit,
 ) {
     for (table in tables) {
         deleteRows(table, where)

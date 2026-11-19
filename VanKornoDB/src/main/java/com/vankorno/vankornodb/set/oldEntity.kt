@@ -3,8 +3,8 @@ package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.api.toContentValues
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.misc.wLog
 
@@ -20,7 +20,7 @@ import com.vankorno.vankornodb.misc.wLog
  */
 inline fun <T : CurrEntity> SQLiteDatabase.setEntity(                 tableInfo: TableInfoNormal<T>,
                                                                          entity: T,
-                                                                          where: WhereDsl.()->Unit,
+                                                                          where: W.()->Unit,
 ): Int {
     val cv = toContentValues(entity, tableInfo.schema)
     val whereDsl = WhereDsl().apply(where)

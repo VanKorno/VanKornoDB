@@ -2,7 +2,6 @@
 package com.vankorno.vankornodb.dbManagement.fix
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.get.getNextInts
 import com.vankorno.vankornodb.get.useCursor
@@ -14,7 +13,7 @@ import com.vankorno.vankornodb.set.setInt
  */
 fun SQLiteDatabase.fixDuplicateIntsMult(                             tables: List<String>,
                                                                     columns: List<IntCol>,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) = tables.sumOf { table ->
     columns.sumOf { column -> fixDuplicateInts(table, column, where) }
 }
@@ -27,7 +26,7 @@ fun SQLiteDatabase.fixDuplicateIntsMult(                             tables: Lis
  */
 fun SQLiteDatabase.fixDuplicateInts(                                  table: String,
                                                                      column: IntCol,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ): Int {
     val rows = mutableListOf<Pair<Long, Int>>()
     

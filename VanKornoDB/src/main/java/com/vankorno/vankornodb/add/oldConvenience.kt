@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.add
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.get.getNextIDs
 import com.vankorno.vankornodb.get.getNextPositions

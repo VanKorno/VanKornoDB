@@ -2,7 +2,6 @@
 package com.vankorno.vankornodb.dbManagement.fix
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
 
 /**
@@ -10,7 +9,7 @@ import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
  * @return The number of rows modified.
  */
 fun SQLiteDatabase.fixDuplicatePosition(                              table: String,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) = fixDuplicateLongs(table, cPosition, where)
 
 
@@ -18,6 +17,6 @@ fun SQLiteDatabase.fixDuplicatePosition(                              table: Str
  * Multi-table variant of [fixDuplicatePosition]
  */
 fun SQLiteDatabase.fixDuplicatePositionMult(                  vararg tables: String,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) = tables.sumOf { table -> fixDuplicatePosition(table, where) }
 

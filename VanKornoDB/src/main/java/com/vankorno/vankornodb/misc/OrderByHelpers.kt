@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.misc
 
-import com.vankorno.vankornodb.api.OrderDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.*
 
 fun orderBy(vararg columns: BaseColumn): OrderDsl.()->Unit = { col(*columns) }

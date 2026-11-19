@@ -1,11 +1,11 @@
 package com.vankorno.vankornodb.core.dsl.where.autoAddAND
 
 import com.vankorno.vankornodb.TestConstants.cInt
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.IN
 import com.vankorno.vankornodb.core.data.DbConstants.NOT_IN
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.core.data.DbConstants._Name
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol

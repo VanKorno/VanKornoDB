@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.where.autoAddAND
 
-import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol

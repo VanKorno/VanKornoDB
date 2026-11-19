@@ -88,7 +88,10 @@ class QueryTable<out I : TableInfoBase<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W
         return render(name, name, names, predicate(name, where), orderBy, extra)
     }
     
-    internal fun existenceQuery(orderBy: O.()->Unit, extra: X.()->Unit, where: W.()->Unit): Subquery {
+    internal fun existenceQuery(                                               orderBy: O.()->Unit,
+                                                                                 extra: X.()->Unit,
+                                                                                 where: W.()->Unit,
+    ): Subquery {
         val result = render(name, name, arrayOf("1"), predicate(name, where), orderBy, extra)
         return Subquery(result.query, result.args)
     }

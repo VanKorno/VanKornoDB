@@ -3,8 +3,8 @@ package com.vankorno.vankornodb.set.noty
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 
 fun SQLiteDatabase.setNoty(                                                        value: Any,
                                                                                    table: String,
@@ -22,7 +22,7 @@ fun SQLiteDatabase.setNoty(                                                     
 fun SQLiteDatabase.setNoty(                                           value: Any,
                                                                       table: String,
                                                                      column: String,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) {
     val builder = WhereDsl().apply(where)
     val safeValue = getBoolSafeVal(value)
@@ -54,7 +54,7 @@ internal fun getBoolSafeVal(value: Any) = if (value is Boolean)
 
 fun SQLiteDatabase.setRowValsNoty(                                         table: String,
                                                                               cv: ContentValues,
-                                                                           where: WhereDsl.()->Unit,
+                                                                           where: W.()->Unit,
 ) {
     val builder = WhereDsl().apply(where)
     update(table, cv, builder.buildStr(), builder.args.toTypedArray())
@@ -62,7 +62,7 @@ fun SQLiteDatabase.setRowValsNoty(                                         table
 
 
 fun SQLiteDatabase.setRowValsNoty(                                        table: String,
-                                                                          where: WhereDsl.()->Unit,
+                                                                          where: W.()->Unit,
                                                                   vararg values: Pair<String, Any?>,
 ) {
     if (values.isEmpty()) return //\/\/\/\/\/\

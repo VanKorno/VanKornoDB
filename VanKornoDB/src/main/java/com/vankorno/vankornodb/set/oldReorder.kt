@@ -2,7 +2,6 @@
 package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.get.getLastPosition
 import com.vankorno.vankornodb.get.getLong
 import com.vankorno.vankornodb.get.useCursor
@@ -17,7 +16,7 @@ fun SQLiteDatabase.reorder(                                           table: Str
                                                                          id: Long,
                                                                moveUpOrBack: Boolean,
                                                             makeFirstOrLast: Boolean = false,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ): Boolean {
     // region LOG
     dLog("reorder(table = $table, id = $id, moveUpOrBack = $moveUpOrBack, makeFirstOrLast = $makeFirstOrLast")
@@ -54,7 +53,7 @@ fun SQLiteDatabase.reorder(                                           table: Str
 private fun SQLiteDatabase.reorderToStartEnd(                         table: String,
                                                                          id: Long,
                                                                moveUpOrBack: Boolean,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ): Boolean {
     val position = getLong(table, cPosition) { ID = id }
     

@@ -44,7 +44,7 @@ fun <A : BaseEntity, B : BaseEntity> getEntityPair(
 fun <A : BaseEntity, B : BaseEntity> getEntityPairs(
     tableA: TableInfoBase<A>,
     tableB: TableInfoBase<B>,
-    where: WhereDsl.()->Unit = {},
+    where: W.()->Unit = {},
 ): List<Pair<A, B>> // or Map<Long, Pair<A, B>>
 ```
 
@@ -120,7 +120,7 @@ fun getMissingIDs(
 fun hasMatchingRows(
     table: String,
     inTable: String,
-    where: WhereDsl.()->Unit = {},
+    where: W.()->Unit = {},
 ): Boolean
 // SQL: SELECT EXISTS (SELECT 1 FROM table WHERE id IN (SELECT id FROM inTable WHERE ...))
 ```

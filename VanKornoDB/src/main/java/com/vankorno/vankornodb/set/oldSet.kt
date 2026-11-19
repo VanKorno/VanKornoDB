@@ -1,10 +1,11 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.set
 
+import android.R.attr.value
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.SetDsl
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
 import com.vankorno.vankornodb.set.dsl.data.LongColOp
@@ -15,7 +16,7 @@ import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
 
 fun SQLiteDatabase.set(                                               table: String,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
                                                                     actions: SetDsl.()->Unit,
 ) {
     val ops = SetDsl().apply(actions).ops

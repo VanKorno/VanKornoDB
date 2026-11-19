@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.orderBy
 
-import com.vankorno.vankornodb.api.OrderDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

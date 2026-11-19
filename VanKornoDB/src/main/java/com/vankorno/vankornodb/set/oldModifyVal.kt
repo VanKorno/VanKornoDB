@@ -2,8 +2,8 @@
 package com.vankorno.vankornodb.set
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
@@ -14,28 +14,28 @@ import com.vankorno.vankornodb.set.internal.baseAddTo
 fun SQLiteDatabase.addToInt(                                         addend: Number,
                                                                       table: String,
                                                                      column: IntCol,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
 fun SQLiteDatabase.addToLong(                                        addend: Number,
                                                                       table: String,
                                                                      column: LongCol,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
 fun SQLiteDatabase.addToFloat(                                       addend: Number,
                                                                       table: String,
                                                                      column: FloatCol,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) = baseAddTo(addend, table, column, where)
 
 
 
 fun SQLiteDatabase.flipBool(                                          table: String,
                                                                      column: BoolCol,
-                                                                      where: WhereDsl.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ) {
     val colName = column.name
     val builder = WhereDsl().apply(where)

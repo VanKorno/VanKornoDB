@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.core.dsl.where
 
-import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
@@ -13,7 +13,7 @@ class WhereEqualTest {
     
     @Test
     fun `Equal Int`() {
-        val where: WhereDsl.()->Unit = { cPosition equal 11 }
+        val where: W.()->Unit = { cPosition equal 11 }
         val whereObj = WhereDsl().apply(where)
         
         assertEquals(cPosition.name + "=?", whereObj.clauses[0])

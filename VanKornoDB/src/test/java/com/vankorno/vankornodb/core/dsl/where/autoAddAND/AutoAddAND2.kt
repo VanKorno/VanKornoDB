@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.core.dsl.where.autoAddAND
 
 import com.vankorno.vankornodb.TestConstants.cFloat
 import com.vankorno.vankornodb.TestConstants.cInt
-import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
 import com.vankorno.vankornodb.misc.data.SharedCol.cEnabled
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
