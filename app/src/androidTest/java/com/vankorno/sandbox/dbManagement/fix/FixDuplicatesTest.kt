@@ -4,9 +4,15 @@ import androidx.test.filters.MediumTest
 import com.vankorno.sandbox._entities.testEntity.CTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.vankornodb.add.addEntities
+import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.delete.deleteTable
+import com.vankorno.vankornodb.get.getColInts
+import com.vankorno.vankornodb.get.getColLongs
+import com.vankorno.vankornodb.get.getRowCount
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
+import com.vankorno.vankornodb.newTable.createTable
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -25,7 +31,7 @@ class FixDuplicatesTest {
     @Test
     fun emptyTable() {
         val table = "EmptyTable"
-        dbh.createTable(table using _Test)
+        dbh.createTable(_Test.table(table))
         assertAllFixFuns(table, 0, 0, 0)
         dbh.deleteTable(table)
     }
@@ -35,8 +41,8 @@ class FixDuplicatesTest {
     @Test
     fun nothingToFix() {
         val table = "nothingToFix"
-        val tableInfo = table using _Test
-        dbh.createTable(table using _Test)
+        val tableInfo = _Test.table(table)
+        dbh.createTable(_Test.table(table))
         
         dbh.addEntity(tableInfo, TestEntity(1L, "1", 10L, int1 = 100, long1 = 1000L))
         dbh.addEntity(tableInfo, TestEntity(2L, "2", 20L, int1 = 200, long1 = 2000L))
@@ -54,7 +60,7 @@ class FixDuplicatesTest {
     @Test
     fun twoDuplicateRows() {
         val table = "twoDuplicateRows"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         dbh.createTable(tableInfo)
         
         dbh.addEntity(tableInfo, TestEntity(position = 10L, int1 = 100, long1 = 1000L))
@@ -71,7 +77,7 @@ class FixDuplicatesTest {
     @Test
     fun multipleDuplicates() {
         val table = "multipleDuplicates"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         dbh.createTable(tableInfo)
         
         dbh.addEntities(tableInfo, listOf(
@@ -95,7 +101,7 @@ class FixDuplicatesTest {
     @Test
     fun tripleDuplicates() {
         val table = "tripleDuplicates"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         dbh.createTable(tableInfo)
         
         dbh.addEntities(tableInfo, listOf(
@@ -118,7 +124,7 @@ class FixDuplicatesTest {
     @Test
     fun whereClause() {
         val table = "whereClause"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         dbh.createTable(tableInfo)
     
         dbh.addEntities(tableInfo, listOf(

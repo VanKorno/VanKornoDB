@@ -4,14 +4,16 @@ import androidx.test.filters.MediumTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
+import com.vankorno.vankornodb.add.addEntitiesWithoutIdCheck
+import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.using
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.delete.deleteRows
+import com.vankorno.vankornodb.get.getLong
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 private const val TestTable = "AddWithoutIdCheckTable"
-private val _TestTable = TestTable using _Test
+private val _TestTable = _Test.table(TestTable)
 
 @MediumTest
 class AddEntityWithoutIdCheckTest {
@@ -26,10 +28,10 @@ class AddEntityWithoutIdCheckTest {
         val insertedRowId = dbh.addEntityWithoutIdCheck(_TestTable, rat)
         assertEquals(true, insertedRowId > 0L)
         
-        val storedId = dbh.getLong(TestTable, cID) { Name = name }
+        val storedId = dbh.getLong(_TestTable, orderBy = { Id }) { Name equal name }
         assertEquals(id, storedId)
         
-        dbh.deleteRows(TestTable) { Name = name }
+        dbh.deleteRows(_TestTable) { Name equal name }
     }
     
     @Test
@@ -46,12 +48,12 @@ class AddEntityWithoutIdCheckTest {
         assertEquals(2, insertedRowIds.size)
         assertEquals(true, insertedRowIds.all { it > 0L })
         
-        val storedId1 = dbh.getLong(TestTable, cID) { Name = rat1.name }
-        val storedId2 = dbh.getLong(TestTable, cID) { Name = rat2.name }
+        val storedId1 = dbh.getLong(_TestTable, column = { Id }) { Name equal rat1.name }
+        val storedId2 = dbh.getLong(_TestTable, column = { Id }) { Name equal rat2.name }
         assertEquals(rat1.id, storedId1)
         assertEquals(rat2.id, storedId2)
         
-        dbh.deleteRows(TestTable) { Name = rat1.name }
-        dbh.deleteRows(TestTable) { Name = rat2.name }
+        dbh.deleteRows(_TestTable) { Name equal rat1.name }
+        dbh.deleteRows(_TestTable) { Name equal rat2.name }
     }
 }

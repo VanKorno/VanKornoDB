@@ -5,14 +5,19 @@ import com.vankorno.sandbox.LabRatQuant
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
+import com.vankorno.vankornodb.add.addWithNewIDsAndPositions
+import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.using
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.delete.deleteRows
+import com.vankorno.vankornodb.delete.deleteTable
+import com.vankorno.vankornodb.get.getLastId
+import com.vankorno.vankornodb.get.getLastPosition
+import com.vankorno.vankornodb.get.getLong
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-private const val TestTable = "AddConvenienceTable"
-private val _TestTable = TestTable using _Test
+private const val TestTableName = "AddConvenienceTable"
+private val _TestTable = _Test.table(TestTableName)
 
 @MediumTest
 class AddConvenienceTest {
@@ -20,7 +25,7 @@ class AddConvenienceTest {
     
     @Test
     fun addWithNewIdAndPositionTest() {
-        dbh.getLabRats(TestTable)
+        dbh.getLabRats(TestTableName)
         
         sanityCheck()
         simpleNew()
@@ -28,24 +33,24 @@ class AddConvenienceTest {
     }
     
     private fun sanityCheck() {
-        val lastId = dbh.getLastId(TestTable)
+        val lastId = dbh.getLastId(_TestTable)
         assertEquals(ratQuant, lastId)
         
-        val lastPosition = dbh.getLastPosition(TestTable)
+        val lastPosition = dbh.getLastPosition(_TestTable)
         assertEquals(ratQuant, lastPosition)
     }
     
     private fun testAndKillNewRat(                                                name: String
     ) {
-        val lastId = dbh.getLastId(TestTable)
-        val lastPosition = dbh.getLastPosition(TestTable)
+        val lastId = dbh.getLastId(_TestTable)
+        val lastPosition = dbh.getLastPosition(_TestTable)
         assertEquals(ratQuant + 1, lastId)
         assertEquals(ratQuant + 1, lastPosition)
 
-        val newRatId = dbh.getLong(TestTable, cID) { Name = name }
+        val newRatId = dbh.getLong(_TestTable, { Id }) { Name equal name }
         assertEquals(ratQuant + 1, newRatId)
         
-        dbh.deleteRows(TestTable) { Name = name }
+        dbh.deleteRows(_TestTable) { Name equal name }
     }
     
     
@@ -80,7 +85,7 @@ class AddConvenienceTest {
     @Test
     fun addWithNewIDsAndPositionsTest() {
         val table = "addWithNewIDsAndPositionsTest"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         dbh.getLabRats(table)
         
         val rats = listOf(TestEntity(name = "Rat1"), TestEntity(name = "Rat2"))
@@ -94,7 +99,7 @@ class AddConvenienceTest {
         assertEquals(ratQuant + 2, results[1].id)
         assertEquals(ratQuant + 2, results[1].position)
         
-        dbh.deleteTable(TestTable)
+        dbh.deleteTable(_TestTable)
     }
     
     

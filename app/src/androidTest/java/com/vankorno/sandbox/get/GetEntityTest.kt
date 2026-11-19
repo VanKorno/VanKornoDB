@@ -39,7 +39,7 @@ class GetEntityTest {
     }
     
     private fun getEntityWithGeneratedGetter() {
-        val obj = dbh.getEntity(GetEntityTestTable using _Test) { ID = 1L }
+        val obj = dbh.getEntity(_Test.table(GetEntityTestTable)) { Id equal 1L }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)
@@ -48,7 +48,7 @@ class GetEntityTest {
     
     
     private fun getEntityWithNullGetter() {
-        val obj = dbh.getEntity(GetEntityTestTable using DummySchema) { ID = 1L }
+        val obj = dbh.getEntity(GetEntityTestTable using DummySchema) { Id equal 1L }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)
@@ -57,7 +57,7 @@ class GetEntityTest {
     
     @Test
     fun getterHasPriorityOverReflection() {
-        val obj = dbh.getEntity(GetEntityTestTable using OrmTestWrongGetter) { ID = 1L }
+        val obj = dbh.getEntity(GetEntityTestTable using OrmTestWrongGetter) { Id equal 1L }
         
         assertNotNull(obj)
         assertEquals(999, obj!!.id)

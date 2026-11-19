@@ -1,37 +1,38 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.misc
 
+import com.vankorno.vankornodb.core.data.DbConstants.DESCENDING
+import com.vankorno.vankornodb.core.data.DbConstants.RowID
+import com.vankorno.vankornodb.core.data.DbConstants._ID
+import com.vankorno.vankornodb.core.data.DbConstants._Position
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.*
 
-fun orderBy(vararg columns: BaseColumn): OrderDsl.()->Unit = { col(*columns) }
+fun orderBy(vararg columns: BaseColumn): OrderDsl<*, *>.()->Unit = {
+    for (column in columns)
+        raw(if (column is DescendingColumn) column.name + DESCENDING else column.name)
+}
 
-fun AscendingColumn<*>.by(): OrderDsl.()->Unit = { col(this@by) }
+fun AscendingColumn<*>.by(): OrderDsl<*, *>.()->Unit = { raw(this@by.name) }
 
-fun orderById(): OrderDsl.()->Unit = { orderById() }
-fun orderByIdFlipped(): OrderDsl.()->Unit = { orderByIdFlipped() }
+fun orderById(): OrderDsl<*, *>.()->Unit = { raw(_ID) }
+fun orderByIdFlipped(): OrderDsl<*, *>.()->Unit = { raw(_ID + DESCENDING) }
 
-fun orderByRowId(): OrderDsl.()->Unit = { orderByRowId() }
-fun orderByRowIdFlipped(): OrderDsl.()->Unit = { orderByRowIdFlipped() }
+fun orderByRowId(): OrderDsl<*, *>.()->Unit = { raw(RowID) }
+fun orderByRowIdFlipped(): OrderDsl<*, *>.()->Unit = { raw(RowID + DESCENDING) }
 
-fun orderByPosition(): OrderDsl.()->Unit = { orderByPosition() }
-fun orderByPositionFlipped(): OrderDsl.()->Unit = { orderByPositionFlipped() }
+fun orderByPosition(): OrderDsl<*, *>.()->Unit = { raw(_Position) }
+fun orderByPositionFlipped(): OrderDsl<*, *>.()->Unit = { raw(_Position + DESCENDING) }
 
-fun orderByName(): OrderDsl.()->Unit = { orderByName() }
-fun orderByNameFlipped(): OrderDsl.()->Unit = { orderByNameFlipped() }
-
-fun orderRandomly(): OrderDsl.()->Unit = { orderRandomly() }
+fun orderRandomly(): OrderDsl<*, *>.()->Unit = { random() }
 
 
 
-fun AscendingColumn<*>.flip(): OrderDsl.()->Unit = { this@flip.flip() }
+fun AscendingColumn<*>.flip(): OrderDsl<*, *>.()->Unit = { raw(this@flip.name + DESCENDING) }
 
 fun AscendingColumn<*>.flipIf(                                             condition: Boolean
-): OrderDsl.()->Unit = {
-    if (condition)
-        this@flipIf.flip()
-    else
-        col(this@flipIf)
+): OrderDsl<*, *>.()->Unit = {
+    raw(if (condition) this@flipIf.name + DESCENDING else this@flipIf.name)
 }
 
 fun IntCol.flipped() = DescendingIntCol(this@flipped.name)

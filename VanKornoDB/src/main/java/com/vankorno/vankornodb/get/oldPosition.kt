@@ -9,6 +9,8 @@ import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 
+// TODO Must not require a column!
+
 /**
  * Returns 0L if nothing was found
  */

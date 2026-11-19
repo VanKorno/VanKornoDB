@@ -4,9 +4,15 @@ import androidx.test.filters.MediumTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
+import com.vankorno.vankornodb.add.addEntities
+import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.delete.deleteRows
+import com.vankorno.vankornodb.delete.deleteTable
+import com.vankorno.vankornodb.get.getNextIDs
+import com.vankorno.vankornodb.get.getNextId
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
+import com.vankorno.vankornodb.newTable.createTable
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -35,7 +41,7 @@ class NextIdTest {
     @Test
     fun emptyTable() {
         val table = "EmptyTable"
-        dbh.createTable(table using _Test)
+        dbh.createTable(_Test.table(table))
         assertBothFun(table, 1L, 2L)
         dbh.deleteTable(table)
     }
@@ -60,7 +66,7 @@ class NextIdTest {
         assertBothFun(table, 51L, 52L)
         
         // Add larger num ID
-        dbh.addEntityWithoutIdCheck(table using _Test, TestEntity(999990))
+        dbh.addEntityWithoutIdCheck(_Test.table(table), TestEntity(999990))
         assertBothFun(table, 999991L, 999992L)
         
         dbh.deleteTable(table)
@@ -73,7 +79,7 @@ class NextIdTest {
         val table = "reservedInEmptyTable"
         val reserved = setOf(1L, 2L, 3L)
         
-        dbh.createTable(table using _Test)
+        dbh.createTable(_Test.table(table))
         assertBothFun(table, 4L, 5L, reserved)
         dbh.deleteTable(table)
     }
@@ -100,7 +106,7 @@ class NextIdTest {
         val table = "reservedEvenNumbersIn"
         val reserved = setOf(2L, 4L, 6L)
         
-        dbh.createTable(table using _Test)
+        dbh.createTable(_Test.table(table))
         assertBothFun(table, 7L, 8L, reserved)
         dbh.deleteTable(table)
     }
@@ -110,7 +116,7 @@ class NextIdTest {
     @Test
     fun maxValueInSingleRowTable() {
         val table = "maxValueInSingleRowTable"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE, name = "Max"))
@@ -124,7 +130,7 @@ class NextIdTest {
     @Test
     fun maxValueInReserved() {
         val table = "maxValueInReserved"
-        dbh.createTable(table using _Test)
+        dbh.createTable(_Test.table(table))
         assertBothFun(table, 1L, 2L, setOf(50L, Long.MAX_VALUE))
         dbh.deleteTable(table)
     }
@@ -138,7 +144,7 @@ class NextIdTest {
     @Test
     fun closeToMax() {
         val table = "closeToMax"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
@@ -160,7 +166,7 @@ class NextIdTest {
     @Test
     fun reservedCloseToMax() {
         val table = "reservedCloseToMax"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         val reserved = setOf(100L, Long.MAX_VALUE - 1)
         
         dbh.createTable(tableInfo)
@@ -179,7 +185,7 @@ class NextIdTest {
     @Test
     fun takenEvenNumbersWithMaxValueCeiling() {
         val table = "takenEvenNumbersWithMaxValueCeiling"
-        val tableInfo = table using _Test
+        val tableInfo = _Test.table(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, listOf(TestEntity(2L), TestEntity(4L), TestEntity(6L), TestEntity(Long.MAX_VALUE)))
@@ -195,7 +201,7 @@ class NextIdTest {
         val table = "reservedEvenNumbersWithMaxValueCeiling"
         val reserved = setOf(2L, 4L, 6L, Long.MAX_VALUE)
         
-        dbh.createTable(table using _Test)
+        dbh.createTable(_Test.table(table))
         assertBothFun(table, 1L, 3L, reserved)
         dbh.deleteTable(table)
     }

@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 fun Cursor.getBoolean(col: Int) = this.getInt(col) == 1
 
 
-/**
+/** TODO Get rid of ???
  * Simplifies passing columns where named param isn't needed:
  *     columns(Column1, Column2)
  * instead of:
@@ -21,13 +21,11 @@ fun columns(vararg columns: String): Array<out String> = columns
 
 fun columns(vararg columns: TypedColumn<*>): Array<out TypedColumn<*>> = columns
 
-fun <T : TypedColumn<*>> typedColumns(vararg columns: T): Array<out T> = columns
-
 
 
 /**
  * A convenience fun to pass limit for the db query
  */
-fun limit(quant: Int): ExtraDsl.()->Unit = { limit = quant }
+fun limit(quant: Int): ExtraDsl<*>.()->Unit = { limit = quant }
 
 

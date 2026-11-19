@@ -11,17 +11,21 @@ import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.createTable
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.core.dsl.subquery
 import com.vankorno.vankornodb.delete.clearTable
+import com.vankorno.vankornodb.get.getEntities
+import com.vankorno.vankornodb.get.tableExists
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import java.nio.file.Files.exists
+import java.nio.file.Files.notExists
 
 private const val ItemsTableName = "SubqueryItemsTable"
-private val _ItemsTable = ItemsTableName using _Test
+private val _ItemsTable = _Test.table(ItemsTableName)
 
 private const val ConditionsTableName = "SubqueryConditionsTable"
-private val _ConditionsTable = ConditionsTableName using _Test
+private val _ConditionsTable = _Test.table(ConditionsTableName)
 
 @MediumTest
 class SubqueryTest : BaseAndroidTest() {

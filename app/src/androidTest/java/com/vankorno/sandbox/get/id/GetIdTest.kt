@@ -8,8 +8,14 @@ import com.vankorno.sandbox._entities.testEntity.CTest.Position
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
+import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.delete.clearTable
+import com.vankorno.vankornodb.delete.deleteRows
+import com.vankorno.vankornodb.get.getAllIDs
+import com.vankorno.vankornodb.get.getIDs
+import com.vankorno.vankornodb.get.getId
+import com.vankorno.vankornodb.get.getLastId
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.orderByIdFlipped
 import org.junit.Assert.assertEquals
@@ -35,7 +41,7 @@ class GetIdTest {
 
         // Add a new row with higher ID
         val newId = 100L
-        dbh.addEntities(GetLastIdTable using _Test, listOf(TestEntity(newId, "Lab rat 100", newId)))
+        dbh.addEntities(_Test.table(GetLastIdTable), listOf(TestEntity(newId, "Lab rat 100", newId)))
         val updatedLastId = dbh.getLastId(GetLastIdTable)
         assertEquals(newId, updatedLastId)
 
@@ -120,7 +126,7 @@ class GetIdTest {
 
         // Add an extra row and verify
         val extraId = 51L
-        dbh.addEntities(GetAllIDsTable using _Test, listOf(TestEntity(extraId, "Lab rat 51", extraId)))
+        dbh.addEntities(_Test.table(GetAllIDsTable), listOf(TestEntity(extraId, "Lab rat 51", extraId)))
         val updatedAllIds = dbh.getAllIDs(GetAllIDsTable)
         assertEquals((1L..extraId).toList(), updatedAllIds)
 
