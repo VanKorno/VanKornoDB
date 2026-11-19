@@ -2,6 +2,9 @@ package com.vankorno.sandbox._navig
 
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.get.getAppTableNames
+import com.vankorno.vankornodb.get.getInternalTableNames
+import com.vankorno.vankornodb.get.raw.getRawTableStr
 import com.vankorno.vankornohelpers.values.LibGlobals.navigating
 import com.vankorno.vankornohelpers.values.LibLambdas.hideKeyboard
 

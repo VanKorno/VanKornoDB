@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.DbLock
-import com.vankorno.vankornodb.api.createTable
-import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
@@ -23,7 +21,9 @@ import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.unitTestCase
-import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
+import com.vankorno.vankornodb.newTable.createExclusiveTables
+import com.vankorno.vankornodb.newTable.createTable
+import com.vankorno.vankornodb.newTable.createTables
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -111,7 +111,7 @@ abstract class DbManager(         dbName: String,
         handleVersionTable(db)
         
         if (createExclusiveTables)
-            db.createExclusiveTablesInternal(entityMeta)
+            db.createExclusiveTables(entityMeta)
         
         if (mustHaveTables.isNotEmpty())
             db.createTables(mustHaveTables)

@@ -3,9 +3,9 @@ package com.vankorno.vankornodb.set
 
 import android.R.attr.value
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.SetDsl
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.set.dsl.SetDsl
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
 import com.vankorno.vankornodb.set.dsl.data.LongColOp
@@ -15,9 +15,9 @@ import com.vankorno.vankornodb.set.dsl.data.SetOp
 import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 import com.vankorno.vankornodb.set.noty.setRowValsNoty
 
-fun SQLiteDatabase.set(                                               table: String,
+fun <W, S : SetDsl<W, S>> SQLiteDatabase.set(                                               table: String,
                                                                       where: W.()->Unit = {},
-                                                                    actions: SetDsl.()->Unit,
+                                                                    actions: S.()->Unit,
 ) {
     val ops = SetDsl().apply(actions).ops
     val builder = WhereDsl().apply(where)

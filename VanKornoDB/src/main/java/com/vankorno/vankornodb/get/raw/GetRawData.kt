@@ -2,9 +2,13 @@
 package com.vankorno.vankornodb.get.raw
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.get.raw.data.RawTableStr
-import com.vankorno.vankornodb.get.useCursor
 
+fun Dbh.getRawTableStr(                                                            table: String
+): RawTableStr = read(RawTableStr(), "getRawTableStr") { db ->
+    db.getRawTableStr(table)
+}
 
 fun SQLiteDatabase.getRawTableStr(                                                 table: String
 ): RawTableStr = useCursor(table) { cursor ->

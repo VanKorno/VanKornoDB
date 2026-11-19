@@ -4,8 +4,6 @@ package com.vankorno.vankornodb.dbManagement.migration
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addEntitiesOut
 import com.vankorno.vankornodb.api.TransformColDsl
-import com.vankorno.vankornodb.api.createTable
-import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.dbManagement.data.BaseEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
@@ -18,6 +16,8 @@ import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.getEntities
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.newTable.createTable
+import com.vankorno.vankornodb.newTable.createTables
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -347,7 +347,7 @@ internal fun SQLiteDatabase.dropAndCreateEmptyTablesInternal(
     // region LOG
         dLog("dropDroppables(): Creating $size table(s)...")
     // endregion
-    createTables(*tables)
+    this@dropAndCreateEmptyTablesInternal.createTables(*tables)
 }
 
 

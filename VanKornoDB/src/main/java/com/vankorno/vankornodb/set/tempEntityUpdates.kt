@@ -4,9 +4,9 @@ package com.vankorno.vankornodb.set
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.ColumnSelector
 import com.vankorno.vankornodb.api.CurrEntity
-import com.vankorno.vankornodb.api.EntityTable
-import com.vankorno.vankornodb.api.SetDsl
+import com.vankorno.vankornodb.core.dsl.EntityTable
 import com.vankorno.vankornodb.dbManagement.data.*
+import com.vankorno.vankornodb.set.dsl.SetDsl
 
 
 fun <W> SQLiteDatabase.setInt(                                     value: Int,

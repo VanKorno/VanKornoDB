@@ -12,8 +12,6 @@ import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
-import com.vankorno.vankornodb.api.createTable
-import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.core.dsl.ColumnSelector
 import com.vankorno.vankornodb.core.dsl.EntityTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
@@ -24,9 +22,9 @@ import com.vankorno.vankornodb.dbManagement.fix.fixDuplicatePosition
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicatePositionMult
 import com.vankorno.vankornodb.delete.*
 import com.vankorno.vankornodb.get.*
-import com.vankorno.vankornodb.get.raw.data.RawTableStr
-import com.vankorno.vankornodb.get.raw.getRawTableStr
 import com.vankorno.vankornodb.misc.data.DbIdAndPosition
+import com.vankorno.vankornodb.newTable.createTable
+import com.vankorno.vankornodb.newTable.createTables
 import com.vankorno.vankornodb.set.*
 import com.vankorno.vankornodb.set.dsl.SetDsl
 
@@ -354,98 +352,6 @@ abstract class DbHelperInternal(
     
     
     
-    // ============================   D E L E T E,  C L E A R   ============================ \\
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteRows] */
-    fun deleteRows(                                                        table: String,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("deleteRows", async) { db ->
-        db.deleteRows(table, where)
-    }
-    
-    fun <W> deleteRows(                                                    table: EntityTable<*, W>,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = deleteRows(table.name, async, table.where(where))
-    
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteRowsFromTables] */
-    fun deleteRowsFromTables(                                             tables: List<String>,
-                                                                           async: Boolean = false,
-                                                                           where: W.()->Unit,
-    ) = write("deleteRowsFromTables", async) { db ->
-        db.deleteRowsFromTables(tables, where)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteRowsFromTables] */
-    fun deleteRowsFromTables(                                      vararg tables: String,
-                                                                           where: W.()->Unit,
-    ) = write("deleteRowsFromTables") { db ->
-        db.deleteRowsFromTables(tables.toList(), where)
-    }
-    
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteFirstRow] */
-    inline fun deleteFirstRow(                                              table: String,
-                                                                            async: Boolean = false,
-    ) = write("deleteFirstRow", async) { db ->
-        db.deleteFirstRow(table)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteLastRow] */
-    inline fun deleteLastRow(                                               table: String,
-                                                                            async: Boolean = false,
-    ) = write("deleteLastRow", async) { db ->
-        db.deleteLastRow(table)
-    }
-    
-    
-    // -------------------------------------------------------------------------------------- \\
-    
-    /** A wrapper fun for [SQLiteDatabase.clearTable] */
-    inline fun clearTable(                                                  table: String,
-                                                                            async: Boolean = false,
-    ) = write("clearTable", async) { it.clearTable(table) }
-    
-    
-    /** A wrapper fun for [SQLiteDatabase.clearTables] */
-    inline fun clearTables(                                         vararg tables: String,
-                                                                            async: Boolean = false,
-    ) = write("clearTables", async) { it.clearTables(*tables) }
-    
-    /** A wrapper fun for [SQLiteDatabase.clearTables] */
-    inline fun clearTables(                                                tables: List<String>,
-                                                                            async: Boolean = false,
-    ) = write("clearTables", async) { it.clearTables(tables) }
-    
-    
-    // -------------------------------------------------------------------------------------- \\
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteTable] */
-    inline fun deleteTable(                                                 table: String,
-                                                                            async: Boolean = false,
-    ) = write("deleteTable", async) { it.deleteTable(table) }
-    
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteTables] */
-    inline fun deleteTables(                                        vararg tables: String,
-                                                                            async: Boolean = false,
-    ) = write("deleteTables", async) { it.deleteTables(*tables) }
-    
-    /** A wrapper fun for [SQLiteDatabase.deleteTables] */
-    inline fun deleteTables(                                               tables: List<String>,
-                                                                            async: Boolean = false,
-    ) = write("deleteTables", async) { it.deleteTables(tables) }
-    
-    
-    
-    
-    /** A wrapper fun for [SQLiteDatabase.getRawTableStr] */
-    inline fun getRawTableStr(                                                     table: String
-    ): RawTableStr = read(RawTableStr(), "getRawTableStr") { db ->
-        db.getRawTableStr(table)
-    }
     
     /** A wrapper fun for [SQLiteDatabase.reorder] */
     fun reorder(                                                      table: String,

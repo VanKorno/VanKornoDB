@@ -11,8 +11,6 @@ import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.dbManagement.lock.DbLockInternal
 import com.vankorno.vankornodb.misc.unitTestCase
-import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
-import com.vankorno.vankornodb.newTable.createTablesInternal
 
 
 /**
@@ -88,33 +86,6 @@ object DbRuntime {
 
 
 
-/**
- * Creates a single table in db.
- */
-fun SQLiteDatabase.createTable(tableInfo: TableInfoNormal<out NormalEntity>) = createTablesInternal(tableInfo)
-
-
-/**
- * Creates multiple tables in the database given vararg TableInfo (table name + schema bundle).
- */
-fun SQLiteDatabase.createTables(                    vararg tables: TableInfoNormal<out NormalEntity>
-) = createTablesInternal(*tables)
-
-/**
- * Creates multiple tables in the database given a list of TableInfo (table name + schema bundle).
- */
-fun SQLiteDatabase.createTables(                     tables: List<TableInfoNormal<out NormalEntity>>
-) = createTablesInternal(*tables.toTypedArray())
-
-
-
-/**
- * Creates tables for all single-table entities, that have EntityMeta.limitedToTable value set.
- * DbHelper/DbManager already runs this fun by default, if you don't disable it by setting the
- * 'createExclusiveTables' param to false.
- */
-fun SQLiteDatabase.createExclusiveTables(                  allEntityMeta: Collection<BaseEntityMeta>
-) = createExclusiveTablesInternal(allEntityMeta)
 
 
 
