@@ -211,8 +211,8 @@ open class WhereDslInternal : WhereDslBase() {
     
     /** For comparisons to provided values. The values are automatically put into the arg array. **/
     
-    infix fun <T> String.equal(value: T) = condition(this, "=", if (value is Boolean) if (value) "1" else "0" else value.toString())
-    infix fun <T> String.notEqual(value: T) = condition(this, "!=", if (value is Boolean) if (value) "1" else "0" else value.toString())
+    infix fun <T> String.equal(value: T) = condition(this, "=", value.toWhereArg())
+    infix fun <T> String.notEqual(value: T) = condition(this, "!=", value.toWhereArg())
     infix fun <T> String.greater(value: T) = condition(this, ">", value.toString())
     infix fun <T> String.greaterEqual(value: T) = condition(this, ">=", value.toString())
     infix fun <T> String.less(value: T) = condition(this, "<", value.toString())

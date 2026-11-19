@@ -9,11 +9,11 @@ import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.api.createTables
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
-import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.NormalEntity
 import com.vankorno.vankornodb.dbManagement.data.TableInfoNormal
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
+import com.vankorno.vankornodb.dbManagement.migration.data.TEntityVersions
 import com.vankorno.vankornodb.dbManagement.migration.data._TTTEntityVersion
 import com.vankorno.vankornodb.delete.deleteRows
 import com.vankorno.vankornodb.get.getColStrings
@@ -21,7 +21,6 @@ import com.vankorno.vankornodb.get.hasRows
 import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.get.tableExists
 import com.vankorno.vankornodb.misc.dLog
-import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.unitTestCase
 import com.vankorno.vankornodb.newTable.createExclusiveTablesInternal
@@ -218,14 +217,14 @@ abstract class DbManager(         dbName: String,
     
     private fun cleanupVersionTable(                                             db: SQLiteDatabase
     ) {
-        val allNames = db.getColStrings(TABLE_EntityVersions, cName)
+        val allNames = db.getColStrings(TEntityVersions, { Name })
         if (allNames.isEmpty()) return //\/\/\/\/\/\
         
         val namesToDelete = allNames.filter { name ->
             entityMeta.none { meta -> meta.dbRowName == name }
         }
         for (name in namesToDelete) {
-            db.deleteRows(TABLE_EntityVersions, _Name, name)
+            db.deleteRows(TEntityVersions) { Name equal name }
         }
     }
     
@@ -233,7 +232,7 @@ abstract class DbManager(         dbName: String,
     ) {
         for (meta in entityMeta) {
             val dbName = meta.dbRowName
-            val rowExists = db.hasRows(TABLE_EntityVersions) { Name = dbName }
+            val rowExists = db.hasRows(TEntityVersions) { Name equal dbName }
             if (rowExists)
                 continue //\/\/\
             

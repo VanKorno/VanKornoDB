@@ -1,7 +1,10 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
+import com.vankorno.vankornodb.api.DslContext
+import com.vankorno.vankornodb.api.EntityDsl
 import com.vankorno.vankornodb.api.OldEntity
-import com.vankorno.vankornodb.dbManagement.data.OldSchemaBundle
+import com.vankorno.vankornodb.api.withDsl
+import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class V2_TestEntity(
@@ -60,4 +63,52 @@ object _V2_Test : OldSchemaBundle<V2_TestEntity>(
     },
 
     withId = { obj, newId -> obj.copy(id = newId) }
-)
+) {
+    fun table(name: String) = (name using this).withDsl(::V2_TestDsl)
+}
+
+
+class V2_TestDsl internal constructor(context: DslContext<V2_TestDsl>) : EntityDsl<V2_TestEntity, V2_TestDsl>(context) {
+    val Id get() = column(CV2_Test.Id)
+    val Name get() = column(CV2_Test.Name)
+    val Position get() = column(CV2_Test.Position)
+    val Enabled get() = column(CV2_Test.Enabled)
+    val Int1 get() = column(CV2_Test.Int1)
+    val Int2 get() = column(CV2_Test.Int2)
+    val Int3 get() = column(CV2_Test.Int3)
+    val Str1 get() = column(CV2_Test.Str1)
+    val Str2 get() = column(CV2_Test.Str2)
+    val Str3 get() = column(CV2_Test.Str3)
+    val Bool1 get() = column(CV2_Test.Bool1)
+    val Bool2 get() = column(CV2_Test.Bool2)
+    val Bool3 get() = column(CV2_Test.Bool3)
+    val Long1 get() = column(CV2_Test.Long1)
+    val Long2 get() = column(CV2_Test.Long2)
+    val Long3 get() = column(CV2_Test.Long3)
+    val Float1 get() = column(CV2_Test.Float1)
+    val Float2 get() = column(CV2_Test.Float2)
+    val Float3 get() = column(CV2_Test.Float3)
+}
+
+
+private object CV2_Test {
+    val Id = lCol("id", -1L)
+    val Name = sCol("name", "")
+    val Position = sCol("position", "")
+    val Enabled = bCol("enabled", false)
+    val Int1 = iCol("int1", 0)
+    val Int2 = iCol("int2", 0)
+    val Int3 = iCol("int3", 0)
+    val Str1 = sCol("str1", "")
+    val Str2 = sCol("str2", "")
+    val Str3 = sCol("str3", "")
+    val Bool1 = bCol("bool1", false)
+    val Bool2 = bCol("bool2", false)
+    val Bool3 = bCol("bool3", false)
+    val Long1 = lCol("long1", 0L)
+    val Long2 = lCol("long2", 0L)
+    val Long3 = lCol("long3", 0L)
+    val Float1 = fCol("float1", 0F)
+    val Float2 = fCol("float2", 0F)
+    val Float3 = fCol("float3", 0F)
+}

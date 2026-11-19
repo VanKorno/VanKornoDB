@@ -1,11 +1,15 @@
 package com.vankorno.sandbox._entities.testEntity.lite
 
+import com.vankorno.vankornodb.api.DslContext
 import com.vankorno.vankornodb.api.EntityColumns
+import com.vankorno.vankornodb.api.EntityDsl
 import com.vankorno.vankornodb.api.LiteEntity
+import com.vankorno.vankornodb.api.withDsl
 import com.vankorno.vankornodb.dbManagement.data.LiteSchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
+import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class TestLiteEntt(
@@ -34,13 +38,23 @@ object _TestLite : LiteSchemaBundle<TestLiteEntt>(
             enabled = cursor.getBoolean(idx++)
         )
     },
-)
+) {
+    fun table(name: String) = (name using this).withDsl(::TestLiteDsl)
+}
+
+
+class TestLiteDsl internal constructor(context: DslContext<TestLiteDsl>) : EntityDsl<TestLiteEntt, TestLiteDsl>(context) {
+    val Id get() = column(CTestLite.Id)
+    val Name get() = column(CTestLite.Name)
+    val Position get() = column(CTestLite.Position)
+    val Enabled get() = column(CTestLite.Enabled)
+}
 
 
 
 
 
-object CTestLite : EntityColumns {
+private object CTestLite : EntityColumns {
     val Id = lCol("id", -1L)
     val Name = sCol("name", "")
     val Position = lCol("position", 0L)

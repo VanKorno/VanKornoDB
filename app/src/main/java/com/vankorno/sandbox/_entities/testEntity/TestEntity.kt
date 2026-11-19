@@ -1,13 +1,11 @@
 package com.vankorno.sandbox._entities.testEntity
 
 import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DslContext
 import com.vankorno.vankornodb.api.EntityColumns
-import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.bCol
-import com.vankorno.vankornodb.dbManagement.data.fCol
-import com.vankorno.vankornodb.dbManagement.data.iCol
-import com.vankorno.vankornodb.dbManagement.data.lCol
-import com.vankorno.vankornodb.dbManagement.data.sCol
+import com.vankorno.vankornodb.api.EntityDsl
+import com.vankorno.vankornodb.api.withDsl
+import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 
 data class TestEntity(
@@ -44,7 +42,7 @@ data class TestEntity(
 object _Test : CurrSchemaBundle<TestEntity>(
     clazz = TestEntity::class,
 
-    columns = CTest,
+    columns = testColumns,
 
     getter = { cursor ->
         var idx = 0
@@ -96,13 +94,40 @@ object _Test : CurrSchemaBundle<TestEntity>(
     },
 
     withId = { obj, newId -> obj.copy(id = newId) }
-)
+) {
+    fun table(name: String) = (name using this).withDsl(::TestDsl)
+}
+
+
+class TestDsl internal constructor(context: DslContext<TestDsl>) : EntityDsl<TestEntity, TestDsl>(context) {
+    val Id get() = column(testColumns.Id)
+    val Name get() = column(testColumns.Name)
+    val Position get() = column(testColumns.Position)
+    val Enabled get() = column(testColumns.Enabled)
+    val Int1 get() = column(testColumns.Int1)
+    val Int2 get() = column(testColumns.Int2)
+    val Int3 get() = column(testColumns.Int3)
+    val Str1 get() = column(testColumns.Str1)
+    val Str2 get() = column(testColumns.Str2)
+    val Str3 get() = column(testColumns.Str3)
+    val Bool1 get() = column(testColumns.Bool1)
+    val Bool2 get() = column(testColumns.Bool2)
+    val Bool3 get() = column(testColumns.Bool3)
+    val Long1 get() = column(testColumns.Long1)
+    val Long2 get() = column(testColumns.Long2)
+    val Long3 get() = column(testColumns.Long3)
+    val Float1 get() = column(testColumns.Float1)
+    val Float2 get() = column(testColumns.Float2)
+    val Float3 get() = column(testColumns.Float3)
+}
 
 
 
 
 
-object CTest : EntityColumns {
+private val testColumns = TestColumnDefinitions()
+
+internal open class TestColumnDefinitions : EntityColumns {
     val Id = lCol("id", -1L)
     val Name = sCol("name", "")
     val Position = lCol("position", 0L)

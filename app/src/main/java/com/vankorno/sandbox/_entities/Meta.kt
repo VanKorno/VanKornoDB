@@ -45,3 +45,4 @@ enum class EntityMeta(                              override val currVersion: In
 
 const val TestTable = "TestTable"
 val _TestTable = TestTable using _Test
+val TTest = _Test.table(TestTable)

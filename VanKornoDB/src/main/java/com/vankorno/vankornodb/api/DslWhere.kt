@@ -8,12 +8,17 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.misc.getColNames
 
 
+@DslInject
 class WhereDsl : WhereDslInternal() {
+    /**
+     * Doesn't add "AND" automatically in front of itself. TODO Check if the feature needed
+     */
     fun group(                                                              where: WhereDsl.()->Unit
     ) {
         val innerBuilder = WhereDsl().apply(where)
         appendGroup(innerBuilder)
     }
+    
     private fun appendGroup(                                                innerBuilder: WhereDsl
     ) {
         if (innerBuilder.clauses.isEmpty())

@@ -2,6 +2,7 @@
 package com.vankorno.vankornodb.delete
 
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.EntityTable
 import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 
@@ -13,6 +14,11 @@ fun SQLiteDatabase.deleteRows(                                             table
     return delete(table, builder.buildStr(), builder.args.toTypedArray())
 }
 
+
+
+fun <W> SQLiteDatabase.deleteRows(                                         table: EntityTable<*, W>,
+                                                                           where: W.()->Unit,
+): Int = deleteRows(table.name, table.where(where))
 
 
 /** Deletes rows from the specified tables matching the condition. */

@@ -2,11 +2,17 @@
 package com.vankorno.vankornodb.dbManagement.migration.data
 
 import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DslContext
 import com.vankorno.vankornodb.api.EntityColumns
+import com.vankorno.vankornodb.api.EntityDsl
+import com.vankorno.vankornodb.api.EntityTable
+import com.vankorno.vankornodb.api.withDsl
 import com.vankorno.vankornodb.dbManagement.data.CurrSchemaBundle
+import com.vankorno.vankornodb.dbManagement.data.TableInfoCurr
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 import com.vankorno.vankornodb.dbManagement.data.sCol
+import com.vankorno.vankornodb.dbManagement.data.using
 
 data class EntityVersion(
                                   val name: String = "",
@@ -45,7 +51,18 @@ object _EntityVersion : CurrSchemaBundle<EntityVersion>(
     },
 
     withId = { obj, newId -> obj.copy(id = newId) }
-)
+) {
+    fun table(name: String): EntityTable<TableInfoCurr<EntityVersion>, EntityVersionDsl> = (name using this).withDsl(::EntityVersionDsl)
+}
+
+
+class EntityVersionDsl internal constructor(                 context: DslContext<EntityVersionDsl>
+) : EntityDsl<EntityVersion, EntityVersionDsl>(context) {
+    val Name get() = column(CEntityVersion.Name)
+    val Version get() = column(CEntityVersion.Version)
+    val Notes get() = column(CEntityVersion.Notes)
+    val Id get() = column(CEntityVersion.Id)
+}
 
 
 
