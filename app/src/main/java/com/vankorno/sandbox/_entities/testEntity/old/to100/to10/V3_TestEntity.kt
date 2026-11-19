@@ -1,8 +1,15 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
-import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.api.OldEntity
+import com.vankorno.vankornodb.core.dsl.DslContext
+import com.vankorno.vankornodb.core.dsl.EntityColumn
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.core.dsl.withDsl
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
+import com.vankorno.vankornodb.set.dsl.SetDsl
 
 data class V3_TestEntity(
                            override val id: Long = -1L,
@@ -87,50 +94,35 @@ interface V3_TestDslColumns {
     val Float3: EntityColumn<V3_TestDsl, FloatCol>
 }
 
-class V3_TestOrderDsl internal constructor(columns: V3_TestDslColumns) : EntityOrderDsl<V3_TestDsl>(), V3_TestDslColumns by columns
-class V3_TestExtraDsl internal constructor(columns: V3_TestDslColumns) : EntityExtraDsl<V3_TestDsl>(), V3_TestDslColumns by columns
+class V3_TestOrderDsl internal constructor(                            columns: V3_TestDslColumns
+) : OrderDsl<V3_TestDsl, V3_TestOrderDsl>(), V3_TestDslColumns by columns
 
-class V3_TestDsl internal constructor(context: DslContext<V3_TestDsl>) : EntityDsl<V3_TestEntity, V3_TestDsl>(context), V3_TestDslColumns {
-    override val Id get() = column(CV3_Test.Id)
-    override val Name get() = column(CV3_Test.Name)
-    override val Position get() = column(CV3_Test.Position)
-    override val Enabled get() = column(CV3_Test.Enabled)
-    override val Int1 get() = column(CV3_Test.Int1)
-    override val Int2 get() = column(CV3_Test.Int2)
-    override val Int3 get() = column(CV3_Test.Int3)
-    override val Str1 get() = column(CV3_Test.Str1)
-    override val Str2 get() = column(CV3_Test.Str2)
-    override val Str3 get() = column(CV3_Test.Str3)
-    override val Bool1 get() = column(CV3_Test.Bool1)
-    override val Bool2 get() = column(CV3_Test.Bool2)
-    override val Bool3 get() = column(CV3_Test.Bool3)
-    override val Long1 get() = column(CV3_Test.Long1)
-    override val Long2 get() = column(CV3_Test.Long2)
-    override val Long3 get() = column(CV3_Test.Long3)
-    override val Float1 get() = column(CV3_Test.Float1)
-    override val Float2 get() = column(CV3_Test.Float2)
-    override val Float3 get() = column(CV3_Test.Float3)
-}
+class V3_TestExtraDsl internal constructor(                            columns: V3_TestDslColumns
+) : ExtraDsl<V3_TestDsl>(), V3_TestDslColumns by columns
+
+class V3_TestSetDsl(                                                   columns: V3_TestDslColumns
+) : SetDsl<V3_TestDsl>(), V3_TestDslColumns by columns
 
 
-private object CV3_Test {
-    val Id = lCol("id", -1L)
-    val Name = sCol("name", "")
-    val Position = lCol("position", 0L)
-    val Enabled = bCol("enabled", false)
-    val Int1 = iCol("int1", 0)
-    val Int2 = iCol("int2", 0)
-    val Int3 = iCol("int3", 0)
-    val Str1 = sCol("str1", "")
-    val Str2 = sCol("str2", "")
-    val Str3 = sCol("str3", "")
-    val Bool1 = bCol("bool1", false)
-    val Bool2 = bCol("bool2", false)
-    val Bool3 = bCol("bool3", false)
-    val Long1 = lCol("long1", 0L)
-    val Long2 = lCol("long2", 0L)
-    val Long3 = lCol("long3", 0L)
-    val Float1 = fCol("float1", 0F)
-    val Float2 = fCol("float2", 0F)
-    val Float3 = fCol("float3", 0F)
+class V3_TestDsl internal constructor(                     context: DslContext<V3_TestDsl>
+) : WhereDsl<V3_TestDsl>(context), V3_TestDslColumns {
+    override val Id get() = column(lCol("id", -1L))
+    override val Name get() = column(sCol("name", ""))
+    override val Position get() = column(lCol("position", 0L))
+    override val Enabled get() = column(bCol("enabled", false))
+    override val Int1 get() = column(iCol("int1", 0))
+    override val Int2 get() = column(iCol("int2", 0))
+    override val Int3 get() = column(iCol("int3", 0))
+    override val Str1 get() = column(sCol("str1", ""))
+    override val Str2 get() = column(sCol("str2", ""))
+    override val Str3 get() = column(sCol("str3", ""))
+    override val Bool1 get() = column(bCol("bool1", false))
+    override val Bool2 get() = column(bCol("bool2", false))
+    override val Bool3 get() = column(bCol("bool3", false))
+    override val Long1 get() = column(lCol("long1", 0L))
+    override val Long2 get() = column(lCol("long2", 0L))
+    override val Long3 get() = column(lCol("long3", 0L))
+    override val Float1 get() = column(fCol("float1", 0F))
+    override val Float2 get() = column(fCol("float2", 0F))
+    override val Float3 get() = column(fCol("float3", 0F))
 }

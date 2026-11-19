@@ -5,7 +5,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.comma
 
 internal fun Any?.toWhereArg(): String = if (this is Boolean) (if (this) "1" else "0") else toString()
 
-abstract class WhereDslBase() {
+internal class WhereDslBase {
     val clauses = mutableListOf<String>()
     val args = mutableListOf<String>()
     
@@ -32,10 +32,10 @@ abstract class WhereDslBase() {
     }
     
     
-    internal fun <T> multCompare(                                                 column: String,
-                                                                                operator: String,
-                                                                                  values: Array<T>,
-                                                                                  encode: (T)->String = { it.toString() },
+    internal fun <T> multCompare(                           column: String,
+                                                          operator: String,
+                                                            values: Array<T>,
+                                                            encode: (T)->String = { it.toString() },
     ) {
         clauses.add(
             buildString {
@@ -140,12 +140,3 @@ abstract class WhereDslBase() {
     }
     
 }
-
-
-
-
-
-
-
-
-

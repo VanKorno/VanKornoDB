@@ -1,46 +1,26 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.ExtraDsl
-import com.vankorno.vankornodb.api.JoinDsl
-import com.vankorno.vankornodb.api.OrderDsl
-import com.vankorno.vankornodb.api.WhereDsl
 import com.vankorno.vankornodb.core.data.DbConstants.comma
 import com.vankorno.vankornodb.core.data.ExtraDslHolder
 import com.vankorno.vankornodb.core.data.QueryWithArgs
-import com.vankorno.vankornodb.dbManagement.data.TypedColumn
-import com.vankorno.vankornodb.misc.getColNames
 
 
-internal fun getQuery(                                      table: String,
-                                                          columns: Array<out String> = arrayOf("*"),
-                                                          orderBy: OrderDsl.()->Unit = {},
-                                                            extra: ExtraDsl.()->Unit = {},
-                                                            where: WhereDsl.()->Unit = {},
+internal fun getQuery(                                                     table: String,
+                                                                         columns: Array<out String>,
+                                                                        orderDsl: OrderDsl<*, *>,
+                                                                        extraDsl: ExtraDslHolder,
+                                                                        whereDsl: WhereDslBase,
 ): QueryWithArgs {
-    val extraDsl = ExtraDsl().apply(extra).query
-    val whereDsl = WhereDsl().apply(where)
-    val orderDsl = OrderDsl().apply(orderBy)
-    return getQuery(table, columns, orderDsl, extraDsl, whereDsl)
-}
-
-
-internal fun getQuery(                                       table: String,
-                                                           columns: Array<out String>,
-                                                          orderDsl: OrderDsl,
-                                                          extraDsl: ExtraDslHolder,
-                                                          whereDsl: WhereDsl,
-): QueryWithArgs {
-    val joinDsl = JoinDsl().apply(extraDsl.joins)
     
     val query = buildString {
         append("SELECT ")
         append(columns.joinToString(comma))
         append(" FROM ")
         append(table)
-        if (joinDsl.joins.isNotEmpty()) {
+        if (extraDsl.joins.isNotEmpty()) {
             append(" ")
-            append(joinDsl.buildStr())
+            append(extraDsl.joins.joinToString(" "))
         }
         if (whereDsl.clauses.isNotEmpty()) {
             append(" WHERE ")
@@ -54,7 +34,7 @@ internal fun getQuery(                                       table: String,
             append(" HAVING ")
             append(extraDsl.having)
         }
-        if (orderDsl.orderoids.isNotEmpty()) {
+        if (orderDsl.terms.isNotEmpty()) {
             append(" ORDER BY ")
             append(orderDsl.buildStr())
         }
@@ -71,26 +51,6 @@ internal fun getQuery(                                       table: String,
         }
     }
     
-    val args =  joinDsl.args +
-                whereDsl.args +
-                orderDsl.args
-                // + havingBuilder.args, etc.
-    
+    val args = extraDsl.joinArgs + whereDsl.args + extraDsl.havingArgs + orderDsl.args
     return QueryWithArgs(query, args.toTypedArray())
 }
-
-
-internal fun getQuery(                                      table: String,
-                                                          columns: Array<out TypedColumn<*>>,
-                                                          orderBy: OrderDsl.()->Unit = {},
-                                                            extra: ExtraDsl.()->Unit = {},
-                                                            where: WhereDsl.()->Unit = {},
-): QueryWithArgs = getQuery(table, getColNames(columns), orderBy, extra, where)
-
-
-internal fun getQuery(                                      table: String,
-                                                           column: TypedColumn<*>,
-                                                          orderBy: OrderDsl.()->Unit = {},
-                                                            extra: ExtraDsl.()->Unit = {},
-                                                            where: WhereDsl.()->Unit = {},
-): QueryWithArgs = getQuery(table, arrayOf(column.name), orderBy, extra, where)

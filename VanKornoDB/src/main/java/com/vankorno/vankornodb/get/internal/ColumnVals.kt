@@ -3,20 +3,25 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.api.ExtraDsl
-import com.vankorno.vankornodb.api.OrderDsl
-import com.vankorno.vankornodb.api.WhereDsl
+import com.vankorno.vankornodb.core.dsl.ColumnSelector
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.QueryTable
+import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 /**
  * For internal use with the type-safe getColVals... functions.
  */
-internal inline fun <T> SQLiteDatabase.getColVals(                    table: String,
-                                                                     column: String,
-                                                           noinline orderBy: OrderDsl.()->Unit = {},
-                                                             noinline extra: ExtraDsl.()->Unit = {},
-                                                             noinline where: WhereDsl.()->Unit = {},
-                                                 crossinline getCursorValue: (Cursor)->T,
-): List<T> = baseGetVals(table, arrayOf(column), orderBy, extra, where) { cursor, _ ->
+internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getColVals(
+                                                           table: QueryTable<*, W, O, X>,
+                                                          column: ColumnSelector<W, TypedColumn<R>>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit = {},
+                                                  getCursorValue: (Cursor)->R,
+): List<R> = baseGetVals(
+    table, column, orderBy = orderBy, extra = extra, where = where
+) { cursor, _ ->
     getCursorValue(cursor)
 }.flatten()
 

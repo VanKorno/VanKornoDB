@@ -4,83 +4,62 @@ package com.vankorno.vankornodb.core.dsl
 import com.vankorno.vankornodb.core.data.DbConstants.DESCENDING
 import com.vankorno.vankornodb.core.data.DbConstants.RANDOM
 import com.vankorno.vankornodb.core.data.DbConstants.comma
+import com.vankorno.vankornodb.core.data.OrderWhen
 import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
-import com.vankorno.vankornodb.dbManagement.data.BaseColumn
-import com.vankorno.vankornodb.dbManagement.data.DescendingColumn
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
-import com.vankorno.vankornodb.misc.data.SharedCol.cName
-import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
 
-/**
- *  Internal base — use [com.vankorno.vankornodb.api.OrderDsl] from the api package instead
- */
-open class OrderDslInternal {
-    val orderoids = mutableListOf<String>()
-    val args = mutableListOf<String>()
+@DslInject
+abstract class OrderDsl<W, O : OrderDsl<W, O>> {
+    internal val terms = mutableListOf<String>()
+    internal val args = mutableListOf<String>()
+    internal lateinit var nested: ()->O
+    internal lateinit var context: DslContext<W>
     
-    internal fun buildStr(): String = orderoids.joinToString(comma)
+    internal fun buildStr() = terms.joinToString(comma)
     
-    operator fun AscendingColumn<*>.invoke() {
-        orderoids += this.name
-    }
-    operator fun DescendingColumn.invoke() {
-        orderoids += this.name + DESCENDING
-    }
-    fun AscendingColumn<*>.by() {
-        orderoids += this.name
+    operator fun EntityColumn<W, AscendingColumn<*>>.invoke() = by()
+    fun EntityColumn<W, AscendingColumn<*>>.by() { terms += definition.name }
+    fun EntityColumn<W, AscendingColumn<*>>.flip() { terms += definition.name + DESCENDING }
+    fun EntityColumn<W, AscendingColumn<*>>.flipIf(condition: Boolean) { if (condition) flip() else by() }
+    fun col(vararg columns: EntityColumn<W, *>) { columns.forEach { terms += it.definition.name } }
+    fun flipAll(vararg columns: EntityColumn<W, AscendingColumn<*>>) { columns.forEach { it.flip() } }
+    fun random() { terms += RANDOM }
+    fun orderRandomly() = random()
+    fun raw(vararg expressions: String) { terms.addAll(expressions) }
+    
+    fun and(block: O.()->Unit) {
+        val child = nested().apply(block)
+        terms += child.terms
+        args += child.args
     }
     
-    fun col(                                                              vararg columns: BaseColumn
-    ) {
-        for(col in columns) {
-            orderoids += col.name + if (col is DescendingColumn) DESCENDING else ""
+    fun group(block: O.()->Unit) {
+        val child = nested().apply(block)
+        if (child.terms.isNotEmpty()) {
+            terms += "(${child.buildStr()})"
+            args += child.args
         }
     }
     
-    fun flipAll(vararg columns: AscendingColumn<*>) = columns.forEach { orderoids += it.name + DESCENDING }
+    fun orderWhen(orders: O.()->Unit, whens: W.()->Unit) = OrderWhen(orders, whens)
+    fun orderWhen(column: EntityColumn<W, AscendingColumn<*>>, whens: W.()->Unit) = orderWhen({ column.by() }, whens)
+    fun orderWhen(expression: String, whens: W.()->Unit) = orderWhen({ raw(expression) }, whens)
     
-    fun AscendingColumn<*>.flip() { orderoids += this@flip.name + DESCENDING }
-    
-    fun AscendingColumn<*>.flipIf(                                             condition: Boolean
-    ) {
-        if (condition)
-            this.flip()
-        else
-            col(this)
+    fun When(vararg branches: OrderWhen<W, O>, Else: O.()->Unit = {}) {
+        val sql = StringBuilder("CASE")
+        val bindings = mutableListOf<String>()
+        for (branch in branches) {
+            val predicate = context.table.predicate(context.qualifier, branch.whens)
+            val result = nested().apply(branch.orders)
+            sql.append(" WHEN ${predicate.buildStr()} THEN ${result.buildStr()}")
+            bindings += predicate.args
+            bindings += result.args
+        }
+        val fallback = nested().apply(Else)
+        if (fallback.terms.isNotEmpty()) {
+            sql.append(" ELSE ${fallback.buildStr()}")
+            bindings += fallback.args
+        }
+        terms += sql.append(" END").toString()
+        args += bindings
     }
-    
-    fun raw(vararg strings: String) = strings.forEach { orderoids += it }
-    
-    
-    fun byId() { cID() }
-    fun orderById() { cID() }
-    fun byIdFlipped() { cID.flip() }
-    fun orderByIdFlipped() { cID.flip() }
-    
-    fun byRowId() { cRowId() }
-    fun orderByRowId() { cRowId() }
-    fun byRowIdFlipped() { cRowId.flip() }
-    fun orderByRowIdFlipped() { cRowId.flip() }
-    
-    fun byPosition() { cPosition() }
-    fun orderByPosition() { cPosition() }
-    fun byPositionFlipped() { cPosition.flip() }
-    fun orderByPositionFlipped() { cPosition.flip() }
-    
-    fun byName() { cName() }
-    fun orderByName() { cName() }
-    fun byNameFlipped() { cName.flip() }
-    fun orderByNameFlipped() { cName.flip() }
-    
-    fun random() { orderoids += RANDOM }
-    fun orderRandomly() { orderoids += RANDOM }
-    
-    
-    fun case(encased: String) = "CASE$encased END" // TODO Find where to put
 }
-
-
-
-
-

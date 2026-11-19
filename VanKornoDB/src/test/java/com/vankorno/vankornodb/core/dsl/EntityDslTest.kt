@@ -1,18 +1,22 @@
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.api.CurrEntity
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersionDsl
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
-import org.junit.Assert.*
+import com.vankorno.vankornodb.set.dsl.SetDsl
+import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotSame
+import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class EntityDslTest {
-    private val versions = _EntityVersion.table("Versions")
+    private val versionTable = _EntityVersion.table("Versions")
     
     @Test
     fun `each query clause sees its own operations and the same entity columns`() {
-        val result = versions.query(
+        val result = versionTable.query(
             columns = arrayOf({ Name }),
             orderBy = { Version.flip() },
             extra = {
@@ -25,13 +29,13 @@ class EntityDslTest {
         
         assertEquals("SELECT name FROM Versions WHERE version>? GROUP BY name ORDER BY version DESC LIMIT 1 OFFSET 2", result.query)
         assertArrayEquals(arrayOf("3"), result.args)
-        assertEquals("SELECT * FROM Versions", versions.query(emptyArray(), {}, {}, {}).query)
+        assertEquals("SELECT * FROM Versions", versionTable.query().query)
     }
     
     @Test
     fun `grouping keeps the entity receiver and preserves argument order`() {
         val name = "O'Brien"
-        val result = getQuery(versions.name, where = versions.where {
+        val result = versionTable.query {
             Name equal name
             and {
                 Version greater 2
@@ -39,7 +43,7 @@ class EntityDslTest {
                 or { Notes like "%beta" }
             }
             Id equalAny listOf(10L, 20L)
-        })
+        }
         
         assertEquals("SELECT * FROM Versions WHERE name=? AND (version>? OR (notes LIKE ?)) AND id IN (?, ?)", result.query)
         assertArrayEquals(arrayOf(name, "2", "%beta", "10", "20"), result.args)
@@ -48,7 +52,7 @@ class EntityDslTest {
     @Test
     fun `subquery switches entity for its projection and its conditions`() {
         val flags = FlagSchema.table("Flags")
-        val result = getQuery(versions.name, where = versions.where {
+        val result = versionTable.query {
             Version greater 0
             Id.inSubquery(flags, { OwnerId }) {
                 Active equalAny arrayOf(true, false)
@@ -56,7 +60,7 @@ class EntityDslTest {
             }
             notExists(flags) { Active equal false }
             Notes equalCol Name
-        })
+        }
         
         assertEquals(
             "SELECT * FROM Versions WHERE version>? AND id IN (SELECT ownerId FROM Flags WHERE " +
@@ -69,12 +73,12 @@ class EntityDslTest {
     @Test
     fun `correlated subqueries qualify both sides and group additional predicates`() {
         val flags = FlagSchema.table("Flags")
-        val result = getQuery(versions.name, where = versions.where {
+        val result = versionTable.query {
             exists(subquery(flags, outerColumn = Id, innerColumn = { OwnerId }) {
                 Active equal true
                 or { OwnerId equal 99L }
             })
-        })
+        }
         
         assertEquals(
             "SELECT * FROM Versions WHERE EXISTS (SELECT 1 FROM Flags WHERE Flags.ownerId=Versions.id " +
@@ -99,20 +103,20 @@ class EntityDslTest {
     fun `a reusable predicate gets a fresh builder on every execution`() {
         var version = 4
         val receivers = mutableListOf<EntityVersionDsl>()
-        val predicate = versions.where {
+        val predicate: EntityVersionDsl.()->Unit = {
             receivers += this
             group { Version equal version }
         }
-        val first = getQuery(versions.name, where = predicate)
+        val first = versionTable.query(where = predicate)
         version = 8
-        val second = getQuery(versions.name, where = predicate)
+        val second = versionTable.query(where = predicate)
         
         assertEquals("SELECT * FROM Versions WHERE (version=?)", first.query)
         assertEquals(first.query, second.query)
         assertArrayEquals(arrayOf("4"), first.args)
         assertArrayEquals(arrayOf("8"), second.args)
         assertNotSame(receivers.first(), receivers.last())
-        assertSame(versions.select { Version }, versions.select { Version })
+        assertEquals("version", versionTable.select { Version }.name)
     }
 }
 
@@ -133,15 +137,19 @@ private interface FlagDslColumns {
     val Scores: List<EntityColumn<FlagDsl, IntCol>>
 }
 
-private class FlagOrderDsl internal constructor(columns: FlagDslColumns) : EntityOrderDsl<FlagDsl>(), FlagDslColumns by columns
-private class FlagExtraDsl internal constructor(columns: FlagDslColumns) : EntityExtraDsl<FlagDsl>(), FlagDslColumns by columns
+private class FlagOrderDsl(                                               columns: FlagDslColumns
+) : OrderDsl<FlagDsl, FlagOrderDsl>(), FlagDslColumns by columns
 
-private class FlagDsl(context: DslContext<FlagDsl>) : EntityDsl<Flag, FlagDsl>(context), FlagDslColumns {
-    override val OwnerId = column(lCol("ownerId"))
-    override val Active = column(bCol("active"))
-    override val Scores get() = column(scoreColumns)
-    
-    private companion object {
-        val scoreColumns = iListCol("score", 2)
-    }
+private class FlagExtraDsl(                                               columns: FlagDslColumns
+) : ExtraDsl<FlagDsl>(), FlagDslColumns by columns
+
+private class FlagSetDsl(                                                 columns: FlagDslColumns
+) : SetDsl<FlagDsl>(), FlagDslColumns by columns
+
+
+private class FlagDsl(                     context: DslContext<FlagDsl>
+) : WhereDsl<FlagDsl>(context), FlagDslColumns {
+    override val OwnerId get() = column(lCol("ownerId"))
+    override val Active get() = column(bCol("active"))
+    override val Scores get() = column(iListCol("score", 2))
 }

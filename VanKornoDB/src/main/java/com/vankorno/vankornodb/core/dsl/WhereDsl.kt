@@ -3,284 +3,216 @@ package com.vankorno.vankornodb.core.dsl
 
 import com.vankorno.vankornodb.core.data.DbConstants.IN
 import com.vankorno.vankornodb.core.data.DbConstants.NOT_IN
-import com.vankorno.vankornodb.core.data.DbConstants._ID
-import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.core.data.Subquery
 import com.vankorno.vankornodb.dbManagement.data.*
 
-/**
- *  Internal base — use [com.vankorno.vankornodb.api.WhereDsl] from the api package instead
- */
-@Suppress("unused")
-open class WhereDslInternal : WhereDslBase() {
+@DslInject
+abstract class WhereDsl<W>(private val context: DslContext<W>) {
+    private val builder get() = context.builder
     
-    /** To pass your own condition string. Use with caution! (SQL-injection risk)**/
-    fun rawClause(str: String) {
-        val missingAnd = if (clauses.isNotEmpty()) "AND " else ""
-        clauses.add(missingAnd + str)
+    private fun appendGroup(operator: String, where: W.()->Unit) {
+        val child = context.table.predicate(context.qualifier, where)
+        if (child.clauses.isNotEmpty()) {
+            if (operator.isNotEmpty() && builder.clauses.isNotEmpty())
+                builder.clauses += operator
+            builder.clauses += "(${child.buildStr()})"
+            builder.args += child.args
+        }
     }
     
-    infix fun String.dot(str2: String = "") = this + "." + str2
-    infix fun String.dot(col: BaseColumn): String = "$this.${col.name}"
-    infix fun TableInfoBase<*>.dot(col: BaseColumn): String = "${this.name}.${col.name}"
-    infix fun TableInfoBase<*>.dot(str2: String): String = "${this.name}.$str2"
+    fun rawClause(sql: String, vararg args: String) {
+        builder.clauses += (if (builder.clauses.isEmpty()) "" else "AND ") + sql
+        builder.args += args
+    }
+    
+    private fun likeValues(name: String, values: Array<out String>, positive: Boolean) {
+        builder.multCompareRaw(name, if (positive) " LIKE " else " NOT LIKE ", Array(values.size) { "?" }, positive)
+        builder.args.addAll(values)
+    }
+    
+    protected fun <C : TypedColumn<*>> column(definition: C) = EntityColumn<W, C>(definition)
+    
+    
+    protected fun <C : TypedColumn<*>> column(                               definitions: List<C>
+    ): List<EntityColumn<W, C>> =
+        object : AbstractList<EntityColumn<W, C>>() {
+            override val size get() = definitions.size
+            override fun get(index: Int) = EntityColumn<W, C>(definitions[index])
+        }
     
-    infix fun IntCol.equal(value: Int) = condition(this.name, "=", value.toString())
-    infix fun StrCol.equal(value: String) = condition(this.name, "=", value)
-    infix fun BoolCol.equal(value: Boolean) = condition(this.name, "=", if (value) "1" else "0")
-    infix fun LongCol.equal(value: Long) = condition(this.name, "=", value.toString())
-    infix fun FloatCol.equal(value: Float) = condition(this.name, "=", value.toString())
     
-    infix fun IntCol.notEqual(value: Int) = condition(this.name, "!=", value.toString())
-    infix fun StrCol.notEqual(value: String) = condition(this.name, "!=", value)
-    infix fun BoolCol.notEqual(value: Boolean) = condition(this.name, "!=", if (value) "1" else "0")
-    infix fun LongCol.notEqual(value: Long) = condition(this.name, "!=", value.toString())
-    infix fun FloatCol.notEqual(value: Float) = condition(this.name, "!=", value.toString())
+    fun group(where: W.()->Unit) = appendGroup("", where)
+    fun and(where: W.()->Unit) = appendGroup("AND", where)
+    fun or(where: W.()->Unit) = appendGroup("OR", where)
     
-    infix fun IntCol.greater(value: Int) = condition(this.name, ">", value.toString())
-    infix fun LongCol.greater(value: Long) = condition(this.name, ">", value.toString())
-    infix fun FloatCol.greater(value: Float) = condition(this.name, ">", value.toString())
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.equal(value: T) = builder.condition(definition.name, "=", value.toWhereArg())
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.notEqual(value: T) = builder.condition(definition.name, "!=", value.toWhereArg())
     
-    infix fun IntCol.greaterEqual(value: Int) = condition(this.name, ">=", value.toString())
-    infix fun LongCol.greaterEqual(value: Long) = condition(this.name, ">=", value.toString())
-    infix fun FloatCol.greaterEqual(value: Float) = condition(this.name, ">=", value.toString())
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.greater(value: T) = builder.condition(definition.name, ">", value.toWhereArg())
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.greaterEqual(value: T) = builder.condition(definition.name, ">=", value.toWhereArg())
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.less(value: T) = builder.condition(definition.name, "<", value.toWhereArg())
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.lessEqual(value: T) = builder.condition(definition.name, "<=", value.toWhereArg())
     
-    infix fun IntCol.less(value: Int) = condition(this.name, "<", value.toString())
-    infix fun LongCol.less(value: Long) = condition(this.name, "<", value.toString())
-    infix fun FloatCol.less(value: Float) = condition(this.name, "<", value.toString())
-    
-    infix fun IntCol.lessEqual(value: Int) = condition(this.name, "<=", value.toString())
-    infix fun LongCol.lessEqual(value: Long) = condition(this.name, "<=", value.toString())
-    infix fun FloatCol.lessEqual(value: Float) = condition(this.name, "<=", value.toString())
-    
-    
-    
-    infix fun IntCol.equalCol(otherCol: IntCol) = conditionRaw(this.name, "=", otherCol.name)
-    infix fun StrCol.equalCol(otherCol: StrCol) = conditionRaw(this.name, "=", otherCol.name)
-    infix fun BoolCol.equalCol(otherCol: BoolCol) = conditionRaw(this.name, "=", otherCol.name)
-    infix fun LongCol.equalCol(otherCol: LongCol) = conditionRaw(this.name, "=", otherCol.name)
-    infix fun FloatCol.equalCol(otherCol: FloatCol) = conditionRaw(this.name, "=", otherCol.name)
-    
-    infix fun IntCol.notEqualCol(otherCol: IntCol) = conditionRaw(this.name, "!=", otherCol.name)
-    infix fun StrCol.notEqualCol(otherCol: StrCol) = conditionRaw(this.name, "!=", otherCol.name)
-    infix fun BoolCol.notEqualCol(otherCol: BoolCol) = conditionRaw(this.name, "!=", otherCol.name)
-    infix fun LongCol.notEqualCol(otherCol: LongCol) = conditionRaw(this.name, "!=", otherCol.name)
-    infix fun FloatCol.notEqualCol(otherCol: FloatCol) = conditionRaw(this.name, "!=", otherCol.name)
-    
-    infix fun IntCol.greaterCol(otherCol: IntCol) = conditionRaw(this.name, ">", otherCol.name)
-    infix fun LongCol.greaterCol(otherCol: LongCol) = conditionRaw(this.name, ">", otherCol.name)
-    infix fun FloatCol.greaterCol(otherCol: FloatCol) = conditionRaw(this.name, ">", otherCol.name)
-    
-    infix fun IntCol.greaterEqualCol(otherCol: IntCol) = conditionRaw(this.name, ">=", otherCol.name)
-    infix fun LongCol.greaterEqualCol(otherCol: LongCol) = conditionRaw(this.name, ">=", otherCol.name)
-    infix fun FloatCol.greaterEqualCol(otherCol: FloatCol) = conditionRaw(this.name, ">=", otherCol.name)
-    
-    infix fun IntCol.lessCol(otherCol: IntCol) = conditionRaw(this.name, "<", otherCol.name)
-    infix fun LongCol.lessCol(otherCol: LongCol) = conditionRaw(this.name, "<", otherCol.name)
-    infix fun FloatCol.lessCol(otherCol: FloatCol) = conditionRaw(this.name, "<", otherCol.name)
-    
-    infix fun IntCol.lessEqualCol(otherCol: IntCol) = conditionRaw(this.name, "<=", otherCol.name)
-    infix fun LongCol.lessEqualCol(otherCol: LongCol) = conditionRaw(this.name, "<=", otherCol.name)
-    infix fun FloatCol.lessEqualCol(otherCol: FloatCol) = conditionRaw(this.name, "<=", otherCol.name)
-    
-    
-    infix fun StrCol.like(value: String) = condition(this.name, " LIKE ", value)
-    infix fun StrCol.notLike(value: String) = condition(this.name, " NOT LIKE ", value)
-    
-    infix fun StrCol.likeCol(otherCol: StrCol) = conditionRaw(this.name, " LIKE ", otherCol.name)
-    infix fun StrCol.notLikeCol(otherCol: StrCol) = conditionRaw(this.name, " NOT LIKE ", otherCol.name)
-    
-    
-    fun StrCol.likeAny(vararg values: String) = multCompare(this.name, " LIKE ", values)
-    fun StrCol.notLikeAny(vararg values: String) = multCompare(this.name, " NOT LIKE ", values)
-    
-    fun StrCol.likeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " LIKE ", otherCols.map { it.name }.toTypedArray(), true)
-    fun StrCol.notLikeAnyCol(vararg otherCols: StrCol) = multCompareRaw(this.name, " NOT LIKE ", otherCols.map { it.name }.toTypedArray(), false)
-    
-    
-    
-    infix fun IntCol.equalAny(values: Array<Int>) = multCompare(this.name, IN, values)
-    infix fun StrCol.equalAny(values: Array<String>) = multCompare(this.name, IN, values)
-    infix fun BoolCol.equalAny(values: Array<Boolean>) = multCompare(this.name, IN, values.map { if (it) "1" else "0" }.toTypedArray())
-    infix fun LongCol.equalAny(values: Array<Long>) = multCompare(this.name, IN, values)
-    infix fun FloatCol.equalAny(values: Array<Float>) = multCompare(this.name, IN, values)
-    
-    infix fun IntCol.notEqualAny(values: Array<Int>) = multCompare(this.name, NOT_IN, values)
-    infix fun StrCol.notEqualAny(values: Array<String>) = multCompare(this.name, NOT_IN, values)
-    infix fun BoolCol.notEqualAny(values: Array<Boolean>) = multCompare(this.name, NOT_IN, values.map { if (it) "1" else "0" }.toTypedArray())
-    infix fun LongCol.notEqualAny(values: Array<Long>) = multCompare(this.name, NOT_IN, values)
-    infix fun FloatCol.notEqualAny(values: Array<Float>) = multCompare(this.name, NOT_IN, values)
-    
-    
-    infix fun IntCol.equalAny(values: List<Int>) = this equalAny values.toTypedArray()
-    infix fun StrCol.equalAny(values: List<String>) = this equalAny values.toTypedArray()
-    infix fun BoolCol.equalAny(values: List<Boolean>) = this equalAny values.toTypedArray()
-    infix fun LongCol.equalAny(values: List<Long>) = this equalAny values.toTypedArray()
-    infix fun FloatCol.equalAny(values: List<Float>) = this equalAny values.toTypedArray()
-    
-    infix fun IntCol.notEqualAny(values: List<Int>) = this notEqualAny values.toTypedArray()
-    infix fun StrCol.notEqualAny(values: List<String>) = this notEqualAny values.toTypedArray()
-    infix fun BoolCol.notEqualAny(values: List<Boolean>) = this notEqualAny values.toTypedArray()
-    infix fun LongCol.notEqualAny(values: List<Long>) = this notEqualAny values.toTypedArray()
-    infix fun FloatCol.notEqualAny(values: List<Float>) = this notEqualAny values.toTypedArray()
-    
-    
-    fun IntCol.equalAnyOf(vararg values: Int) = this equalAny values.toTypedArray()
-    fun StrCol.equalAnyOf(vararg values: String) = this equalAny arrayOf(*values)
-    fun BoolCol.equalAnyOf(vararg values: Boolean) = this equalAny values.toTypedArray()
-    fun LongCol.equalAnyOf(vararg values: Long) = this equalAny values.toTypedArray()
-    fun FloatCol.equalAnyOf(vararg values: Float) = this equalAny values.toTypedArray()
-    
-    fun IntCol.notEqualAnyOf(vararg values: Int) = this notEqualAny values.toTypedArray()
-    fun StrCol.notEqualAnyOf(vararg values: String) = this notEqualAny arrayOf(*values)
-    fun BoolCol.notEqualAnyOf(vararg values: Boolean) = this notEqualAny values.toTypedArray()
-    fun LongCol.notEqualAnyOf(vararg values: Long) = this notEqualAny values.toTypedArray()
-    fun FloatCol.notEqualAnyOf(vararg values: Float) = this notEqualAny values.toTypedArray()
-    
-    
-    
-    
-    // ==================================  S U B Q U E R Y  ================================== \\
-    
-    infix fun <T> TypedColumn<T>.equal(subquery: Subquery) = conditionSubquery(this.name, "=", subquery)
-    infix fun <T> TypedColumn<T>.notEqual(subquery: Subquery) = conditionSubquery(this.name, "!=", subquery)
-    
-    infix fun <T : Number> NumberColumn<T>.greater(subquery: Subquery) = conditionSubquery(this.name, ">", subquery)
-    infix fun <T : Number> NumberColumn<T>.greaterEqual(subquery: Subquery) = conditionSubquery(this.name, ">=", subquery)
-    infix fun <T : Number> NumberColumn<T>.less(subquery: Subquery) = conditionSubquery(this.name, "<", subquery)
-    infix fun <T : Number> NumberColumn<T>.lessEqual(subquery: Subquery) = conditionSubquery(this.name, "<=", subquery)
-    
-    infix fun <T> TypedColumn<T>.inSubquery(subquery: Subquery) = subqueryIn(this.name, IN, subquery)
-    infix fun <T> TypedColumn<T>.notInSubquery(subquery: Subquery) = subqueryIn(this.name, NOT_IN, subquery)
-    
-    infix fun <T> TypedColumn<T>.equalAny(subquery: Subquery) = this inSubquery subquery
-    infix fun <T> TypedColumn<T>.notEqualAny(subquery: Subquery) = this notInSubquery subquery
-    
-    
-    // Subquery as receiver (Subquery on the left)
-    infix fun Subquery.equal(value: Int) = subqueryCondition(this, "=", value.toString())
-    infix fun Subquery.equal(value: Long) = subqueryCondition(this, "=", value.toString())
-    infix fun Subquery.equal(value: Float) = subqueryCondition(this, "=", value.toString())
-    infix fun Subquery.equal(value: String) = subqueryCondition(this, "=", value)
-    infix fun Subquery.equal(value: Boolean) = subqueryCondition(this, "=", if (value) "1" else "0")
-    
-    infix fun Subquery.notEqual(value: Int) = subqueryCondition(this, "!=", value.toString())
-    infix fun Subquery.notEqual(value: Long) = subqueryCondition(this, "!=", value.toString())
-    infix fun Subquery.notEqual(value: Float) = subqueryCondition(this, "!=", value.toString())
-    infix fun Subquery.notEqual(value: String) = subqueryCondition(this, "!=", value)
-    infix fun Subquery.notEqual(value: Boolean) = subqueryCondition(this, "!=", if (value) "1" else "0")
-    
-    infix fun Subquery.greater(value: Int) = subqueryCondition(this, ">", value.toString())
-    infix fun Subquery.greater(value: Long) = subqueryCondition(this, ">", value.toString())
-    infix fun Subquery.greater(value: Float) = subqueryCondition(this, ">", value.toString())
-    
-    infix fun Subquery.greaterEqual(value: Int) = subqueryCondition(this, ">=", value.toString())
-    infix fun Subquery.greaterEqual(value: Long) = subqueryCondition(this, ">=", value.toString())
-    infix fun Subquery.greaterEqual(value: Float) = subqueryCondition(this, ">=", value.toString())
-    
-    infix fun Subquery.less(value: Int) = subqueryCondition(this, "<", value.toString())
-    infix fun Subquery.less(value: Long) = subqueryCondition(this, "<", value.toString())
-    infix fun Subquery.less(value: Float) = subqueryCondition(this, "<", value.toString())
-    
-    infix fun Subquery.lessEqual(value: Int) = subqueryCondition(this, "<=", value.toString())
-    infix fun Subquery.lessEqual(value: Long) = subqueryCondition(this, "<=", value.toString())
-    infix fun Subquery.lessEqual(value: Float) = subqueryCondition(this, "<=", value.toString())
-    
-    infix fun Subquery.equalCol(otherCol: BaseColumn) = subqueryConditionRaw(this, "=", otherCol.name)
-    infix fun Subquery.equalCol(otherCol: String) = subqueryConditionRaw(this, "=", otherCol)
-    infix fun Subquery.notEqualCol(otherCol: BaseColumn) = subqueryConditionRaw(this, "!=", otherCol.name)
-    infix fun Subquery.notEqualCol(otherCol: String) = subqueryConditionRaw(this, "!=", otherCol)
-    
-    infix fun Subquery.greaterCol(otherCol: BaseColumn) = subqueryConditionRaw(this, ">", otherCol.name)
-    infix fun Subquery.greaterCol(otherCol: String) = subqueryConditionRaw(this, ">", otherCol)
-    infix fun Subquery.greaterEqualCol(otherCol: BaseColumn) = subqueryConditionRaw(this, ">=", otherCol.name)
-    infix fun Subquery.greaterEqualCol(otherCol: String) = subqueryConditionRaw(this, ">=", otherCol)
-    
-    infix fun Subquery.lessCol(otherCol: BaseColumn) = subqueryConditionRaw(this, "<", otherCol.name)
-    infix fun Subquery.lessCol(otherCol: String) = subqueryConditionRaw(this, "<", otherCol)
-    infix fun Subquery.lessEqualCol(otherCol: BaseColumn) = subqueryConditionRaw(this, "<=", otherCol.name)
-    infix fun Subquery.lessEqualCol(otherCol: String) = subqueryConditionRaw(this, "<=", otherCol)
-    
-    infix fun Subquery.equal(otherSubquery: Subquery) = subqueryConditionSubquery(this, "=", otherSubquery)
-    infix fun Subquery.notEqual(otherSubquery: Subquery) = subqueryConditionSubquery(this, "!=", otherSubquery)
-    
-    
-    
-    
-    // ==================  N O T   T Y P E - S A F E   C O M P A R I S O N  ================== \\
-    
-    /** For comparisons to provided values. The values are automatically put into the arg array. **/
-    
-    infix fun <T> String.equal(value: T) = condition(this, "=", value.toWhereArg())
-    infix fun <T> String.notEqual(value: T) = condition(this, "!=", value.toWhereArg())
-    infix fun <T> String.greater(value: T) = condition(this, ">", value.toString())
-    infix fun <T> String.greaterEqual(value: T) = condition(this, ">=", value.toString())
-    infix fun <T> String.less(value: T) = condition(this, "<", value.toString())
-    infix fun <T> String.lessEqual(value: T) = condition(this, "<=", value.toString())
-    
-    infix fun String.equal(subquery: Subquery) = conditionSubquery(this, "=", subquery)
-    infix fun String.notEqual(subquery: Subquery) = conditionSubquery(this, "!=", subquery)
-    infix fun String.greater(subquery: Subquery) = conditionSubquery(this, ">", subquery)
-    infix fun String.greaterEqual(subquery: Subquery) = conditionSubquery(this, ">=", subquery)
-    infix fun String.less(subquery: Subquery) = conditionSubquery(this, "<", subquery)
-    infix fun String.lessEqual(subquery: Subquery) = conditionSubquery(this, "<=", subquery)
-    
-    infix fun String.inSubquery(subquery: Subquery) = subqueryIn(this, IN, subquery)
-    infix fun String.notInSubquery(subquery: Subquery) = subqueryIn(this, NOT_IN, subquery)
-    
-    infix fun String.equalAny(subquery: Subquery) = this inSubquery subquery
-    infix fun String.notEqualAny(subquery: Subquery) = this notInSubquery subquery
-    
-    
-    /** For comparisons to values from other columns.
-     *  The provided column names aren't treated as values and are not put into the arg array, but put directly inside the query string.
-    **/
-    infix fun String.equalCol(otherCol: String) = conditionRaw(this, "=", otherCol)
-    infix fun String.notEqualCol(otherCol: String) = conditionRaw(this, "!=", otherCol)
-    infix fun String.lessCol(otherCol: String) = conditionRaw(this, "<", otherCol)
-    infix fun String.lessEqualCol(otherCol: String) = conditionRaw(this, "<=", otherCol)
-    infix fun String.greaterCol(otherCol: String) = conditionRaw(this, ">", otherCol)
-    infix fun String.greaterEqualCol(otherCol: String) = conditionRaw(this, ">=", otherCol)
-    
-    infix fun String.equalCol(otherCol: BaseColumn) = conditionRaw(this, "=", otherCol.name)
-    infix fun String.notEqualCol(otherCol: BaseColumn) = conditionRaw(this, "!=", otherCol.name)
-    infix fun String.lessCol(otherCol: BaseColumn) = conditionRaw(this, "<", otherCol.name)
-    infix fun String.lessEqualCol(otherCol: BaseColumn) = conditionRaw(this, "<=", otherCol.name)
-    infix fun String.greaterCol(otherCol: BaseColumn) = conditionRaw(this, ">", otherCol.name)
-    infix fun String.greaterEqualCol(otherCol: BaseColumn) = conditionRaw(this, ">=", otherCol.name)
-    
-    
-    infix fun <T> String.like(value: T) = condition(this, " LIKE ", value.toString())
-    infix fun <T> String.notLike(value: T) = condition(this, " NOT LIKE ", value.toString())
-    
-    infix fun String.likeCol(otherCol: String) = conditionRaw(this, " LIKE ", otherCol)
-    infix fun String.notLikeCol(otherCol: String) = conditionRaw(this, " NOT LIKE ", otherCol)
-    
-    
-    fun <T> String.likeAny(vararg values: T) = multCompare(this, " LIKE ", values)
-    fun <T> String.notLikeAny(vararg values: T) = multCompare(this, " NOT LIKE ", values)
-    
-    fun String.likeAnyCol(vararg otherCols: String) = multCompareRaw(this, " LIKE ", otherCols, true)
-    fun String.notLikeAnyCol(vararg otherCols: String) = multCompareRaw(this, " NOT LIKE ", otherCols, false)
-    
-    fun <T> String.equalAny(vararg values: T) = multCompare(this, IN, values)
-    fun <T> String.notEqualAny(vararg values: T) = multCompare(this, NOT_IN, values)
-    
-    
-    
-    
-    // ===============================  C O N V E N I E N C E  =============================== \\
-    
-    var ID: Long
-        get() = error("id is write-only")
-        set(value) { whereId(value) }
-    
-    var Name: String
-        get() = error("Name is write-only")
-        set(value) { whereName(value) }
-    
-    fun whereId(id: Long) { condition(_ID, "=", id.toString()) }
-    
-    fun whereName(name: String) { condition(_Name, "=", name) }
-    
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.equalCol(other: EntityColumn<W, AscendingColumn<T>>) = builder.conditionRaw(definition.name, "=", other.definition.name)
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.notEqualCol(other: EntityColumn<W, AscendingColumn<T>>) = builder.conditionRaw(definition.name, "!=", other.definition.name)
+    
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.greaterCol(other: EntityColumn<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, ">", other.definition.name)
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.greaterEqualCol(other: EntityColumn<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, ">=", other.definition.name)
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.lessCol(other: EntityColumn<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, "<", other.definition.name)
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.lessEqualCol(other: EntityColumn<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, "<=", other.definition.name)
+    
+    infix fun EntityColumn<W, StrCol>.like(value: String) = builder.condition(definition.name, " LIKE ", value.toWhereArg())
+    infix fun EntityColumn<W, StrCol>.notLike(value: String) = builder.condition(definition.name, " NOT LIKE ", value.toWhereArg())
+    infix fun EntityColumn<W, StrCol>.likeCol(other: EntityColumn<W, StrCol>) = builder.conditionRaw(definition.name, " LIKE ", other.definition.name)
+    infix fun EntityColumn<W, StrCol>.notLikeCol(other: EntityColumn<W, StrCol>) = builder.conditionRaw(definition.name, " NOT LIKE ", other.definition.name)
+    
+    fun EntityColumn<W, StrCol>.likeAny(vararg values: String) = likeValues(definition.name, values, true)
+    fun EntityColumn<W, StrCol>.notLikeAny(vararg values: String) = likeValues(definition.name, values, false)
+    fun EntityColumn<W, StrCol>.likeAnyCol(vararg others: EntityColumn<W, StrCol>) = builder.multCompareRaw(definition.name, " LIKE ", others.map { it.definition.name }.toTypedArray(), true)
+    fun EntityColumn<W, StrCol>.notLikeAnyCol(vararg others: EntityColumn<W, StrCol>) = builder.multCompareRaw(definition.name, " NOT LIKE ", others.map { it.definition.name }.toTypedArray(), false)
+    
+    
+    private fun EntityColumn<W, *>.compareAny(                           operator: String,
+                                                                           values: Array<out Any?>,
+    ) {
+        builder.multCompare(definition.name, operator, values) { it.toWhereArg() }
+    }
+    
+    
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.equalAny(values: Array<out T>) = compareAny(IN, values)
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.notEqualAny(values: Array<out T>) = compareAny(NOT_IN, values)
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.equalAny(values: List<T>) = compareAny(IN, values.toTypedArray<Any?>())
+    infix fun <T> EntityColumn<W, AscendingColumn<T>>.notEqualAny(values: List<T>) = compareAny(NOT_IN, values.toTypedArray<Any?>())
+    fun EntityColumn<W, IntCol>.equalAnyOf(vararg values: Int) = compareAny(IN, values.toTypedArray())
+    fun EntityColumn<W, LongCol>.equalAnyOf(vararg values: Long) = compareAny(IN, values.toTypedArray())
+    fun EntityColumn<W, FloatCol>.equalAnyOf(vararg values: Float) = compareAny(IN, values.toTypedArray())
+    fun EntityColumn<W, BoolCol>.equalAnyOf(vararg values: Boolean) = compareAny(IN, values.toTypedArray())
+    fun EntityColumn<W, StrCol>.equalAnyOf(vararg values: String) = compareAny(IN, values)
+    
+    fun EntityColumn<W, IntCol>.notEqualAnyOf(vararg values: Int) = compareAny(NOT_IN, values.toTypedArray())
+    fun EntityColumn<W, LongCol>.notEqualAnyOf(vararg values: Long) = compareAny(NOT_IN, values.toTypedArray())
+    fun EntityColumn<W, FloatCol>.notEqualAnyOf(vararg values: Float) = compareAny(NOT_IN, values.toTypedArray())
+    fun EntityColumn<W, BoolCol>.notEqualAnyOf(vararg values: Boolean) = compareAny(NOT_IN, values.toTypedArray())
+    fun EntityColumn<W, StrCol>.notEqualAnyOf(vararg values: String) = compareAny(NOT_IN, values)
+    
+    infix fun EntityColumn<W, TypedColumn<*>>.equal(subquery: Subquery) = builder.conditionSubquery(definition.name, "=", subquery)
+    infix fun EntityColumn<W, TypedColumn<*>>.notEqual(subquery: Subquery) = builder.conditionSubquery(definition.name, "!=", subquery)
+    infix fun EntityColumn<W, NumberColumn<*>>.greater(subquery: Subquery) = builder.conditionSubquery(definition.name, ">", subquery)
+    infix fun EntityColumn<W, NumberColumn<*>>.greaterEqual(subquery: Subquery) = builder.conditionSubquery(definition.name, ">=", subquery)
+    infix fun EntityColumn<W, NumberColumn<*>>.less(subquery: Subquery) = builder.conditionSubquery(definition.name, "<", subquery)
+    infix fun EntityColumn<W, NumberColumn<*>>.lessEqual(subquery: Subquery) = builder.conditionSubquery(definition.name, "<=", subquery)
+    infix fun EntityColumn<W, TypedColumn<*>>.inSubquery(subquery: Subquery) = builder.conditionSubquery(definition.name, IN, subquery)
+    infix fun EntityColumn<W, TypedColumn<*>>.notInSubquery(subquery: Subquery) = builder.conditionSubquery(definition.name, NOT_IN, subquery)
+    infix fun EntityColumn<W, TypedColumn<*>>.equalAny(subquery: Subquery) = this inSubquery subquery
+    infix fun EntityColumn<W, TypedColumn<*>>.notEqualAny(subquery: Subquery) = this notInSubquery subquery
+    
+    
+    
+    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.inSubquery(
+                                                  table: QueryTable<*, I, O, X>,
+                                                     column: ColumnSelector<I, TypedColumn<T>>,
+                                                    orderBy: O.()->Unit = {},
+                                                      extra: X.()->Unit = {},
+                                                      where: I.()->Unit = {},
+    ) = this inSubquery subquery(table, column, orderBy, extra, where)
+    
+    
+    
+    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.notInSubquery(
+                                                  table: QueryTable<*, I, O, X>,
+                                                     column: ColumnSelector<I, TypedColumn<T>>,
+                                                    orderBy: O.()->Unit = {},
+                                                      extra: X.()->Unit = {},
+                                                      where: I.()->Unit = {},
+    ) = this notInSubquery subquery(table, column, orderBy, extra, where)
+    
+    
+    
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(                                 table: QueryTable<*, I, O, X>,
+                                                     column: ColumnSelector<I, TypedColumn<*>>,
+                                                    orderBy: O.()->Unit = {},
+                                                      extra: X.()->Unit = {},
+                                                      where: I.()->Unit = {},
+    ): Subquery = com.vankorno.vankornodb.core.dsl.subquery(table, column, orderBy, extra, where)
+    
+    
+    
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(                                 table: QueryTable<*, I, O, X>,
+                                             vararg columns: ColumnSelector<I, TypedColumn<*>>,
+                                                    orderBy: O.()->Unit = {},
+                                                      extra: X.()->Unit = {},
+                                                      where: I.()->Unit = {},
+    ): Subquery = com.vankorno.vankornodb.core.dsl.subquery(table, *columns, orderBy = orderBy, extra = extra, where = where)
+    
+    
+    
+    /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS. */
+    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(                           table: QueryTable<*, I, O, X>,
+                                             outerColumn: EntityColumn<W, TypedColumn<T>>,
+                                             innerColumn: ColumnSelector<I, TypedColumn<T>>,
+                                                  column: ColumnSelector<I, TypedColumn<*>>? = null,
+                                                 orderBy: O.()->Unit = {},
+                                                   extra: X.()->Unit = {},
+                                                   where: I.()->Unit = {},
+    ): Subquery {
+        val outer = context.qualifier
+        val from = table.name
+        val qualifier = if (from.equals(outer, ignoreCase = true)) {
+            if (outer.equals("vk_inner", ignoreCase = true)) "vk_inner2" else "vk_inner"
+        } else from
+        val source = if (qualifier == from) from else "$from AS $qualifier"
+        val innerName = table.select(innerColumn).name
+        val outerName = outerColumn.definition.name
+        val projection = column?.let { table.select(it).name } ?: "1"
+        
+        val predicate = table.predicate(qualifier, where)
+        val correlation = WhereDslBase()
+        correlation.conditionRaw("$qualifier.$innerName", "=", "$outer.$outerName")
+        if (predicate.clauses.isNotEmpty()) {
+            correlation.clauses += "AND (${predicate.buildStr()})"
+            correlation.args += predicate.args
+        }
+        val result = table.render(source, qualifier, arrayOf(projection), correlation, orderBy, extra)
+        return Subquery(result.query, result.args)
+    }
+    
+    
+    fun exists(subquery: Subquery) = rawClause("EXISTS (${subquery.query})", *subquery.args)
+    fun notExists(subquery: Subquery) = rawClause("NOT EXISTS (${subquery.query})", *subquery.args)
+    
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(
+                                                         table: QueryTable<*, I, O, X>,
+                                                       orderBy: O.()->Unit = {},
+                                                         extra: X.()->Unit = {},
+                                                         where: I.()->Unit = {},
+    ) = exists(table.existenceQuery(orderBy, extra, where))
+
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(
+                                                         table: QueryTable<*, I, O, X>,
+                                                       orderBy: O.()->Unit = {},
+                                                         extra: X.()->Unit = {},
+                                                         where: I.()->Unit = {},
+    ) = notExists(table.existenceQuery(orderBy, extra, where))
+
+    infix fun Subquery.equal(value: String) = builder.subqueryCondition(this, "=", value.toWhereArg())
+    infix fun Subquery.equal(value: Boolean) = builder.subqueryCondition(this, "=", value.toWhereArg())
+    infix fun Subquery.equal(value: Number) = builder.subqueryCondition(this, "=", value.toString())
+    
+    infix fun Subquery.notEqual(value: String) = builder.subqueryCondition(this, "!=", value.toWhereArg())
+    infix fun Subquery.notEqual(value: Boolean) = builder.subqueryCondition(this, "!=", value.toWhereArg())
+    infix fun Subquery.notEqual(value: Number) = builder.subqueryCondition(this, "!=", value.toString())
+    
+    infix fun Subquery.greater(value: Number) = builder.subqueryCondition(this, ">", value.toString())
+    infix fun Subquery.greaterEqual(value: Number) = builder.subqueryCondition(this, ">=", value.toString())
+    infix fun Subquery.less(value: Number) = builder.subqueryCondition(this, "<", value.toString())
+    infix fun Subquery.lessEqual(value: Number) = builder.subqueryCondition(this, "<=", value.toString())
+    
+    infix fun Subquery.equal(other: Subquery) = builder.subqueryConditionSubquery(this, "=", other)
+    infix fun Subquery.notEqual(other: Subquery) = builder.subqueryConditionSubquery(this, "!=", other)
+    infix fun Subquery.equalCol(other: EntityColumn<W, *>) = builder.subqueryConditionRaw(this, "=", other.definition.name)
+    infix fun Subquery.notEqualCol(other: EntityColumn<W, *>) = builder.subqueryConditionRaw(this, "!=", other.definition.name)
+    infix fun Subquery.greaterCol(other: EntityColumn<W, *>) = builder.subqueryConditionRaw(this, ">", other.definition.name)
+    infix fun Subquery.greaterEqualCol(other: EntityColumn<W, *>) = builder.subqueryConditionRaw(this, ">=", other.definition.name)
+    infix fun Subquery.lessCol(other: EntityColumn<W, *>) = builder.subqueryConditionRaw(this, "<", other.definition.name)
+    infix fun Subquery.lessEqualCol(other: EntityColumn<W, *>) = builder.subqueryConditionRaw(this, "<=", other.definition.name)
 }

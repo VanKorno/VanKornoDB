@@ -1,73 +1,37 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.core.dsl
 
-import com.vankorno.vankornodb.api.JoinDsl
+import com.vankorno.vankornodb.core.data.DbConstants.comma
 import com.vankorno.vankornodb.core.data.ExtraDslHolder
 
-/**
- *  Internal base — use [com.vankorno.vankornodb.api.ExtraDsl] from the api package instead
- */
-@Suppress("unused")
-open class ExtraDslInternal(val query: ExtraDslHolder = ExtraDslHolder()) {
+@DslInject
+abstract class ExtraDsl<W> {
+    internal val query = ExtraDslHolder()
+    internal lateinit var context: DslContext<W>
     
-    fun joins(joinDsl: JoinDsl.()->Unit) { query.joins = joinDsl }
-    
-    var joins: JoinDsl.() -> Unit
-        get() = query.joins
-        set(value) { query.joins = value }
-    
-    
-    fun groupBy(by: String) { query.groupBy = by }
-    
-    var groupBy: String
-        get() = query.groupBy
-        set(value) { query.groupBy = value }
-    
-    
-    fun having(having: String) { query.having = having }
-    
-    var having: String
-        get() = query.having
-        set(value) { query.having = value }
-    
-    
-    fun limit(limit: Int) { query.limit = limit }
-    
-    var limit: Int?
-        get() = query.limit
-        set(value) { query.limit = value }
-    
-    
-    fun offset(offset: Int) { query.offset = offset }
-    
-    var offset: Int?
-        get() = query.offset
-        set(value) { query.offset = value }
-    
-    
-    fun customEnd(queryStr: String) { query.customEnd = queryStr }
-    
-    var customEnd: String
-        get() = query.customEnd
-        set(value) { query.customEnd = value }
-    
-    
-    
-    fun applyDsl(                                                     joins: JoinDsl.()->Unit = {},
-                                                                    groupBy: String = "",
-                                                                     having: String = "",
-                                                                      limit: Int? = null,
-                                                                     offset: Int? = null,
-                                                                  customEnd: String = "",
-    ) {
-        this.joins(joins)
-        if (groupBy.isNotBlank()) this.groupBy(groupBy)
-        if (having.isNotBlank()) this.having(having)
-        if (limit != null) this.limit(limit)
-        if (offset != null) this.offset(offset)
-        if (customEnd.isNotBlank()) this.customEnd(customEnd)
+    fun joins(block: JoinDsl<W>.()->Unit) {
+        val join = JoinDsl(context).apply(block)
+        query.joins += join.clauses
+        query.joinArgs += join.args
     }
+    
+    fun groupBy(vararg columns: EntityColumn<W, *>) { query.groupBy = columns.joinToString(comma) { it.definition.name } }
+    fun having(block: W.()->Unit) {
+        val predicate = context.table.predicate(context.qualifier, block)
+        query.having = predicate.buildStr()
+        query.havingArgs = predicate.args.toTypedArray()
+    }
+    
+    fun groupByRaw(expression: String) { query.groupBy = expression }
+    fun havingRaw(expression: String, vararg args: String) {
+        query.having = expression
+        query.havingArgs = arrayOf(*args)
+    }
+    
+    var limit by query::limit
+    var offset by query::offset
+    var customEnd by query::customEnd
+    fun limit(value: Int) { limit = value }
+    fun offset(value: Int) { offset = value }
+    fun customEnd(sql: String) { customEnd = sql }
 }
-
-
-

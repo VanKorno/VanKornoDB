@@ -1,8 +1,11 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.migration.data
 
-import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.EntityColumns
+import com.vankorno.vankornodb.core.dsl.*
 import com.vankorno.vankornodb.dbManagement.data.*
+import com.vankorno.vankornodb.set.dsl.SetDsl
 
 data class EntityVersion(
                                   val name: String = "",
@@ -54,14 +57,18 @@ interface EntityVersionDslColumns {
 }
 
 class EntityVersionOrderDsl internal constructor(                  columns: EntityVersionDslColumns
-) : EntityOrderDsl<EntityVersionDsl>(), EntityVersionDslColumns by columns
+) : OrderDsl<EntityVersionDsl, EntityVersionOrderDsl>(), EntityVersionDslColumns by columns
 
 class EntityVersionExtraDsl internal constructor(                  columns: EntityVersionDslColumns
-) : EntityExtraDsl<EntityVersionDsl>(), EntityVersionDslColumns by columns
+) : ExtraDsl<EntityVersionDsl>(), EntityVersionDslColumns by columns
+
+
+class EntityVersionSetDsl(                                         columns: EntityVersionDslColumns
+) : SetDsl<EntityVersionDsl>(), EntityVersionDslColumns by columns
 
 
 class EntityVersionDsl internal constructor(                  context: DslContext<EntityVersionDsl>
-) : EntityDsl<EntityVersion, EntityVersionDsl>(context), EntityVersionDslColumns {
+) : WhereDsl<EntityVersionDsl>(context), EntityVersionDslColumns {
     override val Name get() = column(sCol("name", ""))
     override val Version get() = column(iCol("version", 0))
     override val Notes get() = column(sCol("notes", ""))

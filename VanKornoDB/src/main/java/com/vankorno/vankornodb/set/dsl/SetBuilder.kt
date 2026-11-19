@@ -2,6 +2,8 @@
 package com.vankorno.vankornodb.set.dsl
 
 import android.content.ContentValues
+import com.vankorno.vankornodb.core.dsl.DslInject
+import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
@@ -13,93 +15,97 @@ import com.vankorno.vankornodb.set.dsl.data.IntColOp
 import com.vankorno.vankornodb.set.dsl.data.LongColOp
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 
-/**
- *  Internal base — use `SetDsl` from the api package instead
- */
-open class SetDslInternal : SetDslBase () {
+@DslInject
+abstract class SetDsl<W> : SetDslBase<W>() {
     fun setCV(cv: ContentValues) { _ops += SetOp.SetCV(cv) }
     fun setContentValues(cv: ContentValues) = setCV(cv)
     
-    infix fun <T> TypedColumn<T>.setTo(value: T) { _ops += SetOp.Set(this, value) }
-    
-    infix fun String.setTo(value: Any) { _ops += SetOp.SetNoty(this, value) }
-    
-    fun BoolCol.flip() { _ops += SetOp.Flip(this) }
-    fun OFF(col: BoolCol) { _ops += SetOp.Set(col, false) }
-    fun ON(col: BoolCol) { _ops += SetOp.Set(col, true) }
+    infix fun <T> EntityColumn<W, TypedColumn<T>>.setTo(value: T) { _ops += SetOp.Set(definition, value) }
     
     
-    infix fun <T : Number> NumberColumn<T>.add(value: Number) { _ops += SetOp.NumOp(this.name, value, "+") }
-    
-    fun <T : Number> List<NumberColumn<T>>.addToEach(value: Number) { this.forEach { it.add(value) }}
-    
-    infix fun IntCol.sub(value: Number) { add(-value.toInt()) } // TODO Check later
-    infix fun LongCol.sub(value: Number) { add(-value.toLong()) }
-    infix fun FloatCol.sub(value: Number) { add(-value.toFloat()) }
+    fun EntityColumn<W, BoolCol>.flip() { _ops += SetOp.Flip(definition) }
+    fun OFF(col: EntityColumn<W, BoolCol>) { _ops += SetOp.Set(col.definition, false) }
+    fun ON(col: EntityColumn<W, BoolCol>) { _ops += SetOp.Set(col.definition, true) }
     
     
-    infix fun IntCol.mult(value: Number) = iMultDiv(this, value, "*")
-    infix fun IntCol.div(value: Number) = iMultDiv(this, value, "/")
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.add(value: Number) { _ops += SetOp.NumOp(definition.name, value, "+") }
     
-    infix fun LongCol.mult(value: Number) = lMultDiv(this, value, "*")
-    infix fun LongCol.div(value: Number) = lMultDiv(this, value, "/")
+    fun <T : Number> List<EntityColumn<W, NumberColumn<T>>>.addToEach(value: Number) { this.forEach { it.add(value) }}
     
-    infix fun FloatCol.mult(value: Number) = fMultDiv(this, value, "*")
-    infix fun FloatCol.div(value: Number) = fMultDiv(this, value, "/")
-    
-    
-    fun IntCol.abs() { _ops += SetOp.Abs(this.name) }
-    
-    
-    infix fun <T : Number> NumberColumn<T>.capAt(value: Number) { _ops += SetOp.MinMax(this.name, value, false) }
-    infix fun <T : Number> NumberColumn<T>.floorAt(value: Number) { _ops += SetOp.MinMax(this.name, value, true) }
+    @JvmName("subInt")
+    infix fun EntityColumn<W, IntCol>.sub(value: Number) { add(-value.toInt()) } // TODO Check later
+    @JvmName("subLong")
+    infix fun EntityColumn<W, LongCol>.sub(value: Number) { add(-value.toLong()) }
+    @JvmName("subFloat")
+    infix fun EntityColumn<W, FloatCol>.sub(value: Number) { add(-value.toFloat()) }
     
     
-    infix fun IntCol.coerceIn(                                                     range: IntRange
+    @JvmName("multInt")
+    infix fun EntityColumn<W, IntCol>.mult(value: Number) = iMultDiv(definition, value, "*")
+    @JvmName("divInt")
+    infix fun EntityColumn<W, IntCol>.div(value: Number) = iMultDiv(definition, value, "/")
+    
+    @JvmName("multLong")
+    infix fun EntityColumn<W, LongCol>.mult(value: Number) = lMultDiv(definition, value, "*")
+    @JvmName("divLong")
+    infix fun EntityColumn<W, LongCol>.div(value: Number) = lMultDiv(definition, value, "/")
+    
+    @JvmName("multFloat")
+    infix fun EntityColumn<W, FloatCol>.mult(value: Number) = fMultDiv(definition, value, "*")
+    @JvmName("divFloat")
+    infix fun EntityColumn<W, FloatCol>.div(value: Number) = fMultDiv(definition, value, "/")
+    
+    
+    fun EntityColumn<W, IntCol>.abs() { _ops += SetOp.Abs(definition.name) }
+    
+    
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.capAt(value: Number) { _ops += SetOp.MinMax(definition.name, value, false) }
+    infix fun <T : Number> EntityColumn<W, NumberColumn<T>>.floorAt(value: Number) { _ops += SetOp.MinMax(definition.name, value, true) }
+    
+    
+    @JvmName("coerceInInt")
+    infix fun EntityColumn<W, IntCol>.coerceIn(                                                     range: IntRange
     ) {
-        _ops += SetOp.CoerceIn(this.name, range.first, range.last)
+        _ops += SetOp.CoerceIn(definition.name, range.first, range.last)
     }
-    infix fun LongCol.coerceIn(                                                    range: LongRange
+    @JvmName("coerceInLong")
+    infix fun EntityColumn<W, LongCol>.coerceIn(                                                    range: LongRange
     ) {
-        _ops += SetOp.CoerceIn(this.name, range.first, range.last)
+        _ops += SetOp.CoerceIn(definition.name, range.first, range.last)
     }
-    infix fun FloatCol.coerceIn(                              range: ClosedFloatingPointRange<Float>
+    @JvmName("coerceInFloat")
+    infix fun EntityColumn<W, FloatCol>.coerceIn(                              range: ClosedFloatingPointRange<Float>
     ) {
-        _ops += SetOp.CoerceIn(this.name, range.start, range.endInclusive)
+        _ops += SetOp.CoerceIn(definition.name, range.start, range.endInclusive)
     }
     
     
     // ----------------- col-to-col DSL -----------------
     
-    infix fun IntCol.setAs(col: IntCol) { _ops += SetOp.SetAs(this.name, col.name) }
-    infix fun LongCol.setAs(col: LongCol) { _ops += SetOp.SetAs(this.name, col.name) }
-    infix fun FloatCol.setAs(col: FloatCol) { _ops += SetOp.SetAs(this.name, col.name) }
+    @JvmName("setAsInt")
+    infix fun EntityColumn<W, IntCol>.setAs(col: EntityColumn<W, IntCol>) { _ops += SetOp.SetAs(definition.name, col.definition.name) }
+    @JvmName("setAsLong")
+    infix fun EntityColumn<W, LongCol>.setAs(col: EntityColumn<W, LongCol>) { _ops += SetOp.SetAs(definition.name, col.definition.name) }
+    @JvmName("setAsFloat")
+    infix fun EntityColumn<W, FloatCol>.setAs(col: EntityColumn<W, FloatCol>) { _ops += SetOp.SetAs(definition.name, col.definition.name) }
     
-    infix fun BoolCol.setAs(col: BoolCol) { _ops += SetOp.SetAs(this.name, col.name) }
+    @JvmName("setAsBool")
+    infix fun EntityColumn<W, BoolCol>.setAs(col: EntityColumn<W, BoolCol>) { _ops += SetOp.SetAs(definition.name, col.definition.name) }
     
     
-    infix fun IntCol.setAs(colWithOp: IntColOp) {
-        _ops += SetOp.SetAsModified(this.name, colWithOp)
+    @JvmName("setAsInt")
+    infix fun EntityColumn<W, IntCol>.setAs(colWithOp: IntColOp<W>) {
+        _ops += SetOp.SetAsModified(definition.name, colWithOp)
     }
-    infix fun LongCol.setAs(colWithOp: LongColOp) {
-        _ops += SetOp.SetAsModified(this.name, colWithOp)
+    @JvmName("setAsLong")
+    infix fun EntityColumn<W, LongCol>.setAs(colWithOp: LongColOp<W>) {
+        _ops += SetOp.SetAsModified(definition.name, colWithOp)
     }
-    infix fun FloatCol.setAs(colWithOp: FloatColOp) {
-        _ops += SetOp.SetAsModified(this.name, colWithOp)
+    @JvmName("setAsFloat")
+    infix fun EntityColumn<W, FloatCol>.setAs(colWithOp: FloatColOp<W>) {
+        _ops += SetOp.SetAsModified(definition.name, colWithOp)
     }
     
     
     
 }
-
-
-
-
-
-
-
-
-
-
-
-

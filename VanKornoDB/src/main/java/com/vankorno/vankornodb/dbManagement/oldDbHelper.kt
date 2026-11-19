@@ -2,7 +2,6 @@
 package com.vankorno.vankornodb.dbManagement
 
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.add.addEntitiesWithoutIdCheck
@@ -10,8 +9,18 @@ import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
 import com.vankorno.vankornodb.add.addWithNewIDsAndPositions
 import com.vankorno.vankornodb.add.addWithNewIdAndPosition
-import com.vankorno.vankornodb.api.*
+import com.vankorno.vankornodb.api.CurrEntity
+import com.vankorno.vankornodb.api.DbLock
 import com.vankorno.vankornodb.api.DbRuntime.dbLock
+import com.vankorno.vankornodb.api.EntityColumns
+import com.vankorno.vankornodb.api.LiteEntity
+import com.vankorno.vankornodb.api.createTable
+import com.vankorno.vankornodb.api.createTables
+import com.vankorno.vankornodb.core.dsl.ColumnSelector
+import com.vankorno.vankornodb.core.dsl.EntityTable
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateInts
 import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateLongs
@@ -24,6 +33,7 @@ import com.vankorno.vankornodb.get.raw.getRawTableStr
 import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 import com.vankorno.vankornodb.misc.orderByRowId
 import com.vankorno.vankornodb.set.*
+import com.vankorno.vankornodb.set.dsl.SetDsl
 
 
 @Suppress("NOTHING_TO_INLINE", "unused")
@@ -48,69 +58,6 @@ abstract class DbHelperInternal(
     onCreate = onCreate,
     onUpgrade = onUpgrade,
 ) {
-    // ===================================  C U R S O R  =================================== \\
-    
-    
-    
-    
-    // -------------------------   R E T U R N I N G   V A L U E S   ------------------------- \\
-    
-    /** A wrapper fun for [SQLiteDatabase.useCursor] */
-    fun <T> getFromCursor(                                            table: String,
-                                                                    default: T,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                      block: (Cursor)->T,
-    ): T = readWrite(default, "getFromCursor") { db ->
-        db.useCursor(table, orderBy, extra, where, block)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.useCursor] */
-    fun <T> getFromCursor(                                         table: String,
-                                                                 columns: Array<out TypedColumn<*>>,
-                                                                 default: T,
-                                                                 orderBy: OrderDsl.()->Unit = {},
-                                                                   extra: ExtraDsl.()->Unit = {},
-                                                                   where: WhereDsl.()->Unit = {},
-                                                                   block: (Cursor)->T,
-    ): T = readWrite(default, "getFromCursor") { db ->
-        db.useCursor(table, columns, orderBy, extra, where, block)
-    }
-    
-    /** A wrapper fun for [SQLiteDatabase.useCursor] */
-    fun <T> getFromCursor(                                            table: String,
-                                                                     column: TypedColumn<*>,
-                                                                    default: T,
-                                                                    orderBy: OrderDsl.()->Unit = {},
-                                                                      extra: ExtraDsl.()->Unit = {},
-                                                                      where: WhereDsl.()->Unit = {},
-                                                                      block: (Cursor)->T,
-    ): T = readWrite(default, "getFromCursor") { db ->
-        db.useCursor(table, column, orderBy, extra, where, block)
-    }
-    
-    fun <W, O : OrderDsl, X : ExtraDsl, R> getFromCursor(                         table: com.vankorno.vankornodb.api.QueryTable<*, W, O, X>,
-                                                    default: R,
-                                             vararg columns: ColumnSelector<W, TypedColumn<*>>,
-                                                    orderBy: O.()->Unit = {},
-                                                      extra: X.()->Unit = {},
-                                                      where: W.()->Unit = {},
-                                                      block: (Cursor)->R,
-    ): R = readWrite(default, "getFromCursor") { db ->
-        db.useCursor(table, *columns, orderBy = orderBy, extra = extra, where = where, block = block)
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     // ===================================  S E T T E R S  =================================== \\
     
     /** A wrapper fun for [SQLiteDatabase.setInt] */
