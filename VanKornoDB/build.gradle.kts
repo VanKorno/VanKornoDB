@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "com.vankorno.vankornodb"
     compileSdk = 37
+    compileSdkMinor = 1
     
     defaultConfig {
         minSdk = 21

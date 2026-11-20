@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "com.vankorno.sandbox"
     compileSdk = 37
+    compileSdkMinor = 1
     
     defaultConfig {
         applicationId = "com.vankorno.sandbox"
