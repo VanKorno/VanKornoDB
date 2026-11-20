@@ -2,7 +2,11 @@ package com.vankorno.vankornodb.dbManagement
 
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.dbManagement.data.iCol
+import com.vankorno.vankornodb.core.dsl.builderTable
+import com.vankorno.vankornodb.get.getRowCount
+import com.vankorno.vankornodb.get.isTableEmpty
+import com.vankorno.vankornodb.get.tableExists
+import com.vankorno.vankornodb.set.setInt
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -61,7 +65,7 @@ class DbAutoMockingTest {
         assertTrue(dbh.isTableEmpty("TestTable"))
         assertEquals(0, dbh.getRowCount("TestTable"))
         
-        dbh.setInt(42, "TestTable", iCol("score")) { ID = 1L }
+        dbh.setInt(42, builderTable("TestTable").col { Num }) { Id equal 1L }
     }
     
     

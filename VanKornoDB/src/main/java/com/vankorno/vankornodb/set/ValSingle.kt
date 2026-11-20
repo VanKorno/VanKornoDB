@@ -4,8 +4,9 @@ package com.vankorno.vankornodb.set
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
-import com.vankorno.vankornodb.core.dsl.EntityTable
+import com.vankorno.vankornodb.core.dsl.DbColumn
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -15,20 +16,20 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
 
 /** Sets [column] to [value] in matching rows.
  */
-fun <W> Dbh.setInt(                                                value: Int,
-                                                                   table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, IntCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setInt(           value: Int,
+                                                                  column: DbColumn<W, O, X, IntCol>,
                                                                    async: Boolean = false,
                                                                    where: W.()->Unit,
 ) = write("setInt", async) { db ->
-    db.setInt(value, table, column, where)
+    db.setInt(value, column, where)
 }
-fun <W> SQLiteDatabase.setInt(                                     value: Int,
-                                                                   table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, IntCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setInt(
+                                                                   value: Int,
+                                                                  column: DbColumn<W, O, X, IntCol>,
                                                                    where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
+    val table = column.table
+    val values = ContentValues(1).apply { put(table.columnSql(column.selector), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -38,20 +39,20 @@ fun <W> SQLiteDatabase.setInt(                                     value: Int,
 
 /** Sets [column] to [value] in matching rows.
  */
-fun <W> Dbh.setStr(                                                value: String,
-                                                                   table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, StrCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setStr(           value: String,
+                                                                  column: DbColumn<W, O, X, StrCol>,
                                                                    async: Boolean = false,
                                                                    where: W.()->Unit,
 ) = write("setStr", async) { db ->
-    db.setStr(value, table, column, where)
+    db.setStr(value, column, where)
 }
-fun <W> SQLiteDatabase.setStr(                                     value: String,
-                                                                   table: EntityTable<*, W>,
-                                                                  column: ColumnSelector<W, StrCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setStr(
+                                                                   value: String,
+                                                                  column: DbColumn<W, O, X, StrCol>,
                                                                    where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
+    val table = column.table
+    val values = ContentValues(1).apply { put(table.columnSql(column.selector), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -61,20 +62,20 @@ fun <W> SQLiteDatabase.setStr(                                     value: String
 
 /** Sets [column] to [value] in matching rows.
  */
-fun <W> Dbh.setBool(                                              value: Boolean,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BoolCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBool(         value: Boolean,
+                                                                 column: DbColumn<W, O, X, BoolCol>,
                                                                   async: Boolean = false,
                                                                   where: W.()->Unit,
 ) = write("setBool", async) { db ->
-    db.setBool(value, table, column, where)
+    db.setBool(value, column, where)
 }
-fun <W> SQLiteDatabase.setBool(                                   value: Boolean,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BoolCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setBool(
+                                                                  value: Boolean,
+                                                                 column: DbColumn<W, O, X, BoolCol>,
                                                                   where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
+    val table = column.table
+    val values = ContentValues(1).apply { put(table.columnSql(column.selector), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -84,20 +85,20 @@ fun <W> SQLiteDatabase.setBool(                                   value: Boolean
 
 /** Sets [column] to [value] in matching rows.
  */
-fun <W> Dbh.setLong(                                              value: Long,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, LongCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setLong(         value: Long,
+                                                                 column: DbColumn<W, O, X, LongCol>,
                                                                   async: Boolean = false,
                                                                   where: W.()->Unit,
 ) = write("setLong", async) { db ->
-    db.setLong(value, table, column, where)
+    db.setLong(value, column, where)
 }
-fun <W> SQLiteDatabase.setLong(                                   value: Long,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, LongCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setLong(
+                                                                  value: Long,
+                                                                 column: DbColumn<W, O, X, LongCol>,
                                                                   where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
+    val table = column.table
+    val values = ContentValues(1).apply { put(table.columnSql(column.selector), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -107,20 +108,20 @@ fun <W> SQLiteDatabase.setLong(                                   value: Long,
 
 /** Sets [column] to [value] in matching rows.
  */
-fun <W> Dbh.setFloat(                                            value: Float,
-                                                                 table: EntityTable<*, W>,
-                                                                column: ColumnSelector<W, FloatCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setFloat(       value: Float,
+                                                                column: DbColumn<W, O, X, FloatCol>,
                                                                  async: Boolean = false,
                                                                  where: W.()->Unit,
 ) = write("setFloat", async) { db ->
-    db.setFloat(value, table, column, where)
+    db.setFloat(value, column, where)
 }
-fun <W> SQLiteDatabase.setFloat(                                 value: Float,
-                                                                 table: EntityTable<*, W>,
-                                                                column: ColumnSelector<W, FloatCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setFloat(
+                                                                 value: Float,
+                                                                column: DbColumn<W, O, X, FloatCol>,
                                                                  where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
+    val table = column.table
+    val values = ContentValues(1).apply { put(table.columnSql(column.selector), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -130,20 +131,20 @@ fun <W> SQLiteDatabase.setFloat(                                 value: Float,
 
 /** Sets [column] to [value] in matching rows.
  */
-fun <W> Dbh.setBlob(                                              value: ByteArray,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BlobCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBlob(         value: ByteArray,
+                                                                 column: DbColumn<W, O, X, BlobCol>,
                                                                   async: Boolean = false,
                                                                   where: W.()->Unit,
 ) = write("setBlob", async) { db ->
-    db.setBlob(value, table, column, where)
+    db.setBlob(value, column, where)
 }
-fun <W> SQLiteDatabase.setBlob(                                   value: ByteArray,
-                                                                  table: EntityTable<*, W>,
-                                                                 column: ColumnSelector<W, BlobCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setBlob(
+                                                                  value: ByteArray,
+                                                                 column: DbColumn<W, O, X, BlobCol>,
                                                                   where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
+    val table = column.table
+    val values = ContentValues(1).apply { put(table.columnSql(column.selector), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }

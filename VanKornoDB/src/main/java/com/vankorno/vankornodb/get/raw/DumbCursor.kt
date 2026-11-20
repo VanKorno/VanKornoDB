@@ -8,8 +8,8 @@ import com.vankorno.vankornodb.api.Dbh
 
 /** Reads all rows and columns from [table] and closes the cursor after [block] finishes.
  */
-fun Dbh.useCursor(                                                              table: String,
-                                                                                block: (Cursor)->Unit,
+fun Dbh.useCursor(                                                           table: String,
+                                                                             block: (Cursor)->Unit,
 ) = write("useCursor") { db ->
     db.useCursor(table, block)
 }

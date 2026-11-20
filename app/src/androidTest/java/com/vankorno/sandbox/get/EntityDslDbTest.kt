@@ -1,15 +1,19 @@
 package com.vankorno.sandbox.get
 
 import androidx.test.platform.app.InstrumentationRegistry
-import com.vankorno.sandbox._entities.testEntity.CTest.Int1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
+import com.vankorno.vankornodb.delete.deleteRows
+import com.vankorno.vankornodb.get.getEntity
+import com.vankorno.vankornodb.get.getIDs
+import com.vankorno.vankornodb.get.getInt
+import com.vankorno.vankornodb.set.setInt
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.nio.file.Files.exists
 import java.util.UUID
 
 class EntityDslDbTest {
@@ -23,11 +27,11 @@ class EntityDslDbTest {
         
         try {
             val name = "O'Brien"
-            val id = dbh.addEntity(items.info, TestEntity(name = name, int1 = 7))
-            val otherId = dbh.addEntity(items.info, TestEntity(name = "other", int1 = 3))
-            dbh.addEntity(versions.info, EntityVersion(name = name, version = 2))
+            val id = dbh.addEntity(items, TestEntity(name = name, int1 = 7))
+            val otherId = dbh.addEntity(items, TestEntity(name = "other", int1 = 3))
+            dbh.addEntity(versions, EntityVersion(name = name, version = 2))
             
-            assertEquals(7, dbh.getInt(items, { Int1 }) { Name equal name })
+            assertEquals(7, dbh.getInt(items.col { Int1 }) { Name equal name })
             assertEquals(listOf(id), dbh.getIDs(items) {
                 exists(subquery(versions, outerColumn = Name, innerColumn = { Name }) {
                     Version equal 2
@@ -42,12 +46,12 @@ class EntityDslDbTest {
                 Name.inSubquery(versions, { Name }) { Version greater 1 }
             })
             
-            dbh.setInt(9, items, { Int1 }) {
+            dbh.setInt(9, items.col { Int1 }) {
                 Name equal name
                 and { Int1 equalAny listOf(7, 8) }
             }
             assertEquals(9, dbh.getEntity(items) { Id equal id }?.int1)
-            assertEquals(3, dbh.getInt(items, { Int1 }) { Id equal otherId })
+            assertEquals(3, dbh.getInt(items.col { Int1 }) { Id equal otherId })
             
             dbh.deleteRows(items) { Int1 equal 9 }
             assertEquals(listOf(otherId), dbh.getIDs(items) {})

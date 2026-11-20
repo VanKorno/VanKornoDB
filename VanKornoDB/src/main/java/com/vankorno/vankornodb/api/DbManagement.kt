@@ -3,7 +3,6 @@ package com.vankorno.vankornodb.api
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.dbManagement.DbHelperInternal
 import com.vankorno.vankornodb.dbManagement.DbManager
 import com.vankorno.vankornodb.dbManagement.DbReaderWriter
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
