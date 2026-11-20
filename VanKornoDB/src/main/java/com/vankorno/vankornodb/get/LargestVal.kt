@@ -1,60 +1,71 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.get
 
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
+import com.vankorno.vankornodb.core.dsl.DbColumn
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLargestInt(    table: QueryTable<*, W, O, X>,
-                                                                  column: ColumnSelector<W, IntCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLargestInt(
+                                                                  column: DbColumn<W, O, X, IntCol>,
                                                                    where: W.()->Unit = {},
 ): Int = read(0, "getLargestInt") { db ->
-    db.getLargestInt(table, column, where)
+    db.getLargestInt(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLargestInt(
-                                                                   table: QueryTable<*, W, O, X>,
-                                                                  column: ColumnSelector<W, IntCol>,
+                                                                  column: DbColumn<W, O, X, IntCol>,
                                                                    where: W.()->Unit = {},
-): Int {
-    val selected = table.selectionScope().column()
-    val name = if (selected is EntityColumn<*, *>) "\"" + selected.sql.replace("\"", "\"\"") + "\"" else selected.sql
-    val predicate = table.predicate(table.name, where)
-    val result = table.render(table.name, table.name, arrayOf("IFNULL(MAX($name), 0)"), predicate, {}, {})
-    return rawQuery(result.query, result.args).use { cursor ->
-        cursor.moveToFirst()
-        cursor.getInt(0)
-    }
-}
+): Int = getLargestValue(column, where) { it.getInt(0) }
 
 
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLargestLong(
-                                                                  table: QueryTable<*, W, O, X>,
-                                                                 column: ColumnSelector<W, LongCol>,
+                                                                 column: DbColumn<W, O, X, LongCol>,
                                                                   where: W.()->Unit = {},
 ): Long = read(0L, "getLargestLong") { db ->
-    db.getLargestLong(table, column, where)
+    db.getLargestLong(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLargestLong(
-                                                                  table: QueryTable<*, W, O, X>,
-                                                                 column: ColumnSelector<W, LongCol>,
+                                                                 column: DbColumn<W, O, X, LongCol>,
                                                                   where: W.()->Unit = {},
-): Long {
-    val selected = table.selectionScope().column()
-    val name = if (selected is EntityColumn<*, *>) "\"" + selected.sql.replace("\"", "\"\"") + "\"" else selected.sql
+): Long = getLargestValue(column, where) { it.getLong(0) }
+
+
+
+
+private inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getLargestValue(
+                                                                       column: DbColumn<W, O, X, *>,
+                                                               noinline where: W.()->Unit,
+                                                                    readValue: (Cursor)->R,
+): R {
+    val table = column.table
+    val selected = column.selector(table.selectionScope())
+    
+    val name =  if (selected is EntityColumn<*, *>)
+                    "\"" + selected.sql.replace("\"", "\"\"") + "\""
+                else
+                    selected.sql
+    
     val predicate = table.predicate(table.name, where)
-    val result = table.render(table.name, table.name, arrayOf("IFNULL(MAX($name), 0)"), predicate, {}, {})
+    
+    val result = table.render(
+        source = table.name,
+        qualifier = table.name,
+        columns = arrayOf("IFNULL(MAX($name), 0)"),
+        where = predicate,
+        orderBy = {},
+        extra = {}
+    )
     return rawQuery(result.query, result.args).use { cursor ->
         cursor.moveToFirst()
-        cursor.getLong(0)
+        readValue(cursor)
     }
 }

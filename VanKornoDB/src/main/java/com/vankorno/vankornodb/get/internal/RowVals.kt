@@ -3,10 +3,9 @@ package com.vankorno.vankornodb.get.internal
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
+import com.vankorno.vankornodb.core.dsl.DbColumns
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.get.getCursor
 
@@ -14,14 +13,13 @@ import com.vankorno.vankornodb.get.getCursor
  * Reads the first matching row in projection order.
  */
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getRowVals(
-                                                           table: QueryTable<*, W, O, X>,
-                                                  vararg columns: ColumnSelector<W, TypedColumn<R>>,
+                                                           columns: DbColumns<W, O, X, TypedColumn<R>>,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
                                                   getCursorValue: (Cursor, Int)->R,
 ): List<R> = getCursor(
-    table, *columns, orderBy = orderBy, where = where,
+    columns, orderBy = orderBy, where = where,
     extra = {
         extra()
         limit = 1

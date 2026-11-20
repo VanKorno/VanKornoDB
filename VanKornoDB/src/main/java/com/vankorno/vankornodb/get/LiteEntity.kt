@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.toEntity
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
@@ -43,12 +42,10 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLit
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit,
 ): T {
-    val columns = checkedLiteColumns(liteSchema, table.info.schema.columns).map { definition ->
-        val select: ColumnSelector<W, TypedColumn<*>> = { EntityColumn(definition) }
-        select
-    }.toTypedArray()
+    val definitions = checkedLiteColumns(liteSchema, table.info.schema.columns)
+    val columns = table.columns { definitions.map { EntityColumn<W, TypedColumn<*>>(it) } }
     
-    return useCursor(table, *columns, orderBy = orderBy, where = where, extra = {
+    return useCursor(columns, orderBy = orderBy, where = where, extra = {
         extra()
         limit = 1
     }) { cursor ->
@@ -88,12 +85,10 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLit
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
 ): List<T> {
-    val columns = checkedLiteColumns(liteSchema, table.info.schema.columns).map { definition ->
-        val select: ColumnSelector<W, TypedColumn<*>> = { EntityColumn(definition) }
-        select
-    }.toTypedArray()
+    val definitions = checkedLiteColumns(liteSchema, table.info.schema.columns)
+    val columns = table.columns { definitions.map { EntityColumn<W, TypedColumn<*>>(it) } }
     
-    return useCursor(table, *columns, orderBy = orderBy, extra = extra, where = where) { cursor ->
+    return useCursor(columns, orderBy = orderBy, extra = extra, where = where) { cursor ->
         buildList {
             if (cursor.moveToFirst()) {
                 do {

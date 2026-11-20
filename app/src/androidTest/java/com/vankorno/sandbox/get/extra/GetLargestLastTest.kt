@@ -42,29 +42,29 @@ class GetLargestLastTest {
     fun getLargestInt() {
         val table = _Test.table("getLargestInt")
         dbh.getLabRats(table.name)
-        var largest = dbh.getLargestInt(table, { Int1 })
+        var largest = dbh.getLargestInt(table.col { Int1 })
         assertEquals(0, largest)
         
         dbh.setInt(2, table, { Int1 }) { Id equal 2 }
-        largest = dbh.getLargestInt(table, { Int1 })
+        largest = dbh.getLargestInt(table.col { Int1 })
         assertEquals(2, largest)
         
         dbh.set(table) { // Sets all rows
             Int2 setTo 10
         }
-        largest = dbh.getLargestInt(table, { Int2 })
+        largest = dbh.getLargestInt(table.col { Int2 })
         assertEquals(10, largest)
         
         dbh.setInt(1, table, { Int3 }) { Id equal 1 }
         dbh.setInt(2, table, { Int3 }) { Id equal 2 }
         dbh.setInt(3, table, { Int3 }) { Id equal 3 }
-        largest = dbh.getLargestInt(table, { Int3 })
+        largest = dbh.getLargestInt(table.col { Int3 })
         assertEquals(3, largest)
         
         dbh.clearTable(table)
-        largest = dbh.getLargestInt(table, { Int1 })
+        largest = dbh.getLargestInt(table.col { Int1 })
         assertEquals(0, largest)
-        largest = dbh.getLargestInt(table, { Int2 })
+        largest = dbh.getLargestInt(table.col { Int2 })
         assertEquals(0, largest)
         dbh.deleteTable(table)
     }
@@ -79,9 +79,9 @@ class GetLargestLastTest {
         dbh.setLong(50L, table, { Long1 }) { Id equal 1 }
         dbh.setLong(100L, table, { Long1 }) { Id equal 2 }
 
-        val largestForId1 = dbh.getLargestLong(table, { Long1 }) { Id equal 1 }
-        val largestForId2 = dbh.getLargestLong(table, { Long1 }) { Id equal 2 }
-        val largestForNonExistent = dbh.getLargestLong(table, { Long1 }) { Id equal 999 }
+        val largestForId1 = dbh.getLargestLong(table.col { Long1 }) { Id equal 1 }
+        val largestForId2 = dbh.getLargestLong(table.col { Long1 }) { Id equal 2 }
+        val largestForNonExistent = dbh.getLargestLong(table.col { Long1 }) { Id equal 999 }
         assertEquals(50L, largestForId1)
         assertEquals(100L, largestForId2)
         assertEquals(0L, largestForNonExistent)
@@ -90,9 +90,9 @@ class GetLargestLastTest {
         dbh.setInt(25, table, { Int1 }) { Id equal 1 }
         dbh.setInt(75, table, { Int1 }) { Id equal 2 }
 
-        val largestIntForId1 = dbh.getLargestInt(table, { Int1 }) { Id equal 1 }
-        val largestIntForId2 = dbh.getLargestInt(table, { Int1 }) { Id equal 2 }
-        val largestIntForNonExistent = dbh.getLargestInt(table, { Int1 }) { Id equal 999 }
+        val largestIntForId1 = dbh.getLargestInt(table.col { Int1 }) { Id equal 1 }
+        val largestIntForId2 = dbh.getLargestInt(table.col { Int1 }) { Id equal 2 }
+        val largestIntForNonExistent = dbh.getLargestInt(table.col { Int1 }) { Id equal 999 }
         assertEquals(25, largestIntForId1)
         assertEquals(75, largestIntForId2)
         assertEquals(0, largestIntForNonExistent)
@@ -146,12 +146,12 @@ class GetLargestLastTest {
     private fun testIdPosition(                                                tableName: String
     ) {
         val table = _Test.table(tableName)
-        val lastId = dbh.getLargestLong(table, { Id })
+        val lastId = dbh.getLargestLong(table.col { Id })
         val lastId2 = dbh.getLastId(table)
         assertEquals(ratQuant, lastId)
         assertEquals(ratQuant, lastId2)
         
-        val lastPosition = dbh.getLargestLong(table, { Position })
+        val lastPosition = dbh.getLargestLong(table.col { Position })
         val lastPosition2 = dbh.getLastPosition(table)
         assertEquals(ratQuant, lastPosition)
         assertEquals(ratQuant, lastPosition2)
@@ -161,9 +161,9 @@ class GetLargestLastTest {
     private fun test0L(                                                        tableName: String
     ) {
         val table = _Test.table(tableName)
-        val largestLong1 = dbh.getLargestLong(table, { Long1 })
-        val largestLong2 = dbh.getLargestLong(table, { Long2 })
-        val largestLong3 = dbh.getLargestLong(table, { Long3 })
+        val largestLong1 = dbh.getLargestLong(table.col { Long1 })
+        val largestLong2 = dbh.getLargestLong(table.col { Long2 })
+        val largestLong3 = dbh.getLargestLong(table.col { Long3 })
         assertEquals(0L, largestLong1)
         assertEquals(0L, largestLong2)
         assertEquals(0L, largestLong3)
@@ -197,7 +197,7 @@ class GetLargestLastTest {
         val table = _Test.table(tableName)
         val newVal = 10L
         dbh.setLong(newVal, table, { Long1 }) { Id equal 1 }
-        val largestLong1 = dbh.getLargestLong(table, { Long1 })
+        val largestLong1 = dbh.getLargestLong(table.col { Long1 })
         assertEquals(newVal, largestLong1)
     }
     
@@ -210,14 +210,14 @@ class GetLargestLastTest {
         dbh.set(table) { // Sets all rows
             Long2 setTo newVal
         }
-        val largestLong = dbh.getLargestLong(table, { Long2 })
+        val largestLong = dbh.getLargestLong(table.col { Long2 })
         assertEquals(newVal, largestLong)
         
         dbh.setLong(21L, table, { Long2 }) { Id equal 1 }
         dbh.setLong(22L, table, { Long2 }) { Id equal 2 }
         dbh.setLong(23L, table, { Long2 }) { Id equal 3 }
         
-        val largestLong2 = dbh.getLargestLong(table, { Long2 })
+        val largestLong2 = dbh.getLargestLong(table.col { Long2 })
         assertEquals(23L, largestLong2)
     }
     
@@ -227,19 +227,19 @@ class GetLargestLastTest {
         val table = _Test.table(tableName)
         assertTrue(dbh.isTableEmpty(table))
         
-        val lastId = dbh.getLargestLong(table, { Id })
+        val lastId = dbh.getLargestLong(table.col { Id })
         val lastId2 = dbh.getLastId(table)
         assertEquals(0L, lastId)
         assertEquals(0L, lastId2)
         
-        val lastPosition = dbh.getLargestLong(table, { Position })
+        val lastPosition = dbh.getLargestLong(table.col { Position })
         val lastPosition2 = dbh.getLastPosition(table)
         assertEquals(0L, lastPosition)
         assertEquals(0L, lastPosition2)
         
-        val largestLong1 = dbh.getLargestLong(table, { Long1 })
-        val largestLong2 = dbh.getLargestLong(table, { Long2 })
-        val largestLong3 = dbh.getLargestLong(table, { Long3 })
+        val largestLong1 = dbh.getLargestLong(table.col { Long1 })
+        val largestLong2 = dbh.getLargestLong(table.col { Long2 })
+        val largestLong3 = dbh.getLargestLong(table.col { Long3 })
         assertEquals(0L, largestLong1)
         assertEquals(0L, largestLong2)
         assertEquals(0L, largestLong3)

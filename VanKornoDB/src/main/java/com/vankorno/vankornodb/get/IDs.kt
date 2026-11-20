@@ -21,7 +21,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastId(           table: Que
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastId(
                                                                       table: QueryTable<*, W, O, X>,
-): Long = getLargestLong(table, idColumn())
+): Long = getLargestLong(table.col(idColumn()))
 
 
 
@@ -50,7 +50,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getIDs(
                                                                       table: QueryTable<*, W, O, X>,
                                                                     orderBy: O.()->Unit = {},
                                                                       where: W.()->Unit,
-): List<Long> = getColLongs(table, idColumn(), orderBy, where = where)
+): List<Long> = getColLongs(table.col(idColumn()), orderBy, where = where)
 
 
 
@@ -64,7 +64,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getAllIDs(           table: Que
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getAllIDs(
                                                                       table: QueryTable<*, W, O, X>,
                                                                     orderBy: O.()->Unit = {},
-): List<Long> = getColLongs(table, idColumn(), orderBy)
+): List<Long> = getColLongs(table.col(idColumn()), orderBy)
 
 
 
@@ -94,4 +94,4 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextIDs(
                                                                       table: QueryTable<*, W, O, X>,
                                                                       count: Int,
                                                                 reservedIDs: Set<Long> = emptySet(),
-): List<Long> = getNextLongs(table, idColumn(), count, reserved = reservedIDs)
+): List<Long> = getNextLongs(table.col(idColumn()), count, reserved = reservedIDs)

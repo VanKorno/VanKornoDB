@@ -55,7 +55,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.fixDuplicateLongs(
             }
         }
     }
-    val replacements = getNextLongs(table, column.selector, duplicates.size)
+    val replacements = getNextLongs(column, duplicates.size)
     val values = ContentValues(1)
     return duplicates.indices.sumOf { idx ->
         values.put(name, replacements[idx])

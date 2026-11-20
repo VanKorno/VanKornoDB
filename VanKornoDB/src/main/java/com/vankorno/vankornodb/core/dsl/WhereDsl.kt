@@ -8,6 +8,10 @@ import com.vankorno.vankornodb.dbManagement.data.*
 
 @DslInject
 abstract class WhereDsl<W>(private val context: DslContext<W>) {
+    infix fun <C : TypedColumn<*>> SelectedColumn<W, C>.then(next: SelectedColumn<W, C>) = listOf(this, next)
+
+    infix fun <C : TypedColumn<*>> List<SelectedColumn<W, C>>.then(next: SelectedColumn<W, C>) = this + next
+
     private val builder get() = context.builder
     
     private fun appendGroup(                                                  operator: String,

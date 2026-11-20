@@ -24,7 +24,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastPosition(
                                                                       where: W.()->Unit = {},
 ): Long {
     table.info.requirePositionColumn()
-    return getLargestLong(table, { raw(_Position) }, where)
+    return getLargestLong(table.col { raw(_Position) }, where)
 }
 
 
@@ -47,7 +47,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextPositions(
                                                                       where: W.()->Unit = {},
 ): List<Long> {
     table.info.requirePositionColumn()
-    return getNextLongs(table, { raw(_Position) }, count, 1L, reserved, where)
+    return getNextLongs(table.col { raw(_Position) }, count, 1L, reserved, where)
 }
 
 
@@ -68,5 +68,5 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextPosition(
                                                                       where: W.()->Unit = {},
 ): Long {
     table.info.requirePositionColumn()
-    return getNextLong(table, { raw(_Position) }, 1L, reserved, where)
+    return getNextLong(table.col { raw(_Position) }, 1L, reserved, where)
 }

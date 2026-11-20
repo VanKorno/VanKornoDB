@@ -209,7 +209,7 @@ abstract class DbManager(         dbName: String,
     ) {
         for (meta in entityMeta) {
             db.addEntity(
-                _TTTEntityVersion,
+                TEntityVersions,
                 EntityVersion(meta.dbRowName, meta.currVersion)
             )
         }
@@ -217,7 +217,7 @@ abstract class DbManager(         dbName: String,
     
     private fun cleanupVersionTable(                                             db: SQLiteDatabase
     ) {
-        val allNames = db.getColStrings(TEntityVersions, { Name })
+        val allNames = db.getColStrings(TEntityVersions.col { Name })
         if (allNames.isEmpty()) return //\/\/\/\/\/\
         
         val namesToDelete = allNames.filter { name ->
@@ -237,7 +237,7 @@ abstract class DbManager(         dbName: String,
                 continue //\/\/\
             
             db.addEntity(
-                _TTTEntityVersion,
+                TEntityVersions,
                 EntityVersion(dbName, meta.currVersion)
             )
         }

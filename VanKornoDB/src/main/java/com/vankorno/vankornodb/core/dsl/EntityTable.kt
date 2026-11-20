@@ -16,9 +16,7 @@ annotation class DslInject
 
 /** The owner is invariant so columns from different entity scopes cannot be interchanged.
  */
-sealed class SelectedColumn<W, out C : TypedColumn<*>>(internal val sql: String) {
-    infix fun then(next: SelectedColumn<W, *>) = ColumnChain(listOf(this, next))
-}
+sealed class SelectedColumn<W, out C : TypedColumn<*>>(internal val sql: String)
 
 
 class EntityColumn<W, out C : TypedColumn<*>> internal constructor(internal val definition: C) :
@@ -29,22 +27,16 @@ private class RawColumn<W>(sql: String) : SelectedColumn<W, Nothing>(sql)
 /** Emits the supplied SQL verbatim in a column selection. */
 fun <W> raw(sql: String): SelectedColumn<W, Nothing> = RawColumn(sql)
 
-class ColumnChain<W> internal constructor(private val items: List<SelectedColumn<W, *>>) : AbstractList<SelectedColumn<W, *>>() {
-    override val size get() = items.size
-    override fun get(index: Int) = items[index]
 
-    infix fun then(next: SelectedColumn<W, *>) = ColumnChain(items + next)
-}
-
-open class DbColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
+open class DbColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
     internal val table: QueryTable<*, W, O, X>,
-    internal val selectors: Array<out ColumnSelector<W, TypedColumn<*>>>,
+    internal val selectors: Array<out ColumnSelector<W, C>>,
 )
 
 class DbColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
     table: QueryTable<*, W, O, X>,
     internal val selector: ColumnSelector<W, C>,
-) : DbColumns<W, O, X>(table, arrayOf(selector))
+) : DbColumns<W, O, X, C>(table, arrayOf(selector))
 
 
 typealias ColumnSelector<W, C> = W.()->SelectedColumn<W, C>
@@ -114,10 +106,10 @@ open class QueryTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<
         return DbColumn(this) { selected }
     }
     
-    fun columns(block: W.()->List<SelectedColumn<W, *>>): DbColumns<W, O, X> {
+    fun <C : TypedColumn<*>> columns(block: W.()->List<SelectedColumn<W, C>>): DbColumns<W, O, X, C> {
         val selected = selectionScope().block()
         require(selected.isNotEmpty()) { "An explicit projection must contain at least one column" }
-        val selectors = Array<ColumnSelector<W, TypedColumn<*>>>(selected.size) { idx ->
+        val selectors = Array<ColumnSelector<W, C>>(selected.size) { idx ->
             val column = selected[idx]
             { column }
         }
@@ -163,11 +155,11 @@ open class QueryTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<
 
 
 class UpdateTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> internal constructor(
-                                                                                info: I,
-                                                                               where: (DslContext<W>)->W,
-                                                                               order: (W)->O,
-                                                                               extra: (W)->X,
-                                                             internal val setFactory: (W)->S,
+                                                                           info: I,
+                                                                          where: (DslContext<W>)->W,
+                                                                          order: (W)->O,
+                                                                          extra: (W)->X,
+                                                        internal val setFactory: (W)->S,
 ) : QueryTable<I, W, O, X>(info, where, order, extra)
 
 fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> I.withDsl(
@@ -177,8 +169,8 @@ fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : Ex
 ) = QueryTable(this, where, order, extra)
 
 fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> I.withDsl(
-                                                                               where: (DslContext<W>)->W,
-                                                                               order: (W)->O,
-                                                                               extra: (W)->X,
-                                                                                 set: (W)->S,
+                                                                          where: (DslContext<W>)->W,
+                                                                          order: (W)->O,
+                                                                          extra: (W)->X,
+                                                                            set: (W)->S,
 ) = UpdateTable(this, where, order, extra, set)
