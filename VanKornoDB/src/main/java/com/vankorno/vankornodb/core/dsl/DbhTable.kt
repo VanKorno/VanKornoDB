@@ -28,15 +28,15 @@ private class RawColumn<W>(sql: String) : SelectedColumn<W, Nothing>(sql)
 fun <W> raw(sql: String): SelectedColumn<W, Nothing> = RawColumn(sql)
 
 
-open class DbColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
+open class DbhColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
     internal val table: QueryTable<*, W, O, X>,
     internal val selectors: Array<out ColumnSelector<W, C>>,
 )
 
-class DbColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
+class DbhColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
     table: QueryTable<*, W, O, X>,
     internal val selector: ColumnSelector<W, C>,
-) : DbColumns<W, O, X, C>(table, arrayOf(selector))
+) : DbhColumns<W, O, X, C>(table, arrayOf(selector))
 
 
 typealias ColumnSelector<W, C> = W.()->SelectedColumn<W, C>
@@ -45,18 +45,16 @@ typealias ColumnSelector<W, C> = W.()->SelectedColumn<W, C>
 
 /** The library supplies one context to each generated receiver.
  */
-class DslContext<W> internal constructor(                     internal val table: EntityTable<*, W>,
+class DslContext<W> internal constructor(                     internal val table: DbhTable<*, W>,
                                                             internal val builder: WhereDslBase,
                                                           internal val qualifier: String,
 )
 
 
-
 /** A physical table, its mapping, and the factory for its generated entity receiver.
  */
-open class EntityTable<out I : TableInfo<*>, W> internal constructor(
-                                                                     val info: I,
-                                                          internal val factory: (DslContext<W>)->W,
+open class DbhTable<out I : TableInfo<*>, W> internal constructor(     val info: I,
+                                                           internal val factory: (DslContext<W>)->W,
 ) {
     val name get() = info.name
     
@@ -105,20 +103,20 @@ open class QueryTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<
                                                                         factory: (DslContext<W>)->W,
                                                        private val orderFactory: (W)->O,
                                                        private val extraFactory: (W)->X,
-) : EntityTable<I, W>(info, factory) {
-    fun <C : TypedColumn<*>> col(block: ColumnSelector<W, C>): DbColumn<W, O, X, C> {
+) : DbhTable<I, W>(info, factory) {
+    fun <C : TypedColumn<*>> col(block: ColumnSelector<W, C>): DbhColumn<W, O, X, C> {
         val selected = selectionScope().block()
-        return DbColumn(this) { selected }
+        return DbhColumn(this) { selected }
     }
     
-    fun <C : TypedColumn<*>> columns(block: W.()->List<SelectedColumn<W, C>>): DbColumns<W, O, X, C> {
+    fun <C : TypedColumn<*>> columns(block: W.()->List<SelectedColumn<W, C>>): DbhColumns<W, O, X, C> {
         val selected = selectionScope().block()
         require(selected.isNotEmpty()) { "An explicit projection must contain at least one column" }
         val selectors = Array<ColumnSelector<W, C>>(selected.size) { idx ->
             val column = selected[idx]
             { column }
         }
-        return DbColumns(this, selectors)
+        return DbhColumns(this, selectors)
     }
     
     internal fun query(        columns: Array<out ColumnSelector<W, TypedColumn<*>>> = emptyArray(),

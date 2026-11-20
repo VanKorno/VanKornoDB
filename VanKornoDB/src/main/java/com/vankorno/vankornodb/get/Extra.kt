@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.core.dsl.EntityTable
+import com.vankorno.vankornodb.core.dsl.DbhTable
 import java.io.File
 
 fun Dbh.tableExists(                                                               table: String
@@ -19,11 +19,11 @@ fun SQLiteDatabase.tableExists(                                                 
 ).use { it.moveToFirst() }
 
 
-fun Dbh.tableExists(                                                        table: EntityTable<*, *>
+fun Dbh.tableExists(                                                        table: DbhTable<*, *>
 ): Boolean = read(false, "tableExists") { db ->
     db.tableExists(table)
 }
-fun SQLiteDatabase.tableExists(                                             table: EntityTable<*, *>
+fun SQLiteDatabase.tableExists(                                             table: DbhTable<*, *>
 ): Boolean = tableExists(table.name)
 
 
@@ -36,11 +36,11 @@ fun Dbh.isTableEmpty(                                                           
 fun SQLiteDatabase.isTableEmpty(table: String): Boolean = !hasRows(table)
 
 
-fun Dbh.isTableEmpty(                                                       table: EntityTable<*, *>
+fun Dbh.isTableEmpty(                                                       table: DbhTable<*, *>
 ): Boolean = read(true, "isTableEmpty") { db ->
     db.isTableEmpty(table)
 }
-fun SQLiteDatabase.isTableEmpty(table: EntityTable<*, *>): Boolean = isTableEmpty(table.name)
+fun SQLiteDatabase.isTableEmpty(table: DbhTable<*, *>): Boolean = isTableEmpty(table.name)
 
 
 

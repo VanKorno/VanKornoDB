@@ -5,13 +5,13 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.toContentValues
-import com.vankorno.vankornodb.core.dsl.EntityTable
+import com.vankorno.vankornodb.core.dsl.DbhTable
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.misc.wLog
 
 /** Updates matching rows with [entity] and returns the number updated.
  */
-fun <T : DbEntity, W> Dbh.setEntity(                            table: EntityTable<TableInfo<T>, W>,
+fun <T : DbEntity, W> Dbh.setEntity(                            table: DbhTable<TableInfo<T>, W>,
                                                                entity: T,
                                                                 where: W.()->Unit,
 ): Int = readWrite(0, "setEntity") { db ->
@@ -20,7 +20,7 @@ fun <T : DbEntity, W> Dbh.setEntity(                            table: EntityTab
 
 /** Updates matching rows with [entity] and returns the number updated.
  */
-fun <T : DbEntity, W> SQLiteDatabase.setEntity(                 table: EntityTable<TableInfo<T>, W>,
+fun <T : DbEntity, W> SQLiteDatabase.setEntity(                 table: DbhTable<TableInfo<T>, W>,
                                                                entity: T,
                                                                 where: W.()->Unit,
 ): Int {

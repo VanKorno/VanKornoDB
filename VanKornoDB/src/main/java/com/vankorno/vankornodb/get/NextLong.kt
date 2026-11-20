@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbColumn
+import com.vankorno.vankornodb.core.dsl.DbhColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.LongCol
@@ -14,7 +14,7 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
  * or a failed read, including exhaustion. The returned values are candidates and are not reserved.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextLongs(
-                                                                 column: DbColumn<W, O, X, LongCol>,
+                                                                 column: DbhColumn<W, O, X, LongCol>,
                                                                   count: Int,
                                                               startFrom: Long = 1L,
                                                                reserved: Set<Long> = emptySet(),
@@ -24,7 +24,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextLongs(
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextLongs(
-                                                                 column: DbColumn<W, O, X, LongCol>,
+                                                                 column: DbhColumn<W, O, X, LongCol>,
                                                                   count: Int,
                                                               startFrom: Long = 1L,
                                                                reserved: Set<Long> = emptySet(),
@@ -54,7 +54,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextLongs(
 
 /** Returns one available value using the same rules as the bulk getter. The helper fallback is -1L.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextLong(    column: DbColumn<W, O, X, LongCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextLong(    column: DbhColumn<W, O, X, LongCol>,
                                                               startFrom: Long = 1L,
                                                                reserved: Set<Long> = emptySet(),
                                                                   where: W.()->Unit = {},
@@ -65,7 +65,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextLong(    column: DbColum
 /** Returns one available value using the same rules as the bulk getter. The helper fallback is -1L.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextLong(
-                                                                 column: DbColumn<W, O, X, LongCol>,
+                                                                 column: DbhColumn<W, O, X, LongCol>,
                                                               startFrom: Long = 1L,
                                                                reserved: Set<Long> = emptySet(),
                                                                   where: W.()->Unit = {},
@@ -76,7 +76,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextLong(
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFreeLongsFromStart(
-                                                                 column: DbColumn<W, O, X, LongCol>,
+                                                                 column: DbhColumn<W, O, X, LongCol>,
                                                                   count: Int,
                                                               startFrom: Long = 1L,
                                                                reserved: Set<Long> = emptySet(),

@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.toContentValues
-import com.vankorno.vankornodb.core.dsl.EntityTable
+import com.vankorno.vankornodb.core.dsl.DbhTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
@@ -47,14 +47,14 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addEnt
 
 /** Inserts [entity] using its existing ID. Returns the inserted row ID, or -1 on failure.
  */
-fun <T : DbEntity, W> Dbh.addEntityWithoutIdCheck(              table: EntityTable<TableInfo<T>, W>,
+fun <T : DbEntity, W> Dbh.addEntityWithoutIdCheck(              table: DbhTable<TableInfo<T>, W>,
                                                                entity: T,
 ): Long = readWrite(-1L, "addEntityWithoutIdCheck") { db ->
     db.addEntityWithoutIdCheck(table, entity)
 }
 
 fun <T : DbEntity, W> SQLiteDatabase.addEntityWithoutIdCheck(
-                                                                table: EntityTable<TableInfo<T>, W>,
+                                                                table: DbhTable<TableInfo<T>, W>,
                                                                entity: T,
 ): Long {
     val cv = toContentValues(entity, table.info.schema)
@@ -68,14 +68,14 @@ fun <T : DbEntity, W> SQLiteDatabase.addEntityWithoutIdCheck(
 /** Inserts [entities] using their existing IDs.
  * Returns the row IDs in input order, with -1 for each failed insert.
  */
-fun <T : DbEntity, W> Dbh.addEntitiesWithoutIdCheck(            table: EntityTable<TableInfo<T>, W>,
+fun <T : DbEntity, W> Dbh.addEntitiesWithoutIdCheck(            table: DbhTable<TableInfo<T>, W>,
                                                              entities: List<T>,
 ): List<Long> = readWrite(emptyList(), "addEntitiesWithoutIdCheck") { db ->
     db.addEntitiesWithoutIdCheck(table, entities)
 }
 
 fun <T : DbEntity, W> SQLiteDatabase.addEntitiesWithoutIdCheck(
-                                                                table: EntityTable<TableInfo<T>, W>,
+                                                                table: DbhTable<TableInfo<T>, W>,
                                                              entities: List<T>,
 ): List<Long> = entities.map { addEntityWithoutIdCheck(table, it) }
 

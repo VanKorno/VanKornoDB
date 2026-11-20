@@ -120,7 +120,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.inSubquery(
-                                                          column: DbColumn<I, O, X, TypedColumn<T>>,
+                                                          column: DbhColumn<I, O, X, TypedColumn<T>>,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
                                                            where: I.()->Unit = {},
@@ -129,7 +129,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.notInSubquery(
-                                                          column: DbColumn<I, O, X, TypedColumn<T>>,
+                                                          column: DbhColumn<I, O, X, TypedColumn<T>>,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
                                                            where: I.()->Unit = {},
@@ -139,7 +139,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS. */
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
-                                         innerColumn: DbColumn<I, O, X, TypedColumn<T>>,
+                                         innerColumn: DbhColumn<I, O, X, TypedColumn<T>>,
                                              outerColumn: EntityColumn<W, TypedColumn<T>>,
                                                   column: ColumnSelector<I, TypedColumn<*>>? = null,
                                                  orderBy: O.()->Unit = {},

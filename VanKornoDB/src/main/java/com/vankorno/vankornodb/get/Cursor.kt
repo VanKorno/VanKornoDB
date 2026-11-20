@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.get
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbColumns
+import com.vankorno.vankornodb.core.dsl.DbhColumns
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
@@ -36,21 +36,21 @@ inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.useCursor(
 ).use(block)
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(          columns: DbColumns<W, O, X, *>,
-                                                                     orderBy: O.()->Unit = {},
-                                                                       extra: X.()->Unit = {},
-                                                                       where: W.()->Unit = {},
-                                                                       block: (Cursor)->Unit,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(         columns: DbhColumns<W, O, X, *>,
+                                                                    orderBy: O.()->Unit = {},
+                                                                      extra: X.()->Unit = {},
+                                                                      where: W.()->Unit = {},
+                                                                      block: (Cursor)->Unit,
 ) = write("useCursor") { db ->
     db.useCursor(columns, orderBy, extra, where, block)
 }
 
 inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.useCursor(
-                                                                     columns: DbColumns<W, O, X, *>,
-                                                            noinline orderBy: O.()->Unit = {},
-                                                              noinline extra: X.()->Unit = {},
-                                                              noinline where: W.()->Unit = {},
-                                                                       block: (Cursor)->R,
+                                                                    columns: DbhColumns<W, O, X, *>,
+                                                           noinline orderBy: O.()->Unit = {},
+                                                             noinline extra: X.()->Unit = {},
+                                                             noinline where: W.()->Unit = {},
+                                                                      block: (Cursor)->R,
 ): R = getCursor(columns, orderBy, extra, where).use(block)
 
 
@@ -84,21 +84,21 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getCursor(
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> Dbh.getFromCursor(
-                                                                     columns: DbColumns<W, O, X, *>,
-                                                                     default: R,
-                                                                     orderBy: O.()->Unit = {},
-                                                                       extra: X.()->Unit = {},
-                                                                       where: W.()->Unit = {},
-                                                                       block: (Cursor)->R,
+                                                                    columns: DbhColumns<W, O, X, *>,
+                                                                    default: R,
+                                                                    orderBy: O.()->Unit = {},
+                                                                      extra: X.()->Unit = {},
+                                                                      where: W.()->Unit = {},
+                                                                      block: (Cursor)->R,
 ): R = readWrite(default, "getFromCursor") { db ->
     db.useCursor(columns, orderBy, extra, where, block)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getCursor(
-                                                                     columns: DbColumns<W, O, X, *>,
-                                                                     orderBy: O.()->Unit = {},
-                                                                       extra: X.()->Unit = {},
-                                                                       where: W.()->Unit = {},
+                                                                    columns: DbhColumns<W, O, X, *>,
+                                                                    orderBy: O.()->Unit = {},
+                                                                      extra: X.()->Unit = {},
+                                                                      where: W.()->Unit = {},
 ): Cursor {
     val (query, args) = columns.table.query(columns.selectors, orderBy, extra, where)
     return rawQuery(query, args)

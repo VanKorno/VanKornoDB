@@ -2,7 +2,7 @@
 package com.vankorno.vankornodb.set.internal
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.core.dsl.DbColumn
+import com.vankorno.vankornodb.core.dsl.DbhColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.NumberColumn
@@ -10,7 +10,7 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.baseAddTo(
                                                          addend: Number,
-                                                         column: DbColumn<W, O, X, NumberColumn<*>>,
+                                                         column: DbhColumn<W, O, X, NumberColumn<*>>,
                                                           where: W.()->Unit,
 ) {
     if (addend.toDouble() == 0.0) return //\/\/\/\/\/\
@@ -20,7 +20,7 @@ internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.baseAddTo(
 
 
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.modifyColumn(
-                                                          column: DbColumn<W, O, X, TypedColumn<*>>,
+                                                          column: DbhColumn<W, O, X, TypedColumn<*>>,
                                                            where: W.()->Unit,
                                                             args: List<Any>,
                                                       expression: (String)->String,

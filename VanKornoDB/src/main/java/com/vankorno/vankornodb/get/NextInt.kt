@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbColumn
+import com.vankorno.vankornodb.core.dsl.DbhColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.IntCol
@@ -13,7 +13,7 @@ import com.vankorno.vankornodb.dbManagement.data.IntCol
  * [startFrom] must be positive when [count] is positive. Returns an empty list for a nonpositive count
  * or a failed read, including exhaustion. The returned values are candidates and are not reserved.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInts(     column: DbColumn<W, O, X, IntCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInts(     column: DbhColumn<W, O, X, IntCol>,
                                                                    count: Int,
                                                                startFrom: Int = 1,
                                                                 reserved: Set<Int> = emptySet(),
@@ -23,7 +23,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInts(     column: DbColu
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInts(
-                                                                  column: DbColumn<W, O, X, IntCol>,
+                                                                  column: DbhColumn<W, O, X, IntCol>,
                                                                    count: Int,
                                                                startFrom: Int = 1,
                                                                 reserved: Set<Int> = emptySet(),
@@ -50,7 +50,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInts(
 
 /** Returns one available value using the same rules as the bulk getter. The helper fallback is -1.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInt(      column: DbColumn<W, O, X, IntCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInt(      column: DbhColumn<W, O, X, IntCol>,
                                                                startFrom: Int = 1,
                                                                 reserved: Set<Int> = emptySet(),
                                                                    where: W.()->Unit = {},
@@ -59,7 +59,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInt(      column: DbColu
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInt(
-                                                                  column: DbColumn<W, O, X, IntCol>,
+                                                                  column: DbhColumn<W, O, X, IntCol>,
                                                                startFrom: Int = 1,
                                                                 reserved: Set<Int> = emptySet(),
                                                                    where: W.()->Unit = {},
@@ -69,7 +69,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInt(
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFreeIntsFromStart(
-                                                                   column: DbColumn<W, O, X, IntCol>,
+                                                                   column: DbhColumn<W, O, X, IntCol>,
                                                                    count: Int,
                                                                startFrom: Int = 1,
                                                                 reserved: Set<Int> = emptySet(),

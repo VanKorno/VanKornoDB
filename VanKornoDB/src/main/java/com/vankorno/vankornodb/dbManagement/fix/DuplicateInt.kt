@@ -5,7 +5,7 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.data.DbConstants.RowID
-import com.vankorno.vankornodb.core.dsl.DbColumn
+import com.vankorno.vankornodb.core.dsl.DbhColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.raw
@@ -16,15 +16,15 @@ import com.vankorno.vankornodb.get.useCursor
 /** Repairs each bound column and returns the total number of modified rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.fixDuplicateIntsMult(
-                                                           columns: List<DbColumn<W, O, X, IntCol>>,
-                                                             where: W.()->Unit = {},
+                                                          columns: List<DbhColumn<W, O, X, IntCol>>,
+                                                            where: W.()->Unit = {},
 ): Int = readWrite(0, "fixDuplicateIntsMult") { db ->
     db.fixDuplicateIntsMult(columns, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.fixDuplicateIntsMult(
-                                                           columns: List<DbColumn<W, O, X, IntCol>>,
-                                                             where: W.()->Unit = {},
+                                                          columns: List<DbhColumn<W, O, X, IntCol>>,
+                                                            where: W.()->Unit = {},
 ): Int = columns.sumOf { fixDuplicateInts(it, where) }
 
 
@@ -34,14 +34,14 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.fixDuplicateIntsMult
  * values available across the whole table and returns the number of rows updated.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.fixDuplicateInts(
-                                                                  column: DbColumn<W, O, X, IntCol>,
-                                                                   where: W.()->Unit = {},
+                                                                 column: DbhColumn<W, O, X, IntCol>,
+                                                                  where: W.()->Unit = {},
 ): Int = readWrite(0, "fixDuplicateInts") { db -> db.fixDuplicateInts(column, where) }
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.fixDuplicateInts(
-                                                                  column: DbColumn<W, O, X, IntCol>,
-                                                                   where: W.()->Unit = {},
+                                                                 column: DbhColumn<W, O, X, IntCol>,
+                                                                  where: W.()->Unit = {},
 ): Int {
     val table = column.table
     val name = table.columnSql(column.selector)

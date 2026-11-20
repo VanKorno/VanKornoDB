@@ -29,7 +29,7 @@ private val schema = SchemaBundle(BuilderRow::class)
 internal fun builderTable(name: String) =
     (name using schema).withDsl(::BuilderWhere, { BuilderOrder() }, { BuilderExtra() })
 
-internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> DbColumns<W, O, X, *>.query(
+internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> DbhColumns<W, O, X, *>.query(
     orderBy: O.()->Unit = {},
     where: W.()->Unit = {},
 ): Subquery {

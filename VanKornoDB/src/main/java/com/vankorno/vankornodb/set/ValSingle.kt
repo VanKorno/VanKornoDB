@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.set
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbColumn
+import com.vankorno.vankornodb.core.dsl.DbhColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
@@ -17,7 +17,7 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
 /** Sets [column] to [value] in matching rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setInt(           value: Int,
-                                                                  column: DbColumn<W, O, X, IntCol>,
+                                                                  column: DbhColumn<W, O, X, IntCol>,
                                                                    async: Boolean = false,
                                                                    where: W.()->Unit,
 ) = write("setInt", async) { db ->
@@ -25,7 +25,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setInt(           value: Int,
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setInt(
                                                                    value: Int,
-                                                                  column: DbColumn<W, O, X, IntCol>,
+                                                                  column: DbhColumn<W, O, X, IntCol>,
                                                                    where: W.()->Unit = {},
 ) {
     val table = column.table
@@ -40,7 +40,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setInt(
 /** Sets [column] to [value] in matching rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setStr(           value: String,
-                                                                  column: DbColumn<W, O, X, StrCol>,
+                                                                  column: DbhColumn<W, O, X, StrCol>,
                                                                    async: Boolean = false,
                                                                    where: W.()->Unit,
 ) = write("setStr", async) { db ->
@@ -48,7 +48,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setStr(           value: String
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setStr(
                                                                    value: String,
-                                                                  column: DbColumn<W, O, X, StrCol>,
+                                                                  column: DbhColumn<W, O, X, StrCol>,
                                                                    where: W.()->Unit = {},
 ) {
     val table = column.table
@@ -63,7 +63,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setStr(
 /** Sets [column] to [value] in matching rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBool(         value: Boolean,
-                                                                 column: DbColumn<W, O, X, BoolCol>,
+                                                                 column: DbhColumn<W, O, X, BoolCol>,
                                                                   async: Boolean = false,
                                                                   where: W.()->Unit,
 ) = write("setBool", async) { db ->
@@ -71,7 +71,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBool(         value: Boolean
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setBool(
                                                                   value: Boolean,
-                                                                 column: DbColumn<W, O, X, BoolCol>,
+                                                                 column: DbhColumn<W, O, X, BoolCol>,
                                                                   where: W.()->Unit = {},
 ) {
     val table = column.table
@@ -86,7 +86,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setBool(
 /** Sets [column] to [value] in matching rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setLong(         value: Long,
-                                                                 column: DbColumn<W, O, X, LongCol>,
+                                                                 column: DbhColumn<W, O, X, LongCol>,
                                                                   async: Boolean = false,
                                                                   where: W.()->Unit,
 ) = write("setLong", async) { db ->
@@ -94,7 +94,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setLong(         value: Long,
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setLong(
                                                                   value: Long,
-                                                                 column: DbColumn<W, O, X, LongCol>,
+                                                                 column: DbhColumn<W, O, X, LongCol>,
                                                                   where: W.()->Unit = {},
 ) {
     val table = column.table
@@ -109,7 +109,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setLong(
 /** Sets [column] to [value] in matching rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setFloat(       value: Float,
-                                                                column: DbColumn<W, O, X, FloatCol>,
+                                                                column: DbhColumn<W, O, X, FloatCol>,
                                                                  async: Boolean = false,
                                                                  where: W.()->Unit,
 ) = write("setFloat", async) { db ->
@@ -117,7 +117,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setFloat(       value: Float,
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setFloat(
                                                                  value: Float,
-                                                                column: DbColumn<W, O, X, FloatCol>,
+                                                                column: DbhColumn<W, O, X, FloatCol>,
                                                                  where: W.()->Unit = {},
 ) {
     val table = column.table
@@ -132,7 +132,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setFloat(
 /** Sets [column] to [value] in matching rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBlob(         value: ByteArray,
-                                                                 column: DbColumn<W, O, X, BlobCol>,
+                                                                 column: DbhColumn<W, O, X, BlobCol>,
                                                                   async: Boolean = false,
                                                                   where: W.()->Unit,
 ) = write("setBlob", async) { db ->
@@ -140,7 +140,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBlob(         value: ByteArr
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setBlob(
                                                                   value: ByteArray,
-                                                                 column: DbColumn<W, O, X, BlobCol>,
+                                                                 column: DbhColumn<W, O, X, BlobCol>,
                                                                   where: W.()->Unit = {},
 ) {
     val table = column.table
