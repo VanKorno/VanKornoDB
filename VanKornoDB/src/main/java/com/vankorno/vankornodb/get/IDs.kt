@@ -4,7 +4,6 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.data.DbConstants._ID
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
 import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
@@ -12,7 +11,7 @@ import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
 
-internal fun <W> idColumn(): ColumnSelector<W, LongCol> = { EntityColumn(lCol(_ID)) } // TODO
+internal fun <W> idColumn(): W.()->EntityColumn<W, LongCol> = { EntityColumn(lCol(_ID)) }
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastId(           table: QueryTable<*, W, O, X>,
@@ -35,7 +34,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getId(               table: Que
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getId(    table: QueryTable<*, W, O, X>,
                                                                       where: W.()->Unit,
-): Long = getLong(table, idColumn(), where = where)
+): Long = getLong(table.col(idColumn()), where = where)
 
 
 

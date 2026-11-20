@@ -3,7 +3,7 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
+import com.vankorno.vankornodb.core.dsl.DbColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
@@ -15,18 +15,16 @@ import com.vankorno.vankornodb.dbManagement.data.StrCol
 /** Returns a random matching Int value, or -1 when there are no matches.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomInt(
-                                                                  table: QueryTable<*, W, O, X>,
-                                                                 column: ColumnSelector<W, IntCol>,
+                                                                 column: DbColumn<W, O, X, IntCol>,
                                                                   where: W.()->Unit = {},
 ): Int = read(-1, "getRandomInt") { db ->
-    db.getRandomInt(table, column, where)
+    db.getRandomInt(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomInt(
-                                                                  table: QueryTable<*, W, O, X>,
-                                                                 column: ColumnSelector<W, IntCol>,
+                                                                 column: DbColumn<W, O, X, IntCol>,
                                                                   where: W.()->Unit = {},
-): Int = getInt(table, column, orderBy = { random() }, where = where)
+): Int = getInt(column, orderBy = { random() }, where = where)
 
 
 
@@ -34,18 +32,16 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomInt(
 /** Returns a random matching String value, or an empty string when there are no matches.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomString(
-                                                                  table: QueryTable<*, W, O, X>,
-                                                                 column: ColumnSelector<W, StrCol>,
+                                                                 column: DbColumn<W, O, X, StrCol>,
                                                                   where: W.()->Unit = {},
 ): String = read("", "getRandomString") { db ->
-    db.getRandomString(table, column, where)
+    db.getRandomString(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomString(
-                                                                  table: QueryTable<*, W, O, X>,
-                                                                 column: ColumnSelector<W, StrCol>,
+                                                                 column: DbColumn<W, O, X, StrCol>,
                                                                   where: W.()->Unit = {},
-): String = getStr(table, column, orderBy = { random() }, where = where)
+): String = getStr(column, orderBy = { random() }, where = where)
 
 
 
@@ -53,18 +49,16 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomString(
 /** Returns a random matching Long value, or -1 when there are no matches.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomLong(
-                                                                 table: QueryTable<*, W, O, X>,
-                                                                column: ColumnSelector<W, LongCol>,
+                                                                column: DbColumn<W, O, X, LongCol>,
                                                                  where: W.()->Unit = {},
 ): Long = read(-1L, "getRandomLong") { db ->
-    db.getRandomLong(table, column, where)
+    db.getRandomLong(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomLong(
-                                                                 table: QueryTable<*, W, O, X>,
-                                                                column: ColumnSelector<W, LongCol>,
+                                                                column: DbColumn<W, O, X, LongCol>,
                                                                  where: W.()->Unit = {},
-): Long = getLong(table, column, orderBy = { random() }, where = where)
+): Long = getLong(column, orderBy = { random() }, where = where)
 
 
 
@@ -72,18 +66,16 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomLong(
 /** Returns a random matching Float value, or -1 when there are no matches.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomFloat(
-                                                                table: QueryTable<*, W, O, X>,
-                                                               column: ColumnSelector<W, FloatCol>,
+                                                               column: DbColumn<W, O, X, FloatCol>,
                                                                 where: W.()->Unit = {},
 ): Float = read(-1f, "getRandomFloat") { db ->
-    db.getRandomFloat(table, column, where)
+    db.getRandomFloat(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomFloat(
-                                                                table: QueryTable<*, W, O, X>,
-                                                               column: ColumnSelector<W, FloatCol>,
+                                                               column: DbColumn<W, O, X, FloatCol>,
                                                                 where: W.()->Unit = {},
-): Float = getFloat(table, column, orderBy = { random() }, where = where)
+): Float = getFloat(column, orderBy = { random() }, where = where)
 
 
 
@@ -91,7 +83,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomFloat(
 /**
  * Retrieves a single random ID from the specified table.
  *
- * @param table The name of the table to query.
+ * @param table The table to query.
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random ID from the table, or -1 if no rows match.
  */
@@ -105,4 +97,4 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomId(
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomId(
                                                                      table: QueryTable<*, W, O, X>,
                                                                      where: W.()->Unit = {},
-): Long = getRandomLong(table, idColumn(), where)
+): Long = getRandomLong(table.col(idColumn()), where)

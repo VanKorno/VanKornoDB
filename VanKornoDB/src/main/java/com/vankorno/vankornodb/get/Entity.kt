@@ -16,25 +16,25 @@ import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
  *  Returns [default] if no result found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
-                                                     default: T,
-                                                     orderBy: O.()->Unit = {},
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit,
+                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                         default: T,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit,
 ): T = read(default, "getEntity") { db ->
-    db.getEntity(tableInfo, default, orderBy, extra, where)
+    db.getEntity(table, default, orderBy, extra, where)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
-                                                     default: T,
-                                                     orderBy: O.()->Unit = {},
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit,
-): T = getEntity(tableInfo, orderBy, extra, where) ?: run {
+                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                         default: T,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit,
+): T = getEntity(table, orderBy, extra, where) ?: run {
     // region LOG
     if (!suppressEntityGetterErrorLog)
-        eLog("getEntity(): The requested row doesn't exist in ${tableInfo.name}, returning default")
+        eLog("getEntity(): The requested row doesn't exist in ${table.name}, returning default")
     // endregion
     default
 }
@@ -44,20 +44,20 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEnt
  * Returns null if no result found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
-                                                     orderBy: O.()->Unit = {},
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit,
+                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit,
 ): T? = read(null, "getEntity") { db ->
-    db.getEntity(tableInfo, orderBy, extra, where)
+    db.getEntity(table, orderBy, extra, where)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                   tableInfo: QueryTable<TableInfo<T>, W, O, X>,
-                                                     orderBy: O.()->Unit = {},
-                                                       extra: X.()->Unit = {},
-                                                       where: W.()->Unit,
-): T? = useCursor(tableInfo, orderBy = orderBy, where = where,
+                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: W.()->Unit,
+): T? = useCursor(table, orderBy = orderBy, where = where,
     extra = {
         extra()
         limit = 1
@@ -65,5 +65,5 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEnt
 ) { cursor ->
     if (!cursor.moveToFirst()) return null //\/\/\/\/\/\
     
-    cursor.toEntt(tableInfo.info.schema)
+    cursor.toEntt(table.info.schema)
 }
