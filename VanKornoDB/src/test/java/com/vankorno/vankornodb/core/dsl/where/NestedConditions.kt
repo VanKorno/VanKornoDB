@@ -5,6 +5,7 @@ import com.vankorno.vankornodb.TestConstants.cInt
 import com.vankorno.vankornodb.core.data.DbConstants.SELECT_ALL_FROM
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.core.data.DbConstants._Name
+import com.vankorno.vankornodb.core.data.DbConstants._Position
 import com.vankorno.vankornodb.core.dsl.builderTable
 import com.vankorno.vankornodb.core.dsl.testColumn
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
@@ -33,7 +34,7 @@ class NestedConditions {
         
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE +
-                "$_Name=? AND (${cPosition.name}=? OR (${cText.name}=?)) OR (${cActive.name}=? AND (${cInt.name}=?))",
+                "$_Name=? AND (${_Position}=? OR (${cText.name}=?)) OR (${cActive.name}=? AND (${cInt.name}=?))",
             query.query
         )
         assertArrayEquals(
