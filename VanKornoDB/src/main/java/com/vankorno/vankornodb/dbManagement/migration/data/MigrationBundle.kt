@@ -6,11 +6,11 @@ import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 
 data class MigrationBundle(
                 val versionedSchemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
-                         val renameHistory: Map<String, List<RenameRecord>>,
+                         val renameHistory: List<RenameRecord>,
                             val milestones: List<Pair<Int, MilestoneLambdas>>,
 ) {
     companion object {
-        val EMPTY = MigrationBundle(emptyMap(), emptyMap(), emptyList())
+        val EMPTY = MigrationBundle(emptyMap(), emptyList(), emptyList())
     }
 }
 

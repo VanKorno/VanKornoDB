@@ -1,9 +1,8 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
-import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import kotlin.reflect.full.primaryConstructor
+import org.junit.Test
 import kotlin.reflect.typeOf
 
 class MigrationUtilsTest : MigrationUtils() {
@@ -52,4 +51,51 @@ class MigrationUtilsTest : MigrationUtils() {
     }
     
     
+    data class DummyV3(val newA: String, val c: Int) : com.vankorno.vankornodb.dbManagement.data.DbEntityWithId()
+    object SchemaV3 : com.vankorno.vankornodb.dbManagement.data.SchemaBundle<DummyV3>(
+        clazz = DummyV3::class,
+        columns = com.vankorno.vankornodb.dbManagement.data.buildColList {
+            +com.vankorno.vankornodb.dbManagement.data.sCol("newA")
+            +com.vankorno.vankornodb.dbManagement.data.iCol("c")
+        },
+    )
+
+    @Test
+    fun `getRenameSnapshot traces column renames backwards across version steps`() {
+        val history = listOf(
+            com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord(version = 2, from = "oldA", to = "midA"),
+            com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord(version = 3, from = "midA", to = "newA"),
+            com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord(version = 3, from = "b", to = "c"),
+        )
+
+        val snapshot = getRenameSnapshot(
+            fromVer = 1,
+            toVer = 3,
+            renameHistory = history,
+            targetSchemaBundle = SchemaV3,
+        )
+
+        assertEquals("oldA", snapshot["newA"])
+        assertEquals("b", snapshot["c"])
+    }
+
+    @Test
+    fun `getRenameSnapshot ignores deleted columns not present in target schema`() {
+        val history = listOf(
+            com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord(version = 2, from = "oldA", to = "midA"),
+            com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord(version = 3, from = "midA", to = "newA"),
+            com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord(version = 2, from = "deletedCol", to = "tempCol"),
+        )
+
+        val snapshot = getRenameSnapshot(
+            fromVer = 1,
+            toVer = 3,
+            renameHistory = history,
+            targetSchemaBundle = SchemaV3,
+        )
+
+        assertEquals("oldA", snapshot["newA"])
+        assertNull(snapshot["tempCol"])
+        assertNull(snapshot["deletedCol"])
+    }
 }

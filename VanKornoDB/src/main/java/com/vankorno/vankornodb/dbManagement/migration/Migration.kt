@@ -195,7 +195,7 @@ open class MigrationUtils {
     internal fun convertThroughSteps(                original: DbEntity,
                                                    oldVersion: Int,
                                                         steps: List<Int>,
-                                                renameHistory: Map<String, List<RenameRecord>>,
+                                                renameHistory: List<RenameRecord>,
                                                 schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
                                                       lambdas: Map<Int, MilestoneLambdas>,
     ): DbEntity {
@@ -203,9 +203,10 @@ open class MigrationUtils {
         var currentVer = oldVersion
         
         for (nextVer in steps) {
-            val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory)
+            val targetBundle = schemaBundles[nextVer]
+            val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory, targetBundle)
             
-            val nextClass = schemaBundles[nextVer]?.clazz ?: error("Missing entity class for version $nextVer")
+            val nextClass = targetBundle?.clazz ?: error("Missing entity class for version $nextVer")
             
             val previousEntity = currentEntity
             currentEntity = convertEntity(currentEntity, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
@@ -218,47 +219,43 @@ open class MigrationUtils {
     
     
     /**
-     * Builds a snapshot of field renames between two entity versions.
+     * Builds a snapshot of field renames between two entity versions by tracing target columns
+     * backwards through historical rename records.
      *
      * @param fromVer The source version number.
      * @param toVer The target version number.
-     * @param renameHistory A map of current field names to their rename history.
-     * @return A map where each key is the current name and each value is the corresponding old name.
+     * @param renameHistory Chronological list of all registered rename records.
+     * @param targetSchemaBundle Schema bundle of the target version.
+     * @return A map where each key is the target property name and value is its corresponding source property name.
      */
     internal fun getRenameSnapshot(                        fromVer: Int,
                                                              toVer: Int,
-                                                     renameHistory: Map<String, List<RenameRecord>>,
+                                                     renameHistory: List<RenameRecord>,
+                                                targetSchemaBundle: SchemaBundle<out DbEntity>? = null,
     ): Map<String, String> {
         val snapshot = mutableMapOf<String, String>()
+        val relevantRecords = renameHistory
+            .filter { it.version > fromVer && it.version <= toVer }
+            .sortedByDescending { it.version }
         
-        for ((latestName, history) in renameHistory) {
-            val oldName = getNameAtVersion(history, fromVer)
-            val targetName = getNameAtVersion(history, toVer)
-            
-            if (oldName != null && targetName != null && oldName != targetName) {
-                snapshot[targetName] = oldName
+        if (relevantRecords.isEmpty()) return snapshot //\/\/\/\/\/\
+        
+        val targetColNames = targetSchemaBundle?.columns?.map { it.name }
+            ?: targetSchemaBundle?.clazz?.primaryConstructor?.parameters?.mapNotNull { it.name }
+            ?: return snapshot //\/\/\/\/\/\
+        
+        for (targetName in targetColNames) {
+            var currName = targetName
+            for (record in relevantRecords) {
+                if (record.to == currName) {
+                    currName = record.from
+                }
+            }
+            if (currName != targetName) {
+                snapshot[targetName] = currName
             }
         }
         return snapshot
-    }
-    
-    /**
-     * Finds the field name used at or before a specific version in the rename history.
-     *
-     * @param colHistory A list of RenameRecord representing rename history for a single column.
-     * @param version The version to query.
-     * @return The name valid at the given version, or null if not found.
-     */
-    private fun getNameAtVersion(                                    colHistory: List<RenameRecord>,
-                                                                        version: Int,
-    ): String? {
-        var current: String? = colHistory.lastOrNull()?.to ?: return null
-        
-        for (record in colHistory.sortedByDescending { it.version }) {
-            if (record.version <= version) break
-            if (record.to == current) current = record.from
-        }
-        return current
     }
     
     

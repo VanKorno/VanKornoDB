@@ -48,7 +48,7 @@ internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: In
  */
 abstract class MigrationDslInternal {
     val versionedSchemaBundles = mutableMapOf<Int, SchemaBundle<out DbEntity>>()
-    val renameHistory = mutableMapOf<String, MutableList<RenameRecord>>()
+    val renameHistory = mutableListOf<RenameRecord>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
     /**
@@ -69,16 +69,7 @@ abstract class MigrationDslInternal {
         versionedSchemaBundles[version] = schemaBundle
         
         // Renames
-        for ((keyName, colRenames) in verBuilder.pendingRenames) {
-            
-            if (renameHistory.containsKey(keyName)  &&  !renameHistory[keyName].isNullOrEmpty()) {
-                for (rename in colRenames) {
-                    renameHistory[keyName]!!.add(rename)
-                }
-            } else {
-                renameHistory[keyName] = colRenames
-            }
-        }
+        renameHistory.addAll(verBuilder.pendingRenames)
         
         // Milestone
         verBuilder.milestone?.let {
@@ -94,7 +85,7 @@ abstract class MigrationDslInternal {
     class VersionBuilder(                                                    val version: Int
     ) {
         var milestone: MilestoneLambdas? = null
-        val pendingRenames = mutableMapOf<String, MutableList<RenameRecord>>()
+        val pendingRenames = mutableListOf<RenameRecord>()
         
         /**
          * Defines column rename history for this version.
@@ -102,17 +93,7 @@ abstract class MigrationDslInternal {
         fun rename(                                                   block: RenameBuilder.()->Unit
         ) {
             val renameBuilder = RenameBuilder(version).apply(block)
-            
-            for ((keyName, colRenames) in renameBuilder.records) {
-                
-                if (pendingRenames.containsKey(keyName)  &&  !pendingRenames[keyName].isNullOrEmpty()) {
-                    for (rename in colRenames) {
-                        pendingRenames[keyName]!!.add(rename)
-                    }
-                } else {
-                    pendingRenames[keyName] = colRenames
-                }
-            }
+            pendingRenames.addAll(renameBuilder.records)
         }
         
         
@@ -145,7 +126,7 @@ abstract class MigrationDslInternal {
             }
             milestone = MilestoneLambdas(
                 transformColVal = overrideBlock,
-                processFinalEntity = processFinalEntity
+                processFinalEntity = processFinalEntity,
             )
         }
         
@@ -156,42 +137,31 @@ abstract class MigrationDslInternal {
          */
         class RenameBuilder(                                                 val version: Int
         ) {
-            val records = mutableMapOf<String, MutableList<RenameRecord>>()
+            val records = mutableListOf<RenameRecord>()
             
-            /** Specifies the source column name to rename from using a [TypedColumn]. */
-            infix fun TypedColumn<*>.from(old: String) = PartialRename(this.name, old)
-            
-            /** Specifies the source column name to rename from using a column name string. */
-            infix fun String.from(old: String) = PartialRename(this, old)
-            
-            
-            inner class PartialRename(                                       val keyName: String,
-                                                                          val renameFrom: String,
+            /** "old" to "new" */
+            infix fun String.to(                                                renameTo: String
             ) {
-                /** Maps the old column name [renameFrom] to the new column name [renameTo]. */
-                infix fun to(                                                   renameTo: String
-                ) {
-                    val record = RenameRecord(version, renameFrom, renameTo)
-                    
-                    if (records.containsKey(keyName)  &&  !records[keyName].isNullOrEmpty())
-                        records[keyName]!!.add(record)
-                    else
-                        records[keyName] = mutableListOf(record)
-                }
+                records.add(RenameRecord(version, from = this, to = renameTo))
+            }
+            
+            /** "old" to newTypedCol */
+            infix fun String.to(                                           renameTo: TypedColumn<*>
+            ) {
+                records.add(RenameRecord(version, from = this, to = renameTo.name))
+            }
+            
+            /** oldTypedCol to "new" */
+            infix fun TypedColumn<*>.to(                                        renameTo: String
+            ) {
+                records.add(RenameRecord(version, from = this.name, to = renameTo))
+            }
+            
+            /** oldTypedCol to newTypedCol */
+            infix fun TypedColumn<*>.to(                                   renameTo: TypedColumn<*>
+            ) {
+                records.add(RenameRecord(version, from = this.name, to = renameTo.name))
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

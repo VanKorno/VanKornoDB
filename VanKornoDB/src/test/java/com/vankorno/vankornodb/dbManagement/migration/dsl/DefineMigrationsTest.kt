@@ -48,14 +48,16 @@ class DefineMigrationsTest {
         val bundle = defineMigrations(2, OrmCurr) {
             version(1, OrmV1) {
                 rename {
-                    "latestA" from "firstA" to "renamedToA"
-                    "latestB" from "firstB" to "renamedToB"
+                    "firstA" to "renamedToA"
+                    "firstB" to "renamedToB"
+                    "firstC" to "renamedToC"
                 }
             }
         }
-        assertEquals(2, bundle.renameHistory.size)
-        assertEquals(listOf(RenameRecord(1, "firstA", "renamedToA")), bundle.renameHistory["latestA"])
-        assertEquals(listOf(RenameRecord(1, "firstB", "renamedToB")), bundle.renameHistory["latestB"])
+        assertEquals(3, bundle.renameHistory.size)
+        assertEquals(RenameRecord(1, "firstA", "renamedToA"), bundle.renameHistory[0])
+        assertEquals(RenameRecord(1, "firstB", "renamedToB"), bundle.renameHistory[1])
+        assertEquals(RenameRecord(1, "firstC", "renamedToC"), bundle.renameHistory[2])
     }
     
     @Test
