@@ -12,7 +12,7 @@ runner = "1.7.0"
 composeBom = "2026.11.01"
 testManifest = "1.13.0"
 constraintlayoutCompose = "1.1.2"
-vankornoHelpers = "2.109"
+vankornoHelpers = "2.110"
 
 
 [libraries]
