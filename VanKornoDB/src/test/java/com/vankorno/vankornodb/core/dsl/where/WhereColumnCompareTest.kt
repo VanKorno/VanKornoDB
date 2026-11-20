@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.core.dsl.where
 
-import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.core.dsl.testColumn
+import com.vankorno.vankornodb.core.dsl.testPredicate
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
@@ -13,12 +14,12 @@ class WhereColumnCompareTest {
     
     @Test
     fun `Equal columns`() {
-        val whereObj = WhereDsl().apply {
-            iCol("intA") equalCol iCol("intB")
-            lCol("longA") equalCol lCol("longB")
-            fCol("floatA") equalCol fCol("floatB")
-            sCol("strA") equalCol sCol("strB")
-            bCol("boolA") equalCol bCol("boolB")
+        val whereObj = testPredicate {
+            testColumn(iCol("intA")) equalCol testColumn(iCol("intB"))
+            testColumn(lCol("longA")) equalCol testColumn(lCol("longB"))
+            testColumn(fCol("floatA")) equalCol testColumn(fCol("floatB"))
+            testColumn(sCol("strA")) equalCol testColumn(sCol("strB"))
+            testColumn(bCol("boolA")) equalCol testColumn(bCol("boolB"))
         }
 
         assertEquals("intA=intB", whereObj.clauses[0])
@@ -30,12 +31,12 @@ class WhereColumnCompareTest {
 
     @Test
     fun `Not equal columns`() {
-        val whereObj = WhereDsl().apply {
-            iCol("intA") notEqualCol iCol("intB")
-            lCol("longA") notEqualCol lCol("longB")
-            fCol("floatA") notEqualCol fCol("floatB")
-            sCol("strA") notEqualCol sCol("strB")
-            bCol("boolA") notEqualCol bCol("boolB")
+        val whereObj = testPredicate {
+            testColumn(iCol("intA")) notEqualCol testColumn(iCol("intB"))
+            testColumn(lCol("longA")) notEqualCol testColumn(lCol("longB"))
+            testColumn(fCol("floatA")) notEqualCol testColumn(fCol("floatB"))
+            testColumn(sCol("strA")) notEqualCol testColumn(sCol("strB"))
+            testColumn(bCol("boolA")) notEqualCol testColumn(bCol("boolB"))
         }
 
         assertEquals("intA!=intB", whereObj.clauses[0])
@@ -47,22 +48,22 @@ class WhereColumnCompareTest {
 
     @Test
     fun `Greater, greaterEqual, less, lessEqual columns`() {
-        val whereObj = WhereDsl().apply {
-            iCol("i1") greaterCol iCol("i2")
-            lCol("l1") greaterCol lCol("l2")
-            fCol("f1") greaterCol fCol("f2")
+        val whereObj = testPredicate {
+            testColumn(iCol("i1")) greaterCol testColumn(iCol("i2"))
+            testColumn(lCol("l1")) greaterCol testColumn(lCol("l2"))
+            testColumn(fCol("f1")) greaterCol testColumn(fCol("f2"))
 
-            iCol("i3") greaterEqualCol iCol("i4")
-            lCol("l3") greaterEqualCol lCol("l4")
-            fCol("f3") greaterEqualCol fCol("f4")
+            testColumn(iCol("i3")) greaterEqualCol testColumn(iCol("i4"))
+            testColumn(lCol("l3")) greaterEqualCol testColumn(lCol("l4"))
+            testColumn(fCol("f3")) greaterEqualCol testColumn(fCol("f4"))
 
-            iCol("i5") lessCol iCol("i6")
-            lCol("l5") lessCol lCol("l6")
-            fCol("f5") lessCol fCol("f6")
+            testColumn(iCol("i5")) lessCol testColumn(iCol("i6"))
+            testColumn(lCol("l5")) lessCol testColumn(lCol("l6"))
+            testColumn(fCol("f5")) lessCol testColumn(fCol("f6"))
 
-            iCol("i7") lessEqualCol iCol("i8")
-            lCol("l7") lessEqualCol lCol("l8")
-            fCol("f7") lessEqualCol fCol("f8")
+            testColumn(iCol("i7")) lessEqualCol testColumn(iCol("i8"))
+            testColumn(lCol("l7")) lessEqualCol testColumn(lCol("l8"))
+            testColumn(fCol("f7")) lessEqualCol testColumn(fCol("f8"))
         }
 
         assertEquals("i1>i2", whereObj.clauses[0])

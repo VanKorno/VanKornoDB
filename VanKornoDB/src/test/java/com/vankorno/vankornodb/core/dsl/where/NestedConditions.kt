@@ -5,7 +5,8 @@ import com.vankorno.vankornodb.TestConstants.cInt
 import com.vankorno.vankornodb.core.data.DbConstants.SELECT_ALL_FROM
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.core.data.DbConstants._Name
-import com.vankorno.vankornodb.core.dsl.getQuery
+import com.vankorno.vankornodb.core.dsl.builderTable
+import com.vankorno.vankornodb.core.dsl.testColumn
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
 import com.vankorno.vankornodb.misc.data.SharedCol.cName
 import com.vankorno.vankornodb.misc.data.SharedCol.cPosition
@@ -17,16 +18,16 @@ import org.junit.Test
 class NestedConditions {
     @Test
     fun `arguments preserve SQL order across nested groups`() {
-        val query = getQuery(DirtyTable) {
-            cName equal "first"
+        val query = builderTable(DirtyTable).query() {
+            testColumn(cName) equal "first"
             
             and {
-                cPosition equal 1L
-                or { cText equal "second" }
+                testColumn(cPosition) equal 1L
+                or { testColumn(cText) equal "second" }
             }
             or {
-                cActive equal true
-                and { cInt equal 42 }
+                testColumn(cActive) equal true
+                and { testColumn(cInt) equal 42 }
             }
         }
         

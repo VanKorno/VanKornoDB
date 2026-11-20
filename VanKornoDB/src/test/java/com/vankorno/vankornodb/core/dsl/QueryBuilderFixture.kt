@@ -36,3 +36,17 @@ internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> DbColumns<W, O, X, *>.quer
     val result = table.query(selectors, orderBy = orderBy, where = where)
     return Subquery(result.query, result.args)
 }
+
+internal fun testPredicate(block: BuilderWhere.()->Unit) = builderTable("Test").predicate("Test", block)
+
+internal fun <C : TypedColumn<*>> testColumn(definition: C) = EntityColumn<BuilderWhere, C>(definition)
+
+internal fun testOrder(block: BuilderOrder.()->Unit): BuilderOrder {
+    val table = builderTable("Test")
+    val context = DslContext(table, WhereDslBase(), table.name)
+    fun order(): BuilderOrder = BuilderOrder().also {
+        it.context = context
+        it.nested = ::order
+    }
+    return order().apply(block)
+}

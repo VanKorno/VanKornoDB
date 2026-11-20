@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.core.dsl.orderBy
 
-import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.BuilderOrder
+import com.vankorno.vankornodb.core.dsl.testColumn
 import com.vankorno.vankornodb.dbManagement.data.bCol
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
@@ -10,15 +11,15 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class OrderByFlipTest {
-    private val colInt = iCol("intCol")
-    private val colStr = sCol("strCol")
-    private val colBool = bCol("boolCol")
-    private val colLong = lCol("longCol")
-    private val colFloat = fCol("floatCol")
+    private val colInt = testColumn(iCol("intCol"))
+    private val colStr = testColumn(sCol("strCol"))
+    private val colBool = testColumn(bCol("boolCol"))
+    private val colLong = testColumn(lCol("longCol"))
+    private val colFloat = testColumn(fCol("floatCol"))
 
     @Test
     fun `flipAll with multiple columns`() {
-        val order = OrderDsl().apply {
+        val order = BuilderOrder().apply {
             flipAll(colInt, colStr, colBool, colLong, colFloat)
         }.buildStr()
 
@@ -30,7 +31,7 @@ class OrderByFlipTest {
 
     @Test
     fun `flipAll with mixed ascending and descending columns`() {
-        val order = OrderDsl().apply {
+        val order = BuilderOrder().apply {
             col(colInt)
             flipAll(colStr, colLong)
             col(colBool, colFloat)
@@ -44,7 +45,7 @@ class OrderByFlipTest {
 
     @Test
     fun `flip single column`() {
-        val order = OrderDsl().apply {
+        val order = BuilderOrder().apply {
             colInt.flip()
         }.buildStr()
 
@@ -53,7 +54,7 @@ class OrderByFlipTest {
 
     @Test
     fun `flip multiple individual columns`() {
-        val order = OrderDsl().apply {
+        val order = BuilderOrder().apply {
             colInt.flip()
             colStr.flip()
             colBool.flip()
@@ -67,7 +68,7 @@ class OrderByFlipTest {
 
     @Test
     fun `flipIf true adds descending column`() {
-        val order = OrderDsl().apply {
+        val order = BuilderOrder().apply {
             colInt.flipIf(true)
         }.buildStr()
 
@@ -76,7 +77,7 @@ class OrderByFlipTest {
 
     @Test
     fun `flipIf false adds ascending column`() {
-        val order = OrderDsl().apply {
+        val order = BuilderOrder().apply {
             colInt.flipIf(false)
         }.buildStr()
 
@@ -85,7 +86,7 @@ class OrderByFlipTest {
 
     @Test
     fun `flipIf with mixed conditions`() {
-        val order = OrderDsl().apply {
+        val order = BuilderOrder().apply {
             colInt.flipIf(true)
             colStr.flipIf(false)
             colBool.flipIf(true)

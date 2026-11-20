@@ -9,7 +9,8 @@ import com.vankorno.vankornodb.core.data.DbConstants.SELECT_ALL_FROM
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.core.data.DbConstants._Name
-import com.vankorno.vankornodb.core.dsl.getQuery
+import com.vankorno.vankornodb.core.dsl.builderTable
+import com.vankorno.vankornodb.core.dsl.testColumn
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
 import com.vankorno.vankornodb.misc.data.SharedCol.cDescr
 import com.vankorno.vankornodb.misc.data.SharedCol.cEnabled
@@ -27,8 +28,8 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_Name=?)",
             
-            getQuery(DirtyTable) {
-                and { Name = BestName }
+            builderTable(DirtyTable).query() {
+                and { Name equal BestName }
             }.query
         )
     }
@@ -38,8 +39,8 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_Name=?)",
             
-            getQuery(DirtyTable) {
-                or { Name = BestName }
+            builderTable(DirtyTable).query() {
+                or { Name equal BestName }
             }.query
         )
     }
@@ -50,10 +51,10 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_Name=? OR ($_Name=?))",
             
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 and {
-                    Name = BestName
-                    or { Name = "a" }
+                    Name equal BestName
+                    or { Name equal "a" }
                 }
             }.query
         )
@@ -64,10 +65,10 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_Name=? OR ($_Name=?))",
             
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 or {
-                    Name = BestName
-                    or { Name = "a" }
+                    Name equal BestName
+                    or { Name equal "a" }
                 }
             }.query
         )
@@ -79,11 +80,11 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "$_Name=?",
             
-            getQuery(DirtyTable) {
-                cName equal BestName
+            builderTable(DirtyTable).query() {
+                testColumn(cName) equal BestName
                 
                 if (false)
-                    or { cPosition equal 1L }
+                    or { testColumn(cPosition) equal 1L }
             }.query
         )
     }
@@ -93,11 +94,11 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "(${cPosition.name}=?)",
             
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 if (false)
-                    cName equal BestName
+                    testColumn(cName) equal BestName
                 
-                or { cPosition equal 1L }
+                or { testColumn(cPosition) equal 1L }
             }.query
         )
     }
@@ -107,14 +108,14 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_Name=?)",
             
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 if (false)
-                    cID equal 1L
+                    testColumn(cID) equal 1L
                 
                 if (false)
-                    or { cPosition equal 1L }
+                    or { testColumn(cPosition) equal 1L }
                 
-                and { cName equal BestName }
+                and { testColumn(cName) equal BestName }
             }.query
         )
     }
@@ -125,11 +126,11 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable,
             
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 if (false) {
-                    cID equal 1L
-                    or { cPosition equal 1L }
-                    and { cName equal BestName }
+                    testColumn(cID) equal 1L
+                    or { testColumn(cPosition) equal 1L }
+                    and { testColumn(cName) equal BestName }
                 }
             }.query
         )
@@ -140,24 +141,24 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable,
             
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 if (false)
-                    cName equal "ignored"
+                    testColumn(cName) equal "ignored"
                 and {
                     if (false)
-                        cPosition equal 1L
+                        testColumn(cPosition) equal 1L
                 }
                 or {
                     if (false)
-                        cActive equal true
+                        testColumn(cActive) equal true
                     and {
                         if (false)
-                            cDescr equal "ignored"
+                            testColumn(cDescr) equal "ignored"
                     }
                 }
                 group {
                     if (false)
-                        cFloat equal 1.5F
+                        testColumn(cFloat) equal 1.5F
                 }
             }.query
         )
@@ -169,16 +170,16 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_Name=?) AND ($_ID=?)",
     
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 if (false)
-                    cPosition equal 2L
+                    testColumn(cPosition) equal 2L
     
-                and { cName equal "a" }
+                and { testColumn(cName) equal "a" }
     
                 if (false)
-                    or { cPosition equal 1L }
+                    or { testColumn(cPosition) equal 1L }
     
-                and { cID equal 2L }
+                and { testColumn(cID) equal 2L }
             }.query
         )
     }
@@ -188,16 +189,16 @@ class SkipBlocksTest {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_ID=?)",
             
-            getQuery(DirtyTable) {
+            builderTable(DirtyTable).query() {
                 and {
                     if (false)
-                        cName equal BestName
+                        testColumn(cName) equal BestName
                 }
                 or {
                     if (false)
-                        and { cPosition equal 1L }
+                        and { testColumn(cPosition) equal 1L }
                 }
-                and { cID equal 1L }
+                and { testColumn(cID) equal 1L }
             }.query
         )
     }
@@ -205,24 +206,24 @@ class SkipBlocksTest {
     
     @Test
     fun `skipped blocks don't add arguments`() {
-        val query = getQuery(DirtyTable) {
-            cName equal "VanKorno"
-            cActive equal true
+        val query = builderTable(DirtyTable).query() {
+            testColumn(cName) equal "VanKorno"
+            testColumn(cActive) equal true
             
             if (false)
                 and {
-                    cPosition equal 123L
-                    cText equal "ignored"
+                    testColumn(cPosition) equal 123L
+                    testColumn(cText) equal "ignored"
                 }
             or {
                 if (false)
-                    cInt equal 999
+                    testColumn(cInt) equal 999
                 and {
                     if (false)
-                        cEnabled equal true
+                        testColumn(cEnabled) equal true
                 }
             }
-            and { cInfo equal "Gamplified" }
+            and { testColumn(cInfo) equal "Gamplified" }
         }
         
         assertArrayEquals(

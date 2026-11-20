@@ -2,7 +2,9 @@ package com.vankorno.vankornodb.core.dsl.where.autoAddAND
 
 import com.vankorno.vankornodb.TestConstants.cFloat
 import com.vankorno.vankornodb.TestConstants.cInt
-import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.core.dsl.BuilderWhere
+import com.vankorno.vankornodb.core.dsl.testColumn
+import com.vankorno.vankornodb.core.dsl.testPredicate
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
 import com.vankorno.vankornodb.misc.data.SharedCol.cEnabled
 import com.vankorno.vankornodb.misc.data.SharedCol.cID
@@ -18,11 +20,11 @@ class AutoAddAND2 {
     
     @Test
     fun `Raw clause`() {
-        val where: WhereDsl.() -> Unit = {
+        val where: BuilderWhere.() -> Unit = {
             rawClause("active = 1")
             rawClause("enabled = 0")
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf("active = 1", "AND enabled = 0"),
@@ -34,11 +36,11 @@ class AutoAddAND2 {
 
     @Test
     fun `Equal Int`() {
-        val where: WhereDsl.() -> Unit = {
-            cInt equal 42
-            cInt equal 43
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cInt) equal 42
+            testColumn(cInt) equal 43
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(cInt.name + "=?", "AND " + cInt.name + "=?"),
@@ -49,11 +51,11 @@ class AutoAddAND2 {
 
     @Test
     fun `Equal String`() {
-        val where: WhereDsl.() -> Unit = {
-            cName equal "VanKorno"
-            cText equal "Gamplified"
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cName) equal "VanKorno"
+            testColumn(cText) equal "Gamplified"
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(cName.name + "=?", "AND " + cText.name + "=?"),
@@ -64,11 +66,11 @@ class AutoAddAND2 {
 
     @Test
     fun `Equal Boolean`() {
-        val where: WhereDsl.() -> Unit = {
-            cActive equal true
-            cEnabled equal false
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cActive) equal true
+            testColumn(cEnabled) equal false
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(cActive.name + "=?", "AND " + cEnabled.name + "=?"),
@@ -79,11 +81,11 @@ class AutoAddAND2 {
 
     @Test
     fun `Equal Long`() {
-        val where: WhereDsl.() -> Unit = {
-            cPosition equal 11L
-            cID equal 22L
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cPosition) equal 11L
+            testColumn(cID) equal 22L
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(cPosition.name + "=?", "AND " + cID.name + "=?"),
@@ -94,11 +96,11 @@ class AutoAddAND2 {
 
     @Test
     fun `Equal Float`() {
-        val where: WhereDsl.() -> Unit = {
-            cFloat equal 1.5F
-            cFloat equal 2.5F
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cFloat) equal 1.5F
+            testColumn(cFloat) equal 2.5F
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(cFloat.name + "=?", "AND " + cFloat.name + "=?"),
@@ -110,14 +112,14 @@ class AutoAddAND2 {
 
     @Test
     fun `Not equal all types`() {
-        val where: WhereDsl.() -> Unit = {
-            cInt notEqual 42
-            cName notEqual "VanKorno"
-            cActive notEqual true
-            cPosition notEqual 123L
-            cFloat notEqual 1.5F
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cInt) notEqual 42
+            testColumn(cName) notEqual "VanKorno"
+            testColumn(cActive) notEqual true
+            testColumn(cPosition) notEqual 123L
+            testColumn(cFloat) notEqual 1.5F
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(
@@ -135,12 +137,12 @@ class AutoAddAND2 {
 
     @Test
     fun `Greater`() {
-        val where: WhereDsl.() -> Unit = {
-            cInt greater 42
-            cPosition greater 123L
-            cFloat greater 1.5F
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cInt) greater 42
+            testColumn(cPosition) greater 123L
+            testColumn(cFloat) greater 1.5F
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(
@@ -156,12 +158,12 @@ class AutoAddAND2 {
 
     @Test
     fun `Greater equal`() {
-        val where: WhereDsl.() -> Unit = {
-            cInt greaterEqual 42
-            cPosition greaterEqual 123L
-            cFloat greaterEqual 1.5F
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cInt) greaterEqual 42
+            testColumn(cPosition) greaterEqual 123L
+            testColumn(cFloat) greaterEqual 1.5F
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(
@@ -177,12 +179,12 @@ class AutoAddAND2 {
 
     @Test
     fun `Less`() {
-        val where: WhereDsl.() -> Unit = {
-            cInt less 42
-            cPosition less 123L
-            cFloat less 1.5F
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cInt) less 42
+            testColumn(cPosition) less 123L
+            testColumn(cFloat) less 1.5F
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(
@@ -198,12 +200,12 @@ class AutoAddAND2 {
 
     @Test
     fun `Less equal`() {
-        val where: WhereDsl.() -> Unit = {
-            cInt lessEqual 42
-            cPosition lessEqual 123L
-            cFloat lessEqual 1.5F
+        val where: BuilderWhere.() -> Unit = {
+            testColumn(cInt) lessEqual 42
+            testColumn(cPosition) lessEqual 123L
+            testColumn(cFloat) lessEqual 1.5F
         }
-        val whereObj = WhereDsl().apply(where)
+        val whereObj = testPredicate(where)
 
         assertEquals(
             listOf(

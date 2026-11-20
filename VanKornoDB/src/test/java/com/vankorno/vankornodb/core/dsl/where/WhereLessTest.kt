@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.core.dsl.where
 
-import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.core.dsl.testColumn
+import com.vankorno.vankornodb.core.dsl.testPredicate
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.dbManagement.data.lCol
@@ -11,7 +12,7 @@ class WhereLessTest {
     
     @Test
     fun `Less Int`() {
-        val whereObj = WhereDsl().apply { iCol("intValue") less 42 }
+        val whereObj = testPredicate { testColumn(iCol("intValue")) less 42 }
         
         assertEquals("intValue<?", whereObj.clauses[0])
         assertEquals("42", whereObj.args[0])
@@ -20,7 +21,7 @@ class WhereLessTest {
     
     @Test
     fun `Less Long`() {
-        val whereObj = WhereDsl().apply { lCol("longValue") less 9999999999L }
+        val whereObj = testPredicate { testColumn(lCol("longValue")) less 9999999999L }
         
         assertEquals("longValue<?", whereObj.clauses[0])
         assertEquals("9999999999", whereObj.args[0])
@@ -29,7 +30,7 @@ class WhereLessTest {
     
     @Test
     fun `Less Float`() {
-        val whereObj = WhereDsl().apply { fCol("floatValue") less 3.14F }
+        val whereObj = testPredicate { testColumn(fCol("floatValue")) less 3.14F }
         
         assertEquals("floatValue<?", whereObj.clauses[0])
         assertEquals("3.14", whereObj.args[0])
@@ -39,7 +40,7 @@ class WhereLessTest {
     
     @Test
     fun `LessEqual Int`() {
-        val whereObj = WhereDsl().apply { iCol("intValue") lessEqual 7 }
+        val whereObj = testPredicate { testColumn(iCol("intValue")) lessEqual 7 }
         
         assertEquals("intValue<=?", whereObj.clauses[0])
         assertEquals("7", whereObj.args[0])
@@ -48,7 +49,7 @@ class WhereLessTest {
     
     @Test
     fun `LessEqual Long`() {
-        val whereObj = WhereDsl().apply { lCol("longValue") lessEqual 123456789L }
+        val whereObj = testPredicate { testColumn(lCol("longValue")) lessEqual 123456789L }
         
         assertEquals("longValue<=?", whereObj.clauses[0])
         assertEquals("123456789", whereObj.args[0])
@@ -57,7 +58,7 @@ class WhereLessTest {
     
     @Test
     fun `LessEqual Float`() {
-        val whereObj = WhereDsl().apply { fCol("floatValue") lessEqual 1.5F }
+        val whereObj = testPredicate { testColumn(fCol("floatValue")) lessEqual 1.5F }
         
         assertEquals("floatValue<=?", whereObj.clauses[0])
         assertEquals("1.5", whereObj.args[0])

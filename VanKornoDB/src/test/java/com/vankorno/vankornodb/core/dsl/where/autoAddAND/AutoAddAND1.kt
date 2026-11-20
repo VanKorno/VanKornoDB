@@ -11,11 +11,10 @@ import org.junit.Test
 
 class AutoAddAND1 {
 
-    private class TestWhereDsl : WhereDslBase()
     
     @Test
     fun `condition adds AND when needed`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.condition(_Name, "=", "VanKorno")
         dsl.condition(cActive.name, "=", "1")
@@ -29,7 +28,7 @@ class AutoAddAND1 {
 
     @Test
     fun `condition doesn't add AND to first condition`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.condition(_Name, "=", "VanKorno")
 
@@ -40,7 +39,7 @@ class AutoAddAND1 {
 
     @Test
     fun `conditionRaw adds AND when needed`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.condition(_Name, "=", "VanKorno")
         dsl.conditionRaw(cActive.name, "=", "1")
@@ -54,7 +53,7 @@ class AutoAddAND1 {
 
     @Test
     fun `conditionRaw doesn't add AND to first condition`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.conditionRaw(cActive.name, "=", "1")
 
@@ -65,7 +64,7 @@ class AutoAddAND1 {
 
     @Test
     fun `multCompare adds AND when needed`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.condition(_Name, "=", "VanKorno")
         dsl.multCompare(cPosition.name, IN, arrayOf(1L, 2L, 3L))
@@ -79,7 +78,7 @@ class AutoAddAND1 {
 
     @Test
     fun `multCompare doesn't add AND to first condition`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.multCompare(cPosition.name, IN, arrayOf(1L, 2L))
 
@@ -90,7 +89,7 @@ class AutoAddAND1 {
 
     @Test
     fun `multCompareRaw adds AND when needed`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.condition(_Name, "=", "VanKorno")
         dsl.multCompareRaw(cPosition.name, "=", arrayOf("1", "2"), true)
@@ -104,7 +103,7 @@ class AutoAddAND1 {
 
     @Test
     fun `multCompareRaw doesn't add AND to first condition`() {
-        val dsl = TestWhereDsl()
+        val dsl = WhereDslBase()
 
         dsl.multCompareRaw(cPosition.name, "=", arrayOf("1", "2"), false)
 

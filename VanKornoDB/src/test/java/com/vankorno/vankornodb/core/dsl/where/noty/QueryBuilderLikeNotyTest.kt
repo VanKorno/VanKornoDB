@@ -2,7 +2,7 @@ package com.vankorno.vankornodb.core.dsl.where.noty
 
 import com.vankorno.vankornodb.TestConstants.DirtyTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.core.dsl.getQuery
+import com.vankorno.vankornodb.core.dsl.builderTable
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -12,7 +12,7 @@ class QueryBuilderLikeNotyTest {
     fun `LIKE basic`() {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _Name + LIKE + "?",
-            getQuery(DirtyTable, where = { _Name like "%abc%" }).query
+            builderTable(DirtyTable).query( where = { Name like "%abc%" }).query
         )
     }
     
@@ -20,7 +20,7 @@ class QueryBuilderLikeNotyTest {
     fun `NOT LIKE basic`() {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _Name + NOT_LIKE + "?",
-            getQuery(DirtyTable, where = { _Name notLike "%xyz%" }).query
+            builderTable(DirtyTable).query( where = { Name notLike "%xyz%" }).query
         )
     }
     
@@ -28,10 +28,10 @@ class QueryBuilderLikeNotyTest {
     fun `LIKE args`() {
         assertEquals(
             arrayOf("%abc%", "%xyz%").joinToString(comma),
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
-                    _Name like "%abc%"
-                    and { _Name notLike "%xyz%" }
+                    Name like "%abc%"
+                    and { Name notLike "%xyz%" }
                 }
             ).args.joinToString(comma)
         )
@@ -44,9 +44,9 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE ANY basic`() {
         assertEquals(
-            SELECT_ALL_FROM + DirtyTable + WHERE + _Name + LIKE + "(?, ?, ?)",
-            getQuery(DirtyTable,
-                where = { _Name.likeAny("%a%", "%b%", "%c%") }
+            SELECT_ALL_FROM + DirtyTable + WHERE + "(name LIKE ? OR name LIKE ? OR name LIKE ?)",
+            builderTable(DirtyTable).query(
+                where = { Name.likeAny("%a%", "%b%", "%c%") }
             ).query
         )
     }
@@ -54,9 +54,9 @@ class QueryBuilderLikeNotyTest {
     @Test
     fun `LIKE NONE basic`() {
         assertEquals(
-            SELECT_ALL_FROM + DirtyTable + WHERE + _Name + NOT_LIKE + "(?, ?, ?)",
-            getQuery(DirtyTable,
-                where = { _Name.notLikeAny("%a%", "%b%", "%c%") }
+            SELECT_ALL_FROM + DirtyTable + WHERE + "(name NOT LIKE ? AND name NOT LIKE ? AND name NOT LIKE ?)",
+            builderTable(DirtyTable).query(
+                where = { Name.notLikeAny("%a%", "%b%", "%c%") }
             ).query
         )
     }
@@ -65,8 +65,8 @@ class QueryBuilderLikeNotyTest {
     fun `LIKE ANY args`() {
         assertEquals(
             arrayOf("%a%", "%b%", "%c%").joinToString(comma),
-            getQuery(DirtyTable,
-                where = { _Name.likeAny("%a%", "%b%", "%c%") }
+            builderTable(DirtyTable).query(
+                where = { Name.likeAny("%a%", "%b%", "%c%") }
             ).args.joinToString(comma)
         )
     }

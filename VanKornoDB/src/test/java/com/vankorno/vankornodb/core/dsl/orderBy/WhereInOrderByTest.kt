@@ -1,6 +1,7 @@
 package com.vankorno.vankornodb.core.dsl.orderBy
 
-import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.testColumn
+import com.vankorno.vankornodb.core.dsl.testOrder
 import com.vankorno.vankornodb.dbManagement.data.fCol
 import com.vankorno.vankornodb.dbManagement.data.iCol
 import com.vankorno.vankornodb.misc.data.SharedCol.cActive
@@ -15,11 +16,11 @@ class WhereInOrderByTest {
     
     @Test
     fun `where() assembles CASE with multiple WhenAndOrders and else`() {
-        val builder = OrderDsl().apply {
+        val builder = testOrder {
             When(
-                orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
-                orderWhen("RANDOM()") { cName notEqual "NotBob" },
-                Else = { cID() }
+                orderWhen({ testColumn(cPosition)(); testColumn(cName).flip() }) { testColumn(cID) equal 1 },
+                orderWhen("RANDOM()") { testColumn(cName) notEqual "NotBob" },
+                Else = { testColumn(cID)() }
             )
         }
         
@@ -35,14 +36,14 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with multiple OrderWhen entries`() {
-        val score = fCol("score", 0f)
+        val score = testColumn(fCol("score", 0f))
         
-        val builder = OrderDsl().apply {
+        val builder = testOrder {
             When(
-                orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
-                orderWhen({ raw("RANDOM()") }) { cName notEqual "NotBob" },
-                orderWhen({ score(); cID() }) { cActive equal true },
-                Else = { cID() }
+                orderWhen({ testColumn(cPosition)(); testColumn(cName).flip() }) { testColumn(cID) equal 1 },
+                orderWhen({ raw("RANDOM()") }) { testColumn(cName) notEqual "NotBob" },
+                orderWhen({ score(); testColumn(cID)() }) { testColumn(cActive) equal true },
+                Else = { testColumn(cID)() }
             )
         }
         
@@ -59,9 +60,9 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with single OrderWhen and no Else`() {
-        val builder = OrderDsl().apply {
+        val builder = testOrder {
             When(
-                orderWhen({ cPosition() }) { cID equal 42 }
+                orderWhen({ testColumn(cPosition)() }) { testColumn(cID) equal 42 }
             )
         }
         val sql = builder.buildStr()
@@ -74,9 +75,9 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with Else only`() {
-        val builder = OrderDsl().apply {
+        val builder = testOrder {
             When(
-                Else = { cID(); cName() }
+                Else = { testColumn(cID)(); testColumn(cName)() }
             )
         }
         val sql = builder.buildStr()
@@ -89,12 +90,12 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with typed column in orderBy`() {
-        val builder = OrderDsl().apply {
+        val builder = testOrder {
             When(
-                orderWhen(cPosition) { cName equal "NotBob" },
-                orderWhen(cType) { cActive equal true },
-                orderWhen(iCol("yolo")) { cType equal "test" },
-                Else = { cID() }
+                orderWhen(testColumn(cPosition)) { testColumn(cName) equal "NotBob" },
+                orderWhen(testColumn(cType)) { testColumn(cActive) equal true },
+                orderWhen(testColumn(iCol("yolo"))) { testColumn(cType) equal "test" },
+                Else = { testColumn(cID)() }
             )
         }
         val sql = builder.buildStr()
@@ -109,10 +110,10 @@ class WhereInOrderByTest {
     
     @Test
     fun `When with raw string orders and multiple conditions`() {
-        val builder = OrderDsl().apply {
+        val builder = testOrder {
             When(
-                orderWhen("ABS(position)+id DESC") { cActive equal true },
-                orderWhen("RANDOM()") { cType equal "test" },
+                orderWhen("ABS(position)+id DESC") { testColumn(cActive) equal true },
+                orderWhen("RANDOM()") { testColumn(cType) equal "test" },
                 Else = { raw("id*2") }
             )
         }
