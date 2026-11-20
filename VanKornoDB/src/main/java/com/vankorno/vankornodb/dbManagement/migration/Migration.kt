@@ -40,10 +40,10 @@ import kotlin.reflect.full.starProjectedType
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
  */
-internal fun SQLiteDatabase.migrateMultiStepInternal(          table: String,
-                                                          oldVersion: Int,
-                                                          entityMeta: BaseEntityMeta,
-                                                       onNewDbFilled: (List<DbEntity>)->Unit = {},
+internal fun SQLiteDatabase.migrateMultiStepInternal(            table: String,
+                                                            oldVersion: Int,
+                                                            entityMeta: BaseEntityMeta,
+                                                         onNewDbFilled: (List<DbEntity>)->Unit = {},
 ) {
     val newVersion = entityMeta.currVersion
     

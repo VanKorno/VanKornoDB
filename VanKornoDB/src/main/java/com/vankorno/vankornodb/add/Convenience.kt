@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.get.getNextIDs
-import com.vankorno.vankornodb.get.getNextPositions
+import com.vankorno.vankornodb.get.getNextLongs
 import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 
 
@@ -38,7 +38,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWit
                                             setIdAndPosition: (T, Long, Long)->T,
 ): List<DbIdAndPosition> {
     val ids = getNextIDs(table, entities.size)
-    val positions = getNextPositions(table, position, entities.size, where = positionConditions)
+    val positions = getNextLongs(table, position, entities.size, where = positionConditions)
     
     return entities.mapIndexed { idx, entity ->
         val id = ids[idx]

@@ -28,7 +28,7 @@ class AddEntityWithoutIdCheckTest {
         val insertedRowId = dbh.addEntityWithoutIdCheck(_TestTable, rat)
         assertEquals(true, insertedRowId > 0L)
         
-        val storedId = dbh.getLong(_TestTable, orderBy = { Id }) { Name equal name }
+        val storedId = dbh.getLong(_TestTable.col { Id }) { Name equal name }
         assertEquals(id, storedId)
         
         dbh.deleteRows(_TestTable) { Name equal name }
@@ -48,8 +48,8 @@ class AddEntityWithoutIdCheckTest {
         assertEquals(2, insertedRowIds.size)
         assertEquals(true, insertedRowIds.all { it > 0L })
         
-        val storedId1 = dbh.getLong(_TestTable, column = { Id }) { Name equal rat1.name }
-        val storedId2 = dbh.getLong(_TestTable, column = { Id }) { Name equal rat2.name }
+        val storedId1 = dbh.getLong(_TestTable.col { Id }) { Name equal rat1.name }
+        val storedId2 = dbh.getLong(_TestTable.col { Id }) { Name equal rat2.name }
         assertEquals(rat1.id, storedId1)
         assertEquals(rat2.id, storedId2)
         

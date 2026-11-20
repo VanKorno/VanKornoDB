@@ -96,7 +96,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFreeIntsFromStart
         if (freeValues.size < count) {
             if (candidateValue == Int.MAX_VALUE)
                 throw IllegalStateException(
-                    "No more available Int values in column '${table.select(column).name}' of table '${table.name}'"
+                    "No more available Int values in column '${table.columnSql(column)}' of table '${table.name}'"
                 )
             
             candidateValue++

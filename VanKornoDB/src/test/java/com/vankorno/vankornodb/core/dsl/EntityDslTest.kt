@@ -15,6 +15,26 @@ class EntityDslTest {
     private val versionTable = _EntityVersion.table("Versions")
     
     @Test
+    fun `raw expressions pass through typed and mixed projections verbatim`() {
+        val scalar = versionTable.col { raw("version + 1") }
+        val mixed = versionTable.columns { Name then raw("length(name)") }
+        
+        assertEquals("SELECT version + 1 FROM Versions", versionTable.query(scalar.selectors).query)
+        assertEquals("SELECT name, length(name) FROM Versions", versionTable.query(mixed.selectors).query)
+    }
+    
+    @Test
+    fun `column selections retain table and projection order`() {
+        val single = versionTable.col { Id }
+        val chained = versionTable.columns { Id then Name then Version }
+        val listed = versionTable.columns { listOf(Id, Name, Version) }
+        
+        assertEquals("SELECT id FROM Versions", single.table.query(single.selectors).query)
+        for (selection in listOf(chained, listed))
+            assertEquals("SELECT id, name, version FROM Versions", selection.table.query(selection.selectors).query)
+    }
+    
+    @Test
     fun `each query clause sees its own operations and the same entity columns`() {
         val result = versionTable.query(
             columns = arrayOf({ Name }),

@@ -10,7 +10,9 @@ import com.vankorno.vankornodb.dbManagement.data.*
 abstract class WhereDsl<W>(private val context: DslContext<W>) {
     private val builder get() = context.builder
     
-    private fun appendGroup(operator: String, where: W.()->Unit) {
+    private fun appendGroup(                                                  operator: String,
+                                                                                 where: W.()->Unit,
+    ) {
         val child = context.table.predicate(context.qualifier, where)
         if (child.clauses.isNotEmpty()) {
             if (operator.isNotEmpty() && builder.clauses.isNotEmpty())
@@ -20,12 +22,17 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
         }
     }
     
-    fun rawClause(sql: String, vararg args: String) {
+    fun rawClause(                                                                   sql: String,
+                                                                             vararg args: String,
+    ) {
         builder.clauses += (if (builder.clauses.isEmpty()) "" else "AND ") + sql
         builder.args += args
     }
     
-    private fun likeValues(name: String, values: Array<out String>, positive: Boolean) {
+    private fun likeValues(                                                 name: String,
+                                                                          values: Array<out String>,
+                                                                        positive: Boolean,
+    ) {
         builder.multCompareRaw(name, if (positive) " LIKE " else " NOT LIKE ", Array(values.size) { "?" }, positive)
         builder.args.addAll(values)
     }
@@ -109,45 +116,48 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.inSubquery(
-                                                  table: QueryTable<*, I, O, X>,
-                                                     column: ColumnSelector<I, TypedColumn<T>>,
-                                                    orderBy: O.()->Unit = {},
-                                                      extra: X.()->Unit = {},
-                                                      where: I.()->Unit = {},
+                                                           table: QueryTable<*, I, O, X>,
+                                                          column: ColumnSelector<I, TypedColumn<T>>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: I.()->Unit = {},
     ) = this inSubquery subquery(table, column, orderBy, extra, where)
     
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.notInSubquery(
-                                                  table: QueryTable<*, I, O, X>,
-                                                     column: ColumnSelector<I, TypedColumn<T>>,
-                                                    orderBy: O.()->Unit = {},
-                                                      extra: X.()->Unit = {},
-                                                      where: I.()->Unit = {},
+                                                           table: QueryTable<*, I, O, X>,
+                                                          column: ColumnSelector<I, TypedColumn<T>>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: I.()->Unit = {},
     ) = this notInSubquery subquery(table, column, orderBy, extra, where)
     
     
     
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(                                 table: QueryTable<*, I, O, X>,
-                                                     column: ColumnSelector<I, TypedColumn<*>>,
-                                                    orderBy: O.()->Unit = {},
-                                                      extra: X.()->Unit = {},
-                                                      where: I.()->Unit = {},
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
+                                                           table: QueryTable<*, I, O, X>,
+                                                          column: ColumnSelector<I, TypedColumn<*>>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: I.()->Unit = {},
     ): Subquery = com.vankorno.vankornodb.core.dsl.subquery(table, column, orderBy, extra, where)
     
     
     
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(                                 table: QueryTable<*, I, O, X>,
-                                             vararg columns: ColumnSelector<I, TypedColumn<*>>,
-                                                    orderBy: O.()->Unit = {},
-                                                      extra: X.()->Unit = {},
-                                                      where: I.()->Unit = {},
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
+                                                       table: QueryTable<*, I, O, X>,
+                                                  vararg columns: ColumnSelector<I, TypedColumn<*>>,
+                                                         orderBy: O.()->Unit = {},
+                                                           extra: X.()->Unit = {},
+                                                           where: I.()->Unit = {},
     ): Subquery = com.vankorno.vankornodb.core.dsl.subquery(table, *columns, orderBy = orderBy, extra = extra, where = where)
     
     
     
     /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS. */
-    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(                           table: QueryTable<*, I, O, X>,
+    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
+                                               table: QueryTable<*, I, O, X>,
                                              outerColumn: EntityColumn<W, TypedColumn<T>>,
                                              innerColumn: ColumnSelector<I, TypedColumn<T>>,
                                                   column: ColumnSelector<I, TypedColumn<*>>? = null,
@@ -161,9 +171,9 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
             if (outer.equals("vk_inner", ignoreCase = true)) "vk_inner2" else "vk_inner"
         } else from
         val source = if (qualifier == from) from else "$from AS $qualifier"
-        val innerName = table.select(innerColumn).name
+        val innerName = table.columnSql(innerColumn)
         val outerName = outerColumn.definition.name
-        val projection = column?.let { table.select(it).name } ?: "1"
+        val projection = column?.let { table.columnSql(it) } ?: "1"
         
         val predicate = table.predicate(qualifier, where)
         val correlation = WhereDslBase()
@@ -180,18 +190,16 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     fun exists(subquery: Subquery) = rawClause("EXISTS (${subquery.query})", *subquery.args)
     fun notExists(subquery: Subquery) = rawClause("NOT EXISTS (${subquery.query})", *subquery.args)
     
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(
-                                                         table: QueryTable<*, I, O, X>,
-                                                       orderBy: O.()->Unit = {},
-                                                         extra: X.()->Unit = {},
-                                                         where: I.()->Unit = {},
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(              table: QueryTable<*, I, O, X>,
+                                                                    orderBy: O.()->Unit = {},
+                                                                      extra: X.()->Unit = {},
+                                                                      where: I.()->Unit = {},
     ) = exists(table.existenceQuery(orderBy, extra, where))
 
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(
-                                                         table: QueryTable<*, I, O, X>,
-                                                       orderBy: O.()->Unit = {},
-                                                         extra: X.()->Unit = {},
-                                                         where: I.()->Unit = {},
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(           table: QueryTable<*, I, O, X>,
+                                                                    orderBy: O.()->Unit = {},
+                                                                      extra: X.()->Unit = {},
+                                                                      where: I.()->Unit = {},
     ) = notExists(table.existenceQuery(orderBy, extra, where))
 
     infix fun Subquery.equal(value: String) = builder.subqueryCondition(this, "=", value.toWhereArg())

@@ -28,7 +28,7 @@ fun <W> SQLiteDatabase.setInt(                                     value: Int,
                                                                   column: ColumnSelector<W, IntCol>,
                                                                    where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.select(column).name, value) }
+    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -51,7 +51,7 @@ fun <W> SQLiteDatabase.setStr(                                     value: String
                                                                   column: ColumnSelector<W, StrCol>,
                                                                    where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.select(column).name, value) }
+    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -74,7 +74,7 @@ fun <W> SQLiteDatabase.setBool(                                   value: Boolean
                                                                  column: ColumnSelector<W, BoolCol>,
                                                                   where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.select(column).name, value) }
+    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -97,7 +97,7 @@ fun <W> SQLiteDatabase.setLong(                                   value: Long,
                                                                  column: ColumnSelector<W, LongCol>,
                                                                   where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.select(column).name, value) }
+    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -120,7 +120,7 @@ fun <W> SQLiteDatabase.setFloat(                                 value: Float,
                                                                 column: ColumnSelector<W, FloatCol>,
                                                                  where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.select(column).name, value) }
+    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }
@@ -143,7 +143,7 @@ fun <W> SQLiteDatabase.setBlob(                                   value: ByteArr
                                                                  column: ColumnSelector<W, BlobCol>,
                                                                   where: W.()->Unit = {},
 ) {
-    val values = ContentValues(1).apply { put(table.select(column).name, value) }
+    val values = ContentValues(1).apply { put(table.columnSql(column), value) }
     val predicate = table.where(where)
     update(table.name, values, predicate.query, predicate.args)
 }

@@ -24,7 +24,7 @@ internal fun <W> SQLiteDatabase.modifyColumn(              table: EntityTable<*,
                                                             args: List<Any>,
                                                       expression: (String)->String,
 ) {
-    val name = table.select(column).name
+    val name = table.columnSql(column)
     val predicate = table.where(where)
     val filter = if (predicate.query.isEmpty()) "" else " WHERE ${predicate.query}"
     execSQL("UPDATE ${table.name} SET $name = ${expression(name)}$filter", (args + predicate.args).toTypedArray())

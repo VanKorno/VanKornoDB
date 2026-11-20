@@ -98,10 +98,10 @@ class GetLargestLastTest {
         assertEquals(0, largestIntForNonExistent)
 
         // getLastPosition with where
-        val lastPosForSubset = dbh.getLastPosition(table, { Position }) { Id less 10L }
+        val lastPosForSubset = dbh.getLastPosition(table) { Id less 10L }
         assertEquals(9L, lastPosForSubset)
 
-        val lastPosNonExistent = dbh.getLastPosition(table, { Position }) { Id greater 1000L }
+        val lastPosNonExistent = dbh.getLastPosition(table) { Id greater 1000L }
         assertEquals(0L, lastPosNonExistent)
 
         dbh.deleteTable(table)
@@ -118,19 +118,19 @@ class GetLargestLastTest {
             TestEntity(position = 50L, str1 = "dog")
         ))
 
-        val catNext = dbh.getNextPosition(table, { Position }) { Str1 equal "cat" }
-        val catNexts = dbh.getNextPositions(table, { Position }, 2) { Str1 equal "cat" }
+        val catNext = dbh.getNextPosition(table) { Str1 equal "cat" }
+        val catNexts = dbh.getNextPositions(table, 2) { Str1 equal "cat" }
         assertEquals(11L, catNext)
         assertEquals(listOf(11L, 12L), catNexts)
 
-        val dogNext = dbh.getNextPosition(table, { Position }) { Str1 equal "dog" }
-        val dogNexts = dbh.getNextPositions(table, { Position }, 2) { Str1 equal "dog" }
+        val dogNext = dbh.getNextPosition(table) { Str1 equal "dog" }
+        val dogNexts = dbh.getNextPositions(table, 2) { Str1 equal "dog" }
         assertEquals(51L, dogNext)
         assertEquals(listOf(51L, 52L), dogNexts)
 
         // Non-matching where condition behaves like empty table (starts from 1L)
-        val emptyNext = dbh.getNextPosition(table, { Position }) { Str1 equal "bird" }
-        val emptyNexts = dbh.getNextPositions(table, { Position }, 2) { Str1 equal "bird" }
+        val emptyNext = dbh.getNextPosition(table) { Str1 equal "bird" }
+        val emptyNexts = dbh.getNextPositions(table, 2) { Str1 equal "bird" }
         assertEquals(1L, emptyNext)
         assertEquals(listOf(1L, 2L), emptyNexts)
 
@@ -143,7 +143,8 @@ class GetLargestLastTest {
     
     // ========================================================================================= \\
     
-    private fun testIdPosition(tableName: String) {
+    private fun testIdPosition(                                                tableName: String
+    ) {
         val table = _Test.table(tableName)
         val lastId = dbh.getLargestLong(table, { Id })
         val lastId2 = dbh.getLastId(table)
@@ -151,13 +152,14 @@ class GetLargestLastTest {
         assertEquals(ratQuant, lastId2)
         
         val lastPosition = dbh.getLargestLong(table, { Position })
-        val lastPosition2 = dbh.getLastPosition(table, { Position })
+        val lastPosition2 = dbh.getLastPosition(table)
         assertEquals(ratQuant, lastPosition)
         assertEquals(ratQuant, lastPosition2)
     }
     
     
-    private fun test0L(tableName: String) {
+    private fun test0L(                                                        tableName: String
+    ) {
         val table = _Test.table(tableName)
         val largestLong1 = dbh.getLargestLong(table, { Long1 })
         val largestLong2 = dbh.getLargestLong(table, { Long2 })
@@ -168,7 +170,8 @@ class GetLargestLastTest {
     }
     
     
-    private fun testWithValueChange(tableName: String) {
+    private fun testWithValueChange(                                           tableName: String
+    ) {
         val table = _Test.table(tableName)
         testSwapLastRows(table.name)
         testSingleValueChange(table.name)
@@ -176,19 +179,21 @@ class GetLargestLastTest {
     }
     
     
-    private fun testSwapLastRows(tableName: String) {
+    private fun testSwapLastRows(                                              tableName: String
+    ) {
         val table = _Test.table(tableName)
         dbh.reorder(table, { Position }, ratQuant, moveUpOrBack = true)
         
         val lastId = dbh.getLastId(table)
         assertEquals(ratQuant, lastId)
         
-        val lastPosition = dbh.getLastPosition(table, { Position })
+        val lastPosition = dbh.getLastPosition(table)
         assertEquals(ratQuant, lastPosition)
     }
     
     
-    private fun testSingleValueChange(tableName: String) {
+    private fun testSingleValueChange(                                         tableName: String
+    ) {
         val table = _Test.table(tableName)
         val newVal = 10L
         dbh.setLong(newVal, table, { Long1 }) { Id equal 1 }
@@ -197,7 +202,8 @@ class GetLargestLastTest {
     }
     
     
-    private fun testMultValuesChange(tableName: String) {
+    private fun testMultValuesChange(                                          tableName: String
+    ) {
         val table = _Test.table(tableName)
         val newVal = 20L
         
@@ -216,7 +222,8 @@ class GetLargestLastTest {
     }
     
     
-    private fun testEmptyTable(tableName: String) {
+    private fun testEmptyTable(                                                tableName: String
+    ) {
         val table = _Test.table(tableName)
         assertTrue(dbh.isTableEmpty(table))
         
@@ -226,7 +233,7 @@ class GetLargestLastTest {
         assertEquals(0L, lastId2)
         
         val lastPosition = dbh.getLargestLong(table, { Position })
-        val lastPosition2 = dbh.getLastPosition(table, { Position })
+        val lastPosition2 = dbh.getLastPosition(table)
         assertEquals(0L, lastPosition)
         assertEquals(0L, lastPosition2)
         

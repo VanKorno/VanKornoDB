@@ -13,6 +13,7 @@ import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.get.getLargestLong
 import com.vankorno.vankornodb.get.idColumn
 import com.vankorno.vankornodb.get.useCursor
+import com.vankorno.vankornodb.misc.limit
 
 /** Moves a row one position, or to the first or last position, among rows matching [where].
  * Returns false when the row has no available move.
@@ -75,7 +76,7 @@ private fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabas
         return true //\/\/\/\/\/\
     }
     
-    val sortColumn = EntityColumn<W, LongCol>(table.select(column))
+    val sortColumn = EntityColumn<W, LongCol>(com.vankorno.vankornodb.dbManagement.data.lCol(table.columnSql(column)))
     val neighbour = useCursor(table, idColumn, column,
         orderBy = { sortColumn.flipIf(moveUpOrBack) },
         extra = { limit = 1 },

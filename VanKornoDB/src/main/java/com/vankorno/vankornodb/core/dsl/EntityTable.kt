@@ -16,10 +16,38 @@ annotation class DslInject
 
 /** The owner is invariant so columns from different entity scopes cannot be interchanged.
  */
-class EntityColumn<W, out C : TypedColumn<*>> internal constructor(internal val definition: C)
+sealed class SelectedColumn<W, out C : TypedColumn<*>>(internal val sql: String) {
+    infix fun then(next: SelectedColumn<W, *>) = ColumnChain(listOf(this, next))
+}
 
 
-typealias ColumnSelector<W, C> = W.()->EntityColumn<W, C>
+class EntityColumn<W, out C : TypedColumn<*>> internal constructor(internal val definition: C) :
+    SelectedColumn<W, C>(definition.name)
+
+private class RawColumn<W>(sql: String) : SelectedColumn<W, Nothing>(sql)
+
+/** Emits the supplied SQL verbatim in a column selection. */
+fun <W> raw(sql: String): SelectedColumn<W, Nothing> = RawColumn(sql)
+
+class ColumnChain<W> internal constructor(private val items: List<SelectedColumn<W, *>>) : AbstractList<SelectedColumn<W, *>>() {
+    override val size get() = items.size
+    override fun get(index: Int) = items[index]
+
+    infix fun then(next: SelectedColumn<W, *>) = ColumnChain(items + next)
+}
+
+open class DbColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
+    internal val table: QueryTable<*, W, O, X>,
+    internal val selectors: Array<out ColumnSelector<W, TypedColumn<*>>>,
+)
+
+class DbColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
+    table: QueryTable<*, W, O, X>,
+    internal val selector: ColumnSelector<W, C>,
+) : DbColumns<W, O, X>(table, arrayOf(selector))
+
+
+typealias ColumnSelector<W, C> = W.()->SelectedColumn<W, C>
 
 
 
@@ -55,20 +83,22 @@ open class EntityTable<out I : TableInfo<*>, W> internal constructor(
     fun <S : SetDsl<W>> set(factory: (W)->S, actions: S.()->Unit) =
         factory(selectionScope()).apply(actions).ops
     
-    private fun selectionScope() = factory(DslContext(this, WhereDslBase(), name))
+    internal fun selectionScope() = factory(DslContext(this, WhereDslBase(), name))
     
     
     /** Selects one schema descriptor for APIs that accept a typed column directly.
      */
-    fun <C : TypedColumn<*>> select(column: ColumnSelector<W, C>): C =
+    fun <C : TypedColumn<*>> select(column: W.()->EntityColumn<W, C>): C =
         selectionScope().column().definition
     
     
     
+    internal fun columnSql(column: ColumnSelector<W, *>): String = selectionScope().column().sql
+
     internal fun select(                      columns: Array<out ColumnSelector<W, TypedColumn<*>>>
-    ): Array<TypedColumn<*>> {
+    ): Array<String> {
         val scope = selectionScope()
-        return Array(columns.size) { idx -> columns[idx](scope).definition }
+        return Array(columns.size) { idx -> columns[idx](scope).sql }
     }
 }
 
@@ -79,12 +109,27 @@ open class QueryTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<
                                                        private val orderFactory: (W)->O,
                                                        private val extraFactory: (W)->X,
 ) : EntityTable<I, W>(info, factory) {
+    fun <C : TypedColumn<*>> col(block: ColumnSelector<W, C>): DbColumn<W, O, X, C> {
+        val selected = selectionScope().block()
+        return DbColumn(this) { selected }
+    }
+    
+    fun columns(block: W.()->List<SelectedColumn<W, *>>): DbColumns<W, O, X> {
+        val selected = selectionScope().block()
+        require(selected.isNotEmpty()) { "An explicit projection must contain at least one column" }
+        val selectors = Array<ColumnSelector<W, TypedColumn<*>>>(selected.size) { idx ->
+            val column = selected[idx]
+            { column }
+        }
+        return DbColumns(this, selectors)
+    }
+    
     internal fun query(        columns: Array<out ColumnSelector<W, TypedColumn<*>>> = emptyArray(),
                                orderBy: O.()->Unit = {},
                                  extra: X.()->Unit = {},
                                  where: W.()->Unit = {},
     ): QueryWithArgs {
-        val names = if (columns.isEmpty()) arrayOf("*") else select(columns).map { it.name }.toTypedArray()
+        val names = if (columns.isEmpty()) arrayOf("*") else select(columns)
         return render(name, name, names, predicate(name, where), orderBy, extra)
     }
     
