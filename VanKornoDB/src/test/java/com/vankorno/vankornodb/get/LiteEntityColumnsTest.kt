@@ -10,7 +10,7 @@ import org.junit.Test
 class LiteEntityColumnsTest {
     @Test
     fun `returns lite schema columns in declared order`() {
-        val columns = checkedLiteColumns(liteTable.schema, sourceColumns)
+        val columns = checkedThiefColumns(liteTable.schema, sourceColumns)
 
         assertEquals(listOf("id", "name", "enabled"), columns.map { it.name })
         assertArrayEquals(liteColumns.toTypedArray(), columns)
@@ -19,7 +19,7 @@ class LiteEntityColumnsTest {
     @Test
     fun `rejects a lite column missing from original entity columns`() {
         val error = assertThrows(IllegalStateException::class.java) {
-            checkedLiteColumns(liteTable.schema, listOf(SourceColumns.Id))
+            checkedThiefColumns(liteTable.schema, listOf(SourceColumns.Id))
         }
 
         assertEquals(
@@ -33,7 +33,7 @@ class LiteEntityColumnsTest {
         val wrongTypeColumns = listOf(SourceColumns.Id, iCol("name"), SourceColumns.Enabled)
 
         val error = assertThrows(IllegalArgumentException::class.java) {
-            checkedLiteColumns(liteTable.schema, wrongTypeColumns)
+            checkedThiefColumns(liteTable.schema, wrongTypeColumns)
         }
 
         assertEquals(
@@ -47,7 +47,7 @@ class LiteEntityColumnsTest {
         val emptyLiteTable = TableInfo("test", SchemaBundle(LiteFixture::class, columns = emptyList()))
 
         val error = assertThrows(IllegalArgumentException::class.java) {
-            checkedLiteColumns(emptyLiteTable.schema, sourceColumns)
+            checkedThiefColumns(emptyLiteTable.schema, sourceColumns)
         }
 
         assertEquals("Lite schema for LiteFixture declares no columns", error.message)
@@ -62,7 +62,7 @@ class LiteEntityColumnsTest {
         )
 
         val error = assertThrows(IllegalArgumentException::class.java) {
-            checkedLiteColumns(duplicateLiteTable.schema, sourceColumns)
+            checkedThiefColumns(duplicateLiteTable.schema, sourceColumns)
         }
 
         assertEquals("Lite schema for LiteFixture declares duplicate column names", error.message)
@@ -73,7 +73,7 @@ class LiteEntityColumnsTest {
         val noColumnsTable = TableInfo("test", SchemaBundle(LiteFixture::class))
 
         val error = assertThrows(IllegalStateException::class.java) {
-            checkedLiteColumns(noColumnsTable.schema, sourceColumns)
+            checkedThiefColumns(noColumnsTable.schema, sourceColumns)
         }
 
         assertEquals("Lite schema for LiteFixture must declare columns", error.message)

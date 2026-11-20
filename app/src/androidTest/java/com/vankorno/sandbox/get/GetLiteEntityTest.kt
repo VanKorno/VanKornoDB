@@ -8,8 +8,8 @@ import com.vankorno.sandbox._entities.testEntity.lite._TestLite
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.delete.deleteTable
-import com.vankorno.vankornodb.get.getLiteEntities
-import com.vankorno.vankornodb.get.getLiteEntity
+import com.vankorno.vankornodb.get.steal
+import com.vankorno.vankornodb.get.stealALot
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -20,7 +20,7 @@ class GetLiteEntityTest {
         val table = "GetLiteEntity1"
         dbh.getLabRats(table)
         
-        val entity = dbh.getLiteEntity(
+        val entity = dbh.steal(
             _Test.tableNamed(table),
             _TestLite,
             default = TestLiteEntt(),
@@ -41,7 +41,7 @@ class GetLiteEntityTest {
         dbh.getLabRats(table)
         val default = TestLiteEntt(id = -100L, name = "default")
         
-        val entity = dbh.getLiteEntity(
+        val entity = dbh.steal(
             _Test.tableNamed(table),
             _TestLite,
             default = default,
@@ -58,7 +58,7 @@ class GetLiteEntityTest {
         val table = "GetLiteEntities1"
         dbh.getLabRats(table)
         
-        val entities = dbh.getLiteEntities(
+        val entities = dbh.stealALot(
             _Test.tableNamed(table),
             _TestLite,
         )
@@ -77,7 +77,7 @@ class GetLiteEntityTest {
         val table = "GetLiteEntities2"
         dbh.getLabRats(table)
         
-        val entities = dbh.getLiteEntities(
+        val entities = dbh.stealALot(
             _Test.tableNamed(table),
             _TestLite,
         ) { Id equal -100L }
