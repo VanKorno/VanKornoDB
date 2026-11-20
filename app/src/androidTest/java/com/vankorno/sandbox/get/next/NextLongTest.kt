@@ -1,8 +1,6 @@
 package com.vankorno.sandbox.get.next
 
 import androidx.test.filters.MediumTest
-import com.vankorno.sandbox._entities.testEntity.CTest.Long1
-import com.vankorno.sandbox._entities.testEntity.CTest.Str1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
@@ -13,7 +11,6 @@ import com.vankorno.vankornodb.delete.deleteRows
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.getNextLong
 import com.vankorno.vankornodb.get.getNextLongs
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.newTable.createTable
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -27,9 +24,9 @@ class NextLongTest {
      */
     @Test
     fun emptyTable() {
-        val table = "EmptyTable"
-        dbh.createTable(_Test.tableNamed(table))
-        assertBothFun(table, 1L, 2L)
+        val table = _Test.tableNamed("EmptyTable")
+        dbh.createTable(table)
+        assertBothFun(table.name, 1L, 2L)
         dbh.deleteTable(table)
     }
     
@@ -39,19 +36,19 @@ class NextLongTest {
      */
     @Test
     fun standardLastValues() {
-        val table = "standardLastValues"
+        val table = _Test.tableNamed("standardLastValues")
         
-        dbh.getLabRats(table)
-        assertBothFun(table, 51L, 52L)
+        dbh.getLabRats(table.name)
+        assertBothFun(table.name, 51L, 52L)
         
-        dbh.deleteRows(table) { ID = 10 }
-        assertBothFun(table, 51L, 52L)
+        dbh.deleteRows(table) { Id equal 10 }
+        assertBothFun(table.name, 51L, 52L)
         
-        dbh.deleteRows(table) { cID less 10 }
-        assertBothFun(table, 51L, 52L)
+        dbh.deleteRows(table) { Id less 10 }
+        assertBothFun(table.name, 51L, 52L)
         
-        dbh.addEntityWithoutIdCheck(_Test.tableNamed(table), TestEntity(999990))
-        assertBothFun(table, 999991L, 999992L)
+        dbh.addEntityWithoutIdCheck(table, TestEntity(999990))
+        assertBothFun(table.name, 999991L, 999992L)
         
         dbh.deleteTable(table)
     }
@@ -60,11 +57,11 @@ class NextLongTest {
     /** In an empty table with first values reserved, the allocator finds values after them */
     @Test
     fun reservedInEmptyTable() {
-        val table = "reservedInEmptyTable"
+        val table = _Test.tableNamed("reservedInEmptyTable")
         val reserved = setOf(1L, 2L, 3L)
         
-        dbh.createTable(_Test.tableNamed(table))
-        assertBothFun(table, 4L, 5L, reserved)
+        dbh.createTable(table)
+        assertBothFun(table.name, 4L, 5L, reserved)
         dbh.deleteTable(table)
     }
     
@@ -72,11 +69,11 @@ class NextLongTest {
     /** In a filled table with next values reserved, the allocator finds values after all of them */
     @Test
     fun reservedInFilledTableSequential() {
-        val table = "reservedInFilledTableSequential"
+        val table = _Test.tableNamed("reservedInFilledTableSequential")
         val reserved = setOf(51L, 52L, 53L)
         
-        dbh.getLabRats(table)
-        assertBothFun(table, 54L, 55L, reserved)
+        dbh.getLabRats(table.name)
+        assertBothFun(table.name, 54L, 55L, reserved)
         
         dbh.deleteTable(table)
     }
@@ -85,11 +82,11 @@ class NextLongTest {
     /** With even values reserved and odd values available, the allocator finds values after them */
     @Test
     fun reservedEvenNumbersIn() {
-        val table = "reservedEvenNumbersIn"
+        val table = _Test.tableNamed("reservedEvenNumbersIn")
         val reserved = setOf(2L, 4L, 6L)
 
-        dbh.createTable(_Test.tableNamed(table))
-        assertBothFun(table, 7L, 8L, reserved)
+        dbh.createTable(table)
+        assertBothFun(table.name, 7L, 8L, reserved)
         dbh.deleteTable(table)
     }
     
@@ -97,13 +94,12 @@ class NextLongTest {
     /** With Long.MAX_VALUE in a single row, the allocator finds the first available values */
     @Test
     fun maxValueInSingleRowTable() {
-        val table = "maxValueInSingleRowTable"
-        val tableInfo = _Test.tableNamed(table)
+        val table = _Test.tableNamed("maxValueInSingleRowTable")
         
-        dbh.createTable(tableInfo)
-        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE, name = "Max"))
+        dbh.createTable(table)
+        dbh.addEntityWithoutIdCheck(table, TestEntity(id = Long.MAX_VALUE, name = "Max"))
         
-        assertBothFun(table, 1L, 2L)
+        assertBothFun(table.name, 1L, 2L)
         dbh.deleteTable(table)
     }
     
@@ -111,9 +107,9 @@ class NextLongTest {
     /** With Long.MAX_VALUE reserved, the allocator finds the first available values */
     @Test
     fun maxValueInReserved() {
-        val table = "maxValueInReserved"
-        dbh.createTable(_Test.tableNamed(table))
-        assertBothFun(table, 1L, 2L, setOf(50L, Long.MAX_VALUE))
+        val table = _Test.tableNamed("maxValueInReserved")
+        dbh.createTable(table)
+        assertBothFun(table.name, 1L, 2L, setOf(50L, Long.MAX_VALUE))
         dbh.deleteTable(table)
     }
     
@@ -125,14 +121,13 @@ class NextLongTest {
      */
     @Test
     fun closeToMax() {
-        val table = "closeToMax"
-        val tableInfo = _Test.tableNamed(table)
+        val table = _Test.tableNamed("closeToMax")
         
-        dbh.createTable(tableInfo)
-        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
+        dbh.createTable(table)
+        dbh.addEntityWithoutIdCheck(table, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
-        val value1 = dbh.getNextLong(table, cID)
-        val values1 = dbh.getNextLongs(table, cID, 2)
+        val value1 = dbh.getNextLong(table.col { Id })
+        val values1 = dbh.getNextLongs(table.col { Id }, 2)
         assertEquals(Long.MAX_VALUE, value1)
         assertEquals(listOf(1L, 2L), values1)
         
@@ -147,15 +142,14 @@ class NextLongTest {
      */
     @Test
     fun reservedCloseToMax() {
-        val table = "reservedCloseToMax"
-        val tableInfo = _Test.tableNamed(table)
+        val table = _Test.tableNamed("reservedCloseToMax")
         val reserved = setOf(100L, Long.MAX_VALUE - 1)
         
-        dbh.createTable(tableInfo)
-        dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
+        dbh.createTable(table)
+        dbh.addEntityWithoutIdCheck(table, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
         
-        val value1 = dbh.getNextLong(table, cID, reserved = reserved)
-        val values1 = dbh.getNextLongs(table, cID, 2, reserved = reserved)
+        val value1 = dbh.getNextLong(table.col { Id }, reserved = reserved)
+        val values1 = dbh.getNextLongs(table.col { Id }, 2, reserved = reserved)
         assertEquals(Long.MAX_VALUE, value1)
         assertEquals(listOf(1L, 2L), values1)
         
@@ -166,18 +160,17 @@ class NextLongTest {
     /** With even values already taken, fallback finds the available odd values */
     @Test
     fun takenEvenNumbersWithMaxValueCeiling() {
-        val table = "takenEvenNumbersWithMaxValueCeiling"
-        val tableInfo = _Test.tableNamed(table)
+        val table = _Test.tableNamed("takenEvenNumbersWithMaxValueCeiling")
         
-        dbh.createTable(tableInfo)
-        dbh.addEntities(tableInfo, listOf(
+        dbh.createTable(table)
+        dbh.addEntities(table, listOf(
             TestEntity(2L),
             TestEntity(4L),
             TestEntity(6L),
             TestEntity(Long.MAX_VALUE)
         ))
         
-        assertBothFun(table, 1L, 3L)
+        assertBothFun(table.name, 1L, 3L)
         dbh.deleteTable(table)
     }
     
@@ -185,11 +178,11 @@ class NextLongTest {
     /** With even values reserved, fallback finds the available odd values */
     @Test
     fun reservedEvenNumbersWithMaxValueCeiling() {
-        val table = "reservedEvenNumbersWithMaxValueCeiling"
+        val table = _Test.tableNamed("reservedEvenNumbersWithMaxValueCeiling")
         val reserved = setOf(2L, 4L, 6L, Long.MAX_VALUE)
         
-        dbh.createTable(_Test.tableNamed(table))
-        assertBothFun(table, 1L, 3L, reserved)
+        dbh.createTable(table)
+        assertBothFun(table.name, 1L, 3L, reserved)
         dbh.deleteTable(table)
     }
     
@@ -201,29 +194,28 @@ class NextLongTest {
      */
     @Test
     fun whereFilterStandard() {
-        val table = "whereFilterStandardLong"
-        val tableInfo = _Test.tableNamed(table)
+        val table = _Test.tableNamed("whereFilterStandardLong")
 
-        dbh.createTable(tableInfo)
-        dbh.addEntities(tableInfo, listOf(
+        dbh.createTable(table)
+        dbh.addEntities(table, listOf(
             TestEntity(long1 = 10L, str1 = "cat"),
             TestEntity(long1 = 20L, str1 = "cat"),
             TestEntity(long1 = 100L, str1 = "dog")
         ))
 
-        val catNext = dbh.getNextLong(table, Long1) { Str1 equal "cat" }
-        val catNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "cat" }
+        val catNext = dbh.getNextLong(table.col { Long1 }) { Str1 equal "cat" }
+        val catNexts = dbh.getNextLongs(table.col { Long1 }, 2) { Str1 equal "cat" }
         assertEquals(21L, catNext)
         assertEquals(listOf(21L, 22L), catNexts)
 
-        val dogNext = dbh.getNextLong(table, Long1) { Str1 equal "dog" }
-        val dogNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "dog" }
+        val dogNext = dbh.getNextLong(table.col { Long1 }) { Str1 equal "dog" }
+        val dogNexts = dbh.getNextLongs(table.col { Long1 }, 2) { Str1 equal "dog" }
         assertEquals(101L, dogNext)
         assertEquals(listOf(101L, 102L), dogNexts)
 
         // Non-matching where condition behaves like empty table
-        val emptyNext = dbh.getNextLong(table, Long1) { Str1 equal "bird" }
-        val emptyNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "bird" }
+        val emptyNext = dbh.getNextLong(table.col { Long1 }) { Str1 equal "bird" }
+        val emptyNexts = dbh.getNextLongs(table.col { Long1 }, 2) { Str1 equal "bird" }
         assertEquals(1L, emptyNext)
         assertEquals(listOf(1L, 2L), emptyNexts)
 
@@ -238,11 +230,10 @@ class NextLongTest {
      */
     @Test
     fun whereFilterWithFallback() {
-        val table = "whereFilterWithFallbackLong"
-        val tableInfo = _Test.tableNamed(table)
+        val table = _Test.tableNamed("whereFilterWithFallbackLong")
 
-        dbh.createTable(tableInfo)
-        dbh.addEntities(tableInfo, listOf(
+        dbh.createTable(table)
+        dbh.addEntities(table, listOf(
             TestEntity(long1 = 1L, str1 = "cat"),
             TestEntity(long1 = 2L, str1 = "dog"), // 2L is taken by dog, not cat
             TestEntity(long1 = 3L, str1 = "cat"),
@@ -250,14 +241,14 @@ class NextLongTest {
         ))
 
         // For cat, 1, 3, and MAX_VALUE are taken. 2 is free!
-        val catNext = dbh.getNextLong(table, Long1) { Str1 equal "cat" }
-        val catNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "cat" }
+        val catNext = dbh.getNextLong(table.col { Long1 }) { Str1 equal "cat" }
+        val catNexts = dbh.getNextLongs(table.col { Long1 }, 2) { Str1 equal "cat" }
         assertEquals(2L, catNext)
         assertEquals(listOf(2L, 4L), catNexts)
 
         // For dog, only 2 is taken, and dog does NOT have MAX_VALUE, so it allocates after 2
-        val dogNext = dbh.getNextLong(table, Long1) { Str1 equal "dog" }
-        val dogNexts = dbh.getNextLongs(table, Long1, 2) { Str1 equal "dog" }
+        val dogNext = dbh.getNextLong(table.col { Long1 }) { Str1 equal "dog" }
+        val dogNexts = dbh.getNextLongs(table.col { Long1 }, 2) { Str1 equal "dog" }
         assertEquals(3L, dogNext)
         assertEquals(listOf(3L, 4L), dogNexts)
 
@@ -270,19 +261,18 @@ class NextLongTest {
      */
     @Test
     fun whereFilterWithReservedAndStartFrom() {
-        val table = "whereFilterWithReservedAndStartFromLong"
-        val tableInfo = _Test.tableNamed(table)
+        val table = _Test.tableNamed("whereFilterWithReservedAndStartFromLong")
 
-        dbh.createTable(tableInfo)
-        dbh.addEntities(tableInfo, listOf(
+        dbh.createTable(table)
+        dbh.addEntities(table, listOf(
             TestEntity(long1 = 5L, str1 = "cat"),
             TestEntity(long1 = 10L, str1 = "cat"),
             TestEntity(long1 = 50L, str1 = "dog")
         ))
 
         val reserved = setOf(11L, 12L)
-        val next = dbh.getNextLong(table, Long1, startFrom = 5L, reserved = reserved) { Str1 equal "cat" }
-        val nexts = dbh.getNextLongs(table, Long1, 2, startFrom = 5L, reserved = reserved) { Str1 equal "cat" }
+        val next = dbh.getNextLong(table.col { Long1 }, startFrom = 5L, reserved = reserved) { Str1 equal "cat" }
+        val nexts = dbh.getNextLongs(table.col { Long1 }, 2, startFrom = 5L, reserved = reserved) { Str1 equal "cat" }
         assertEquals(13L, next)
         assertEquals(listOf(13L, 14L), nexts)
 
@@ -290,13 +280,14 @@ class NextLongTest {
     }
     
     
-    private fun assertBothFun(                                        table: String,
+    private fun assertBothFun(                                        tableName: String,
                                                               firstExpected: Long,
                                                              secondExpected: Long,
                                                                    reserved: Set<Long> = emptySet(),
     ) {
-        val value1 = dbh.getNextLong(table, cID, reserved = reserved)
-        val values1 = dbh.getNextLongs(table, cID, 2, reserved = reserved)
+        val table = _Test.tableNamed(tableName)
+        val value1 = dbh.getNextLong(table.col { Id }, reserved = reserved)
+        val values1 = dbh.getNextLongs(table.col { Id }, 2, reserved = reserved)
         assertEquals(firstExpected, value1)
         assertEquals(listOf(firstExpected, secondExpected), values1)
     }

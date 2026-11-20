@@ -7,22 +7,21 @@ import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.api.createTable
+import com.vankorno.vankornodb.core.dsl.raw
 import com.vankorno.vankornodb.core.dsl.subquery
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.get.getEntities
 import com.vankorno.vankornodb.get.tableExists
+import com.vankorno.vankornodb.newTable.createTable
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.nio.file.Files.exists
-import java.nio.file.Files.notExists
 
 private const val ItemsTableName = "SubqueryItemsTable"
-private val _ItemsTable = _Test.tableNamed(ItemsTableName)
+private val SubqueryItems = _Test.tableNamed(ItemsTableName)
 
 private const val ConditionsTableName = "SubqueryConditionsTable"
-private val _ConditionsTable = _Test.tableNamed(ConditionsTableName)
+private val SubqueryConditions = _Test.tableNamed(ConditionsTableName)
 
 @MediumTest
 class SubqueryTest : BaseAndroidTest() {
@@ -30,7 +29,7 @@ class SubqueryTest : BaseAndroidTest() {
     @Before
     fun setupTables() {
         if (dbh.tableExists(ItemsTableName))
-            dbh.clearTable(ItemsTableName)
+            dbh.clearTable(SubqueryItems)
         dbh.getLabRats(ItemsTableName)
         
         val conditions = List(50) { idx ->
@@ -43,19 +42,18 @@ class SubqueryTest : BaseAndroidTest() {
             )
         }
         dbh.write("setupConditions", async = false) { db ->
-            db.createTable(_ConditionsTable)
-            db.clearTable(ConditionsTableName)
-            db.addEntities(_ConditionsTable, conditions)
+            db.createTable(SubqueryConditions)
+            db.clearTable(SubqueryConditions)
+            db.addEntities(SubqueryConditions, conditions)
         }
     }
     
     
     @Test
     fun inSubqueryInfix() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             Id inSubquery subquery(
-                table = ConditionsTableName,
-                column = Id,
+                SubqueryConditions.col { Id },
                 where = { Enabled equal true },
             )
         }
@@ -66,10 +64,9 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun inSubqueryNonInfix() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             Id.inSubquery(
-                table = ConditionsTableName,
-                column = Id,
+                SubqueryConditions.col { Id },
                 where = { Enabled equal true },
             )
         }
@@ -80,10 +77,9 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun testNotInSubquery() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             Id notInSubquery subquery(
-                table = ConditionsTableName,
-                column = Id,
+                SubqueryConditions.col { Id },
                 where = { Int1 greater 0 }
             )
         }
@@ -94,11 +90,8 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun correlatedExists() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
-            exists(ConditionsTableName) {
-                (ConditionsTableName dot Id) equalCol (ItemsTableName dot Id)
-                Enabled equal true
-            }
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
+            exists(subquery(SubqueryConditions.col { Id }, Id) { Enabled equal true })
         }
         assertEquals(10, entities.size)
         assertEquals((1L..10L).toList(), entities.map { it.id })
@@ -107,13 +100,11 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun correlatedExistsSubquery() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             exists(
                 subquery(
-                    table = ConditionsTableName,
-                    column = "1",
+                    SubqueryConditions.col { Id }, Id,
                     where = {
-                        (ConditionsTableName dot Id) equalCol (ItemsTableName dot Id)
                         Enabled equal true
                     }
                 )
@@ -126,11 +117,8 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun correlatedNotExists() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
-            notExists(ConditionsTableName) {
-                (ConditionsTableName dot Id) equalCol (ItemsTableName dot Id)
-                Int1 greater 0
-            }
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
+            notExists(subquery(SubqueryConditions.col { Id }, Id) { Int1 greater 0 })
         }
         assertEquals(40, entities.size)
         assertEquals((11L..50L).toList(), entities.map { it.id })
@@ -139,13 +127,11 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun correlatedNotExistsSubquery() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             notExists(
                 subquery(
-                    table = ConditionsTableName,
-                    column = "1",
+                    SubqueryConditions.col { Id }, Id,
                     where = {
-                        (ConditionsTableName dot Id) equalCol (ItemsTableName dot Id)
                         Int1 greater 0
                     }
                 )
@@ -158,13 +144,9 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun testScalarSubqueryOnLeft() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             subquery(
-                table = ConditionsTableName,
-                column = Int1,
-                where = {
-                    (ConditionsTableName dot Id) equalCol (ItemsTableName dot Id)
-                }
+                SubqueryConditions.col { Id }, Id, column = { Int1 },
             ) greater 105
         }
         assertEquals(5, entities.size)
@@ -174,12 +156,11 @@ class SubqueryTest : BaseAndroidTest() {
     
     @Test
     fun testInSubqueryNoty() {
-        val entities: List<TestEntity> = dbh.getEntities(_ItemsTable) {
-            "id" inSubquery subquery(
-                table = ConditionsTableName,
-                column = "id",
+        val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
+            Id inSubquery subquery(
+                SubqueryConditions.col { raw("id") },
                 where = {
-                    "enabled" equal true
+                    Enabled equal true
                 }
             )
         }

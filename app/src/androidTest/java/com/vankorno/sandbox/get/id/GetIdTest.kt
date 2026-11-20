@@ -3,8 +3,6 @@ package com.vankorno.sandbox.get.id
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox.LabRatQuant
-import com.vankorno.sandbox._entities.testEntity.CTest.Int1
-import com.vankorno.sandbox._entities.testEntity.CTest.Position
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
@@ -16,17 +14,16 @@ import com.vankorno.vankornodb.get.getAllIDs
 import com.vankorno.vankornodb.get.getIDs
 import com.vankorno.vankornodb.get.getId
 import com.vankorno.vankornodb.get.getLastId
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import com.vankorno.vankornodb.misc.orderByIdFlipped
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-private const val GetLastIdTable = "GetLastIdTestTable"
-private const val GetIdTable = "GetIdSingleTestTable"
-private const val GetIDsTable = "GetIDsTestTable"
-private const val GetAllIDsTable = "GetAllIDsTestTable"
+private val GetLastIdTable = _Test.tableNamed("GetLastIdTestTable")
+private val GetIdTable = _Test.tableNamed("GetIdSingleTestTable")
+private val GetIDsTable = _Test.tableNamed("GetIDsTestTable")
+private val GetAllIDsTable = _Test.tableNamed("GetAllIDsTestTable")
 
 @MediumTest
 class GetIdTest {
@@ -34,19 +31,19 @@ class GetIdTest {
 
     @Test
     fun testGetLastId() {
-        dbh.getLabRats(GetLastIdTable)
+        dbh.getLabRats(GetLastIdTable.name)
 
         val lastId = dbh.getLastId(GetLastIdTable)
         assertEquals(ratQuant, lastId)
 
         // Add a new row with higher ID
         val newId = 100L
-        dbh.addEntities(_Test.tableNamed(GetLastIdTable), listOf(TestEntity(newId, "Lab rat 100", newId)))
+        dbh.addEntities(GetLastIdTable, listOf(TestEntity(newId, "Lab rat 100", newId)))
         val updatedLastId = dbh.getLastId(GetLastIdTable)
         assertEquals(newId, updatedLastId)
 
         // Delete the new row
-        dbh.deleteRows(GetLastIdTable) { ID = newId }
+        dbh.deleteRows(GetLastIdTable) { Id equal newId }
         val restoredLastId = dbh.getLastId(GetLastIdTable)
         assertEquals(ratQuant, restoredLastId)
 
@@ -58,10 +55,10 @@ class GetIdTest {
 
     @Test
     fun testGetId() {
-        dbh.getLabRats(GetIdTable)
+        dbh.getLabRats(GetIdTable.name)
         
         // Existent by name
-        val idByName = dbh.getId(GetIdTable) { Name = LabRat + "5" }
+        val idByName = dbh.getId(GetIdTable) { Name equal LabRat + "5" }
         assertEquals(5L, idByName)
         
         // Existent by position
@@ -69,25 +66,25 @@ class GetIdTest {
         assertEquals(10L, idByPosition)
         
         // Non-existent
-        val id2 = dbh.getId(GetIdTable) { Name = "NonExistentRat" }
+        val id2 = dbh.getId(GetIdTable) { Name equal "NonExistentRat" }
         assertEquals(-1L, id2)
         
         // Empty table
         dbh.clearTable(GetIdTable)
-        val emptyId = dbh.getId(GetIdTable) { Name = LabRat + "1" }
+        val emptyId = dbh.getId(GetIdTable) { Name equal LabRat + "1" }
         assertEquals(-1L, emptyId)
     }
 
     @Test
     fun testGetIDs() {
-        dbh.getLabRats(GetIDsTable)
+        dbh.getLabRats(GetIDsTable.name)
 
         // Filter single ID
-        val idsSingle = dbh.getIDs(GetIDsTable) { ID = 10L }
+        val idsSingle = dbh.getIDs(GetIDsTable) { Id equal 10L }
         assertEquals(listOf(10L), idsSingle)
 
         // Filter range of IDs
-        val idsRange = dbh.getIDs(GetIDsTable) { cID greater 45L }
+        val idsRange = dbh.getIDs(GetIDsTable) { Id greater 45L }
         assertEquals(listOf(46L, 47L, 48L, 49L, 50L), idsRange)
 
         // Filter with custom column (Int1 equals 0 for all rats)
@@ -95,26 +92,26 @@ class GetIdTest {
         assertEquals((1L..ratQuant).toList(), idsCustomCol)
 
         // Filter with orderBy (descending)
-        val idsDesc = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { cID greater 47L }
+        val idsDesc = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { Id greater 47L }
         assertEquals(listOf(50L, 49L, 48L), idsDesc)
 
         // Filter with equalAnyOf and orderBy
-        val idsInList = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { cID.equalAnyOf(5L, 15L, 25L) }
+        val idsInList = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { Id.equalAnyOf(5L, 15L, 25L) }
         assertEquals(listOf(25L, 15L, 5L), idsInList)
 
         // Condition matching nothing
-        val idsNone = dbh.getIDs(GetIDsTable) { ID = 9999L }
+        val idsNone = dbh.getIDs(GetIDsTable) { Id equal 9999L }
         assertTrue(idsNone.isEmpty())
 
         // Empty table
         dbh.clearTable(GetIDsTable)
-        val idsEmpty = dbh.getIDs(GetIDsTable) { cID greater 0L }
+        val idsEmpty = dbh.getIDs(GetIDsTable) { Id greater 0L }
         assertTrue(idsEmpty.isEmpty())
     }
 
     @Test
     fun testGetAllIDs() {
-        dbh.getLabRats(GetAllIDsTable)
+        dbh.getLabRats(GetAllIDsTable.name)
 
         // Default ascending order
         val allIds = dbh.getAllIDs(GetAllIDsTable)
@@ -126,12 +123,12 @@ class GetIdTest {
 
         // Add an extra row and verify
         val extraId = 51L
-        dbh.addEntities(_Test.tableNamed(GetAllIDsTable), listOf(TestEntity(extraId, "Lab rat 51", extraId)))
+        dbh.addEntities(GetAllIDsTable, listOf(TestEntity(extraId, "Lab rat 51", extraId)))
         val updatedAllIds = dbh.getAllIDs(GetAllIDsTable)
         assertEquals((1L..extraId).toList(), updatedAllIds)
 
         // Delete specific rows and verify
-        dbh.deleteRows(GetAllIDsTable) { cID.equalAnyOf(2L, 4L) }
+        dbh.deleteRows(GetAllIDsTable) { Id.equalAnyOf(2L, 4L) }
         val remainingIds = dbh.getAllIDs(GetAllIDsTable)
         assertEquals(49, remainingIds.size)
         assertFalse(remainingIds.contains(2L))

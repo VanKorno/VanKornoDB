@@ -6,13 +6,13 @@ import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.api.createTable
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.get.getEntityPair
 import com.vankorno.vankornodb.get.getEntityPairMap
 import com.vankorno.vankornodb.get.getEntityPairs
 import com.vankorno.vankornodb.get.getEntityTriple
 import com.vankorno.vankornodb.get.getEntityTriples
+import com.vankorno.vankornodb.newTable.createTable
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -20,13 +20,13 @@ import org.junit.Before
 import org.junit.Test
 
 private const val ItemsTableName = "PairTestItemsTable"
-private val _ItemsTable = _Test.tableNamed(ItemsTableName)
+private val ItemsTable = _Test.tableNamed(ItemsTableName)
 
 private const val ConditionsTableName = "PairTestConditionsTable"
-private val _ConditionsTable = _Test.tableNamed(ConditionsTableName)
+private val ConditionsTable = _Test.tableNamed(ConditionsTableName)
 
 private const val MetaTableName = "PairTestMetaTable"
-private val _MetaTable = _Test.tableNamed(MetaTableName)
+private val MetaTable = _Test.tableNamed(MetaTableName)
 
 @MediumTest
 class EntityPairsTest : BaseAndroidTest() {
@@ -62,23 +62,23 @@ class EntityPairsTest : BaseAndroidTest() {
         }
         
         dbh.write("setupPairTables", async = false) { db ->
-            db.createTable(_ItemsTable)
-            db.clearTable(ItemsTableName)
-            db.addEntities(_ItemsTable, items)
+            db.createTable(ItemsTable)
+            db.clearTable(ItemsTable)
+            db.addEntities(ItemsTable, items)
             
-            db.createTable(_ConditionsTable)
-            db.clearTable(ConditionsTableName)
-            db.addEntities(_ConditionsTable, conditions)
+            db.createTable(ConditionsTable)
+            db.clearTable(ConditionsTable)
+            db.addEntities(ConditionsTable, conditions)
             
-            db.createTable(_MetaTable)
-            db.clearTable(MetaTableName)
-            db.addEntities(_MetaTable, meta)
+            db.createTable(MetaTable)
+            db.clearTable(MetaTable)
+            db.addEntities(MetaTable, meta)
         }
     }
     
     @Test
     fun testGetEntityPairById() {
-        val pair = dbh.getEntityPair(_ItemsTable, _ConditionsTable, id = 3L)
+        val pair = dbh.getEntityPair(ItemsTable, ConditionsTable, id = 3L)
         
         assertNotNull(pair)
         assertEquals(3L, pair!!.first.id)
@@ -87,13 +87,13 @@ class EntityPairsTest : BaseAndroidTest() {
         assertEquals(true, pair.second.enabled)
         assertEquals(103, pair.second.int1)
         
-        val missing = dbh.getEntityPair(_ItemsTable, _ConditionsTable, id = 999L)
+        val missing = dbh.getEntityPair(ItemsTable, ConditionsTable, id = 999L)
         assertNull(missing)
     }
     
     @Test
     fun testGetEntityPairByWhere() {
-        val pair = dbh.getEntityPair(_ItemsTable, _ConditionsTable) {
+        val pair = dbh.getEntityPair(ItemsTable, ConditionsTable) {
             Id equal 4L
         }
         
@@ -103,7 +103,7 @@ class EntityPairsTest : BaseAndroidTest() {
         assertEquals(4L, pair.second.id)
         assertEquals(true, pair.second.enabled)
         
-        val missing = dbh.getEntityPair(_ItemsTable, _ConditionsTable) {
+        val missing = dbh.getEntityPair(ItemsTable, ConditionsTable) {
             Id equal 999L
         }
         assertNull(missing)
@@ -111,7 +111,7 @@ class EntityPairsTest : BaseAndroidTest() {
     
     @Test
     fun testGetEntityPairs() {
-        val pairs = dbh.getEntityPairs(_ItemsTable, _ConditionsTable) {
+        val pairs = dbh.getEntityPairs(ItemsTable, ConditionsTable) {
             Int1 lessEqual 5
         }
         
@@ -125,7 +125,7 @@ class EntityPairsTest : BaseAndroidTest() {
     
     @Test
     fun testGetEntityPairMap() {
-        val pairMap = dbh.getEntityPairMap(_ItemsTable, _ConditionsTable)
+        val pairMap = dbh.getEntityPairMap(ItemsTable, ConditionsTable)
         
         assertEquals(10, pairMap.size)
         for (id in 1L..10L) {
@@ -138,7 +138,7 @@ class EntityPairsTest : BaseAndroidTest() {
     
     @Test
     fun testGetEntityTripleById() {
-        val triple = dbh.getEntityTriple(_ItemsTable, _ConditionsTable, _MetaTable, id = 2L)
+        val triple = dbh.getEntityTriple(ItemsTable, ConditionsTable, MetaTable, id = 2L)
         
         assertNotNull(triple)
         assertEquals(2L, triple!!.first.id)
@@ -148,13 +148,13 @@ class EntityPairsTest : BaseAndroidTest() {
         assertEquals(2L, triple.third.id)
         assertEquals("MetaVal_2", triple.third.str1)
         
-        val missing = dbh.getEntityTriple(_ItemsTable, _ConditionsTable, _MetaTable, id = 999L)
+        val missing = dbh.getEntityTriple(ItemsTable, ConditionsTable, MetaTable, id = 999L)
         assertNull(missing)
     }
     
     @Test
     fun testGetEntityTriples() {
-        val triples = dbh.getEntityTriples(_ItemsTable, _ConditionsTable, _MetaTable) {
+        val triples = dbh.getEntityTriples(ItemsTable, ConditionsTable, MetaTable) {
             Int1 lessEqual 3
         }
         

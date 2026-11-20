@@ -6,10 +6,14 @@ import com.vankorno.sandbox._entities.EntityMeta
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
-import com.vankorno.vankornodb.dbManagement.migration.data._TTTEntityVersion
+import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
+import com.vankorno.vankornodb.get.getFirstEntity
+import com.vankorno.vankornodb.get.tableExists
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+
+private val VersionsTable = _EntityVersion.tableNamed(TABLE_EntityVersions)
 
 @MediumTest
 class StartTest() : BaseAndroidTest() {
@@ -21,13 +25,13 @@ class StartTest() : BaseAndroidTest() {
     
     @Test
     fun rowCreated() {
-        val firstRow = dbh.getFirstEntity(_TTTEntityVersion)
+        val firstRow = dbh.getFirstEntity(VersionsTable)
         assertTrue(firstRow != null)
     }
     
     @Test
     fun correctVersionVals() {
-        val firstRow = dbh.getFirstEntity(_TTTEntityVersion, default = EntityVersion())
+        val firstRow = dbh.getFirstEntity(VersionsTable, default = EntityVersion())
         
         val target = EntityVersion(
             name = EntityMeta.TestEntt.dbRowName,

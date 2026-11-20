@@ -1,9 +1,10 @@
 package com.vankorno.vankornodb.core.dsl.orderBy
 
-import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.BuilderOrder
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.flipped
 import com.vankorno.vankornodb.misc.flippedIf
+import com.vankorno.vankornodb.misc.orderBy
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -33,15 +34,13 @@ class FlippedTest {
     
     @Test
     fun `flipped columns produce descending order`() {
-        val order = OrderDsl().apply {
-            col(
-                colInt.flipped(),
-                colStr.flipped(),
-                colBool.flipped(),
-                colLong.flipped(),
-                colFloat.flipped()
-            )
-        }.buildStr()
+        val order = BuilderOrder().apply(orderBy(
+            colInt.flipped(),
+            colStr.flipped(),
+            colBool.flipped(),
+            colLong.flipped(),
+            colFloat.flipped(),
+        )).buildStr()
         
         assertEquals(
             "intCol DESC, strCol DESC, boolCol DESC, longCol DESC, floatCol DESC",
@@ -80,15 +79,13 @@ class FlippedTest {
     
     @Test
     fun `flippedIf condition controls ordering`() {
-        val order = OrderDsl().apply {
-            col(
-                colInt.flippedIf(true),
-                colStr.flippedIf(false),
-                colBool.flippedIf(true),
-                colLong.flippedIf(false),
-                colFloat.flippedIf(true)
-            )
-        }.buildStr()
+        val order = BuilderOrder().apply(orderBy(
+            colInt.flippedIf(true),
+            colStr.flippedIf(false),
+            colBool.flippedIf(true),
+            colLong.flippedIf(false),
+            colFloat.flippedIf(true),
+        )).buildStr()
         
         assertEquals(
             "intCol DESC, strCol, boolCol DESC, longCol, floatCol DESC",

@@ -120,62 +120,40 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.inSubquery(
-                                                           table: QueryTable<*, I, O, X>,
-                                                          column: ColumnSelector<I, TypedColumn<T>>,
+                                                          column: DbColumn<I, O, X, TypedColumn<T>>,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
                                                            where: I.()->Unit = {},
-    ) = this inSubquery subquery(table, column, orderBy, extra, where)
+    ) = this inSubquery subquery(column, orderBy, extra, where)
     
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> EntityColumn<W, TypedColumn<T>>.notInSubquery(
-                                                           table: QueryTable<*, I, O, X>,
-                                                          column: ColumnSelector<I, TypedColumn<T>>,
+                                                          column: DbColumn<I, O, X, TypedColumn<T>>,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
                                                            where: I.()->Unit = {},
-    ) = this notInSubquery subquery(table, column, orderBy, extra, where)
-    
-    
-    
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
-                                                           table: QueryTable<*, I, O, X>,
-                                                          column: ColumnSelector<I, TypedColumn<*>>,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: I.()->Unit = {},
-    ): Subquery = com.vankorno.vankornodb.core.dsl.subquery(table, column, orderBy, extra, where)
-    
-    
-    
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
-                                                       table: QueryTable<*, I, O, X>,
-                                                  vararg columns: ColumnSelector<I, TypedColumn<*>>,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: I.()->Unit = {},
-    ): Subquery = com.vankorno.vankornodb.core.dsl.subquery(table, *columns, orderBy = orderBy, extra = extra, where = where)
+    ) = this notInSubquery subquery(column, orderBy, extra, where)
     
     
     
     /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS. */
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
-                                               table: QueryTable<*, I, O, X>,
+                                         innerColumn: DbColumn<I, O, X, TypedColumn<T>>,
                                              outerColumn: EntityColumn<W, TypedColumn<T>>,
-                                             innerColumn: ColumnSelector<I, TypedColumn<T>>,
                                                   column: ColumnSelector<I, TypedColumn<*>>? = null,
                                                  orderBy: O.()->Unit = {},
                                                    extra: X.()->Unit = {},
                                                    where: I.()->Unit = {},
     ): Subquery {
+        val table = innerColumn.table
         val outer = context.qualifier
         val from = table.name
         val qualifier = if (from.equals(outer, ignoreCase = true)) {
             if (outer.equals("vk_inner", ignoreCase = true)) "vk_inner2" else "vk_inner"
         } else from
         val source = if (qualifier == from) from else "$from AS $qualifier"
-        val innerName = table.columnSql(innerColumn)
+        val innerName = table.columnSql(innerColumn.selector)
         val outerName = outerColumn.definition.name
         val projection = column?.let { table.columnSql(it) } ?: "1"
         

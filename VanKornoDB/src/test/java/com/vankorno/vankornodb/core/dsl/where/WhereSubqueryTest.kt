@@ -36,7 +36,7 @@ class WhereSubqueryTest {
     fun `Direct inSubquery and notInSubquery on TypedColumn`() {
         val resultExplicitCol = builderTable("Items").col { LongValue }.query(
             where = {
-                LongValue.inSubquery(builderTable("Conditions"), { LongValue }) {
+                LongValue.inSubquery(builderTable("Conditions").col { LongValue }) {
                     Flag equal true
                 }
             },
@@ -49,7 +49,7 @@ class WhereSubqueryTest {
         
         val resultDefaultCol = builderTable("Items").col { LongValue }.query(
             where = {
-                LongValue.inSubquery(builderTable("Conditions"), { LongValue }) {
+                LongValue.inSubquery(builderTable("Conditions").col { LongValue }) {
                     Flag equal true
                 }
             },
@@ -62,7 +62,7 @@ class WhereSubqueryTest {
         
         val resultNotIn = builderTable("Items").col { LongValue }.query(
             where = {
-                LongValue.notInSubquery(builderTable("Blocked"), { LongValue }) {
+                LongValue.notInSubquery(builderTable("Blocked").col { LongValue }) {
                     Flag equal true
                 }
             },

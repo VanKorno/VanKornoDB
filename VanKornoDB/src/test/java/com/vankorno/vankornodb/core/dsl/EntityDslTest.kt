@@ -74,7 +74,7 @@ class EntityDslTest {
         val flags = FlagSchema.tableNamed("Flags")
         val result = versionTable.query {
             Version greater 0
-            Id.inSubquery(flags, { OwnerId }) {
+            Id.inSubquery(flags.col { OwnerId }) {
                 Active equalAny arrayOf(true, false)
                 and { OwnerId greater 10L }
             }
@@ -94,7 +94,7 @@ class EntityDslTest {
     fun `correlated subqueries qualify both sides and group additional predicates`() {
         val flags = FlagSchema.tableNamed("Flags")
         val result = versionTable.query {
-            exists(subquery(flags, outerColumn = Id, innerColumn = { OwnerId }) {
+            exists(subquery(flags.col { OwnerId }, outerColumn = Id) {
                 Active equal true
                 or { OwnerId equal 99L }
             })
@@ -112,7 +112,7 @@ class EntityDslTest {
     fun `expanded columns retain their index and accept primitive varargs`() {
         val flags = FlagSchema.tableNamed("Flags")
         val choices = intArrayOf(2, 5)
-        val query = subquery(flags, { Scores[0] }) { Scores[1].equalAnyOf(*choices) }
+        val query = subquery(flags.col { Scores[0] }) { Scores[1].equalAnyOf(*choices) }
         
         assertEquals("SELECT score1 FROM Flags WHERE score2 IN (?, ?)", query.query)
         assertArrayEquals(arrayOf("2", "5"), query.args)
