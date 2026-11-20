@@ -1,46 +1,64 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.fix
 
+import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import com.vankorno.vankornodb.api.Dbh
+import com.vankorno.vankornodb.core.data.DbConstants.RowID
+import com.vankorno.vankornodb.core.dsl.DbColumn
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.raw
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.get.getNextLongs
-import com.vankorno.vankornodb.get.getTableLongs
-import com.vankorno.vankornodb.misc.data.SharedCol.cRowId
-import com.vankorno.vankornodb.set.setLong
+import com.vankorno.vankornodb.get.useCursor
 
-/**
- * Multi-table, multi-column variant of [fixDuplicateLongs]
+/** Repairs each bound column and returns the total number of modified rows.
  */
-fun SQLiteDatabase.fixDuplicateLongsMult(                            tables: List<String>,
-                                                                    columns: List<LongCol>,
-                                                                      where: W.()->Unit = {},
-) = tables.sumOf { table ->
-    columns.sumOf { column -> fixDuplicateLongs(table, column, where) }
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.fixDuplicateLongsMult(
+                                                           columns: List<DbColumn<W, O, X, LongCol>>,
+                                                             where: W.()->Unit = {},
+): Int = readWrite(0, "fixDuplicateLongsMult") { db ->
+    db.fixDuplicateLongsMult(columns, where)
 }
 
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.fixDuplicateLongsMult(
+                                                           columns: List<DbColumn<W, O, X, LongCol>>,
+                                                             where: W.()->Unit = {},
+): Int = columns.sumOf { fixDuplicateLongs(it, where) }
 
-/**
- * Finds duplicate values in a column and assigns unique values to subsequent occurrences.
- * The first occurrence of each value is preserved.
- *
- * @return Number of rows modified.
+
+
+
+/** Preserves the first matching row per value in ROWID order. Assigns subsequent matches
+ * values available across the whole table and returns the number of rows updated.
  */
-fun SQLiteDatabase.fixDuplicateLongs(                                 table: String,
-                                                                     column: LongCol,
-                                                                      where: W.()->Unit = {},
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.fixDuplicateLongs(
+                                                                  column: DbColumn<W, O, X, LongCol>,
+                                                                   where: W.()->Unit = {},
+): Int = readWrite(0, "fixDuplicateLongs") { db -> db.fixDuplicateLongs(column, where) }
+
+
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.fixDuplicateLongs(
+                                                                  column: DbColumn<W, O, X, LongCol>,
+                                                                   where: W.()->Unit = {},
 ): Int {
-    val rows = getTableLongs(table, arrayOf(cRowId, column), where = where)
-    val seenValues = mutableSetOf<Long>()
-    val duplicateRows = rows.filter { (_, value) -> !seenValues.add(value) }
-    
-    if (duplicateRows.isEmpty()) return 0 //\/\/\/\/\/\
-    
-    val newValues = getNextLongs(table, column, duplicateRows.size)
-    
-    duplicateRows.forEachIndexed { idx, (rowId, _) ->
-        setLong(newValues[idx], table, column) {
-            cRowId equal rowId
+    val table = column.table
+    val name = table.columnSql(column.selector)
+    val projection = table.columns { listOf(raw(RowID), column.selector(this)) }
+    val duplicates = useCursor(projection, orderBy = { raw(RowID) }, where = where) { cursor ->
+        val seen = mutableSetOf<Long>()
+        buildList {
+            while (cursor.moveToNext()) {
+                if (!seen.add(cursor.getLong(1)))
+                    add(cursor.getLong(0))
+            }
         }
     }
-    return duplicateRows.size
+    val replacements = getNextLongs(table, column.selector, duplicates.size)
+    val values = ContentValues(1)
+    return duplicates.indices.sumOf { idx ->
+        values.put(name, replacements[idx])
+        update(table.name, values, "$RowID = ?", arrayOf(duplicates[idx].toString()))
+    }
 }

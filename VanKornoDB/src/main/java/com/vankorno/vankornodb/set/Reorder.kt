@@ -9,6 +9,7 @@ import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.dbManagement.data.requirePositionColumn
 
 /** Moves a row one position, or to the first or last position, among rows matching [where].
  * Returns false when the row has no available move.
@@ -30,6 +31,7 @@ fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorde
                                                             makeFirstOrLast: Boolean = false,
                                                                       where: W.()->Unit = {},
 ): Boolean {
+    table.info.requirePositionColumn()
     beginTransaction()
     try {
         val moved = reorderRow(table, id, moveUpOrBack, makeFirstOrLast, where)

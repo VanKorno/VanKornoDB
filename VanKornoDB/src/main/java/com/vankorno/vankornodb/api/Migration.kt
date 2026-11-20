@@ -77,10 +77,10 @@ open class DbMigrator(                                               db: SQLiteD
  *
  * @throws IllegalArgumentException if any expected entity class or migration lambda is missing.
  */
-fun SQLiteDatabase.migrateMultiStep(                           table: String,
-                                                          oldVersion: Int,
-                                                          entityMeta: BaseEntityMeta,
-                                                       onNewDbFilled: (List<DbEntity>)->Unit = {},
+fun SQLiteDatabase.migrateMultiStep(                             table: String,
+                                                            oldVersion: Int,
+                                                            entityMeta: BaseEntityMeta,
+                                                         onNewDbFilled: (List<DbEntity>)->Unit = {},
 ) {
     this.migrateMultiStepInternal(
         table = table,

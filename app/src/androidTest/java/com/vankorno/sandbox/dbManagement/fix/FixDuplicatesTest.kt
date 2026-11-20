@@ -7,6 +7,9 @@ import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateInts
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicateLongs
+import com.vankorno.vankornodb.dbManagement.fix.fixDuplicatePosition
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.get.getColInts
 import com.vankorno.vankornodb.get.getColLongs
@@ -133,9 +136,9 @@ class FixDuplicatesTest {
             TestEntity(position = 20L, int1 = 200, long1 = 2000L, int2 = 2),
             TestEntity(position = 20L, int1 = 200, long1 = 2000L, int2 = 2),
         ))
-        assertEquals(1, dbh.fixDuplicateLongs(table, CTest.Long1) { CTest.Int2 equal 1 })
-        assertEquals(1, dbh.fixDuplicateInts(table, CTest.Int1) { CTest.Int2 equal 1 })
-        assertEquals(1, dbh.fixDuplicatePosition(table) { CTest.Int2 equal 1 })
+        assertEquals(1, dbh.fixDuplicateLongs(_Test.table(table).col { Long1 }) { Int2 equal 1 })
+        assertEquals(1, dbh.fixDuplicateInts(tableInfo.col { Int1 }) { Int2 equal 1 })
+        assertEquals(1, dbh.fixDuplicatePosition(_Test.table(table)) { Int2 equal 1 })
         
         assertAllFixFuns(table, 1, 1, 1)
         
@@ -154,8 +157,8 @@ class FixDuplicatesTest {
                                                                             expectedInts: Int,
                                                                         expectedPosition: Int,
     ) {
-        assertEquals(expectedLongs, dbh.fixDuplicateLongs(table, CTest.Long1))
-        assertEquals(expectedInts, dbh.fixDuplicateInts(table, CTest.Int1))
-        assertEquals(expectedPosition, dbh.fixDuplicatePosition(table))
+        assertEquals(expectedLongs, dbh.fixDuplicateLongs(_Test.table(table).col { Long1 }))
+        assertEquals(expectedInts, dbh.fixDuplicateInts(_Test.table(table).col { Int1 }))
+        assertEquals(expectedPosition, dbh.fixDuplicatePosition(_Test.table(table)))
     }
 }

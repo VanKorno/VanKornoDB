@@ -4,14 +4,12 @@ package com.vankorno.vankornodb.add
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.ColumnSelector
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.QueryTable
-import com.vankorno.vankornodb.dbManagement.data.LongCol
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.get.getNextIDs
-import com.vankorno.vankornodb.get.getNextLongs
+import com.vankorno.vankornodb.get.getNextPositions
 import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 
 
@@ -23,22 +21,20 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIDsAndPositions(
                                                        table: QueryTable<TableInfo<T>, W, O, X>,
                                                     entities: List<T>,
-                                                    position: ColumnSelector<W, LongCol>,
                                           positionConditions: W.()->Unit = {},
                                             setIdAndPosition: (T, Long, Long)->T,
 ): List<DbIdAndPosition> = readWrite(emptyList(), "addWithNewIDsAndPositions") { db ->
-    db.addWithNewIDsAndPositions(table, entities, position, positionConditions, setIdAndPosition)
+    db.addWithNewIDsAndPositions(table, entities, positionConditions, setIdAndPosition)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIDsAndPositions(
                                                        table: QueryTable<TableInfo<T>, W, O, X>,
                                                     entities: List<T>,
-                                                    position: ColumnSelector<W, LongCol>,
                                           positionConditions: W.()->Unit = {},
                                             setIdAndPosition: (T, Long, Long)->T,
 ): List<DbIdAndPosition> {
+    val positions = getNextPositions(table, entities.size, where = positionConditions)
     val ids = getNextIDs(table, entities.size)
-    val positions = getNextLongs(table, position, entities.size, where = positionConditions)
     
     return entities.mapIndexed { idx, entity ->
         val id = ids[idx]
@@ -57,23 +53,20 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWit
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIdAndPosition(
                                                            table: QueryTable<TableInfo<T>, W, O, X>,
                                                           entity: T,
-                                                        position: ColumnSelector<W, LongCol>,
                                               positionConditions: W.()->Unit = {},
                                                 setIdAndPosition: (T, Long, Long)->T,
 ): DbIdAndPosition = readWrite(DbIdAndPosition(), "addWithNewIdAndPosition") { db ->
-    db.addWithNewIdAndPosition(table, entity, position, positionConditions, setIdAndPosition)
+    db.addWithNewIdAndPosition(table, entity, positionConditions, setIdAndPosition)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIdAndPosition(
                                                            table: QueryTable<TableInfo<T>, W, O, X>,
                                                           entity: T,
-                                                        position: ColumnSelector<W, LongCol>,
                                               positionConditions: W.()->Unit = {},
                                                 setIdAndPosition: (T, Long, Long)->T,
 ): DbIdAndPosition = addWithNewIDsAndPositions(
     table = table,
     entities = listOf(entity),
-    position = position,
     positionConditions = positionConditions,
     setIdAndPosition = setIdAndPosition,
 ).single()

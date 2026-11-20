@@ -47,7 +47,7 @@ class AddConvenienceTest {
         assertEquals(ratQuant + 1, lastId)
         assertEquals(ratQuant + 1, lastPosition)
 
-        val newRatId = dbh.getLong(_TestTable, { Id }) { Name equal name }
+        val newRatId = dbh.getLong(_TestTable.col { Id }) { Name equal name }
         assertEquals(ratQuant + 1, newRatId)
         
         dbh.deleteRows(_TestTable) { Name equal name }
