@@ -1,13 +1,11 @@
 /* SPDX-License-Identifier: MPL-2.0 */
-package com.vankorno.vankornodb.add
+package com.vankorno.vankornodb.add.internal
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.toContentValues
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.misc.wLog
-
-// TODO Move to "internal"
 
 /** For migration / polymorphic use
 */
@@ -18,6 +16,7 @@ private fun <T : DbEntity> SQLiteDatabase.addEntityOut(                 tableInf
     if (cv.size() == 0) return -1 //\/\/\/\/\/\
     return insert(tableInfo.name, null, cv)
 }
+
 
 /** For migration / polymorphic use
 */
@@ -38,6 +37,3 @@ internal fun <T : DbEntity> SQLiteDatabase.addEntitiesOut(              tableInf
     }
     return count
 }
-
-
-

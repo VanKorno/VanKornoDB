@@ -2,7 +2,7 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
 import android.database.sqlite.SQLiteDatabase
-import com.vankorno.vankornodb.add.addEntitiesOut
+import com.vankorno.vankornodb.add.internal.addEntitiesOut
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.toEntity

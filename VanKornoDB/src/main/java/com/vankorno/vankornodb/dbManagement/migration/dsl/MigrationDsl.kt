@@ -20,7 +20,7 @@ class ColModification(val colName: String, val block: TransformColDslInternal.Co
 /**
  * Builds a [MigrationBundle] from the version specifications and milestone rules configured in [block].
  */
-internal fun <T: DbEntity> defineMigrationsInternal(         latestVersion: Int,
+internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: Int,
                                                           latestSchemaBundle: SchemaBundle<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle {
@@ -58,7 +58,7 @@ abstract class MigrationDslInternal {
      * @param schemaBundle The schema bundle defining this version's entity class and structure.
      * @param block Configuration block for renames and milestones at this version.
      */
-    fun <T : DbEntity> version(                           version: Int,
+    fun <T : DbEntity> version(                               version: Int,
                                                          schemaBundle: SchemaBundle<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
