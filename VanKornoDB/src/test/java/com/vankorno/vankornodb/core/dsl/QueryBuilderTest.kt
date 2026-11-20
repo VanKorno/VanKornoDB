@@ -4,8 +4,6 @@ import com.vankorno.vankornodb.TestConstants.BestName
 import com.vankorno.vankornodb.TestConstants.Bool1
 import com.vankorno.vankornodb.TestConstants.DirtyTable
 import com.vankorno.vankornodb.core.data.DbConstants.*
-import com.vankorno.vankornodb.misc.columns
-import com.vankorno.vankornodb.misc.data.SharedCol.cID
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -17,16 +15,16 @@ class QueryBuilderTest { // TODO split tests/files
     fun `Simple checks`() {
         assertEquals(
             SELECT_ALL_FROM + DirtyTable,
-            getQuery(DirtyTable).query
+            builderTable(DirtyTable).query().query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + ORDER_BY + _ID,
-            getQuery(DirtyTable, orderBy = { raw(_ID) }).query
+            builderTable(DirtyTable).query( orderBy = { raw(_ID) }).query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID+"=?" + ORDER_BY + _ID c _Name,
             
-            getQuery(DirtyTable, where = { cID equal 1 }, 
+            builderTable(DirtyTable).query( where = { Id equal 1 }, 
                 orderBy = {
                     raw(_ID)
                     raw(_Name)
@@ -36,23 +34,23 @@ class QueryBuilderTest { // TODO split tests/files
         
         assertEquals(
             SELECT + _ID c _Name + FROM + DirtyTable + WHERE + _ID+">=?",
-            getQuery(DirtyTable, columns(_ID, _Name), where = { _ID greaterEqual 10 }).query
+            builderTable(DirtyTable).columns { Id then Name }.query( where = { Id greaterEqual 10 }).query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID+">?",
-            getQuery(DirtyTable, where = { _ID greater 1 }).query
+            builderTable(DirtyTable).query( where = { Id greater 1 }).query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID+"<?",
-            getQuery(DirtyTable, where = { _ID less 1 }).query
+            builderTable(DirtyTable).query( where = { Id less 1 }).query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + _ID+"<=?",
-            getQuery(DirtyTable, where = { _ID lessEqual 1 }).query
+            builderTable(DirtyTable).query( where = { Id lessEqual 1 }).query
         )
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + Bool1+"=?",
-            getQuery(DirtyTable, where = { Bool1 equal true }).query
+            builderTable(DirtyTable).query( where = { Bool equal true }).query
         )
     }
     
@@ -61,10 +59,10 @@ class QueryBuilderTest { // TODO split tests/files
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "$_ID>=? AND ($_Name=?)",
             
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
-                    _ID greaterEqual 10
-                    and { Name = BestName }
+                    Id greaterEqual 10
+                    and { Name equal BestName }
                 }
             ).query
         )
@@ -75,12 +73,12 @@ class QueryBuilderTest { // TODO split tests/files
                 and + "($_Name=?)" +
                 and + "($_Position=?)" +
                 and + "($_ID=?)",
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
-                    _ID greaterEqual 10
-                    and { _Name equal BestName }
-                    and { _Position equal 1.1F }
-                    and { _ID equal "1" }
+                    Id greaterEqual 10
+                    and { Name equal BestName }
+                    and { Position equal 1.1F }
+                    and { Id equal 1 }
                 }
             ).query
         )
@@ -91,12 +89,12 @@ class QueryBuilderTest { // TODO split tests/files
                 and + "($_Name=?)" +
                 or + "($_Position=?)" +
                 or + "($_ID=?)",
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
-                    _ID greaterEqual 10
-                    and { _Name equal BestName }
-                    or { _Position equal 1.1F }
-                    or { _ID equal 1 }
+                    Id greaterEqual 10
+                    and { Name equal BestName }
+                    or { Position equal 1.1F }
+                    or { Id equal 1 }
                 }
             ).query
         )
@@ -106,12 +104,12 @@ class QueryBuilderTest { // TODO split tests/files
     fun `condition values`() {
         assertEquals(
             arrayOf("1", "1", "1.1", "1").joinToString(comma),
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
-                    _ID greaterEqual 1
-                    and { _ID equal 1 }
-                    and { _ID greaterEqual 1.1F }
-                    and { _ID greaterEqual 1L }
+                    Id greaterEqual 1
+                    and { Id equal 1 }
+                    and { rawClause("id>=?", "1.1") }
+                    and { Id greaterEqual 1L }
                 }
             ).args.joinToString(comma)
         )
@@ -127,13 +125,13 @@ class QueryBuilderTest { // TODO split tests/files
                 and + "($_Name=?)" +
                 or + "($_Position=? OR ($_ID=?))",
             
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
-                    _ID greaterEqual 10
-                    and { _Name equal BestName }
+                    Id greaterEqual 10
+                    and { Name equal BestName }
                     or {
-                        _Position equal 1.1F
-                        or { _ID equal 1 }
+                        Position equal 1.1F
+                        or { Id equal 1 }
                     }
                 }
             ).query
@@ -145,14 +143,14 @@ class QueryBuilderTest { // TODO split tests/files
         assertEquals(
             SELECT_ALL_FROM + DirtyTable + WHERE + "($_ID>=? AND ($_Name=?)) AND ($_Position=?) OR ($_ID=?)",
             
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
                     group {
-                        _ID greaterEqual 10
-                        and { _Name equal BestName }
+                        Id greaterEqual 10
+                        and { Name equal BestName }
                     }
-                    and { _Position equal 1.1F }
-                    or { _ID equal 1 }
+                    and { Position equal 1.1F }
+                    or { Id equal 1 }
                 }
             ).query
         )
@@ -169,15 +167,15 @@ class QueryBuilderTest { // TODO split tests/files
                 and + "($_Position=?)" + 
                 or + "($_ID=?)"
             ,
-            getQuery(DirtyTable,
+            builderTable(DirtyTable).query(
                 where = {
-                    _Position equal 1.1F
+                    Position equal 1.1F
                     and {
-                        _ID greaterEqual 10
-                        and { _Name equal BestName }
+                        Id greaterEqual 10
+                        and { Name equal BestName }
                     }
-                    and { _Position equal 1.1F }
-                    or { _ID equal 1 }
+                    and { Position equal 1.1F }
+                    or { Id equal 1 }
                 }
             ).query
         )
@@ -186,24 +184,24 @@ class QueryBuilderTest { // TODO split tests/files
     
     @Test
     fun `Five lvl conditions`() {
-        val result = getQuery(DirtyTable,
+        val result = builderTable(DirtyTable).query(
             where = {
-                _Position equal 1
+                rawClause("position=?", "1")
                 and {
-                    _ID greaterEqual 2
+                    Id greaterEqual 2
                     or {
-                        _Name equal BestName
+                        Name equal BestName
                         and {
-                            _Name equal BestName
+                            Name equal BestName
                             or {
-                                _Name equal BestName
-                                or { _Position less 5 }
+                                Name equal BestName
+                                or { rawClause("position<?", "5") }
                             }
                         }
                     }
                 }
-                and { _Position equal 1.1F }
-                or { _ID equal 1 }
+                and { Position equal 1.1F }
+                or { Id equal 1 }
             }
         )
         

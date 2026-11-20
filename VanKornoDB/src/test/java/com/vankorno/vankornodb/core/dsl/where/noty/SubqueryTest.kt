@@ -7,21 +7,20 @@ import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.core.data.DbConstants._Name
 import com.vankorno.vankornodb.core.data.DbConstants.comma
 import com.vankorno.vankornodb.core.data.DbConstants.countAll
-import com.vankorno.vankornodb.core.dsl.getQuery
-import com.vankorno.vankornodb.misc.columns
+import com.vankorno.vankornodb.core.dsl.builderTable
+import com.vankorno.vankornodb.core.dsl.query
+import com.vankorno.vankornodb.core.dsl.raw
 import org.junit.Assert
 import org.junit.Test
 
 class SubqueryTest {
     @Test
     fun `Query in query`() {
-        val result = getQuery(
-            table = Users,
-            columns = columns(_Name),
+        val result = builderTable(Users).col { Name }.query(
             where = {
-                subquery(Posts, columns(countAll),
+                builderTable(Posts).col { raw(countAll) }.query(
                     where = {
-                        (Posts dot UserID) equal (Users dot _ID)
+                        rawClause("$Posts.$UserID=?", "$Users.$_ID")
                     }
                 ) greater 10
             }

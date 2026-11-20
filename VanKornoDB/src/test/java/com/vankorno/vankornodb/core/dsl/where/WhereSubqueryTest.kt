@@ -1,15 +1,10 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.core.dsl.where
 
-import com.vankorno.vankornodb.TestConstants.cBool
-import com.vankorno.vankornodb.TestConstants.cInt
-import com.vankorno.vankornodb.TestConstants.cLong
 import com.vankorno.vankornodb.core.data.DbConstants.comma
-import com.vankorno.vankornodb.core.dsl.getQuery
-import com.vankorno.vankornodb.dbManagement.data.bCol
-import com.vankorno.vankornodb.dbManagement.data.iCol
-import com.vankorno.vankornodb.dbManagement.data.lCol
-import com.vankorno.vankornodb.misc.columns
+import com.vankorno.vankornodb.core.dsl.builderTable
+import com.vankorno.vankornodb.core.dsl.query
+import com.vankorno.vankornodb.core.dsl.raw
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -17,15 +12,11 @@ class WhereSubqueryTest {
     
     @Test
     fun `Subquery with inSubquery using TypedColumn`() {
-        val result = getQuery(
-            table = "Items",
-            columns = columns(cLong),
+        val result = builderTable("Items").col { LongValue }.query(
             where = {
-                cLong inSubquery subquery(
-                    table = "Conditions",
-                    column = cLong,
+                LongValue inSubquery builderTable("Conditions").col { LongValue }.query(
                     where = {
-                        cBool equal true
+                        Flag equal true
                     },
                 )
             },
@@ -43,12 +34,10 @@ class WhereSubqueryTest {
     
     @Test
     fun `Direct inSubquery and notInSubquery on TypedColumn`() {
-        val resultExplicitCol = getQuery(
-            table = "Items",
-            columns = columns(cLong),
+        val resultExplicitCol = builderTable("Items").col { LongValue }.query(
             where = {
-                cLong.inSubquery("Conditions", cLong) {
-                    cBool equal true
+                LongValue.inSubquery(builderTable("Conditions"), { LongValue }) {
+                    Flag equal true
                 }
             },
         )
@@ -58,12 +47,10 @@ class WhereSubqueryTest {
         )
         assertEquals("1", resultExplicitCol.args.joinToString(comma))
         
-        val resultDefaultCol = getQuery(
-            table = "Items",
-            columns = columns(cLong),
+        val resultDefaultCol = builderTable("Items").col { LongValue }.query(
             where = {
-                cLong.inSubquery("Conditions") {
-                    cBool equal true
+                LongValue.inSubquery(builderTable("Conditions"), { LongValue }) {
+                    Flag equal true
                 }
             },
         )
@@ -73,12 +60,10 @@ class WhereSubqueryTest {
         )
         assertEquals("1", resultDefaultCol.args.joinToString(comma))
         
-        val resultNotIn = getQuery(
-            table = "Items",
-            columns = columns(cLong),
+        val resultNotIn = builderTable("Items").col { LongValue }.query(
             where = {
-                cLong.notInSubquery("Blocked") {
-                    cBool equal true
+                LongValue.notInSubquery(builderTable("Blocked"), { LongValue }) {
+                    Flag equal true
                 }
             },
         )
@@ -91,16 +76,12 @@ class WhereSubqueryTest {
     
     @Test
     fun `Subquery with inSubquery using String`() {
-        val result = getQuery(
-            table = "Items",
-            columns = columns("id"),
+        val result = builderTable("Items").col { Id }.query(
             where = {
-                "id" inSubquery subquery(
-                    table = "Conditions",
-                    column = "id",
+                Id inSubquery builderTable("Conditions").col { Id }.query(
                     where = {
-                        "active" equal true
-                        "level" greater 5
+                        Active equal true
+                        Level greater 5
                     },
                 )
             },
@@ -118,14 +99,11 @@ class WhereSubqueryTest {
     
     @Test
     fun `Subquery with notInSubquery and equalAny`() {
-        val resultNotIn = getQuery(
-            table = "Items",
+        val resultNotIn = builderTable("Items").query(
             where = {
-                cInt notInSubquery subquery(
-                    table = "Banned",
-                    column = cInt,
+                Num notInSubquery builderTable("Banned").col { Num }.query(
                     where = {
-                        cInt greater 100
+                        Num greater 100
                     },
                 )
             },
@@ -136,12 +114,9 @@ class WhereSubqueryTest {
         )
         assertEquals("100", resultNotIn.args.joinToString(comma))
         
-        val resultEqualAny = getQuery(
-            table = "Items",
+        val resultEqualAny = builderTable("Items").query(
             where = {
-                cInt equalAny subquery(
-                    table = "Allowed",
-                    column = cInt,
+                Num equalAny builderTable("Allowed").col { Num }.query(
                 )
             },
         )
@@ -153,16 +128,13 @@ class WhereSubqueryTest {
     
     @Test
     fun `Subquery with exists and notExists`() {
-        val resultExists = getQuery(
-            table = "Items",
+        val resultExists = builderTable("Items").query(
             where = {
                 exists(
-                    subquery(
-                        table = "Conditions",
-                        column = "1",
+                    builderTable("Conditions").col { raw("1") }.query(
                         where = {
-                            ("Conditions" dot cLong) equalCol ("Items" dot cLong)
-                            cBool equal true
+                            rawClause("Conditions.cLong=Items.cLong")
+                            Flag equal true
                         },
                     ),
                 )
@@ -175,15 +147,12 @@ class WhereSubqueryTest {
         )
         assertEquals("1", resultExists.args.joinToString(comma))
         
-        val resultNotExists = getQuery(
-            table = "Items",
+        val resultNotExists = builderTable("Items").query(
             where = {
                 notExists(
-                    subquery(
-                        table = "Blocked",
-                        column = "1",
+                    builderTable("Blocked").col { raw("1") }.query(
                         where = {
-                            ("Blocked" dot cLong) equalCol ("Items" dot cLong)
+                            rawClause("Blocked.cLong=Items.cLong")
                         },
                     ),
                 )
@@ -198,25 +167,17 @@ class WhereSubqueryTest {
     
     @Test
     fun `Column equal subquery and NumberColumn compare subquery`() {
-        val visibleAtHome = bCol("visibleAtHome")
-        val itemId = lCol("id")
-        val priority = iCol("priority")
         
-        val result = getQuery(
-            table = "Items",
+        val result = builderTable("Items").query(
             where = {
-                visibleAtHome equal subquery(
-                    table = "Conditions",
-                    column = visibleAtHome,
+                Visible equal builderTable("Conditions").col { Visible }.query(
                     where = {
-                        ("Conditions" dot itemId) equalCol ("Items" dot itemId)
+                        rawClause("Conditions.id=Items.id")
                     },
                 )
-                priority greater subquery(
-                    table = "Thresholds",
-                    column = priority,
+                Priority greater builderTable("Thresholds").col { Priority }.query(
                     where = {
-                        priority greater 10
+                        Priority greater 10
                     },
                 )
             },
@@ -234,18 +195,13 @@ class WhereSubqueryTest {
     
     @Test
     fun `Subquery with multiple columns`() {
-        val colA = iCol("colA")
-        val colB = iCol("colB")
         
-        val result = getQuery(
-            table = "Main",
+        val result = builderTable("Main").query(
             where = {
                 exists(
-                    subquery(
-                        table = "Sub",
-                        columns = columns(colA, colB),
+                    builderTable("Sub").columns { A then B }.query(
                         where = {
-                            colA equal 1
+                            A equal 1
                         },
                     ),
                 )
@@ -261,19 +217,13 @@ class WhereSubqueryTest {
     
     @Test
     fun `Two tables visibility check using IN subquery`() {
-        val itemId = lCol("id")
-        val conditionA = bCol("condA")
-        val minLevel = iCol("minLvl")
         
-        val result = getQuery(
-            table = "HomeItems",
+        val result = builderTable("HomeItems").query(
             where = {
-                itemId inSubquery subquery(
-                    table = "VisibilityConditions",
-                    column = itemId,
+                Id inSubquery builderTable("VisibilityConditions").col { Id }.query(
                     where = {
-                        conditionA equal true
-                        minLevel greaterEqual 3
+                        Condition equal true
+                        MinLevel greaterEqual 3
                     },
                 )
             },
@@ -291,19 +241,14 @@ class WhereSubqueryTest {
     
     @Test
     fun `Two tables visibility check using correlated EXISTS subquery`() {
-        val itemId = lCol("id")
-        val conditionA = bCol("condA")
         
-        val result = getQuery(
-            table = "HomeItems",
+        val result = builderTable("HomeItems").query(
             where = {
                 exists(
-                    subquery(
-                        table = "VisibilityConditions",
-                        column = "1",
+                    builderTable("VisibilityConditions").col { raw("1") }.query(
                         where = {
-                            ("VisibilityConditions" dot itemId) equalCol ("HomeItems" dot itemId)
-                            conditionA equal true
+                            rawClause("VisibilityConditions.id=HomeItems.id")
+                            Condition equal true
                         },
                     ),
                 )
