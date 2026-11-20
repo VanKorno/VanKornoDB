@@ -182,7 +182,7 @@ class GetLargestLastTest {
     private fun testSwapLastRows(                                              tableName: String
     ) {
         val table = _Test.table(tableName)
-        dbh.reorder(table, { Position }, ratQuant, moveUpOrBack = true)
+        dbh.reorder(table, ratQuant, moveUpOrBack = true)
         
         val lastId = dbh.getLastId(table)
         assertEquals(ratQuant, lastId)
