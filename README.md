@@ -215,8 +215,8 @@ fun migrationsTaskoid() = defineMigrations(
 ) {
     version(1, _V1_Taskoid) // Basic minimal data: keeps, which class was used at that version
     version(2, _V2_Taskoid) // Probably some columns were removed or added here automatically, based on the class differences
-    version(3, _V3_Taskoid) { rename { TaskoidTable.select { HideForMins } from "hideForMints" to "hideForMins" }} // for renaming you need to keep a record like this
-    version(4, _V4_Taskoid) { rename { TaskoidTable.select { TimesCompletedGame } from "timesCompleted" to "timesCompletedGame" }}
+    version(3, _V3_Taskoid) { rename { "hideForMints" to "hideForMins" } } // for renaming you need to keep a record like this
+    version(4, _V4_Taskoid) { rename { "timesCompleted" to "timesCompletedGame" } }
     version(5, _V5_Taskoid)
     version(6, _V6_Taskoid) {
         milestone( // Milestones (migration steps, unskippable migrations, see more info below the code)

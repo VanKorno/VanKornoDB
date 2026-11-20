@@ -16,6 +16,7 @@ import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.delete.deleteTable
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.eLog
+import com.vankorno.vankornodb.misc.wLog
 import com.vankorno.vankornodb.newTable.createTable
 import com.vankorno.vankornodb.newTable.createTables
 import kotlin.reflect.KClass
@@ -62,6 +63,8 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(            table: String,
     val versionedBundles = migrationBundle.versionedSchemaBundles
     val renameHistory = migrationBundle.renameHistory
     val milestones = migrationBundle.milestones
+    
+    validateMigrationBundle(versionedBundles, renameHistory)
     // region LOG
         dLog("Starting migrateMultiStep()... Table = $table, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${milestones.size}")
     // endregion
@@ -379,8 +382,75 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(     vararg tables: Tab
 
 
 
+internal fun validateMigrationBundle(
+                                       versionedSchemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
+                                                renameHistory: List<RenameRecord>,
+) {
+    for (record in renameHistory) {
+        val ver = record.version
+        val prevBundle = versionedSchemaBundles[ver - 1]
+        val currBundle = versionedSchemaBundles[ver]
+        
+        if (prevBundle != null) {
+            val prevCols = prevBundle.columns?.map { it.name } ?: emptyList()
+            if (prevCols.isNotEmpty() && record.from !in prevCols) {
+                val closest = findClosestMatch(record.from, prevCols)
+                val hint = if (closest != null) " Did you mean '$closest'?" else ""
+                // region LOG
+                    wLog("Migration validation warning at version $ver: Source column '${record.from}' in rename rule ('${record.from}' -> '${record.to}') was not found in version ${ver - 1} schema ($prevCols).$hint")
+                // endregion
+            }
+        }
+        
+        if (currBundle != null) {
+            val currCols = currBundle.columns?.map { it.name } ?: emptyList()
+            if (currCols.isNotEmpty() && record.to !in currCols) {
+                val closest = findClosestMatch(record.to, currCols)
+                val hint = if (closest != null) " Did you mean '$closest'?" else ""
+                // region LOG
+                    wLog("Migration validation warning at version $ver: Target column '${record.to}' in rename rule ('${record.from}' -> '${record.to}') was not found in version $ver schema ($currCols).$hint")
+                // endregion
+            }
+        }
+    }
+}
 
 
 
-
-
+internal fun findClosestMatch(                                                target: String,
+                                                                          candidates: List<String>,
+): String? {
+    if (candidates.isEmpty()) return null //\/\/\/\/\/\
+    
+    fun levenshtein(s1: String, s2: String): Int {
+        val m = s1.length
+        val n = s2.length
+        val dp = Array(m + 1) { IntArray(n + 1) }
+        for (i in 0..m) dp[i][0] = i
+        for (j in 0..n) dp[0][j] = j
+        
+        for (i in 1..m) {
+            for (j in 1..n) {
+                val cost = if (s1[i - 1].equals(s2[j - 1], ignoreCase = true)) 0 else 1
+                dp[i][j] = minOf(
+                    dp[i - 1][j] + 1,
+                    dp[i][j - 1] + 1,
+                    dp[i - 1][j - 1] + cost,
+                )
+            }
+        }
+        return dp[m][n]
+    }
+    
+    var bestMatch: String? = null
+    var minDistance = Int.MAX_VALUE
+    
+    for (candidate in candidates) {
+        val dist = levenshtein(target, candidate)
+        if (dist < minDistance && dist <= maxOf(2, target.length / 2)) {
+            minDistance = dist
+            bestMatch = candidate
+        }
+    }
+    return bestMatch
+}

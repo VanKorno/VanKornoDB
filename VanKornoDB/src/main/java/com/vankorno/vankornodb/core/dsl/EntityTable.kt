@@ -61,19 +61,24 @@ open class EntityTable<out I : TableInfo<*>, W> internal constructor(
     val name get() = info.name
     
     
-    internal fun predicate(qualifier: String, block: W.()->Unit): WhereDslBase {
+    internal fun predicate(                                                  qualifier: String,
+                                                                                 block: W.()->Unit,
+    ): WhereDslBase {
         val state = WhereDslBase()
         factory(DslContext(this, state, qualifier)).block()
         return state
     }
     
-    fun where(block: W.()->Unit): QueryWithArgs {
+    fun where(                                                                     block: W.()->Unit
+    ): QueryWithArgs {
         val predicate = predicate(name, block)
         return QueryWithArgs(predicate.buildStr(), predicate.args.toTypedArray())
     }
     
-    fun <S : SetDsl<W>> set(factory: (W)->S, actions: S.()->Unit) =
-        factory(selectionScope()).apply(actions).ops
+    fun <S : SetDsl<W>> set(                                                   factory: (W)->S,
+                                                                               actions: S.()->Unit,
+    ) = factory(selectionScope()).apply(actions).ops
+    
     
     internal fun selectionScope() = factory(DslContext(this, WhereDslBase(), name))
     

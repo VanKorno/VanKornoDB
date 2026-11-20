@@ -9,6 +9,7 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
+import com.vankorno.vankornodb.dbManagement.migration.validateMigrationBundle
 
 
 /**
@@ -31,10 +32,15 @@ internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: In
     if (latestVersionAbsent)
         defBuilder.versionedSchemaBundles[latestVersion] = latestSchemaBundle
     
+    validateMigrationBundle(
+        versionedSchemaBundles = defBuilder.versionedSchemaBundles,
+        renameHistory = defBuilder.renameHistory,
+    )
+    
     return MigrationBundle(
         versionedSchemaBundles = defBuilder.versionedSchemaBundles,
         renameHistory = defBuilder.renameHistory,
-        milestones = defBuilder.milestones
+        milestones = defBuilder.milestones,
     )
 }
 
