@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.addEntitiesOut
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
+import com.vankorno.vankornodb.api.toEntity
+import com.vankorno.vankornodb.core.data.DbConstants.RowID
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
@@ -12,7 +14,6 @@ import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.delete.deleteTable
-import com.vankorno.vankornodb.get.getEntities
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.newTable.createTable
@@ -168,10 +169,10 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    internal fun getEntitiesByVersion(           db: SQLiteDatabase,
-                                              table: String,
-                                            version: Int,
-                                      schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
+    internal fun getEntitiesByVersion(                     db: SQLiteDatabase,
+                                                        table: String,
+                                                      version: Int,
+                                                schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
     ): List<DbEntity> {
         // region LOG
             dLog("getEntitiesByVersion() starts. Table = $table, version = $version")
@@ -179,7 +180,7 @@ open class MigrationUtils {
         val fromBundle = schemaBundles[version]
             ?: error("Missing schemaBundle for version $version")
         
-        val elements = db.getEntities(table using fromBundle)
+        val elements = db.readMigrationRows(table using fromBundle)
         // region LOG
             dLog("getEntitiesByVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -191,12 +192,12 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    internal fun convertThroughSteps(      original: DbEntity,
-                                         oldVersion: Int,
-                                              steps: List<Int>,
-                                      renameHistory: Map<String, List<RenameRecord>>,
-                                      schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
-                                            lambdas: Map<Int, MilestoneLambdas>,
+    internal fun convertThroughSteps(                original: DbEntity,
+                                                   oldVersion: Int,
+                                                        steps: List<Int>,
+                                                renameHistory: Map<String, List<RenameRecord>>,
+                                                schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
+                                                      lambdas: Map<Int, MilestoneLambdas>,
     ): DbEntity {
         var currentEntity = original
         var currentVer = oldVersion
@@ -333,8 +334,21 @@ open class MigrationUtils {
 
 
 
+private fun <T : DbEntity> SQLiteDatabase.readMigrationRows(                     table: TableInfo<T>
+): List<T> {
+    val quotedName = "\"" + table.name.replace("\"", "\"\"") + "\""
+    return rawQuery("SELECT * FROM $quotedName ORDER BY $RowID", null).use { cursor ->
+        buildList {
+            while (cursor.moveToNext())
+                add(cursor.toEntity(table.schema))
+        }
+    }
+}
+
+
+
 internal fun SQLiteDatabase.dropAndCreateEmptyTablesInternal(
-                                                    vararg tables: TableInfo<out DbEntity>
+                                                              vararg tables: TableInfo<out DbEntity>
 ) {
     val size = tables.size
     // region LOG
@@ -351,14 +365,13 @@ internal fun SQLiteDatabase.dropAndCreateEmptyTablesInternal(
 
 
 
-internal fun SQLiteDatabase.migrateWithoutChangeInternal(
-                                                    vararg tables: TableInfo<out DbEntity>
+internal fun SQLiteDatabase.migrateWithoutChangeInternal(     vararg tables: TableInfo<out DbEntity>
 ) {
     // region LOG
         dLog("migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = getEntities(table)
+        val rows = readMigrationRows(table)
         dropAndCreateEmptyTablesInternal(table)
         addEntitiesOut(table, rows)
     }
