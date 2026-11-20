@@ -3,10 +3,7 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.data.DbConstants.DbTypeTable
-import com.vankorno.vankornodb.core.data.DbConstants.TABLE_AndroidMetadata
-import com.vankorno.vankornodb.core.data.DbConstants.TABLE_EntityVersions
-import com.vankorno.vankornodb.core.data.DbConstants.TABLE_Master
+import com.vankorno.vankornodb.core.data.DbConstants.*
 import com.vankorno.vankornodb.core.dsl.EntityTable
 import java.io.File
 
@@ -72,7 +69,7 @@ private fun SQLiteDatabase.tableNames(                                    intern
 ): List<String> {
     val filter = "(name LIKE ? OR name IN (?, ?))"
     val predicate = if (internalTables) filter else "NOT $filter"
-    val sql = "SELECT name FROM $TABLE_Master WHERE type=? AND $predicate ORDER BY name"
+    val sql = "SELECT name FROM $TABLE_Master WHERE type=? AND $predicate ORDER BY $RowID"
     return rawQuery(sql, arrayOf(DbTypeTable, "sqlite_%", TABLE_AndroidMetadata, TABLE_EntityVersions)).use { cursor ->
         buildList {
             while (cursor.moveToNext())
