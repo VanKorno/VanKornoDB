@@ -5,7 +5,6 @@ import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox._entities.testEntity.migrationsTestEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 
 const val DbName = "DbFile.db"
@@ -39,11 +38,10 @@ enum class EntityMeta(                              override val currVersion: In
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {
-    TestEntt(3, "TestEntity", _Test, lazy { migrationsTestEntity() }, TestTable),
+    TestEntt(3, "TestEntity", _Test, lazy { migrationsTestEntity() }, TestTableName),
     
 }
 
 
-const val TestTable = "TestTable"
-val _TestTable = TestTable using _Test
-val TTest = _Test.table(TestTable)
+const val TestTableName = "TestTable"
+val TestTable = _Test.tableNamed(TestTableName)

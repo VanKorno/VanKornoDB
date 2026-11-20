@@ -2,8 +2,6 @@ package com.vankorno.sandbox.get
 
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
-import com.vankorno.sandbox._entities.testEntity.CTest.Id
-import com.vankorno.sandbox._entities.testEntity.CTest.Int1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.vankornodb.add.addEntities
@@ -22,13 +20,13 @@ import org.junit.Before
 import org.junit.Test
 
 private const val ItemsTableName = "PairTestItemsTable"
-private val _ItemsTable = _Test.table(ItemsTableName)
+private val _ItemsTable = _Test.tableNamed(ItemsTableName)
 
 private const val ConditionsTableName = "PairTestConditionsTable"
-private val _ConditionsTable = _Test.table(ConditionsTableName)
+private val _ConditionsTable = _Test.tableNamed(ConditionsTableName)
 
 private const val MetaTableName = "PairTestMetaTable"
-private val _MetaTable = _Test.table(MetaTableName)
+private val _MetaTable = _Test.tableNamed(MetaTableName)
 
 @MediumTest
 class EntityPairsTest : BaseAndroidTest() {

@@ -39,7 +39,7 @@ class GetEntityTest {
     }
     
     private fun getEntityWithGeneratedGetter() {
-        val obj = dbh.getEntity(_Test.table(GetEntityTestTable)) { Id equal 1L }
+        val obj = dbh.getEntity(_Test.tableNamed(GetEntityTestTable)) { Id equal 1L }
         
         assertTrue(obj != null)
         assertEquals(1, obj!!.id)

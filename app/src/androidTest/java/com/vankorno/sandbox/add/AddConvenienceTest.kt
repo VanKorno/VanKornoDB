@@ -17,7 +17,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 private const val TestTableName = "AddConvenienceTable"
-private val _TestTable = _Test.table(TestTableName)
+private val _TestTable = _Test.tableNamed(TestTableName)
 
 @MediumTest
 class AddConvenienceTest {
@@ -85,7 +85,7 @@ class AddConvenienceTest {
     @Test
     fun addWithNewIDsAndPositionsTest() {
         val table = "addWithNewIDsAndPositionsTest"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         dbh.getLabRats(table)
         
         val rats = listOf(TestEntity(name = "Rat1"), TestEntity(name = "Rat2"))

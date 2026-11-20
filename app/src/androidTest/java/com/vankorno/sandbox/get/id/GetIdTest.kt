@@ -41,7 +41,7 @@ class GetIdTest {
 
         // Add a new row with higher ID
         val newId = 100L
-        dbh.addEntities(_Test.table(GetLastIdTable), listOf(TestEntity(newId, "Lab rat 100", newId)))
+        dbh.addEntities(_Test.tableNamed(GetLastIdTable), listOf(TestEntity(newId, "Lab rat 100", newId)))
         val updatedLastId = dbh.getLastId(GetLastIdTable)
         assertEquals(newId, updatedLastId)
 
@@ -126,7 +126,7 @@ class GetIdTest {
 
         // Add an extra row and verify
         val extraId = 51L
-        dbh.addEntities(_Test.table(GetAllIDsTable), listOf(TestEntity(extraId, "Lab rat 51", extraId)))
+        dbh.addEntities(_Test.tableNamed(GetAllIDsTable), listOf(TestEntity(extraId, "Lab rat 51", extraId)))
         val updatedAllIds = dbh.getAllIDs(GetAllIDsTable)
         assertEquals((1L..extraId).toList(), updatedAllIds)
 

@@ -2,6 +2,7 @@ package com.vankorno.sandbox._navig
 
 import com.vankorno.sandbox.MainActivity.Companion.vm
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.get.getAppTableNames
 import com.vankorno.vankornohelpers.values.LibGlobals.updatingScreen
 
 object ScreenUpdater {

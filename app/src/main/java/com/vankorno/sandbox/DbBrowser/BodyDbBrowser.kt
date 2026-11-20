@@ -26,6 +26,7 @@ import com.vankorno.sandbox._navig.ScreenUpdater.updateScreen
 import com.vankorno.sandbox._ui.composables.Spa_______________cer
 import com.vankorno.sandbox._ui.theme.AccentColor
 import com.vankorno.vankornodb.api.DbRuntime.dbh
+import com.vankorno.vankornodb.delete.deleteTable
 
 
 @Composable

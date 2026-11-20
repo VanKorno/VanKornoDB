@@ -21,8 +21,8 @@ class EntityDslDbTest {
     fun readUpdateAndDeleteWithGeneratedReceivers() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val dbName = "entity-where-${UUID.randomUUID()}.db"
-        val items = _Test.table("Items")
-        val versions = _EntityVersion.table("Versions")
+        val items = _Test.tableNamed("Items")
+        val versions = _EntityVersion.tableNamed("Versions")
         val dbh = Dbh(dbName, 1, context, emptyList(), mustHaveTables = listOf(items.info, versions.info))
         
         try {

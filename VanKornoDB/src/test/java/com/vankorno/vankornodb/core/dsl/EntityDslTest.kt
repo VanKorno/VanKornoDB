@@ -12,7 +12,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class EntityDslTest {
-    private val versionTable = _EntityVersion.table("Versions")
+    private val versionTable = _EntityVersion.tableNamed("Versions")
     
     @Test
     fun `raw expressions pass through typed and mixed projections verbatim`() {
@@ -71,7 +71,7 @@ class EntityDslTest {
     
     @Test
     fun `subquery switches entity for its projection and its conditions`() {
-        val flags = FlagSchema.table("Flags")
+        val flags = FlagSchema.tableNamed("Flags")
         val result = versionTable.query {
             Version greater 0
             Id.inSubquery(flags, { OwnerId }) {
@@ -92,7 +92,7 @@ class EntityDslTest {
     
     @Test
     fun `correlated subqueries qualify both sides and group additional predicates`() {
-        val flags = FlagSchema.table("Flags")
+        val flags = FlagSchema.tableNamed("Flags")
         val result = versionTable.query {
             exists(subquery(flags, outerColumn = Id, innerColumn = { OwnerId }) {
                 Active equal true
@@ -110,7 +110,7 @@ class EntityDslTest {
     
     @Test
     fun `expanded columns retain their index and accept primitive varargs`() {
-        val flags = FlagSchema.table("Flags")
+        val flags = FlagSchema.tableNamed("Flags")
         val choices = intArrayOf(2, 5)
         val query = subquery(flags, { Scores[0] }) { Scores[1].equalAnyOf(*choices) }
         
@@ -153,7 +153,7 @@ private object FlagSchema : SchemaBundle<Flag>(Flag::class, columns = buildColLi
         +FlagFields.Active
         +FlagFields.Scores
     }) {
-    fun table(name: String) = (name using this).withDsl(::FlagDsl, ::FlagOrderDsl, ::FlagExtraDsl, ::FlagSetDsl)
+    fun tableNamed(name: String) = (name using this).withDsl(::FlagDsl, ::FlagOrderDsl, ::FlagExtraDsl, ::FlagSetDsl)
 }
 
 private interface FlagDslColumns {

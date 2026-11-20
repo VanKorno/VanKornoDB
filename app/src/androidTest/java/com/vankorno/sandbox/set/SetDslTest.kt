@@ -21,7 +21,7 @@ import org.junit.Test
 class SetDslTest : BaseAndroidTest() {
     companion object {
         const val SetValsTestTable = "SetValsTestTable"
-        val SetValsTable = _Test.table(SetValsTestTable)
+        val SetValsTable = _Test.tableNamed(SetValsTestTable)
     }
     
     @Test

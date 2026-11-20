@@ -48,7 +48,7 @@ object _EntityVersion : SchemaBundle<EntityVersion>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String): UpdateTable<TableInfo<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl, EntityVersionSetDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl, ::EntityVersionSetDsl)
+    fun tableNamed(name: String): UpdateTable<TableInfo<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl, EntityVersionSetDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl, ::EntityVersionSetDsl)
 }
 
 

@@ -16,7 +16,8 @@ import com.vankorno.sandbox._ui.MainScaffold
 import com.vankorno.sandbox._ui.theme.AppColor
 import com.vankorno.sandbox._vm.VmShared
 import com.vankorno.vankornodb.api.DbRuntime.dbh
-import com.vankorno.vankornodb.dbManagement.data.using
+import com.vankorno.vankornodb.get.tableExists
+import com.vankorno.vankornodb.newTable.createTable
 import com.vankorno.vankornohelpers.LibMisc
 import com.vankorno.vankornohelpers.LibUI
 import com.vankorno.vankornohelpers.values.LibGlobals.actExists
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var vm: VmShared
         val DummyTableName = "DummyTable"
-        val _DummyTable = DummyTableName using _Test
+        val _DummyTable = _Test.tableNamed(DummyTableName)
     }
     
     override fun onCreate(                                            savedInstanceState: Bundle?

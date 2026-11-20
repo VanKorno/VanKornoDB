@@ -2,9 +2,6 @@ package com.vankorno.sandbox.get
 
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
-import com.vankorno.sandbox._entities.testEntity.CTest.Enabled
-import com.vankorno.sandbox._entities.testEntity.CTest.Id
-import com.vankorno.sandbox._entities.testEntity.CTest.Int1
 import com.vankorno.sandbox._entities.testEntity.TestEntity
 import com.vankorno.sandbox._entities.testEntity._Test
 import com.vankorno.sandbox.getLabRats
@@ -22,10 +19,10 @@ import java.nio.file.Files.exists
 import java.nio.file.Files.notExists
 
 private const val ItemsTableName = "SubqueryItemsTable"
-private val _ItemsTable = _Test.table(ItemsTableName)
+private val _ItemsTable = _Test.tableNamed(ItemsTableName)
 
 private const val ConditionsTableName = "SubqueryConditionsTable"
-private val _ConditionsTable = _Test.table(ConditionsTableName)
+private val _ConditionsTable = _Test.tableNamed(ConditionsTableName)
 
 @MediumTest
 class SubqueryTest : BaseAndroidTest() {

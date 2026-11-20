@@ -2,7 +2,7 @@ package com.vankorno.sandbox._entities.testEntity
 
 /** Column fixture for the instrumentation tests of the original string-table API. */
 internal object CTest {
-    private val table = _Test.table("Test")
+    private val table = _Test.tableNamed("Test")
     val Id = table.select { Id }
     val Name = table.select { Name }
     val Position = table.select { Position }

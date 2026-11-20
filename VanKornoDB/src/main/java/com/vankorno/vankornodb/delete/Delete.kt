@@ -3,7 +3,6 @@ package com.vankorno.vankornodb.delete
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.core.dsl.EntityTable
 
 
@@ -160,10 +159,22 @@ fun SQLiteDatabase.deleteTables(vararg tables: EntityTable<*, *>) = deleteTables
 
 
 
-/** Used by schema migrations that address tables by name. */
+
+fun Dbh.deleteTable(table: String) = write("deleteTable") { db -> db.deleteTable(table) }
+
 fun SQLiteDatabase.deleteTable(table: String) { execSQL("DROP TABLE IF EXISTS " + table) }
 
 
+fun Dbh.deleteTables(                                               vararg tables: String,
+                                                                            async: Boolean = false,
+) = write("deleteTables", async) { db ->
+    db.deleteTables(*tables)
+}
+fun SQLiteDatabase.deleteTables(vararg tables: String) { tables.forEach { deleteTable(it) }}
+
+
+
+/*
 internal fun SQLiteDatabase.deleteRowById(                                            id: Long,
                                                                                    table: String,
 ): Int = delete(table, "$_ID = ?", arrayOf(id.toString()))
@@ -173,3 +184,4 @@ internal fun <T> SQLiteDatabase.deleteRows(                                     
                                                                                 whereStr: String,
                                                                                   equals: T,
 ): Int = delete(table, "$whereStr = ?", arrayOf(equals.toString()))
+*/

@@ -26,7 +26,7 @@ class NextIntTest {
     @Test
     fun emptyTable() {
         val table = "EmptyTable"
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 1, 2)
         dbh.deleteTable(table)
     }
@@ -39,7 +39,7 @@ class NextIntTest {
     @Test
     fun standardLastValues() {
         val table = "standardLastValues"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, List(20) { idx ->
@@ -67,7 +67,7 @@ class NextIntTest {
         val table = "reservedInEmptyTable"
         val reserved = setOf(1, 2, 3)
         
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 4, 5, reserved)
         dbh.deleteTable(table)
     }
@@ -78,7 +78,7 @@ class NextIntTest {
     fun reservedInFilledTableSequential() {
         val table = "reservedInFilledTableSequential"
         val reserved = setOf(11, 12, 13)
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, List(10) { idx ->
@@ -96,7 +96,7 @@ class NextIntTest {
         val table = "reservedEvenNumbersIn"
         val reserved = setOf(2, 4, 6)
         
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 7, 8, reserved)
         dbh.deleteTable(table)
     }
@@ -106,7 +106,7 @@ class NextIntTest {
     @Test
     fun maxValueInSingleRowTable() {
         val table = "maxValueInSingleRowTable"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE))
@@ -120,7 +120,7 @@ class NextIntTest {
     @Test
     fun maxValueInReserved() {
         val table = "maxValueInReserved"
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 1, 2, setOf(50, Int.MAX_VALUE))
         dbh.deleteTable(table)
     }
@@ -134,7 +134,7 @@ class NextIntTest {
     @Test
     fun closeToMax() {
         val table = "closeToMax"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(int1 = Int.MAX_VALUE - 1))
@@ -156,7 +156,7 @@ class NextIntTest {
     @Test
     fun reservedCloseToMax() {
         val table = "reservedCloseToMax"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         val reserved = setOf(100, Int.MAX_VALUE - 1)
         
         dbh.createTable(tableInfo)
@@ -175,7 +175,7 @@ class NextIntTest {
     @Test
     fun takenEvenNumbersWithMaxValueCeiling() {
         val table = "takenEvenNumbersWithMaxValueCeiling"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, listOf(
@@ -196,7 +196,7 @@ class NextIntTest {
         val table = "reservedEvenNumbersWithMaxValueCeiling"
         val reserved = setOf(2, 4, 6, Int.MAX_VALUE)
         
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 1, 3, reserved)
         dbh.deleteTable(table)
     }
@@ -210,7 +210,7 @@ class NextIntTest {
     @Test
     fun whereFilterStandard() {
         val table = "whereFilterStandard"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
 
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, listOf(
@@ -247,7 +247,7 @@ class NextIntTest {
     @Test
     fun whereFilterWithFallback() {
         val table = "whereFilterWithFallback"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
 
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, listOf(
@@ -279,7 +279,7 @@ class NextIntTest {
     @Test
     fun whereFilterWithReservedAndStartFrom() {
         val table = "whereFilterWithReservedAndStartFrom"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
 
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, listOf(

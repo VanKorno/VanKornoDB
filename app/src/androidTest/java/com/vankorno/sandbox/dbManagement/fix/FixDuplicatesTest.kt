@@ -34,7 +34,7 @@ class FixDuplicatesTest {
     @Test
     fun emptyTable() {
         val table = "EmptyTable"
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertAllFixFuns(table, 0, 0, 0)
         dbh.deleteTable(table)
     }
@@ -44,8 +44,8 @@ class FixDuplicatesTest {
     @Test
     fun nothingToFix() {
         val table = "nothingToFix"
-        val tableInfo = _Test.table(table)
-        dbh.createTable(_Test.table(table))
+        val tableInfo = _Test.tableNamed(table)
+        dbh.createTable(_Test.tableNamed(table))
         
         dbh.addEntity(tableInfo, TestEntity(1L, "1", 10L, int1 = 100, long1 = 1000L))
         dbh.addEntity(tableInfo, TestEntity(2L, "2", 20L, int1 = 200, long1 = 2000L))
@@ -63,7 +63,7 @@ class FixDuplicatesTest {
     @Test
     fun twoDuplicateRows() {
         val table = "twoDuplicateRows"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         dbh.createTable(tableInfo)
         
         dbh.addEntity(tableInfo, TestEntity(position = 10L, int1 = 100, long1 = 1000L))
@@ -80,7 +80,7 @@ class FixDuplicatesTest {
     @Test
     fun multipleDuplicates() {
         val table = "multipleDuplicates"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         dbh.createTable(tableInfo)
         
         dbh.addEntities(tableInfo, listOf(
@@ -104,7 +104,7 @@ class FixDuplicatesTest {
     @Test
     fun tripleDuplicates() {
         val table = "tripleDuplicates"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         dbh.createTable(tableInfo)
         
         dbh.addEntities(tableInfo, listOf(
@@ -127,7 +127,7 @@ class FixDuplicatesTest {
     @Test
     fun whereClause() {
         val table = "whereClause"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         dbh.createTable(tableInfo)
     
         dbh.addEntities(tableInfo, listOf(
@@ -136,9 +136,9 @@ class FixDuplicatesTest {
             TestEntity(position = 20L, int1 = 200, long1 = 2000L, int2 = 2),
             TestEntity(position = 20L, int1 = 200, long1 = 2000L, int2 = 2),
         ))
-        assertEquals(1, dbh.fixDuplicateLongs(_Test.table(table).col { Long1 }) { Int2 equal 1 })
+        assertEquals(1, dbh.fixDuplicateLongs(_Test.tableNamed(table).col { Long1 }) { Int2 equal 1 })
         assertEquals(1, dbh.fixDuplicateInts(tableInfo.col { Int1 }) { Int2 equal 1 })
-        assertEquals(1, dbh.fixDuplicatePosition(_Test.table(table)) { Int2 equal 1 })
+        assertEquals(1, dbh.fixDuplicatePosition(_Test.tableNamed(table)) { Int2 equal 1 })
         
         assertAllFixFuns(table, 1, 1, 1)
         
@@ -157,8 +157,8 @@ class FixDuplicatesTest {
                                                                             expectedInts: Int,
                                                                         expectedPosition: Int,
     ) {
-        assertEquals(expectedLongs, dbh.fixDuplicateLongs(_Test.table(table).col { Long1 }))
-        assertEquals(expectedInts, dbh.fixDuplicateInts(_Test.table(table).col { Int1 }))
-        assertEquals(expectedPosition, dbh.fixDuplicatePosition(_Test.table(table)))
+        assertEquals(expectedLongs, dbh.fixDuplicateLongs(_Test.tableNamed(table).col { Long1 }))
+        assertEquals(expectedInts, dbh.fixDuplicateInts(_Test.tableNamed(table).col { Int1 }))
+        assertEquals(expectedPosition, dbh.fixDuplicatePosition(_Test.tableNamed(table)))
     }
 }

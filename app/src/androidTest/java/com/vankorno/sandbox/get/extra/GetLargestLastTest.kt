@@ -25,7 +25,7 @@ class GetLargestLastTest {
     
     @Test
     fun getLargestLong() {
-        val table = _Test.table("getLargestLong")
+        val table = _Test.tableNamed("getLargestLong")
         dbh.getLabRats(table.name)
         
         testIdPosition(table.name)
@@ -40,7 +40,7 @@ class GetLargestLastTest {
     
     @Test
     fun getLargestInt() {
-        val table = _Test.table("getLargestInt")
+        val table = _Test.tableNamed("getLargestInt")
         dbh.getLabRats(table.name)
         var largest = dbh.getLargestInt(table.col { Int1 })
         assertEquals(0, largest)
@@ -72,7 +72,7 @@ class GetLargestLastTest {
     
     @Test
     fun getLargestWithWhere() {
-        val table = _Test.table("getLargestWithWhere")
+        val table = _Test.tableNamed("getLargestWithWhere")
         dbh.getLabRats(table.name)
 
         // Filter getLargestLong by ID
@@ -109,7 +109,7 @@ class GetLargestLastTest {
 
     @Test
     fun getNextPositionWithWhere() {
-        val table = _Test.table("getNextPositionWithWhere")
+        val table = _Test.tableNamed("getNextPositionWithWhere")
 
         dbh.createTable(table)
         dbh.addEntities(table, listOf(
@@ -145,7 +145,7 @@ class GetLargestLastTest {
     
     private fun testIdPosition(                                                tableName: String
     ) {
-        val table = _Test.table(tableName)
+        val table = _Test.tableNamed(tableName)
         val lastId = dbh.getLargestLong(table.col { Id })
         val lastId2 = dbh.getLastId(table)
         assertEquals(ratQuant, lastId)
@@ -160,7 +160,7 @@ class GetLargestLastTest {
     
     private fun test0L(                                                        tableName: String
     ) {
-        val table = _Test.table(tableName)
+        val table = _Test.tableNamed(tableName)
         val largestLong1 = dbh.getLargestLong(table.col { Long1 })
         val largestLong2 = dbh.getLargestLong(table.col { Long2 })
         val largestLong3 = dbh.getLargestLong(table.col { Long3 })
@@ -172,7 +172,7 @@ class GetLargestLastTest {
     
     private fun testWithValueChange(                                           tableName: String
     ) {
-        val table = _Test.table(tableName)
+        val table = _Test.tableNamed(tableName)
         testSwapLastRows(table.name)
         testSingleValueChange(table.name)
         testMultValuesChange(table.name)
@@ -181,7 +181,7 @@ class GetLargestLastTest {
     
     private fun testSwapLastRows(                                              tableName: String
     ) {
-        val table = _Test.table(tableName)
+        val table = _Test.tableNamed(tableName)
         dbh.reorder(table, ratQuant, moveUpOrBack = true)
         
         val lastId = dbh.getLastId(table)
@@ -194,7 +194,7 @@ class GetLargestLastTest {
     
     private fun testSingleValueChange(                                         tableName: String
     ) {
-        val table = _Test.table(tableName)
+        val table = _Test.tableNamed(tableName)
         val newVal = 10L
         dbh.setLong(newVal, table.col { Long1 }) { Id equal 1 }
         val largestLong1 = dbh.getLargestLong(table.col { Long1 })
@@ -204,7 +204,7 @@ class GetLargestLastTest {
     
     private fun testMultValuesChange(                                          tableName: String
     ) {
-        val table = _Test.table(tableName)
+        val table = _Test.tableNamed(tableName)
         val newVal = 20L
         
         dbh.set(table) { // Sets all rows
@@ -224,7 +224,7 @@ class GetLargestLastTest {
     
     private fun testEmptyTable(                                                tableName: String
     ) {
-        val table = _Test.table(tableName)
+        val table = _Test.tableNamed(tableName)
         assertTrue(dbh.isTableEmpty(table))
         
         val lastId = dbh.getLargestLong(table.col { Id })

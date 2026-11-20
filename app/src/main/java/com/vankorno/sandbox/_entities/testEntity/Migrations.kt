@@ -1,14 +1,14 @@
 package com.vankorno.sandbox._entities.testEntity
 
 import com.vankorno.sandbox._entities.EntityMeta
-import com.vankorno.sandbox._entities.TTest
+import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.sandbox._entities.testEntity.old.to100.to10._V1_Test
 import com.vankorno.sandbox._entities.testEntity.old.to100.to10._V2_Test
 import com.vankorno.vankornodb.api.defineMigrations
 
 fun migrationsTestEntity() = defineMigrations(EntityMeta.TestEntt) {
     version(1, _V1_Test)
-    version(2, _V2_Test) { rename { TTest.select { Bool1 } from "boo" to "bool1" } }
+    version(2, _V2_Test) { rename { TestTable.select { Bool1 } from "boo" to "bool1" } }
     version(3, _Test)
     
 }

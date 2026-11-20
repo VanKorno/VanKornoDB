@@ -4,7 +4,7 @@ import android.app.Application
 import com.vankorno.sandbox._entities.DbName
 import com.vankorno.sandbox._entities.DbVersion
 import com.vankorno.sandbox._entities.EntityMeta
-import com.vankorno.sandbox._entities._TestTable
+import com.vankorno.sandbox._entities.TestTable
 import com.vankorno.vankornodb.api.DbMigrator
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.api.Dbh
@@ -27,7 +27,7 @@ class App : Application() {
             context = this,
             entityMeta = EntityMeta.entries,
             createExclusiveTables = true,
-            mustHaveTables = listOf(_TestTable),
+            mustHaveTables = listOf(TestTable.info),
             onCreate = { db ->
                 
             },

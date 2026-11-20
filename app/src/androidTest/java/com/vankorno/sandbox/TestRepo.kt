@@ -12,12 +12,12 @@ const val LabRatQuant = 50
 fun Dbh.getLabRats(                                                                table: String
 ) {
     write("launchApp", async = false) { db ->
-        db.createTable(_Test.table(table))
+        db.createTable(_Test.tableNamed(table))
         
         val testSubjects = List(LabRatQuant) { idx ->
             TestEntity(name = LabRat + (idx + 1), position = idx + 1L)
         }
-        db.addEntities(_Test.table(table), testSubjects)
+        db.addEntities(_Test.tableNamed(table), testSubjects)
     }
 }
 

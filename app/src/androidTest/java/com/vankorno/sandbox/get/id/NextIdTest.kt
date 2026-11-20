@@ -41,7 +41,7 @@ class NextIdTest {
     @Test
     fun emptyTable() {
         val table = "EmptyTable"
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 1L, 2L)
         dbh.deleteTable(table)
     }
@@ -66,7 +66,7 @@ class NextIdTest {
         assertBothFun(table, 51L, 52L)
         
         // Add larger num ID
-        dbh.addEntityWithoutIdCheck(_Test.table(table), TestEntity(999990))
+        dbh.addEntityWithoutIdCheck(_Test.tableNamed(table), TestEntity(999990))
         assertBothFun(table, 999991L, 999992L)
         
         dbh.deleteTable(table)
@@ -79,7 +79,7 @@ class NextIdTest {
         val table = "reservedInEmptyTable"
         val reserved = setOf(1L, 2L, 3L)
         
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 4L, 5L, reserved)
         dbh.deleteTable(table)
     }
@@ -106,7 +106,7 @@ class NextIdTest {
         val table = "reservedEvenNumbersIn"
         val reserved = setOf(2L, 4L, 6L)
         
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 7L, 8L, reserved)
         dbh.deleteTable(table)
     }
@@ -116,7 +116,7 @@ class NextIdTest {
     @Test
     fun maxValueInSingleRowTable() {
         val table = "maxValueInSingleRowTable"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE, name = "Max"))
@@ -130,7 +130,7 @@ class NextIdTest {
     @Test
     fun maxValueInReserved() {
         val table = "maxValueInReserved"
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 1L, 2L, setOf(50L, Long.MAX_VALUE))
         dbh.deleteTable(table)
     }
@@ -144,7 +144,7 @@ class NextIdTest {
     @Test
     fun closeToMax() {
         val table = "closeToMax"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntityWithoutIdCheck(tableInfo, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
@@ -166,7 +166,7 @@ class NextIdTest {
     @Test
     fun reservedCloseToMax() {
         val table = "reservedCloseToMax"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         val reserved = setOf(100L, Long.MAX_VALUE - 1)
         
         dbh.createTable(tableInfo)
@@ -185,7 +185,7 @@ class NextIdTest {
     @Test
     fun takenEvenNumbersWithMaxValueCeiling() {
         val table = "takenEvenNumbersWithMaxValueCeiling"
-        val tableInfo = _Test.table(table)
+        val tableInfo = _Test.tableNamed(table)
         
         dbh.createTable(tableInfo)
         dbh.addEntities(tableInfo, listOf(TestEntity(2L), TestEntity(4L), TestEntity(6L), TestEntity(Long.MAX_VALUE)))
@@ -201,7 +201,7 @@ class NextIdTest {
         val table = "reservedEvenNumbersWithMaxValueCeiling"
         val reserved = setOf(2L, 4L, 6L, Long.MAX_VALUE)
         
-        dbh.createTable(_Test.table(table))
+        dbh.createTable(_Test.tableNamed(table))
         assertBothFun(table, 1L, 3L, reserved)
         dbh.deleteTable(table)
     }

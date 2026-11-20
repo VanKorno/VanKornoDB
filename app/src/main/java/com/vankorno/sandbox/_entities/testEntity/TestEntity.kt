@@ -117,7 +117,7 @@ object _Test : SchemaBundle<TestEntity>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun table(name: String) = (name using this).withDsl(::TestDsl, ::TestOrderDsl, ::TestExtraDsl, ::TestSetDsl)
+    fun tableNamed(name: String) = (name using this).withDsl(::TestDsl, ::TestOrderDsl, ::TestExtraDsl, ::TestSetDsl)
 }
 
 

@@ -13,7 +13,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 private const val TestTable = "AddWithoutIdCheckTable"
-private val _TestTable = _Test.table(TestTable)
+private val _TestTable = _Test.tableNamed(TestTable)
 
 @MediumTest
 class AddEntityWithoutIdCheckTest {
