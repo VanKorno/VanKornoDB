@@ -18,14 +18,15 @@ VanKorno DB lets you retrieve exactly the data you need — no more, no less, be
 It lets you do more on the SQLite level without sacrificing convenience of the ORM-like mapping.
 If you want more control - you can have it. If you want more automation - you can have it as well. You choose the amount of control/automation you want!
 
+The Kotlin DSL is **type-safe and schema-safe**. In `dbh.getLong(Items.col { Position })`, the getter requires a Long column, and `Items` determines which columns you can select. If you rename a generated column, Kotlin flags callers that still use the old name. Inside a query you can write `Name equal "Arthur"` without importing a public column or repeating the table name.
 
 ### It's still a work in progress and until the 1.0 release, recommended only for people who don't mind experimenting, don't mind everything changing all the time. Until v1.0 I'll be working on it almost as if I'm the only user, so, don't try it at home :)
 
 
 ## Features
 
-- Concise and readable SQL DSL (no raw SQL strings)
-- Strongly typed query construction
+- Table-scoped column selection, predicates, ordering, and updates
+- Explicit raw SQL expressions when you need them
 - Nested queries and joins
 - Shared DSL for reading, writing, updating, and deleting
 - No annotation processing
@@ -42,7 +43,7 @@ You can freely map entities to tables in any configuration.
 You can dynamically create tables:
 ```kotlin
 for (i in 1..1000) {
-    db.createTable(ShopTable + i, ShopSchema)
+    db.createTable(_Shop.tableNamed("Shop" + i))
 }
 ```
 
@@ -50,8 +51,9 @@ for (i in 1..1000) {
 List properties are automatically expanded into multiple columns.
 ```kotlin
 data class Shop(
-    val someList: List<Int> = List(1000) { 0 }
-)
+    override val id: Long = 0L,
+    val someList: List<Int> = List(1000) { 0 },
+) : DbEntity
 ```
 This results in 1000 columns generated automatically.
 
@@ -68,9 +70,9 @@ getCursor() - a function that's often used by other functions under the hood. It
 ```kotlin
 db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals value 'userName' 
 
-db.getCursor(SomeTable, columns(Name, Position), orderByPosition(), limit(10)) {
+db.getCursor(SomeTable.columns { Name then Position }, orderByPosition(), limit(10)) {
     // Conditions (where)
-    ID notEqual 1
+    Id notEqual 1
     Order equal 1 // condition clause and value in one place
     Volume greater 1.1F
     or { Time less 1L }
@@ -81,19 +83,19 @@ db.getCursor(SomeTable, columns(Name, Position), orderByPosition(), limit(10)) {
 getEntity() - gets a whole db table row as an object of an entity data class
 
 ```kotlin
-db.getEntity(_RoundTable) { KnightState notEqual drunk }
+db.getEntity(RoundTable) { KnightState notEqual drunk }
 ```
 
 getEntities() or getEntityMap() - for getting multiple entity objects from a db table.
 
 ```kotlin
-db.getEntities(_RoundTable) { KnightState less hammered }
+db.getEntities(RoundTable) { KnightState less hammered }
 ```
 
 getInt() (same for other types) - for getting single values from a particular cell.
 
 ```kotlin
-val aggressionLvl = db.getInt(RoundTable, column = Aggression) { Name equal Arthur }
+val aggressionLvl = db.getInt(RoundTable.col { Aggression }) { Name equal Arthur }
 ```
 
 
@@ -102,54 +104,46 @@ Here's some of that:
 
 ```kotlin
 db.getCursor(
-    table = Users,
-    columns = columns(Name, Address, Phone),
+    columns = Users.columns { Name then Address then Phone },
     where = {
         // Scalar subquery comparison
         subquery(
-            table = Posts,
-            columns = columns(countAll), // COUNT(*)
-            where = {
-                (Posts dot user_id) equalCol (Users dot ID)
-            }
+            innerColumn = Posts.col { UserId },
+            outerColumn = Id,
+            column = { raw(countAll) }, // COUNT(*)
         ) greater 10
         
-        // IN subquery (defaults to same column name, or pass a target column)
-        ID.inSubquery(ActiveVIPs, CVip.UserId) {
+        // IN subquery
+        Id.inSubquery(ActiveVIPs.col { UserId }) {
             Points greater 100
         }
         
         // Correlated EXISTS subquery
         exists(
             subquery(
-                table = Subscriptions,
-                column = "1",
-                where = {
-                    (Subscriptions dot CSub.UserId) equalCol (Users dot ID)
-                    Active equal true
-                }
+                innerColumn = Subscriptions.col { UserId },
+                outerColumn = Id,
+                where = { Active equal true },
             )
         )
         
         // Direct column comparison to scalar subquery
         VisibleAtHome equal subquery(
-            table = VisibilityConditions,
-            column = CVis.VisibleAtHome,
-            where = {
-                (VisibilityConditions dot CVis.Id) equalCol (Users dot ID)
-            }
+            innerColumn = VisibilityConditions.col { Id },
+            outerColumn = Id,
+            column = { VisibleAtHome },
         )
         
-        ID notEqual 3
+        Id notEqual 3
         
         and {  // Nested conditions
-            ID notEqual 4
+            Id notEqual 4
             or {
-                ID notEqual 5
+                Id notEqual 5
                 if (someBool) // Custom logic inside
-                    ID less someInt
+                    Id less someInt
                 else
-                    ID greater someInt
+                    Id greater someInt
             }
         }
     },
@@ -157,20 +151,20 @@ db.getCursor(
         SomeColumn()
         AnotherColumn.flip()
         When(
-            orderWhen({ cPosition(); cName.flip() }) { cID equal 1 },
-            orderWhen(RANDOM) { cName notEqual "NotBob" },
-            Else = { cID() }
+            orderWhen({ Position(); Name.flip() }) { Id equal 1 },
+            orderWhen(RANDOM) { Name notEqual "NotBob" },
+            Else = { Id() }
         )
     }
 )
 ```
 
-There are multiple setter functions as well. Single value setters, like setInt(), setString(), entity setters, like setEntity(), different convenience functions like addToInt(), flipBool()...
+There are multiple setter functions as well. Single value setters, like setInt(), setStr(), entity setters, like setEntity(), different convenience functions like addToInt(), flipBool()...
 
-set() - is a universal value setter function that uses its own DSL to modify multiple values, perform different operations, joining them all in a single db query under the hood, optimizing performance.
+set() - is a universal value setter function that uses its own DSL to modify multiple values, perform different operations, grouping compatible operations into a single db query under the hood, optimizing performance.
 
 ```kotlin
-db.set(RoundKnightTable, whereName(Dudley)) {
+db.set(RoundKnightTable, where = { Name equal Dudley }) {
     Int1 setTo 5
     Enabled setTo true
     Bool2.flip()
@@ -211,38 +205,38 @@ dependencyResolutionManagement {
 ## Migrations
 You keep in your files and provide the migration system with the current entity class and the previous classes.
 It automatically chooses from which to which class to migrate, and which intermediate steps to take (milestones).
-It automatically removes deleted rows and adds new ones. You don't have to state that anywhere.
+It automatically drops removed columns and fills new ones with their defaults. You don't have to state that anywhere.
 For things like renaming you'll have to keep a convenient DSL-record, like this example from a real project:
 
 ```kotlin
 fun migrationsTaskoid() = defineMigrations(
     EntityMeta.Taskoid.currVersion, // EntityMeta is an enum with all your app entities, their versions, etc.
-    EntityMeta.Taskoid.currClass
+    EntityMeta.Taskoid.schemaBundle
 ) {
-    version(1, V1_Taskoid::class) // Basic minimal data: keeps, which class was used at that version
-    version(2, V2_Taskoid::class) // Probably some columns were removed or added here automatically, based on the class differences
-    version(3, V3_Taskoid::class) { rename { HideForMins from "hideForMints" to "hideForMins" }} // for renaming you need to keep a record like this
-    version(4, V4_Taskoid::class) { rename { TimesCompletedGame from "timesCompleted" to "timesCompletedGame" }}
-    version(5, V5_Taskoid::class)
-    version(6, V6_Taskoid::class) {
+    version(1, _V1_Taskoid) // Basic minimal data: keeps, which class was used at that version
+    version(2, _V2_Taskoid) // Probably some columns were removed or added here automatically, based on the class differences
+    version(3, _V3_Taskoid) { rename { TaskoidTable.select { HideForMins } from "hideForMints" to "hideForMins" }} // for renaming you need to keep a record like this
+    version(4, _V4_Taskoid) { rename { TaskoidTable.select { TimesCompletedGame } from "timesCompleted" to "timesCompletedGame" }}
+    version(5, _V5_Taskoid)
+    version(6, _V6_Taskoid) {
         milestone( // Milestones (migration steps, unskippable migrations, see more info below the code)
-            Afterclick modify {
+            TaskoidTable.select { Afterclick } modify {
                 fromInt = { AfterclickEnum.entries[it].code } // DSL to modify data, not just db itself
             },
-            AfterclickOpt modify {
+            TaskoidTable.select { AfterclickOpt } modify {
                 fromInt = { AfterclickOptEnum.entries[it].code } // Switching from keeping the enum's ordinal to keeping its String code
             },
-            Bonus modify {
+            TaskoidTable.select { Bonus } modify {
                 finalTransform = { 0 } // Set all Bonuses to 0
             }
         )
     }
-    version(7, V7_Taskoid::class) {
-        rename { PicDb from "fullPic" to "pic" }
-        rename { CountUpIntervalSec from "countUpInterval" to "countUpIntervalSec" }
-        rename { CountUpUnpaidSec from "countUpUnpaid" to "countUpUnpaidSec" }
+    version(7, _V7_Taskoid) {
+        rename { TaskoidTable.select { PicDb } from "fullPic" to "pic" }
+        rename { TaskoidTable.select { CountUpIntervalSec } from "countUpInterval" to "countUpIntervalSec" }
+        rename { TaskoidTable.select { CountUpUnpaidSec } from "countUpUnpaid" to "countUpUnpaidSec" }
     }
-    version(8, V8_Taskoid::class) { rename { Position from "priority" to "position" } }
+    version(8, _Taskoid) { rename { TaskoidTable.select { Position } from "priority" to "position" } }
 }
 ```
 Normal migrations get skipped, their differences are handled automatically. There's no need to migrate through each of them. The system is smarter: calculates the differences based on the data you keep, then migrates to the latest class it can.
