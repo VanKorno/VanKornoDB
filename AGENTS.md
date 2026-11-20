@@ -192,6 +192,28 @@ Modifier
 
 
 
+10. Space between fun
+In general I like to have more space between functions.
+Space between a wrapper-fun and a base fun can be 0-1 lines.
+Overloads - 1-2 lines.
+Normal fun - 2 and more.
+
+Don't remove spaces anywhere in the file unless you created that space yourself!
+And don't add more space than reasonably needed (if I need more space - I'll add it myself)
+
+
+
+11. KDoc
+Default style for multiline KDoc-descriptions, but single-line descriptions should look like this (with the closing symbols on the next line):
+```kotlin
+
+/** Some stuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuff.
+ */
+fun someFun() {}
+```
+
+
+
 
 
 
