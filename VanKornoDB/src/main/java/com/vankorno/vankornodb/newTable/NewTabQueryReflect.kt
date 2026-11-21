@@ -35,8 +35,8 @@ import kotlin.reflect.full.primaryConstructor
  * @return A complete `CREATE TABLE` SQL string based on [entityClass].
  */
 
-internal fun newTableQuery(                                           table: String,
-                                                                entityClass: KClass<out DbEntity>,
+internal fun newTableQuery(                                             table: String,
+                                                                  entityClass: KClass<out DbEntity>,
 ): String {
     val constructor = entityClass.primaryConstructor
         ?: error("Class ${entityClass.simpleName} must have a primary constructor")
@@ -63,7 +63,7 @@ internal fun newTableQuery(                                           table: Str
             val defaultValue = list.first()
             val columnType = getColumnType(name, elementType, isNullable = false)
                 ?: error("Unsupported element type $elementType for list field $name")
-
+            
             val defaultSqlValue = when (defaultValue) {
                 is String -> "'$defaultValue'"
                 is Boolean -> if (defaultValue) "1" else "0"

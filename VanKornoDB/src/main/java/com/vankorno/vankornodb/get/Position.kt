@@ -13,15 +13,15 @@ import com.vankorno.vankornodb.dbManagement.data.requirePositionColumn
 /**
  * Returns 0L if nothing was found
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastPosition(     table: DslTable<*, W, O, X>,
-                                                                      where: W.()->Unit = {},
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastPosition(       table: DslTable<*, W, O, X>,
+                                                                        where: W.()->Unit = {},
 ): Long = read(0L, "getLastPosition") { db ->
     db.getLastPosition(table, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastPosition(
-                                                                      table: DslTable<*, W, O, X>,
-                                                                      where: W.()->Unit = {},
+                                                                        table: DslTable<*, W, O, X>,
+                                                                        where: W.()->Unit = {},
 ): Long {
     table.info.requirePositionColumn()
     return getLargestLong(table.col { raw(_Position) }, where)

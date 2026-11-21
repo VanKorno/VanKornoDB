@@ -17,16 +17,16 @@ import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 
 /** Applies [actions] in declaration order to the rows matching [where].
  */
-fun <W, S : SetDsl<W>> Dbh.set(                                   table: FullDslTable<*, W, *, *, S>,
-                                                                  where: W.()->Unit = {},
-                                                                  async: Boolean = false,
-                                                                actions: S.()->Unit,
+fun <W, S : SetDsl<W>> Dbh.set(                                  table: FullDslTable<*, W, *, *, S>,
+                                                                 where: W.()->Unit = {},
+                                                                 async: Boolean = false,
+                                                               actions: S.()->Unit,
 ) = write("set", async) { db -> db.set(table, where, actions) }
 
 
-fun <W, S : SetDsl<W>> SQLiteDatabase.set(                        table: FullDslTable<*, W, *, *, S>,
-                                                                  where: W.()->Unit = {},
-                                                                actions: S.()->Unit,
+fun <W, S : SetDsl<W>> SQLiteDatabase.set(                       table: FullDslTable<*, W, *, *, S>,
+                                                                 where: W.()->Unit = {},
+                                                               actions: S.()->Unit,
 ) {
     val ops = table.set(table.setFactory, actions)
     if (ops.isEmpty()) return //\/\/\/\/\/\

@@ -19,11 +19,11 @@ fun SQLiteDatabase.tableExists(                                                 
 ).use { it.moveToFirst() }
 
 
-fun Dbh.tableExists(                                                        table: MiniDslTable<*, *>
+fun Dbh.tableExists(                                                       table: MiniDslTable<*, *>
 ): Boolean = read(false, "tableExists") { db ->
     db.tableExists(table)
 }
-fun SQLiteDatabase.tableExists(                                             table: MiniDslTable<*, *>
+fun SQLiteDatabase.tableExists(                                            table: MiniDslTable<*, *>
 ): Boolean = tableExists(table.name)
 
 
@@ -36,7 +36,7 @@ fun Dbh.isTableEmpty(                                                           
 fun SQLiteDatabase.isTableEmpty(table: String): Boolean = !hasRows(table)
 
 
-fun Dbh.isTableEmpty(                                                       table: MiniDslTable<*, *>
+fun Dbh.isTableEmpty(                                                      table: MiniDslTable<*, *>
 ): Boolean = read(true, "isTableEmpty") { db ->
     db.isTableEmpty(table)
 }

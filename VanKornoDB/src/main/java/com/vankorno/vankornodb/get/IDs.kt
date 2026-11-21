@@ -14,42 +14,41 @@ import com.vankorno.vankornodb.dbManagement.data.lCol
 internal fun <W> idColumn(): W.()->Field<W, LongCol> = { Field(lCol(_ID)) }
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastId(           table: DslTable<*, W, O, X>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastId(             table: DslTable<*, W, O, X>,
 ): Long = read(0L, "getLastId") { db ->
     db.getLastId(table)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLastId(
-                                                                      table: DslTable<*, W, O, X>,
+                                                                        table: DslTable<*, W, O, X>,
 ): Long = getLargestLong(table.col(idColumn()))
 
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getId(               table: DslTable<*, W, O, X>,
-                                                                      where: W.()->Unit,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getId(                 table: DslTable<*, W, O, X>,
+                                                                        where: W.()->Unit,
 ): Long = read(-1L, "getId") { db ->
     db.getId(table, where)
 }
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getId(    table: DslTable<*, W, O, X>,
-                                                                      where: W.()->Unit,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getId(      table: DslTable<*, W, O, X>,
+                                                                        where: W.()->Unit,
 ): Long = getLong(table.col(idColumn()), where = where)
 
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getIDs(              table: DslTable<*, W, O, X>,
-                                                                    orderBy: O.()->Unit = {},
-                                                                      where: W.()->Unit,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getIDs(                table: DslTable<*, W, O, X>,
+                                                                      orderBy: O.()->Unit = {},
+                                                                        where: W.()->Unit,
 ): List<Long> = read(emptyList(), "getIDs") { db ->
     db.getIDs(table, orderBy, where)
 }
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getIDs(
-                                                                      table: DslTable<*, W, O, X>,
-                                                                    orderBy: O.()->Unit = {},
-                                                                      where: W.()->Unit,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getIDs(     table: DslTable<*, W, O, X>,
+                                                                      orderBy: O.()->Unit = {},
+                                                                        where: W.()->Unit,
 ): List<Long> = getColLongs(table.col(idColumn()), orderBy, where = where)
 
 
@@ -62,8 +61,8 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getAllIDs(           table: Dsl
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getAllIDs(
-                                                                      table: DslTable<*, W, O, X>,
-                                                                    orderBy: O.()->Unit = {},
+                                                                        table: DslTable<*, W, O, X>,
+                                                                      orderBy: O.()->Unit = {},
 ): List<Long> = getColLongs(table.col(idColumn()), orderBy)
 
 

@@ -19,19 +19,19 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
  * Returns the assigned pairs in input order.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIDsAndPositions(
-                                                       table: DslTable<TableInfo<T>, W, O, X>,
-                                                    entities: List<T>,
-                                          positionConditions: W.()->Unit = {},
-                                            setIdAndPosition: (T, Long, Long)->T,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                          entities: List<T>,
+                                                positionConditions: W.()->Unit = {},
+                                                  setIdAndPosition: (T, Long, Long)->T,
 ): List<DbIdAndPosition> = readWrite(emptyList(), "addWithNewIDsAndPositions") { db ->
     db.addWithNewIDsAndPositions(table, entities, positionConditions, setIdAndPosition)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIDsAndPositions(
-                                                       table: DslTable<TableInfo<T>, W, O, X>,
-                                                    entities: List<T>,
-                                          positionConditions: W.()->Unit = {},
-                                            setIdAndPosition: (T, Long, Long)->T,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                          entities: List<T>,
+                                                positionConditions: W.()->Unit = {},
+                                                  setIdAndPosition: (T, Long, Long)->T,
 ): List<DbIdAndPosition> {
     val positions = getNextPositions(table, entities.size, where = positionConditions)
     val ids = getNextIDs(table, entities.size)
@@ -51,19 +51,19 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWit
  * Returns the assigned pair.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIdAndPosition(
-                                                           table: DslTable<TableInfo<T>, W, O, X>,
-                                                          entity: T,
-                                              positionConditions: W.()->Unit = {},
-                                                setIdAndPosition: (T, Long, Long)->T,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                            entity: T,
+                                                positionConditions: W.()->Unit = {},
+                                                  setIdAndPosition: (T, Long, Long)->T,
 ): DbIdAndPosition = readWrite(DbIdAndPosition(), "addWithNewIdAndPosition") { db ->
     db.addWithNewIdAndPosition(table, entity, positionConditions, setIdAndPosition)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIdAndPosition(
-                                                           table: DslTable<TableInfo<T>, W, O, X>,
-                                                          entity: T,
-                                              positionConditions: W.()->Unit = {},
-                                                setIdAndPosition: (T, Long, Long)->T,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                            entity: T,
+                                                positionConditions: W.()->Unit = {},
+                                                  setIdAndPosition: (T, Long, Long)->T,
 ): DbIdAndPosition = addWithNewIDsAndPositions(
     table = table,
     entities = listOf(entity),

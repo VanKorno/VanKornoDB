@@ -13,21 +13,22 @@ import com.vankorno.vankornodb.dbManagement.data.IntCol
  * [startFrom] must be positive when [count] is positive. Returns an empty list for a nonpositive count
  * or a failed read, including exhaustion. The returned values are candidates and are not reserved.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInts(     column: TableColumn<W, O, X, IntCol>,
-                                                                   count: Int,
-                                                               startFrom: Int = 1,
-                                                                reserved: Set<Int> = emptySet(),
-                                                                   where: W.()->Unit = {},
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInts(
+                                                               column: TableColumn<W, O, X, IntCol>,
+                                                                count: Int,
+                                                            startFrom: Int = 1,
+                                                             reserved: Set<Int> = emptySet(),
+                                                                where: W.()->Unit = {},
 ): List<Int> = read(emptyList(), "getNextInts") { db ->
     db.getNextInts(column, count, startFrom, reserved, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInts(
-                                                                  column: TableColumn<W, O, X, IntCol>,
-                                                                   count: Int,
-                                                               startFrom: Int = 1,
-                                                                reserved: Set<Int> = emptySet(),
-                                                                   where: W.()->Unit = {},
+                                                               column: TableColumn<W, O, X, IntCol>,
+                                                                count: Int,
+                                                            startFrom: Int = 1,
+                                                             reserved: Set<Int> = emptySet(),
+                                                                where: W.()->Unit = {},
 ): List<Int> {
     if (count <= 0) return emptyList() ///\/\/\/\/\/\
     require(startFrom > 0) { "startFrom must be positive" } //\/\/\
@@ -50,30 +51,31 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInts(
 
 /** Returns one available value using the same rules as the bulk getter. The helper fallback is -1.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInt(      column: TableColumn<W, O, X, IntCol>,
-                                                               startFrom: Int = 1,
-                                                                reserved: Set<Int> = emptySet(),
-                                                                   where: W.()->Unit = {},
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getNextInt(
+                                                               column: TableColumn<W, O, X, IntCol>,
+                                                            startFrom: Int = 1,
+                                                             reserved: Set<Int> = emptySet(),
+                                                                where: W.()->Unit = {},
 ): Int = read(-1, "getNextInt") { db ->
     db.getNextInt(column, startFrom, reserved, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInt(
-                                                                  column: TableColumn<W, O, X, IntCol>,
-                                                               startFrom: Int = 1,
-                                                                reserved: Set<Int> = emptySet(),
-                                                                   where: W.()->Unit = {},
+                                                               column: TableColumn<W, O, X, IntCol>,
+                                                            startFrom: Int = 1,
+                                                             reserved: Set<Int> = emptySet(),
+                                                                where: W.()->Unit = {},
 ): Int = getNextInts(column, 1, startFrom, reserved, where)
     .firstOrNull() ?: -1
 
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFreeIntsFromStart(
-                                                                   column: TableColumn<W, O, X, IntCol>,
-                                                                   count: Int,
-                                                               startFrom: Int = 1,
-                                                                reserved: Set<Int> = emptySet(),
-                                                                   where: W.()->Unit = {},
+                                                               column: TableColumn<W, O, X, IntCol>,
+                                                                count: Int,
+                                                            startFrom: Int = 1,
+                                                             reserved: Set<Int> = emptySet(),
+                                                                where: W.()->Unit = {},
 ): List<Int> {
     if (count <= 0) return emptyList() ///\/\/\/\/\/\
     require(startFrom > 0) { "startFrom must be positive" } //\/\/\

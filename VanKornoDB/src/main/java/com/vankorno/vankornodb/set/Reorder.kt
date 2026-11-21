@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.core.data.DbConstants._Position
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.requirePositionColumn
 
@@ -15,21 +15,21 @@ import com.vankorno.vankornodb.dbManagement.data.requirePositionColumn
  * Returns false when the row has no available move.
  */
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.reorder(
-                                                                      table: DslTable<*, W, O, X>,
-                                                                         id: Long,
-                                                               moveUpOrBack: Boolean,
-                                                            makeFirstOrLast: Boolean = false,
-                                                                      where: W.()->Unit = {},
+                                                                        table: DslTable<*, W, O, X>,
+                                                                           id: Long,
+                                                                 moveUpOrBack: Boolean,
+                                                              makeFirstOrLast: Boolean = false,
+                                                                        where: W.()->Unit = {},
 ): Boolean = readWrite(false, "reorder") { db ->
     db.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
 }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorder(
-                                                                      table: DslTable<*, W, O, X>,
-                                                                         id: Long,
-                                                               moveUpOrBack: Boolean,
-                                                            makeFirstOrLast: Boolean = false,
-                                                                      where: W.()->Unit = {},
+                                                                        table: DslTable<*, W, O, X>,
+                                                                           id: Long,
+                                                                 moveUpOrBack: Boolean,
+                                                              makeFirstOrLast: Boolean = false,
+                                                                        where: W.()->Unit = {},
 ): Boolean {
     table.info.requirePositionColumn()
     beginTransaction()
@@ -46,11 +46,11 @@ fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorde
 
 
 private fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorderRow(
-                                                                      table: DslTable<*, W, O, X>,
-                                                                         id: Long,
-                                                               moveUpOrBack: Boolean,
-                                                            makeFirstOrLast: Boolean,
-                                                                      where: W.()->Unit,
+                                                                        table: DslTable<*, W, O, X>,
+                                                                           id: Long,
+                                                                 moveUpOrBack: Boolean,
+                                                              makeFirstOrLast: Boolean,
+                                                                        where: W.()->Unit,
 ): Boolean {
     fun identifier(name: String) = "\"" + name.replace("\"", "\"\"") + "\""
     

@@ -14,18 +14,36 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfo
  * Retrieves a pair of entities from two tables sharing the specified [id].
  * Returns null if either entity is not found.
  */
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPair(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                           id: Long,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > Dbh.getEntityPair(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                             id: Long,
 ): Pair<A, B>? = read(null, "getEntityPair") { db ->
     db.getEntityPair(tableA, tableB, id)
 }
 
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPair(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                           id: Long,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > SQLiteDatabase.getEntityPair(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                             id: Long,
 ): Pair<A, B>? {
     val a = getEntity(tableA) { rawClause("id=?", id.toString()) } ?: return null
     val b = getEntity(tableB) { rawClause("id=?", id.toString()) } ?: return null
@@ -39,22 +57,40 @@ fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : 
  * where [where] conditions match an entity in [tableA].
  * Returns null if no matching entity is found in [tableA] or if the corresponding entity in [tableB] is missing.
  */
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPair(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                      orderBy: OA.()->Unit = {},
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > Dbh.getEntityPair(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                        orderBy: OA.()->Unit = {},
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit,
 ): Pair<A, B>? = read(null, "getEntityPair") { db ->
     db.getEntityPair(tableA, tableB, orderBy, extra, where)
 }
 
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPair(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                      orderBy: OA.()->Unit = {},
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > SQLiteDatabase.getEntityPair(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                        orderBy: OA.()->Unit = {},
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit,
 ): Pair<A, B>? {
     val a = getEntity(tableA, orderBy, extra, where) ?: return null
     val b = getEntity(tableB) { rawClause("id=?", a.id.toString()) } ?: return null
@@ -69,22 +105,40 @@ fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : 
  * corresponding entities from [tableB].
  * Only pairs where both entities exist are included in the result.
  */
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPairs(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                      orderBy: OA.()->Unit = { raw("ROWID") },
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit = {},
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > Dbh.getEntityPairs(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit = {},
 ): List<Pair<A, B>> = read(emptyList(), "getEntityPairs") { db ->
     db.getEntityPairs(tableA, tableB, orderBy, extra, where)
 }
 
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPairs(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                      orderBy: OA.()->Unit = { raw("ROWID") },
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit = {},
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > SQLiteDatabase.getEntityPairs(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit = {},
 ): List<Pair<A, B>> {
     val mapA = getEntityMap(tableA, orderBy, extra, where)
     if (mapA.isEmpty()) return emptyList() //\/\/\/\/\/\
@@ -105,22 +159,40 @@ fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : 
  * corresponding entities from [tableB].
  * Only pairs where both entities exist are included in the result.
  */
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> Dbh.getEntityPairMap(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                      orderBy: OA.()->Unit = { raw("ROWID") },
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit = {},
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > Dbh.getEntityPairMap(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit = {},
 ): Map<Long, Pair<A, B>> = read(emptyMap(), "getEntityPairMap") { db ->
     db.getEntityPairMap(tableA, tableB, orderBy, extra, where)
 }
 
-fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>> SQLiteDatabase.getEntityPairMap(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                      orderBy: OA.()->Unit = { raw("ROWID") },
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit = {},
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>
+    > SQLiteDatabase.getEntityPairMap(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit = {},
 ): Map<Long, Pair<A, B>> {
     val mapA = getEntityMap(tableA, orderBy, extra, where)
     if (mapA.isEmpty()) return emptyMap() //\/\/\/\/\/\
@@ -141,20 +213,46 @@ fun <A : DbEntity, B : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : 
  * Retrieves a triple of entities from three tables sharing the specified [id].
  * Returns null if any entity is not found.
  */
-fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriple(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                       tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                           id: Long,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    C : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>,
+    WC : WhereDsl<WC>,
+    OC : OrderDsl<WC, OC>,
+    XC : ExtraDsl<WC>
+    > Dbh.getEntityTriple(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                                             id: Long,
 ): Triple<A, B, C>? = read(null, "getEntityTriple") { db ->
     db.getEntityTriple(tableA, tableB, tableC, id)
 }
 
-fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriple(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                       tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                           id: Long,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    C : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>,
+    WC : WhereDsl<WC>,
+    OC : OrderDsl<WC, OC>,
+    XC : ExtraDsl<WC>
+    > SQLiteDatabase.getEntityTriple(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                                             id: Long,
 ): Triple<A, B, C>? {
     val a = getEntity(tableA) { rawClause("id=?", id.toString()) } ?: return null
     val b = getEntity(tableB) { rawClause("id=?", id.toString()) } ?: return null
@@ -169,24 +267,50 @@ fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<
  * where [where] conditions match an entity in [tableA].
  * Returns null if no matching entity is found in [tableA] or if corresponding entities in [tableB] or [tableC] are missing.
  */
-fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriple(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                       tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                      orderBy: OA.()->Unit = {},
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    C : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>,
+    WC : WhereDsl<WC>,
+    OC : OrderDsl<WC, OC>,
+    XC : ExtraDsl<WC>
+    > Dbh.getEntityTriple(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                                        orderBy: OA.()->Unit = {},
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit,
 ): Triple<A, B, C>? = read(null, "getEntityTriple") { db ->
     db.getEntityTriple(tableA, tableB, tableC, orderBy, extra, where)
 }
 
-fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriple(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                       tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                      orderBy: OA.()->Unit = {},
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit,
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    C : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>,
+    WC : WhereDsl<WC>,
+    OC : OrderDsl<WC, OC>,
+    XC : ExtraDsl<WC>
+    > SQLiteDatabase.getEntityTriple(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                                        orderBy: OA.()->Unit = {},
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit,
 ): Triple<A, B, C>? {
     val a = getEntity(tableA, orderBy, extra, where) ?: return null
     val b = getEntity(tableB) { rawClause("id=?", a.id.toString()) } ?: return null
@@ -202,24 +326,49 @@ fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<
  * corresponding entities from [tableB] and [tableC].
  * Only triples where all three entities exist are included in the result.
  */
-fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> Dbh.getEntityTriples(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                       tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                      orderBy: OA.()->Unit = { raw("ROWID") },
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit = {},
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    C : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>,
+    WC : WhereDsl<WC>,
+    OC : OrderDsl<WC, OC>,
+    XC : ExtraDsl<WC>
+    > Dbh.getEntityTriples(
+                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit = {},
 ): List<Triple<A, B, C>> = read(emptyList(), "getEntityTriples") { db ->
     db.getEntityTriples(tableA, tableB, tableC, orderBy, extra, where)
 }
 
-fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<WA, OA>, XA : ExtraDsl<WA>, WB : WhereDsl<WB>, OB : OrderDsl<WB, OB>, XB : ExtraDsl<WB>, WC : WhereDsl<WC>, OC : OrderDsl<WC, OC>, XC : ExtraDsl<WC>> SQLiteDatabase.getEntityTriples(
-                                                       tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                       tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                       tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                      orderBy: OA.()->Unit = { raw("ROWID") },
-                                                        extra: XA.()->Unit = {},
-                                                        where: WA.()->Unit = {},
+fun <
+    A : DbEntity,
+    B : DbEntity,
+    C : DbEntity,
+    WA : WhereDsl<WA>,
+    OA : OrderDsl<WA, OA>,
+    XA : ExtraDsl<WA>,
+    WB : WhereDsl<WB>,
+    OB : OrderDsl<WB, OB>,
+    XB : ExtraDsl<WB>,
+    WC : WhereDsl<WC>,
+    OC : OrderDsl<WC, OC>,
+    XC : ExtraDsl<WC>
+    > SQLiteDatabase.getEntityTriples(                   tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                          extra: XA.()->Unit = {},
+                                                          where: WA.()->Unit = {},
 ): List<Triple<A, B, C>> {
     val mapA = getEntityMap(tableA, orderBy, extra, where)
     if (mapA.isEmpty()) return emptyList() //\/\/\/\/\/\
@@ -237,9 +386,14 @@ fun <A : DbEntity, B : DbEntity, C : DbEntity, WA : WhereDsl<WA>, OA : OrderDsl<
 
 
 
-private fun <T : DbEntity, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.entitiesByIds(
-                                                           table: DslTable<TableInfo<T>, W, O, X>,
-                                                             ids: Set<Long>,
+private fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.entitiesByIds(
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                               ids: Set<Long>,
 ): Map<Long, T> = buildMap {
     for (batch in ids.chunked(900)) {
         putAll(getEntityMap(table) { idColumn<W>()(this) equalAny batch })

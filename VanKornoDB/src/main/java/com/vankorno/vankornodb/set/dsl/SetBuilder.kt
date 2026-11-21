@@ -64,17 +64,17 @@ abstract class SetDsl<W> : SetDslBase<W>() {
     
     
     @JvmName("coerceInInt")
-    infix fun Field<W, IntCol>.coerceIn(                                                     range: IntRange
+    infix fun Field<W, IntCol>.coerceIn(                                           range: IntRange
     ) {
         _ops += SetOp.CoerceIn(definition.name, range.first, range.last)
     }
     @JvmName("coerceInLong")
-    infix fun Field<W, LongCol>.coerceIn(                                                    range: LongRange
+    infix fun Field<W, LongCol>.coerceIn(                                          range: LongRange
     ) {
         _ops += SetOp.CoerceIn(definition.name, range.first, range.last)
     }
     @JvmName("coerceInFloat")
-    infix fun Field<W, FloatCol>.coerceIn(                              range: ClosedFloatingPointRange<Float>
+    infix fun Field<W, FloatCol>.coerceIn(                    range: ClosedFloatingPointRange<Float>
     ) {
         _ops += SetOp.CoerceIn(definition.name, range.start, range.endInclusive)
     }

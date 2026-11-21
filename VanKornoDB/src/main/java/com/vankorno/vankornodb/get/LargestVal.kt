@@ -12,39 +12,39 @@ import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLargestInt(
-                                                                  column: TableColumn<W, O, X, IntCol>,
-                                                                   where: W.()->Unit = {},
+                                                               column: TableColumn<W, O, X, IntCol>,
+                                                                where: W.()->Unit = {},
 ): Int = read(0, "getLargestInt") { db ->
     db.getLargestInt(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLargestInt(
-                                                                  column: TableColumn<W, O, X, IntCol>,
-                                                                   where: W.()->Unit = {},
+                                                               column: TableColumn<W, O, X, IntCol>,
+                                                                where: W.()->Unit = {},
 ): Int = getLargestValue(column, where) { it.getInt(0) }
 
 
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLargestLong(
-                                                                 column: TableColumn<W, O, X, LongCol>,
-                                                                  where: W.()->Unit = {},
+                                                              column: TableColumn<W, O, X, LongCol>,
+                                                               where: W.()->Unit = {},
 ): Long = read(0L, "getLargestLong") { db ->
     db.getLargestLong(column, where)
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLargestLong(
-                                                                 column: TableColumn<W, O, X, LongCol>,
-                                                                  where: W.()->Unit = {},
+                                                              column: TableColumn<W, O, X, LongCol>,
+                                                               where: W.()->Unit = {},
 ): Long = getLargestValue(column, where) { it.getLong(0) }
 
 
 
 
 private inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getLargestValue(
-                                                                       column: TableColumn<W, O, X, *>,
-                                                               noinline where: W.()->Unit,
-                                                                    readValue: (Cursor)->R,
+                                                                    column: TableColumn<W, O, X, *>,
+                                                            noinline where: W.()->Unit,
+                                                                 readValue: (Cursor)->R,
 ): R {
     val table = column.table
     val selected = column.selector(table.selectionScope())

@@ -5,10 +5,10 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.toEntity
-import com.vankorno.vankornodb.core.dsl.Field
-import com.vankorno.vankornodb.core.dsl.ExtraDsl
-import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.DslTable
+import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.Field
+import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
@@ -24,23 +24,23 @@ import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
  * Returns [default] if no result is found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.steal(
-                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
-                                                     thiefSchema: SchemaBundle<T>,
-                                                         default: T,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit,
+                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
+                                                       thiefSchema: SchemaBundle<T>,
+                                                           default: T,
+                                                           orderBy: O.()->Unit = {},
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit,
 ): T = read(default, "stealFrom") { db ->
     db.steal(ownerTable, thiefSchema, default, orderBy, extra, where)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
-                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
-                                                     thiefSchema: SchemaBundle<T>,
-                                                         default: T,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit,
+                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
+                                                       thiefSchema: SchemaBundle<T>,
+                                                           default: T,
+                                                           orderBy: O.()->Unit = {},
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit,
 ): T {
     val definitions = checkedThiefColumns(thiefSchema, ownerTable.info.schema.columns)
     val columns = ownerTable.columns { definitions.map { Field(it) } }
@@ -72,21 +72,21 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
  * Returns an empty list if no result is found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.stealALot(
-                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
-                                                     thiefSchema: SchemaBundle<T>,
-                                                         orderBy: O.()->Unit = { raw("ROWID") },
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit = {},
+                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
+                                                       thiefSchema: SchemaBundle<T>,
+                                                           orderBy: O.()->Unit = { raw("ROWID") },
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit = {},
 ): List<T> = read(emptyList(), "stealALot") { db ->
     db.stealALot(ownerTable, thiefSchema, orderBy, extra, where)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.stealALot(
-                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
-                                                     thiefSchema: SchemaBundle<T>,
-                                                         orderBy: O.()->Unit = { raw("ROWID") },
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit = {},
+                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
+                                                       thiefSchema: SchemaBundle<T>,
+                                                           orderBy: O.()->Unit = { raw("ROWID") },
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit = {},
 ): List<T> {
     val definitions = checkedThiefColumns(thiefSchema, ownerTable.info.schema.columns)
     val columns = ownerTable.columns { definitions.map { Field(it) } }

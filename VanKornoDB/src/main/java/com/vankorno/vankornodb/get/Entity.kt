@@ -16,21 +16,21 @@ import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
  *  Returns [default] if no result found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                           table: DslTable<TableInfo<T>, W, O, X>,
-                                                         default: T,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                           default: T,
+                                                           orderBy: O.()->Unit = {},
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit,
 ): T = read(default, "getEntity") { db ->
     db.getEntity(table, default, orderBy, extra, where)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                           table: DslTable<TableInfo<T>, W, O, X>,
-                                                         default: T,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                           default: T,
+                                                           orderBy: O.()->Unit = {},
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit,
 ): T = getEntity(table, orderBy, extra, where) ?: run {
     // region LOG
     if (!suppressEntityGetterErrorLog)
@@ -44,19 +44,19 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEnt
  * Returns null if no result found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                           table: DslTable<TableInfo<T>, W, O, X>,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                           orderBy: O.()->Unit = {},
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit,
 ): T? = read(null, "getEntity") { db ->
     db.getEntity(table, orderBy, extra, where)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                           table: DslTable<TableInfo<T>, W, O, X>,
-                                                         orderBy: O.()->Unit = {},
-                                                           extra: X.()->Unit = {},
-                                                           where: W.()->Unit,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
+                                                           orderBy: O.()->Unit = {},
+                                                             extra: X.()->Unit = {},
+                                                             where: W.()->Unit,
 ): T? = useCursor(table, orderBy = orderBy, where = where,
     extra = {
         extra()

@@ -9,9 +9,9 @@ import com.vankorno.vankornodb.dbManagement.data.NumberColumn
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.baseAddTo(
-                                                         addend: Number,
-                                                         column: TableColumn<W, O, X, NumberColumn<*>>,
-                                                          where: W.()->Unit,
+                                                      addend: Number,
+                                                      column: TableColumn<W, O, X, NumberColumn<*>>,
+                                                       where: W.()->Unit,
 ) {
     if (addend.toDouble() == 0.0) return //\/\/\/\/\/\
     
@@ -20,10 +20,10 @@ internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.baseAddTo(
 
 
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.modifyColumn(
-                                                          column: TableColumn<W, O, X, TypedColumn<*>>,
-                                                           where: W.()->Unit,
-                                                            args: List<Any>,
-                                                      expression: (String)->String,
+                                                       column: TableColumn<W, O, X, TypedColumn<*>>,
+                                                        where: W.()->Unit,
+                                                         args: List<Any>,
+                                                   expression: (String)->String,
 ) {
     val table = column.table
     val name = table.columnSql(column.selector)

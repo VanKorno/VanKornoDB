@@ -11,18 +11,18 @@ import com.vankorno.vankornodb.misc.wLog
 
 /** Updates matching rows with [entity] and returns the number updated.
  */
-fun <T : DbEntity, W> Dbh.setEntity(                            table: MiniDslTable<TableInfo<T>, W>,
-                                                               entity: T,
-                                                                where: W.()->Unit,
+fun <T : DbEntity, W> Dbh.setEntity(                           table: MiniDslTable<TableInfo<T>, W>,
+                                                              entity: T,
+                                                               where: W.()->Unit,
 ): Int = readWrite(0, "setEntity") { db ->
     db.setEntity(table = table, entity = entity, where = where)
 }
 
 /** Updates matching rows with [entity] and returns the number updated.
  */
-fun <T : DbEntity, W> SQLiteDatabase.setEntity(                 table: MiniDslTable<TableInfo<T>, W>,
-                                                               entity: T,
-                                                                where: W.()->Unit,
+fun <T : DbEntity, W> SQLiteDatabase.setEntity(                table: MiniDslTable<TableInfo<T>, W>,
+                                                              entity: T,
+                                                               where: W.()->Unit,
 ): Int {
     val cv = toContentValues(entity, table.info.schema)
     val predicate = table.where(where)

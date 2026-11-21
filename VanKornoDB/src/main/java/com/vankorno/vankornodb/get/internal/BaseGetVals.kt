@@ -9,17 +9,16 @@ import com.vankorno.vankornodb.core.dsl.TableColumns
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.get.getCursor
 
-/**
- * Base fun for getting multiple values from db
- */
+/** Base fun for getting multiple values from db
+*/
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.baseGetVals(
-                                                       columns: TableColumns<W, O, X, TypedColumn<R>>,
-                                                       orderBy: O.()->Unit = columns.defaultOrder,
-                                                         extra: X.()->Unit = {},
-                                                         where: W.()->Unit = {},
-                                                getCursorValue: (Cursor, Int)->R,
+                                                     columns: TableColumns<W, O, X, TypedColumn<R>>,
+                                                     orderBy: O.()->Unit = columns.defaultOrder,
+                                                       extra: X.()->Unit = {},
+                                                       where: W.()->Unit = {},
+                                              getCursorValue: (Cursor, Int)->R,
 ): List<List<R>> = getCursor(
-    columns, orderBy = orderBy, extra = extra, where = where
+    columns, orderBy, extra, where
 ).use { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
