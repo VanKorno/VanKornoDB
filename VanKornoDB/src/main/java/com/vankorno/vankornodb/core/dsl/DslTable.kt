@@ -29,7 +29,9 @@ private class RawExpr<W>(sql: String) : SelectExpr<W, Nothing>(sql)
 fun <W> raw(sql: String): SelectExpr<W, Nothing> = RawExpr(sql)
 
 
-open class TableColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
+open class TableColumns<
+    W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>
+    > internal constructor(
                                                  internal val table: DslTable<*, W, O, X>,
                                              internal val selectors: Array<out FieldSelector<W, C>>,
                             @PublishedApi internal val defaultOrder: O.()->Unit = {},
@@ -44,18 +46,20 @@ open class TableColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedCol
     }
     
     
-    open fun limit(count: Int): TableColumns<W, O, X, C> =
-        TableColumns(table, selectors, defaultOrder, count)
+    open fun limit(count: Int): TableColumns<W, O, X, C> = TableColumns(table, selectors, defaultOrder, count)
     
     
-    internal fun orderWithFallback(orderBy: O.()->Unit): O.()->Unit =
+    internal fun orderWithFallback(                                              orderBy: O.()->Unit
+    ): O.()->Unit =
         if (orderBy === defaultOrder) orderBy else fun O.() {
             orderBy()
             if (terms.isEmpty()) defaultOrder()
         }
     
     
-    internal fun fieldOrder(descending: Boolean, selector: W.()->Field<W, AscendingColumn<*>>): O.()->Unit {
+    internal fun fieldOrder(                         descending: Boolean,
+                                                       selector: W.()->Field<W, AscendingColumn<*>>,
+    ): O.()->Unit {
         val field = table.selectionScope().selector()
         return if (descending) ({ field.flip() }) else ({ field.by() })
     }
@@ -72,33 +76,55 @@ open class TableColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedCol
     )
     
     
-    open fun orderFlip(field: W.()->Field<W, AscendingColumn<*>>): TableColumns<W, O, X, C> =
-        TableColumns(table, selectors, fieldOrder(descending = true, selector = field), defaultLimit)
+    open fun orderFlip(                                    field: W.()->Field<W, AscendingColumn<*>>
+    ): TableColumns<W, O, X, C> = TableColumns(
+        table = table,
+        selectors = selectors,
+        defaultOrder = fieldOrder(descending = true, selector = field),
+        defaultLimit = defaultLimit
+    )
     
     
-    open fun orderIf(condition: Boolean, field: W.()->Field<W, AscendingColumn<*>>): TableColumns<W, O, X, C> =
+    open fun orderIf(                                 condition: Boolean,
+                                                          field: W.()->Field<W, AscendingColumn<*>>,
+    ): TableColumns<W, O, X, C> =
         if (condition) orderBy(field) else this
 }
 
-class TableColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
+class TableColumn<
+    W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>
+    > internal constructor(
                                                                         table: DslTable<*, W, O, X>,
                                                         internal val selector: FieldSelector<W, C>,
                                                                  defaultOrder: O.()->Unit = {},
                                                                  defaultLimit: Int? = null,
-) : TableColumns<W, O, X, C>(table, arrayOf(selector), defaultOrder, defaultLimit) {
-    override fun limit(count: Int): TableColumn<W, O, X, C> =
-        TableColumn(table, selector, defaultOrder, count)
+) : TableColumns<W, O, X, C>(
+    table, arrayOf(selector), defaultOrder, defaultLimit
+) {
+    override fun limit(count: Int): TableColumn<W, O, X, C> = TableColumn(table, selector, defaultOrder, count)
     
     
-    override fun orderBy(field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
-        TableColumn(table, selector, fieldOrder(descending = false, selector = field), defaultLimit)
+    override fun orderBy(                                  field: W.()->Field<W, AscendingColumn<*>>
+    ): TableColumn<W, O, X, C> = TableColumn(
+        table = table,
+        selector = selector,
+        defaultOrder = fieldOrder(descending = false, selector = field),
+        defaultLimit = defaultLimit
+    )
     
     
-    override fun orderFlip(field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
-        TableColumn(table, selector, fieldOrder(descending = true, selector = field), defaultLimit)
+    override fun orderFlip(                                field: W.()->Field<W, AscendingColumn<*>>
+    ): TableColumn<W, O, X, C> = TableColumn(
+        table = table,
+        selector = selector,
+        defaultOrder = fieldOrder(descending = true, selector = field),
+        defaultLimit = defaultLimit
+    )
     
     
-    override fun orderIf(condition: Boolean, field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
+    override fun orderIf(                             condition: Boolean,
+                                                          field: W.()->Field<W, AscendingColumn<*>>,
+    ): TableColumn<W, O, X, C> =
         if (condition) orderBy(field) else this
 }
 
@@ -154,7 +180,8 @@ open class MiniDslTable<out I : TableInfo<*>, W> internal constructor(
     
     
     internal fun columnSql(column: FieldSelector<W, *>): String = selectionScope().column().sql
-
+    
+    
     internal fun select(                      columns: Array<out FieldSelector<W, TypedColumn<*>>>
     ): Array<String> {
         val scope = selectionScope()
@@ -169,14 +196,19 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
                                                        private val orderFactory: (W)->O,
                                                        private val extraFactory: (W)->X,
 ) : MiniDslTable<I, W>(info, factory) {
-    fun <C : TypedColumn<*>> col(block: FieldSelector<W, C>): TableColumn<W, O, X, C> {
+    
+    fun <C : TypedColumn<*>> col(                                         block: FieldSelector<W, C>
+    ): TableColumn<W, O, X, C> {
         val selected = selectionScope().block()
         return TableColumn(this, selector = { selected })
     }
     
-    fun <C : TypedColumn<*>> columns(block: W.()->List<SelectExpr<W, C>>): TableColumns<W, O, X, C> {
+    fun <C : TypedColumn<*>> columns(                            block: W.()->List<SelectExpr<W, C>>
+    ): TableColumns<W, O, X, C> {
         val selected = selectionScope().block()
+        
         require(selected.isNotEmpty()) { "An explicit projection must contain at least one column" }
+        
         val selectors = Array<FieldSelector<W, C>>(selected.size) { idx ->
             val column = selected[idx]
             { column }
@@ -184,12 +216,15 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
         return TableColumns(this, selectors)
     }
     
-    internal fun query(        columns: Array<out FieldSelector<W, TypedColumn<*>>> = emptyArray(),
-                               orderBy: O.()->Unit = {},
-                                 extra: X.()->Unit = {},
-                                 where: W.()->Unit = {},
+    internal fun query(         columns: Array<out FieldSelector<W, TypedColumn<*>>> = emptyArray(),
+                                orderBy: O.()->Unit = {},
+                                  extra: X.()->Unit = {},
+                                  where: W.()->Unit = {},
     ): QueryWithArgs {
-        val names = if (columns.isEmpty()) arrayOf("*") else select(columns)
+        val names = if (columns.isEmpty())
+                        arrayOf("*")
+                    else
+                        select(columns)
         return render(name, name, names, predicate(name, where), orderBy, extra)
     }
     
