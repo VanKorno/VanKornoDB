@@ -14,7 +14,6 @@ import com.vankorno.vankornodb.get.getAllIDs
 import com.vankorno.vankornodb.get.getIDs
 import com.vankorno.vankornodb.get.getId
 import com.vankorno.vankornodb.get.getLastId
-import com.vankorno.vankornodb.misc.orderByIdFlipped
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -92,11 +91,11 @@ class GetIdTest {
         assertEquals((1L..ratQuant).toList(), idsCustomCol)
 
         // Filter with orderBy (descending)
-        val idsDesc = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { Id greater 47L }
+        val idsDesc = dbh.getIDs(GetIDsTable, orderBy = { Id.flip() }) { Id greater 47L }
         assertEquals(listOf(50L, 49L, 48L), idsDesc)
 
         // Filter with equalAnyOf and orderBy
-        val idsInList = dbh.getIDs(GetIDsTable, orderByIdFlipped()) { Id.equalAnyOf(5L, 15L, 25L) }
+        val idsInList = dbh.getIDs(GetIDsTable, orderBy = { Id.flip() }) { Id.equalAnyOf(5L, 15L, 25L) }
         assertEquals(listOf(25L, 15L, 5L), idsInList)
 
         // Condition matching nothing
@@ -118,7 +117,7 @@ class GetIdTest {
         assertEquals((1L..ratQuant).toList(), allIds)
 
         // Explicit descending order
-        val allIdsDesc = dbh.getAllIDs(GetAllIDsTable, orderByIdFlipped())
+        val allIdsDesc = dbh.getAllIDs(GetAllIDsTable, orderBy = { Id.flip() })
         assertEquals((ratQuant downTo 1L).toList(), allIdsDesc)
 
         // Add an extra row and verify
