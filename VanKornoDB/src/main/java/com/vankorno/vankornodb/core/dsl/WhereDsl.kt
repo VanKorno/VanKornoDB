@@ -146,9 +146,9 @@ abstract class WhereDsl<W>(                                      private val con
     /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS.
      */
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
-                                              innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
                                               outerColumn: Field<W, TypedColumn<T>>,
-                                                   column: FieldSelector<I, TypedColumn<*>>? = null,
+                                              innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
+                                             selectColumn: FieldSelector<I, TypedColumn<*>>? = null,
                                                   orderBy: O.()->Unit = innerColumn.defaultOrder,
                                                     extra: X.()->Unit = {},
                                                     where: I.()->Unit = {},
@@ -167,7 +167,7 @@ abstract class WhereDsl<W>(                                      private val con
         val source = if (qualifier == from) from else "$from AS $qualifier"
         val innerName = table.columnSql(innerColumn.selector)
         val outerName = outerColumn.definition.name
-        val projection = column?.let { table.columnSql(it) } ?: "1"
+        val projection = selectColumn?.let { table.columnSql(it) } ?: "1"
         
         val predicate = table.predicate(qualifier, where)
         val correlation = WhereDslBase()
@@ -187,6 +187,24 @@ abstract class WhereDsl<W>(                                      private val con
         )
         return Subquery(result.query, result.args)
     }
+    
+    
+    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(
+                                              matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
+                                                  equalTo: Field<W, TypedColumn<T>>,
+                                                  orderBy: O.()->Unit = matchColumn.defaultOrder,
+                                                    extra: X.()->Unit = {},
+                                                    where: I.()->Unit = {},
+    ) = exists(subquery(equalTo, matchColumn, orderBy = orderBy, extra = extra, where = where))
+    
+    
+    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(
+                                              matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
+                                                  equalTo: Field<W, TypedColumn<T>>,
+                                                  orderBy: O.()->Unit = matchColumn.defaultOrder,
+                                                    extra: X.()->Unit = {},
+                                                    where: I.()->Unit = {},
+    ) = notExists(subquery(equalTo, matchColumn, orderBy = orderBy, extra = extra, where = where))
     
     
     fun exists(subquery: Subquery) = rawClause("EXISTS (${subquery.query})", *subquery.args)

@@ -110,9 +110,9 @@ db.getCursor(
     where = {
         // Scalar subquery comparison
         subquery(
-            innerColumn = Posts.col { UserId },
             outerColumn = Id,
-            column = { raw(countAll) }, // COUNT(*)
+            innerColumn = Posts.col { UserId },
+            selectColumn = { raw(countAll) }, // COUNT(*)
         ) greater 10
         
         // IN subquery
@@ -123,17 +123,17 @@ db.getCursor(
         // Correlated EXISTS subquery
         exists(
             subquery(
-                innerColumn = Subscriptions.col { UserId },
                 outerColumn = Id,
+                innerColumn = Subscriptions.col { UserId },
                 where = { Active equal true },
             )
         )
         
         // Direct column comparison to scalar subquery
         VisibleAtHome equal subquery(
-            innerColumn = VisibilityConditions.col { Id },
             outerColumn = Id,
-            column = { VisibleAtHome },
+            innerColumn = VisibilityConditions.col { Id },
+            selectColumn = { VisibleAtHome },
         )
         
         Id notEqual 3

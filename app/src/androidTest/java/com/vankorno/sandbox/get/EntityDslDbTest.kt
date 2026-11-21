@@ -40,12 +40,12 @@ class EntityDslDbTest {
             
             assertEquals(7, dbh.getInt(items.col { Int1 }) { Name equal name })
             assertEquals(listOf(id), dbh.getIDs(items) {
-                exists(subquery(versions.col { Name }, outerColumn = Name) {
+                exists(subquery(Name, versions.col { Name }) {
                     Version equal 2
                 })
             })
             assertEquals(listOf(id), dbh.getIDs(items) {
-                exists(subquery(items.col { Id }, outerColumn = Id) {
+                exists(subquery(Id, items.col { Id }) {
                     Int1 equal 7
                 })
             })

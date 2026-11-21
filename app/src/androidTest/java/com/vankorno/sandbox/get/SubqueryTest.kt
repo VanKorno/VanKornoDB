@@ -91,7 +91,7 @@ class SubqueryTest : BaseAndroidTest() {
     @Test
     fun correlatedExists() {
         val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
-            exists(subquery(SubqueryConditions.col { Id }, Id) { Enabled equal true })
+            exists(subquery(Id, SubqueryConditions.col { Id }) { Enabled equal true })
         }
         assertEquals(10, entities.size)
         assertEquals((1L..10L).toList(), entities.map { it.id })
@@ -103,7 +103,7 @@ class SubqueryTest : BaseAndroidTest() {
         val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             exists(
                 subquery(
-                    SubqueryConditions.col { Id }, Id,
+                    Id, SubqueryConditions.col { Id },
                     where = {
                         Enabled equal true
                     }
@@ -118,7 +118,7 @@ class SubqueryTest : BaseAndroidTest() {
     @Test
     fun correlatedNotExists() {
         val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
-            notExists(subquery(SubqueryConditions.col { Id }, Id) { Int1 greater 0 })
+            notExists(subquery(Id, SubqueryConditions.col { Id }) { Int1 greater 0 })
         }
         assertEquals(40, entities.size)
         assertEquals((11L..50L).toList(), entities.map { it.id })
@@ -130,7 +130,7 @@ class SubqueryTest : BaseAndroidTest() {
         val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             notExists(
                 subquery(
-                    SubqueryConditions.col { Id }, Id,
+                    Id, SubqueryConditions.col { Id },
                     where = {
                         Int1 greater 0
                     }
@@ -146,7 +146,9 @@ class SubqueryTest : BaseAndroidTest() {
     fun testScalarSubqueryOnLeft() {
         val entities: List<TestEntity> = dbh.getEntities(SubqueryItems) {
             subquery(
-                SubqueryConditions.col { Id }, Id, column = { Int1 },
+                outerColumn = Id,
+                innerColumn = SubqueryConditions.col { Id },
+                selectColumn = { Int1 },
             ) greater 105
         }
         assertEquals(5, entities.size)

@@ -130,14 +130,14 @@ class EntityDslTest {
     fun `correlated subqueries qualify both sides and group additional predicates`() {
         val flags = FlagSchema.tableNamed("Flags")
         val result = versionTable.query {
-            exists(subquery(flags.col { OwnerId }, outerColumn = Id) {
+            notExists(flags.col { OwnerId }, equalTo = Id) {
                 Active equal true
                 or { OwnerId equal 99L }
-            })
+            }
         }
         
         assertEquals(
-            "SELECT * FROM Versions WHERE EXISTS (SELECT 1 FROM Flags WHERE Flags.ownerId=Versions.id " +
+            "SELECT * FROM Versions WHERE NOT EXISTS (SELECT 1 FROM Flags WHERE Flags.ownerId=Versions.id " +
                 "AND (active=? OR (ownerId=?)))",
             result.query,
         )
