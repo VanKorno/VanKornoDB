@@ -33,7 +33,21 @@ open class TableColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedCol
                                                  internal val table: DslTable<*, W, O, X>,
                                              internal val selectors: Array<out FieldSelector<W, C>>,
                             @PublishedApi internal val defaultOrder: O.()->Unit = {},
+                                          internal val defaultLimit: Int? = null,
 ) {
+    internal fun extraWithLimit(extra: X.()->Unit): X.()->Unit {
+        val count = defaultLimit ?: return extra //\/\/\/\/\/\
+        return {
+            limit = count
+            extra()
+        }
+    }
+    
+    
+    open fun limit(count: Int): TableColumns<W, O, X, C> =
+        TableColumns(table, selectors, defaultOrder, count)
+    
+    
     internal fun orderWithFallback(orderBy: O.()->Unit): O.()->Unit =
         if (orderBy === defaultOrder) orderBy else fun O.() {
             orderBy()
@@ -53,12 +67,13 @@ open class TableColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedCol
     ): TableColumns<W, O, X, C> = TableColumns(
         table = table,
         selectors = selectors,
-        defaultOrder = fieldOrder(descending = false, selector = field)
+        defaultOrder = fieldOrder(descending = false, selector = field),
+        defaultLimit = defaultLimit,
     )
     
     
     open fun orderFlip(field: W.()->Field<W, AscendingColumn<*>>): TableColumns<W, O, X, C> =
-        TableColumns(table, selectors, fieldOrder(descending = true, selector = field))
+        TableColumns(table, selectors, fieldOrder(descending = true, selector = field), defaultLimit)
     
     
     open fun orderIf(condition: Boolean, field: W.()->Field<W, AscendingColumn<*>>): TableColumns<W, O, X, C> =
@@ -69,13 +84,18 @@ class TableColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>
                                                                         table: DslTable<*, W, O, X>,
                                                         internal val selector: FieldSelector<W, C>,
                                                                  defaultOrder: O.()->Unit = {},
-) : TableColumns<W, O, X, C>(table, arrayOf(selector), defaultOrder) {
+                                                                 defaultLimit: Int? = null,
+) : TableColumns<W, O, X, C>(table, arrayOf(selector), defaultOrder, defaultLimit) {
+    override fun limit(count: Int): TableColumn<W, O, X, C> =
+        TableColumn(table, selector, defaultOrder, count)
+    
+    
     override fun orderBy(field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
-        TableColumn(table, selector, fieldOrder(descending = false, selector = field))
+        TableColumn(table, selector, fieldOrder(descending = false, selector = field), defaultLimit)
     
     
     override fun orderFlip(field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
-        TableColumn(table, selector, fieldOrder(descending = true, selector = field))
+        TableColumn(table, selector, fieldOrder(descending = true, selector = field), defaultLimit)
     
     
     override fun orderIf(condition: Boolean, field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =

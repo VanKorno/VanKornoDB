@@ -70,7 +70,9 @@ getCursor() - a function that's often used by other functions under the hood. It
 ```kotlin
 db.getCursor(SomeTable) { Name equal userName } // Gets cursor from SomeTable where the column 'Name' equals value 'userName' 
 
-db.getCursor(SomeTable.columns { Name then Position }, orderByPosition(), limit(10)) {
+db.getCursor(
+    SomeTable.col { Name }.orderBy { Position }.limit(10)
+) {
     // Conditions (where)
     Id notEqual 1
     Order equal 1 // condition clause and value in one place

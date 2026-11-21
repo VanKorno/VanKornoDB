@@ -7,7 +7,8 @@ import com.vankorno.vankornodb.core.data.Subquery
 import com.vankorno.vankornodb.dbManagement.data.*
 
 @DslInject
-abstract class WhereDsl<W>(private val context: DslContext<W>) {
+abstract class WhereDsl<W>(                                      private val context: DslContext<W>
+) {
     infix fun <C : TypedColumn<*>> SelectExpr<W, C>.then(next: SelectExpr<W, C>) = listOf(this, next)
 
     infix fun <C : TypedColumn<*>> List<SelectExpr<W, C>>.then(next: SelectExpr<W, C>) = this + next
@@ -37,7 +38,12 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
                                                                           values: Array<out String>,
                                                                         positive: Boolean,
     ) {
-        builder.multCompareRaw(name, if (positive) " LIKE " else " NOT LIKE ", Array(values.size) { "?" }, positive)
+        builder.multCompareRaw(
+            column = name,
+            operator = if (positive) " LIKE " else " NOT LIKE ",
+            otherCols = Array(values.size) { "?" },
+            positive = positive
+        )
         builder.args.addAll(values)
     }
     
@@ -83,7 +89,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     fun Field<W, StrCol>.notLikeAnyCol(vararg others: Field<W, StrCol>) = builder.multCompareRaw(definition.name, " NOT LIKE ", others.map { it.definition.name }.toTypedArray(), false)
     
     
-    private fun Field<W, *>.compareAny(                           operator: String,
+    private fun Field<W, *>.compareAny(                                  operator: String,
                                                                            values: Array<out Any?>,
     ) {
         builder.multCompare(definition.name, operator, values) { it.toWhereArg() }
@@ -120,38 +126,44 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.inSubquery(
-                                                          column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                         orderBy: O.()->Unit = column.defaultOrder,
-                                                           extra: X.()->Unit = {},
-                                                           where: I.()->Unit = {},
+                                                       column: TableColumn<I, O, X, TypedColumn<T>>,
+                                                      orderBy: O.()->Unit = column.defaultOrder,
+                                                        extra: X.()->Unit = {},
+                                                        where: I.()->Unit = {},
     ) = this inSubquery subquery(column, orderBy, extra, where)
     
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.notInSubquery(
-                                                          column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                         orderBy: O.()->Unit = column.defaultOrder,
-                                                           extra: X.()->Unit = {},
-                                                           where: I.()->Unit = {},
+                                                       column: TableColumn<I, O, X, TypedColumn<T>>,
+                                                      orderBy: O.()->Unit = column.defaultOrder,
+                                                        extra: X.()->Unit = {},
+                                                        where: I.()->Unit = {},
     ) = this notInSubquery subquery(column, orderBy, extra, where)
     
     
     
-    /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS. */
+    /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS.
+     */
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
-                                         innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
-                                             outerColumn: Field<W, TypedColumn<T>>,
-                                                  column: FieldSelector<I, TypedColumn<*>>? = null,
-                                                 orderBy: O.()->Unit = innerColumn.defaultOrder,
-                                                   extra: X.()->Unit = {},
-                                                   where: I.()->Unit = {},
+                                              innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
+                                              outerColumn: Field<W, TypedColumn<T>>,
+                                                   column: FieldSelector<I, TypedColumn<*>>? = null,
+                                                  orderBy: O.()->Unit = innerColumn.defaultOrder,
+                                                    extra: X.()->Unit = {},
+                                                    where: I.()->Unit = {},
     ): Subquery {
         val table = innerColumn.table
         val outer = context.qualifier
         val from = table.name
         val qualifier = if (from.equals(outer, ignoreCase = true)) {
-            if (outer.equals("vk_inner", ignoreCase = true)) "vk_inner2" else "vk_inner"
-        } else from
+                            if (outer.equals("vk_inner", ignoreCase = true))
+                                "vk_inner2"
+                            else
+                                "vk_inner"
+                        } else {
+                            from
+                        }
         val source = if (qualifier == from) from else "$from AS $qualifier"
         val innerName = table.columnSql(innerColumn.selector)
         val outerName = outerColumn.definition.name
@@ -160,11 +172,19 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
         val predicate = table.predicate(qualifier, where)
         val correlation = WhereDslBase()
         correlation.conditionRaw("$qualifier.$innerName", "=", "$outer.$outerName")
+        
         if (predicate.clauses.isNotEmpty()) {
             correlation.clauses += "AND (${predicate.buildStr()})"
             correlation.args += predicate.args
         }
-        val result = table.render(source, qualifier, arrayOf(projection), correlation, innerColumn.orderWithFallback(orderBy), extra)
+        val result = table.render(
+            source = source,
+            qualifier = qualifier,
+            columns = arrayOf(projection),
+            where = correlation,
+            orderBy = innerColumn.orderWithFallback(orderBy),
+            extra = innerColumn.extraWithLimit(extra)
+        )
         return Subquery(result.query, result.args)
     }
     

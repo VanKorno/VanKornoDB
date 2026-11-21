@@ -15,6 +15,19 @@ class EntityDslTest {
     private val versionTable = _EntityVersion.tableNamed("Versions")
     
     @Test
+    fun `chained limit composes with ordering and explicit extras`() {
+        val ids = versionTable.col { Id }
+        val select = "SELECT id FROM Versions ORDER BY version"
+        assertEquals("$select LIMIT 1", subquery(ids.orderBy { Version }.limit(1)).query)
+        assertEquals("$select DESC LIMIT 2 OFFSET 1", subquery(ids.limit(5).orderFlip { Version }, extra = {
+            limit = 2
+            offset = 1
+        }).query)
+        assertEquals("SELECT id FROM Versions", subquery(ids).query)
+    }
+    
+    
+    @Test
     fun `flipped and conditional selections preserve the requested ordering`() {
         val ids = versionTable.col { Id }.orderFlip { Version }
         val select = "SELECT id FROM Versions ORDER BY "

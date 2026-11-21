@@ -19,7 +19,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(             table: D
                                                                         where: W.()->Unit = {},
                                                                         block: (Cursor)->Unit,
 ) = write("useCursor") { db ->
-    db.useCursor(table, orderBy = orderBy, extra = extra, where = where, block = block)
+    db.useCursor(table, orderBy, extra, where, block)
 }
 /**
  * Queries the database, lets you use [Cursor].
@@ -31,9 +31,7 @@ inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.useCursor(
                                                                noinline extra: X.()->Unit = {},
                                                                noinline where: W.()->Unit = {},
                                                                         block: (Cursor)->R,
-): R = getCursor(
-    table, orderBy = orderBy, extra = extra, where = where
-).use(block)
+): R = getCursor(table, orderBy, extra, where).use(block)
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(
@@ -101,6 +99,11 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getCursor(
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
 ): Cursor {
-    val (query, args) = columns.table.query(columns.selectors, columns.orderWithFallback(orderBy), extra, where)
+    val (query, args) = columns.table.query(
+        columns = columns.selectors,
+        orderBy = columns.orderWithFallback(orderBy),
+        extra = columns.extraWithLimit(extra),
+        where = where
+    )
     return rawQuery(query, args)
 }

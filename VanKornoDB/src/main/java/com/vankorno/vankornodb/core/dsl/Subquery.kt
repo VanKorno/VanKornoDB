@@ -13,7 +13,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> subquery(
     val result = columns.table.query(
         columns = columns.selectors,
         orderBy = columns.orderWithFallback(orderBy),
-        extra = extra,
+        extra = columns.extraWithLimit(extra),
         where = where
     )
     return Subquery(result.query, result.args)
