@@ -4,6 +4,7 @@ package com.vankorno.vankornodb.core.dsl
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.data.QueryWithArgs
 import com.vankorno.vankornodb.core.data.Subquery
+import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.set.dsl.SetDsl
@@ -19,8 +20,8 @@ annotation class DslInject
 sealed class SelectExpr<W, out C : TypedColumn<*>>(internal val sql: String)
 
 
-class Field<W, out C : TypedColumn<*>> internal constructor(internal val definition: C) :
-    SelectExpr<W, C>(definition.name)
+class Field<W, out C : TypedColumn<*>> internal constructor(     internal val definition: C
+) : SelectExpr<W, C>(definition.name)
 
 private class RawExpr<W>(sql: String) : SelectExpr<W, Nothing>(sql)
 
@@ -29,14 +30,57 @@ fun <W> raw(sql: String): SelectExpr<W, Nothing> = RawExpr(sql)
 
 
 open class TableColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
-    internal val table: DslTable<*, W, O, X>,
-    internal val selectors: Array<out FieldSelector<W, C>>,
-)
+                                                 internal val table: DslTable<*, W, O, X>,
+                                             internal val selectors: Array<out FieldSelector<W, C>>,
+                            @PublishedApi internal val defaultOrder: O.()->Unit = {},
+) {
+    internal fun orderWithFallback(orderBy: O.()->Unit): O.()->Unit =
+        if (orderBy === defaultOrder) orderBy else fun O.() {
+            orderBy()
+            if (terms.isEmpty()) defaultOrder()
+        }
+    
+    
+    internal fun fieldOrder(descending: Boolean, selector: W.()->Field<W, AscendingColumn<*>>): O.()->Unit {
+        val field = table.selectionScope().selector()
+        return if (descending) ({ field.flip() }) else ({ field.by() })
+    }
+    
+    
+    /** Returns a new selection ordered by [field] unless the query supplies its own order.
+     */
+    open fun orderBy(                                      field: W.()->Field<W, AscendingColumn<*>>
+    ): TableColumns<W, O, X, C> = TableColumns(
+        table = table,
+        selectors = selectors,
+        defaultOrder = fieldOrder(descending = false, selector = field)
+    )
+    
+    
+    open fun orderFlip(field: W.()->Field<W, AscendingColumn<*>>): TableColumns<W, O, X, C> =
+        TableColumns(table, selectors, fieldOrder(descending = true, selector = field))
+    
+    
+    open fun orderIf(condition: Boolean, field: W.()->Field<W, AscendingColumn<*>>): TableColumns<W, O, X, C> =
+        if (condition) orderBy(field) else this
+}
 
 class TableColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
-    table: DslTable<*, W, O, X>,
-    internal val selector: FieldSelector<W, C>,
-) : TableColumns<W, O, X, C>(table, arrayOf(selector))
+                                                                        table: DslTable<*, W, O, X>,
+                                                        internal val selector: FieldSelector<W, C>,
+                                                                 defaultOrder: O.()->Unit = {},
+) : TableColumns<W, O, X, C>(table, arrayOf(selector), defaultOrder) {
+    override fun orderBy(field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
+        TableColumn(table, selector, fieldOrder(descending = false, selector = field))
+    
+    
+    override fun orderFlip(field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
+        TableColumn(table, selector, fieldOrder(descending = true, selector = field))
+    
+    
+    override fun orderIf(condition: Boolean, field: W.()->Field<W, AscendingColumn<*>>): TableColumn<W, O, X, C> =
+        if (condition) orderBy(field) else this
+}
 
 
 typealias FieldSelector<W, C> = W.()->SelectExpr<W, C>
@@ -107,7 +151,7 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
 ) : MiniDslTable<I, W>(info, factory) {
     fun <C : TypedColumn<*>> col(block: FieldSelector<W, C>): TableColumn<W, O, X, C> {
         val selected = selectionScope().block()
-        return TableColumn(this) { selected }
+        return TableColumn(this, selector = { selected })
     }
     
     fun <C : TypedColumn<*>> columns(block: W.()->List<SelectExpr<W, C>>): TableColumns<W, O, X, C> {

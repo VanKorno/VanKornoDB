@@ -19,7 +19,7 @@ import com.vankorno.vankornodb.misc.getBoolean
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableInts(
                                                                 columns: TableColumns<W, O, X, IntCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<List<Int>> = read(emptyList(), "getTableInts") { db ->
@@ -29,7 +29,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableInts(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableInts(
                                                                 columns: TableColumns<W, O, X, IntCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<List<Int>> = baseGetVals(
@@ -45,7 +45,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableInts(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableStrings(
                                                                 columns: TableColumns<W, O, X, StrCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<List<String>> = read(emptyList(), "getTableStrings") { db ->
@@ -55,7 +55,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableStrings(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableStrings(
                                                                 columns: TableColumns<W, O, X, StrCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<List<String>> = baseGetVals(
@@ -71,7 +71,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableStrings(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBools(
                                                                columns: TableColumns<W, O, X, BoolCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<List<Boolean>> = read(emptyList(), "getTableBools") { db ->
@@ -81,7 +81,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBools(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBools(
                                                                columns: TableColumns<W, O, X, BoolCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<List<Boolean>> = baseGetVals(
@@ -97,7 +97,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBools(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableLongs(
                                                                columns: TableColumns<W, O, X, LongCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<List<Long>> = read(emptyList(), "getTableLongs") { db ->
@@ -107,7 +107,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableLongs(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableLongs(
                                                                columns: TableColumns<W, O, X, LongCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<List<Long>> = baseGetVals(
@@ -123,7 +123,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableLongs(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableFloats(
                                                               columns: TableColumns<W, O, X, FloatCol>,
-                                                              orderBy: O.()->Unit = {},
+                                                              orderBy: O.()->Unit = columns.defaultOrder,
                                                                 extra: X.()->Unit = {},
                                                                 where: W.()->Unit = {},
 ): List<List<Float>> = read(emptyList(), "getTableFloats") { db ->
@@ -133,7 +133,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableFloats(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableFloats(
                                                               columns: TableColumns<W, O, X, FloatCol>,
-                                                              orderBy: O.()->Unit = {},
+                                                              orderBy: O.()->Unit = columns.defaultOrder,
                                                                 extra: X.()->Unit = {},
                                                                 where: W.()->Unit = {},
 ): List<List<Float>> = baseGetVals(
@@ -149,7 +149,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableFloats(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBlobs(
                                                                columns: TableColumns<W, O, X, BlobCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<List<ByteArray>> = read(emptyList(), "getTableBlobs") { db ->
@@ -159,7 +159,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBlobs(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBlobs(
                                                                columns: TableColumns<W, O, X, BlobCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<List<ByteArray>> = baseGetVals(

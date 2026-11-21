@@ -121,7 +121,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.inSubquery(
                                                           column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                         orderBy: O.()->Unit = {},
+                                                         orderBy: O.()->Unit = column.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: I.()->Unit = {},
     ) = this inSubquery subquery(column, orderBy, extra, where)
@@ -130,7 +130,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.notInSubquery(
                                                           column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                         orderBy: O.()->Unit = {},
+                                                         orderBy: O.()->Unit = column.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: I.()->Unit = {},
     ) = this notInSubquery subquery(column, orderBy, extra, where)
@@ -142,7 +142,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
                                          innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
                                              outerColumn: Field<W, TypedColumn<T>>,
                                                   column: FieldSelector<I, TypedColumn<*>>? = null,
-                                                 orderBy: O.()->Unit = {},
+                                                 orderBy: O.()->Unit = innerColumn.defaultOrder,
                                                    extra: X.()->Unit = {},
                                                    where: I.()->Unit = {},
     ): Subquery {
@@ -164,7 +164,7 @@ abstract class WhereDsl<W>(private val context: DslContext<W>) {
             correlation.clauses += "AND (${predicate.buildStr()})"
             correlation.args += predicate.args
         }
-        val result = table.render(source, qualifier, arrayOf(projection), correlation, orderBy, extra)
+        val result = table.render(source, qualifier, arrayOf(projection), correlation, innerColumn.orderWithFallback(orderBy), extra)
         return Subquery(result.query, result.args)
     }
     

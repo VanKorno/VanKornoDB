@@ -8,6 +8,7 @@ import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
 import com.vankorno.vankornodb.delete.deleteRows
+import com.vankorno.vankornodb.get.getColLongs
 import com.vankorno.vankornodb.get.getEntity
 import com.vankorno.vankornodb.get.getIDs
 import com.vankorno.vankornodb.get.getInt
@@ -30,6 +31,12 @@ class EntityDslDbTest {
             val id = dbh.addEntity(items, TestEntity(name = name, int1 = 7))
             val otherId = dbh.addEntity(items, TestEntity(name = "other", int1 = 3))
             dbh.addEntity(versions, EntityVersion(name = name, version = 2))
+            
+            val ids = items.col { Id }.orderBy { Id }
+            val idsByValue = ids.orderBy { Int1 }
+            assertEquals(listOf(otherId, id), dbh.getColLongs(idsByValue))
+            assertEquals(listOf(id, otherId), dbh.getColLongs(ids))
+            assertEquals(listOf(id, otherId), dbh.getColLongs(idsByValue, orderBy = { Int1.flip() }))
             
             assertEquals(7, dbh.getInt(items.col { Int1 }) { Name equal name })
             assertEquals(listOf(id), dbh.getIDs(items) {

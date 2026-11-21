@@ -14,7 +14,7 @@ import com.vankorno.vankornodb.get.getCursor
  */
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.baseGetVals(
                                                        columns: TableColumns<W, O, X, TypedColumn<R>>,
-                                                       orderBy: O.()->Unit = {},
+                                                       orderBy: O.()->Unit = columns.defaultOrder,
                                                          extra: X.()->Unit = {},
                                                          where: W.()->Unit = {},
                                                 getCursorValue: (Cursor, Int)->R,

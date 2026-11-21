@@ -15,6 +15,29 @@ class EntityDslTest {
     private val versionTable = _EntityVersion.tableNamed("Versions")
     
     @Test
+    fun `flipped and conditional selections preserve the requested ordering`() {
+        val ids = versionTable.col { Id }.orderFlip { Version }
+        val select = "SELECT id FROM Versions ORDER BY "
+        assertEquals(select + "version DESC", subquery(ids.orderIf(false) { Name }, orderBy = {}).query)
+        assertEquals(select + "name", subquery(ids.orderIf(true) { Name }).query)
+        
+        val columns = versionTable.columns { Id then Name }.orderFlip { Version }
+        assertEquals("SELECT id, name FROM Versions ORDER BY version DESC", subquery(columns).query)
+    }
+    
+    
+    @Test
+    fun `selection order applies only when the explicit order adds no terms`() {
+        val ids = versionTable.col { Id }.orderBy { Version }
+        val select = "SELECT id FROM Versions ORDER BY "
+        
+        assertEquals(select + "version", subquery(ids, orderBy = {}).query)
+        assertEquals(select + "version", subquery(ids, orderBy = { group {} }).query)
+        assertEquals(select + "name DESC", subquery(ids, orderBy = { Name.flip() }).query)
+    }
+    
+    
+    @Test
     fun `raw expressions pass through typed and mixed projections verbatim`() {
         val scalar = versionTable.col { raw("version + 1") }
         val mixed = versionTable.columns { Name then raw("length(name)") }

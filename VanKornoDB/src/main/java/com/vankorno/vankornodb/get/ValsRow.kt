@@ -3,9 +3,9 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.TableColumns
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.TableColumns
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -18,7 +18,7 @@ import com.vankorno.vankornodb.misc.getBoolean
 /** Retrieves a list of Ints from the first matching row.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowInts(    columns: TableColumns<W, O, X, IntCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<Int> = read(emptyList(), "getRowInts") { db ->
@@ -28,7 +28,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowInts(    columns: TableCo
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowInts(
                                                                 columns: TableColumns<W, O, X, IntCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<Int> = getRowVals(
@@ -44,7 +44,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowInts(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowStrings(
                                                                 columns: TableColumns<W, O, X, StrCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<String> = read(emptyList(), "getRowStrings") { db ->
@@ -54,7 +54,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowStrings(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowStrings(
                                                                 columns: TableColumns<W, O, X, StrCol>,
-                                                                orderBy: O.()->Unit = {},
+                                                                orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
 ): List<String> = getRowVals(
@@ -70,7 +70,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowStrings(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowBools(
                                                                columns: TableColumns<W, O, X, BoolCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<Boolean> = read(emptyList(), "getRowBools") { db ->
@@ -80,7 +80,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowBools(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowBools(
                                                                columns: TableColumns<W, O, X, BoolCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<Boolean> = getRowVals(
@@ -96,7 +96,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowBools(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowLongs(
                                                                columns: TableColumns<W, O, X, LongCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<Long> = read(emptyList(), "getRowLongs") { db ->
@@ -106,7 +106,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowLongs(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowLongs(
                                                                columns: TableColumns<W, O, X, LongCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<Long> = getRowVals(
@@ -122,7 +122,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowLongs(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowFloats(
                                                               columns: TableColumns<W, O, X, FloatCol>,
-                                                              orderBy: O.()->Unit = {},
+                                                              orderBy: O.()->Unit = columns.defaultOrder,
                                                                 extra: X.()->Unit = {},
                                                                 where: W.()->Unit = {},
 ): List<Float> = read(emptyList(), "getRowFloats") { db ->
@@ -132,7 +132,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowFloats(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowFloats(
                                                               columns: TableColumns<W, O, X, FloatCol>,
-                                                              orderBy: O.()->Unit = {},
+                                                              orderBy: O.()->Unit = columns.defaultOrder,
                                                                 extra: X.()->Unit = {},
                                                                 where: W.()->Unit = {},
 ): List<Float> = getRowVals(
@@ -148,7 +148,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowFloats(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowBlobs(
                                                                columns: TableColumns<W, O, X, BlobCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<ByteArray> = read(emptyList(), "getRowBlobs") { db ->
@@ -158,7 +158,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowBlobs(
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowBlobs(
                                                                columns: TableColumns<W, O, X, BlobCol>,
-                                                               orderBy: O.()->Unit = {},
+                                                               orderBy: O.()->Unit = columns.defaultOrder,
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
 ): List<ByteArray> = getRowVals(

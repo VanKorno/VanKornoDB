@@ -13,7 +13,7 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
  */
 internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getColVals(
                                                          column: TableColumn<W, O, X, TypedColumn<R>>,
-                                                        orderBy: O.()->Unit = {},
+                                                        orderBy: O.()->Unit = column.defaultOrder,
                                                           extra: X.()->Unit = {},
                                                           where: W.()->Unit = {},
                                                  getCursorValue: (Cursor)->R,
