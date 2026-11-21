@@ -1,12 +1,7 @@
 package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.core.dsl.DslContext
-import com.vankorno.vankornodb.core.dsl.ExtraDsl
-import com.vankorno.vankornodb.core.dsl.Field
-import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.WhereDsl
-import com.vankorno.vankornodb.core.dsl.withDsl
+import com.vankorno.vankornodb.core.dsl.*
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.set.dsl.SetDsl
@@ -145,6 +140,8 @@ class V2_TestOrderDsl internal constructor(columns: V2_TestDslColumns) : OrderDs
 class V2_TestExtraDsl internal constructor(columns: V2_TestDslColumns) : ExtraDsl<V2_TestDsl>(), V2_TestDslColumns by columns
 
 class V2_TestSetDsl(columns: V2_TestDslColumns) : SetDsl<V2_TestDsl>(), V2_TestDslColumns by columns
+
+typealias V2_TestT = FullDslTable<TableInfo<V2_Test>, V2_TestDsl, V2_TestOrderDsl, V2_TestExtraDsl, V2_TestSetDsl>
 
 
 class V2_TestDsl internal constructor(                     context: DslContext<V2_TestDsl>

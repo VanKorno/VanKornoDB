@@ -3,12 +3,7 @@ package com.vankorno.sandbox._entities.crashTester
 
 import android.os.Parcelable
 import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.core.dsl.DslContext
-import com.vankorno.vankornodb.core.dsl.ExtraDsl
-import com.vankorno.vankornodb.core.dsl.Field
-import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.WhereDsl
-import com.vankorno.vankornodb.core.dsl.withDsl
+import com.vankorno.vankornodb.core.dsl.*
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.set.dsl.SetDsl
@@ -182,6 +177,8 @@ class CrashTesterOrderDsl internal constructor(columns: CrashTesterDslColumns) :
 class CrashTesterExtraDsl internal constructor(columns: CrashTesterDslColumns) : ExtraDsl<CrashTesterDsl>(), CrashTesterDslColumns by columns
 
 class CrashTesterSetDsl(columns: CrashTesterDslColumns) : SetDsl<CrashTesterDsl>(), CrashTesterDslColumns by columns
+
+typealias CrashTesterT = FullDslTable<TableInfo<CrashTester>, CrashTesterDsl, CrashTesterOrderDsl, CrashTesterExtraDsl, CrashTesterSetDsl>
 
 
 class CrashTesterDsl internal constructor(                     context: DslContext<CrashTesterDsl>

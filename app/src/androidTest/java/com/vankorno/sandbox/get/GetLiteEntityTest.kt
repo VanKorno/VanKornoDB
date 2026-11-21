@@ -3,7 +3,7 @@ package com.vankorno.sandbox.get
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox._entities.testEntity._TestEntity
-import com.vankorno.sandbox._entities.testEntity.lite.TestLiteEntt
+import com.vankorno.sandbox._entities.testEntity.lite.TestLite
 import com.vankorno.sandbox._entities.testEntity.lite._TestLite
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
@@ -23,7 +23,7 @@ class GetLiteEntityTest {
         val entity = dbh.steal(
             _TestEntity.tableNamed(table),
             _TestLite,
-            default = TestLiteEntt(),
+            default = TestLite(),
         ) { Id equal 1L }
         
         assertEquals(1L, entity.id)
@@ -39,7 +39,7 @@ class GetLiteEntityTest {
     fun returnsDefaultWhenNoLiteEntityMatches() {
         val table = "GetLiteEntity2"
         dbh.getLabRats(table)
-        val default = TestLiteEntt(id = -100L, name = "default")
+        val default = TestLite(id = -100L, name = "default")
         
         val entity = dbh.steal(
             _TestEntity.tableNamed(table),
@@ -82,7 +82,7 @@ class GetLiteEntityTest {
             _TestLite,
         ) { Id equal -100L }
         
-        assertEquals(emptyList<TestLiteEntt>(), entities)
+        assertEquals(emptyList<TestLite>(), entities)
         
         dbh.deleteTable(_TestEntity.tableNamed(table))
     }

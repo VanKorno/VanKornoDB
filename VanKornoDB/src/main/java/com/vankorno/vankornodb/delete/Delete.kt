@@ -8,15 +8,15 @@ import com.vankorno.vankornodb.core.dsl.MiniDslTable
 
 /** Deletes rows matching [where]. An empty predicate deletes every row.
  */
-fun <W> Dbh.deleteRows(                                                     table: MiniDslTable<*, W>,
-                                                                            async: Boolean = false,
-                                                                            where: W.()->Unit,
+fun <W> Dbh.deleteRows(                                                   table: MiniDslTable<*, W>,
+                                                                          async: Boolean = false,
+                                                                          where: W.()->Unit,
 ) = write("deleteRows", async) { db ->
     db.deleteRows(table, where)
 }
 
-fun <W> SQLiteDatabase.deleteRows(                                           table: MiniDslTable<*, W>,
-                                                                             where: W.()->Unit,
+fun <W> SQLiteDatabase.deleteRows(                                        table: MiniDslTable<*, W>,
+                                                                          where: W.()->Unit,
 ): Int {
     val predicate = table.where(where)
     return delete(table.name, predicate.query, predicate.args)
@@ -26,15 +26,15 @@ fun <W> SQLiteDatabase.deleteRows(                                           tab
 
 /** Applies [where] to each table sharing the same entity DSL.
  */
-fun <W> Dbh.deleteRowsFromTables(                                      tables: List<MiniDslTable<*, W>>,
-                                                                        async: Boolean = false,
-                                                                        where: W.()->Unit,
+fun <W> Dbh.deleteRowsFromTables(                                  tables: List<MiniDslTable<*, W>>,
+                                                                    async: Boolean = false,
+                                                                    where: W.()->Unit,
 ) = write("deleteRowsFromTables", async) { db ->
     db.deleteRowsFromTables(tables, where)
 }
 
-fun <W> SQLiteDatabase.deleteRowsFromTables(                           tables: List<MiniDslTable<*, W>>,
-                                                                        where: W.()->Unit,
+fun <W> SQLiteDatabase.deleteRowsFromTables(                       tables: List<MiniDslTable<*, W>>,
+                                                                    where: W.()->Unit,
 ) {
     tables.forEach { deleteRows(it, where) }
 }
@@ -43,27 +43,27 @@ fun <W> SQLiteDatabase.deleteRowsFromTables(                           tables: L
 
 /** Applies [where] to each table sharing the same entity DSL.
  */
-fun <W> Dbh.deleteRowsFromTables(                                    vararg tables: MiniDslTable<*, W>,
-                                                                             where: W.()->Unit,
+fun <W> Dbh.deleteRowsFromTables(                                 vararg tables: MiniDslTable<*, W>,
+                                                                          where: W.()->Unit,
 ) = write("deleteRowsFromTables") { db ->
     db.deleteRowsFromTables(*tables, where = where)
 }
 
-fun <W> SQLiteDatabase.deleteRowsFromTables(                         vararg tables: MiniDslTable<*, W>,
-                                                                             where: W.()->Unit,
+fun <W> SQLiteDatabase.deleteRowsFromTables(                      vararg tables: MiniDslTable<*, W>,
+                                                                          where: W.()->Unit,
 ) = deleteRowsFromTables(tables.asList(), where)
 
 
 
 /** Deletes the row with the lowest ROWID.
  */
-fun Dbh.deleteFirstRow(                                                     table: MiniDslTable<*, *>,
-                                                                            async: Boolean = false,
+fun Dbh.deleteFirstRow(                                                   table: MiniDslTable<*, *>,
+                                                                          async: Boolean = false,
 ) = write("deleteFirstRow", async) { db ->
     db.deleteFirstRow(table)
 }
 
-fun SQLiteDatabase.deleteFirstRow(                                            table: MiniDslTable<*, *>
+fun SQLiteDatabase.deleteFirstRow(                                         table: MiniDslTable<*, *>
 ) {
     delete(table.name, "ROWID = (SELECT ROWID FROM ${table.name} ORDER BY ROWID ASC LIMIT 1)", null)
 }
@@ -72,13 +72,13 @@ fun SQLiteDatabase.deleteFirstRow(                                            ta
 
 /** Deletes the row with the highest ROWID.
  */
-fun Dbh.deleteLastRow(                                                      table: MiniDslTable<*, *>,
-                                                                            async: Boolean = false,
+fun Dbh.deleteLastRow(                                                    table: MiniDslTable<*, *>,
+                                                                          async: Boolean = false,
 ) = write("deleteLastRow", async) { db ->
     db.deleteLastRow(table)
 }
 
-fun SQLiteDatabase.deleteLastRow(                                            table: MiniDslTable<*, *>
+fun SQLiteDatabase.deleteLastRow(                                          table: MiniDslTable<*, *>
 ) {
     delete(table.name, "ROWID = (SELECT ROWID FROM ${table.name} ORDER BY ROWID DESC LIMIT 1)", null)
 }
@@ -87,34 +87,34 @@ fun SQLiteDatabase.deleteLastRow(                                            tab
 
 /** Deletes all rows and keeps the table schema.
  */
-fun Dbh.clearTable(                                                         table: MiniDslTable<*, *>,
-                                                                            async: Boolean = false,
+fun Dbh.clearTable(                                                       table: MiniDslTable<*, *>,
+                                                                          async: Boolean = false,
 ) = write("clearTable", async) { db ->
     db.clearTable(table)
 }
 
-fun SQLiteDatabase.clearTable(                                                table: MiniDslTable<*, *>
+fun SQLiteDatabase.clearTable(                                             table: MiniDslTable<*, *>
 ) { delete(table.name, null, null) }
 
 
 
 /** Deletes all rows and keeps each table schema.
  */
-fun Dbh.clearTables(                                                   tables: List<MiniDslTable<*, *>>,
-                                                                        async: Boolean = false,
+fun Dbh.clearTables(                                               tables: List<MiniDslTable<*, *>>,
+                                                                    async: Boolean = false,
 ) = write("clearTables", async) { db ->
     db.clearTables(tables)
 }
 
-fun SQLiteDatabase.clearTables(                                         tables: List<MiniDslTable<*, *>>
+fun SQLiteDatabase.clearTables(                                     tables: List<MiniDslTable<*, *>>
 ) { tables.forEach { clearTable(it) } }
 
 
 
 /** Deletes all rows and keeps each table schema.
  */
-fun Dbh.clearTables(                                                vararg tables: MiniDslTable<*, *>,
-                                                                            async: Boolean = false,
+fun Dbh.clearTables(                                              vararg tables: MiniDslTable<*, *>,
+                                                                          async: Boolean = false,
 ) = write("clearTables", async) { db ->
     db.clearTables(*tables)
 }
@@ -125,8 +125,8 @@ fun SQLiteDatabase.clearTables(vararg tables: MiniDslTable<*, *>) = clearTables(
 
 /** Drops the table if it exists.
  */
-fun Dbh.deleteTable(                                                        table: MiniDslTable<*, *>,
-                                                                            async: Boolean = false,
+fun Dbh.deleteTable(                                                      table: MiniDslTable<*, *>,
+                                                                          async: Boolean = false,
 ) = write("deleteTable", async) { db ->
     db.deleteTable(table)
 }
@@ -137,8 +137,8 @@ fun SQLiteDatabase.deleteTable(table: MiniDslTable<*, *>) = deleteTable(table.na
 
 /** Drops each table if it exists.
  */
-fun Dbh.deleteTables(                                                  tables: List<MiniDslTable<*, *>>,
-                                                                        async: Boolean = false,
+fun Dbh.deleteTables(                                              tables: List<MiniDslTable<*, *>>,
+                                                                    async: Boolean = false,
 ) = write("deleteTables", async) { db ->
     db.deleteTables(tables)
 }
@@ -149,8 +149,8 @@ fun SQLiteDatabase.deleteTables(tables: List<MiniDslTable<*, *>>) { tables.forEa
 
 /** Drops each table if it exists.
  */
-fun Dbh.deleteTables(                                               vararg tables: MiniDslTable<*, *>,
-                                                                            async: Boolean = false,
+fun Dbh.deleteTables(                                             vararg tables: MiniDslTable<*, *>,
+                                                                          async: Boolean = false,
 ) = write("deleteTables", async) { db ->
     db.deleteTables(*tables)
 }
