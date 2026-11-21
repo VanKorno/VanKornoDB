@@ -81,14 +81,19 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(            table: String,
     // region LOG
         dLog("migrateMultiStep() Milestone count: ${steps.size}. Milestone ver numbers: ${steps.joinToString(", ")}")
     // endregion
-    val lambdas = relevantMilestones.toMap()
     
     val utils = MigrationUtils()
     
     val oldObjects = utils.getEntitiesByVersion(this, table, oldVersion, versionedClasses)
     
+    val migrationSteps = relevantMilestones.mapIndexed { index, (version, actions) ->
+        val previousVersion = steps.getOrNull(index - 1) ?: oldVersion
+        val targetClass = versionedClasses[version] ?: error("Missing entity class for version $version")
+        MigrationStep(targetClass, utils.getRenameSnapshot(previousVersion, version, renameHistory, targetClass), actions)
+    }
+    
     val migratedObjects = oldObjects.map { original ->
-        utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
+        utils.convertThroughSteps(original, migrationSteps)
     }
     this.deleteTable(table)
     // region LOG
@@ -111,6 +116,13 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(            table: String,
 
 
 
+
+
+internal class MigrationStep(
+    val targetClass: KClass<out DbEntity>,
+    val renameSnapshot: Map<String, String>,
+    val actions: MilestoneLambdas,
+)
 
 
 open class MigrationUtils {
@@ -173,10 +185,10 @@ open class MigrationUtils {
      * Reads all rows from the specified table and maps them to instances 
      * of the entity class corresponding to the given version.
      */
-    internal fun getEntitiesByVersion(                     db: SQLiteDatabase,
-                                                        table: String,
-                                                      version: Int,
-                                                versionedClasses: Map<Int, KClass<out DbEntity>>,
+    internal fun getEntitiesByVersion(                           db: SQLiteDatabase,
+                                                              table: String,
+                                                            version: Int,
+                                                   versionedClasses: Map<Int, KClass<out DbEntity>>,
     ): List<DbEntity> {
         // region LOG
             dLog("getEntitiesByVersion() starts. Table = $table, version = $version")
@@ -196,27 +208,15 @@ open class MigrationUtils {
      * Converts an entity through a sequence of intermediate versions using
      * rename snapshots and version-specific migration lambdas.
      */
-    internal fun convertThroughSteps(                original: DbEntity,
-                                                   oldVersion: Int,
-                                                        steps: List<Int>,
-                                                renameHistory: List<RenameRecord>,
-                                                versionedClasses: Map<Int, KClass<out DbEntity>>,
-                                                      lambdas: Map<Int, MilestoneLambdas>,
+    internal fun convertThroughSteps(                                 original: DbEntity,
+                                                                         steps: List<MigrationStep>,
     ): DbEntity {
         var currentEntity = original
-        var currentVer = oldVersion
         
-        for (nextVer in steps) {
-            val targetClass = versionedClasses[nextVer]
-            val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory, targetClass)
-            
-            val nextClass = targetClass ?: error("Missing entity class for version $nextVer")
-            
+        for (step in steps) {
             val previousEntity = currentEntity
-            currentEntity = convertEntity(currentEntity, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
-            
-            currentEntity = lambdas[nextVer]?.processFinalEntity?.invoke(previousEntity, currentEntity) ?: currentEntity
-            currentVer = nextVer
+            currentEntity = convertEntity(previousEntity, step.targetClass, step.renameSnapshot, step.actions.transformColVal)
+            currentEntity = step.actions.processFinalEntity?.invoke(previousEntity, currentEntity) ?: currentEntity
         }
         return currentEntity
     }
@@ -232,10 +232,10 @@ open class MigrationUtils {
      * @param targetClass Entity class of the target version.
      * @return A map where each key is the target property name and value is its corresponding source property name.
      */
-    internal fun getRenameSnapshot(                        fromVer: Int,
-                                                             toVer: Int,
-                                                     renameHistory: List<RenameRecord>,
-                                                targetClass: KClass<out DbEntity>? = null,
+    internal fun getRenameSnapshot(                           fromVer: Int,
+                                                                toVer: Int,
+                                                        renameHistory: List<RenameRecord>,
+                                                          targetClass: KClass<out DbEntity>? = null,
     ): Map<String, String> {
         val snapshot = mutableMapOf<String, String>()
         val relevantRecords = renameHistory
@@ -334,8 +334,8 @@ open class MigrationUtils {
 
 
 
-private fun <T : DbEntity> SQLiteDatabase.readMigrationRows(                          table: String,
-                                                              readRow: (Cursor)->T,
+private fun <T : DbEntity> SQLiteDatabase.readMigrationRows(                    table: String,
+                                                                              readRow: (Cursor)->T,
 ): List<T> {
     val quotedName = "\"" + table.replace("\"", "\"\"") + "\""
     return rawQuery("SELECT * FROM $quotedName ORDER BY $RowID", null).use { cursor ->
@@ -383,9 +383,8 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(     vararg tables: Tab
 
 
 
-internal fun validateMigrationBundle(
-                                       versionedClasses: Map<Int, KClass<out DbEntity>>,
-                                                renameHistory: List<RenameRecord>,
+internal fun validateMigrationBundle(              versionedClasses: Map<Int, KClass<out DbEntity>>,
+                                                      renameHistory: List<RenameRecord>,
 ) {
     for (record in renameHistory) {
         val ver = record.version

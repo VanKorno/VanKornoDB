@@ -7,6 +7,10 @@ import com.vankorno.vankornodb.core.data.DbConstants.TABLE_Master
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
 
+private val columnDefinitions = "\\((.*)\\)".toRegex()
+private val whitespace = "\\s+".toRegex()
+
+
 fun SQLiteDatabase.getTableTypesFromInitQuery(                                     table: String
 ): List<String> {
     val queryStr = rawQuery(
@@ -24,10 +28,10 @@ fun SQLiteDatabase.getTableTypesFromInitQuery(                                  
     }
     if (queryStr.isBlank()) return emptyList() //\/\/\/\/\/\
     
-    val colsDef = "\\((.*)\\)".toRegex().find(queryStr)?.groups?.get(1)?.value ?: ""
+    val colsDef = columnDefinitions.find(queryStr)?.groups?.get(1)?.value ?: ""
     
     return colsDef.split(",").map { colDef ->
-        val tokens = colDef.trim().split("\\s+".toRegex())
+        val tokens = colDef.trim().split(whitespace)
         if (tokens.size < 2) return@map "TEXT"
         
         /* type can be NUMERIC(10,2) or REAL, etc. */
