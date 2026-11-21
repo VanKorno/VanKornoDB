@@ -1,6 +1,8 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.sandbox._entities
 
+import com.vankorno.sandbox._entities.crashTester._CrashTester
+import com.vankorno.sandbox._entities.crashTester.migrationsCrashTester
 import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox._entities.testEntity.migrationsTestEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
@@ -39,6 +41,7 @@ enum class EntityMeta(                              override val currVersion: In
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {
     TestEntt(3, "TestEntity", _TestEntity, lazy { migrationsTestEntity() }, TestTableName),
+    CrashTester(4, "CrashTester", _CrashTester, lazy { migrationsCrashTester() }),
     
 }
 

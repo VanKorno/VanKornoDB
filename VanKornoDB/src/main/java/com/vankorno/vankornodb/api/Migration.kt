@@ -3,7 +3,6 @@ package com.vankorno.vankornodb.api
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.migration.DbMigratorInternal
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
@@ -13,6 +12,7 @@ import com.vankorno.vankornodb.dbManagement.migration.dsl.TransformColDslInterna
 import com.vankorno.vankornodb.dbManagement.migration.dsl.defineMigrationsInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateMultiStepInternal
 import com.vankorno.vankornodb.dbManagement.migration.migrateWithoutChangeInternal
+import kotlin.reflect.KClass
 
 class MigrationDsl : MigrationDslInternal()
 
@@ -22,18 +22,18 @@ fun defineMigrations(                                             entityMeta: Ba
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(
     latestVersion = entityMeta.currVersion,
-    latestSchemaBundle = entityMeta.schemaBundle,
+    latestClass = entityMeta.schemaBundle.clazz,
     block = block
 )
 
 
-/** Defines migrations for the given entity metadata. Takes explicit version and schema bundle. */
+/** Defines migrations for the given entity metadata. Takes explicit version and entity class. */
 fun <T: DbEntity> defineMigrations(                            latestVersion: Int,
-                                                          latestSchemaBundle: SchemaBundle<T>,
+                                                          latestClass: KClass<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle = defineMigrationsInternal(
     latestVersion = latestVersion,
-    latestSchemaBundle = latestSchemaBundle,
+    latestClass = latestClass,
     block = block
 )
 

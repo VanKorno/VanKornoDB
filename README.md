@@ -211,14 +211,14 @@ For things like renaming you'll have to keep a convenient DSL-record, like this 
 ```kotlin
 fun migrationsTaskoid() = defineMigrations(
     EntityMeta.Taskoid.currVersion, // EntityMeta is an enum with all your app entities, their versions, etc.
-    EntityMeta.Taskoid.schemaBundle
+    Taskoid::class
 ) {
-    version(1, _V1_Taskoid) // Basic minimal data: keeps, which class was used at that version
-    version(2, _V2_Taskoid) // Probably some columns were removed or added here automatically, based on the class differences
-    version(3, _V3_Taskoid) { rename { "hideForMints" to "hideForMins" } } // for renaming you need to keep a record like this
-    version(4, _V4_Taskoid) { rename { "timesCompleted" to "timesCompletedGame" } }
-    version(5, _V5_Taskoid)
-    version(6, _V6_Taskoid) {
+    version(1, V1_Taskoid::class) // Basic minimal data: keeps, which class was used at that version
+    version(2, V2_Taskoid::class) // Probably some columns were removed or added here automatically, based on the class differences
+    version(3, V3_Taskoid::class) { rename { "hideForMints" to "hideForMins" } } // for renaming you need to keep a record like this
+    version(4, V4_Taskoid::class) { rename { "timesCompleted" to "timesCompletedGame" } }
+    version(5, V5_Taskoid::class)
+    version(6, V6_Taskoid::class) {
         milestone( // Milestones (migration steps, unskippable migrations, see more info below the code)
             TaskoidTable.select { Afterclick } modify {
                 fromInt = { AfterclickEnum.entries[it].code } // DSL to modify data, not just db itself
@@ -231,12 +231,12 @@ fun migrationsTaskoid() = defineMigrations(
             }
         )
     }
-    version(7, _V7_Taskoid) {
+    version(7, V7_Taskoid::class) {
         rename { TaskoidTable.select { PicDb } from "fullPic" to "pic" }
         rename { TaskoidTable.select { CountUpIntervalSec } from "countUpInterval" to "countUpIntervalSec" }
         rename { TaskoidTable.select { CountUpUnpaidSec } from "countUpUnpaid" to "countUpUnpaidSec" }
     }
-    version(8, _Taskoid) { rename { TaskoidTable.select { Position } from "priority" to "position" } }
+    version(8, Taskoid::class) { rename { TaskoidTable.select { Position } from "priority" to "position" } }
 }
 ```
 Normal migrations get skipped, their differences are handled automatically. There's no need to migrate through each of them. The system is smarter: calculates the differences based on the data you keep, then migrates to the latest class it can.

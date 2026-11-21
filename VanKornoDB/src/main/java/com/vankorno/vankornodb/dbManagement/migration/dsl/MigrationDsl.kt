@@ -4,12 +4,12 @@ package com.vankorno.vankornodb.dbManagement.migration.dsl
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.MigrationDsl
 import com.vankorno.vankornodb.api.TransformColDsl
-import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 import com.vankorno.vankornodb.dbManagement.migration.data.MigrationBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.dbManagement.migration.validateMigrationBundle
+import kotlin.reflect.KClass
 
 
 /**
@@ -22,23 +22,23 @@ class ColModification(val colName: String, val block: TransformColDslInternal.Co
  * Builds a [MigrationBundle] from the version specifications and milestone rules configured in [block].
  */
 internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: Int,
-                                                          latestSchemaBundle: SchemaBundle<T>,
+                                                          latestClass: KClass<T>,
                                                                        block: MigrationDsl.()->Unit,
 ): MigrationBundle {
     val defBuilder = MigrationDsl()
     defBuilder.block()
     
-    val latestVersionAbsent = !defBuilder.versionedSchemaBundles.containsKey(latestVersion)
+    val latestVersionAbsent = !defBuilder.versionedClasses.containsKey(latestVersion)
     if (latestVersionAbsent)
-        defBuilder.versionedSchemaBundles[latestVersion] = latestSchemaBundle
+        defBuilder.versionedClasses[latestVersion] = latestClass
     
     validateMigrationBundle(
-        versionedSchemaBundles = defBuilder.versionedSchemaBundles,
+        versionedClasses = defBuilder.versionedClasses,
         renameHistory = defBuilder.renameHistory,
     )
     
     return MigrationBundle(
-        versionedSchemaBundles = defBuilder.versionedSchemaBundles,
+        versionedClasses = defBuilder.versionedClasses,
         renameHistory = defBuilder.renameHistory,
         milestones = defBuilder.milestones,
     )
@@ -53,26 +53,26 @@ internal fun <T: DbEntity> defineMigrationsInternal(           latestVersion: In
  * require explicit milestone steps via [VersionBuilder.milestone].
  */
 abstract class MigrationDslInternal {
-    val versionedSchemaBundles = mutableMapOf<Int, SchemaBundle<out DbEntity>>()
+    val versionedClasses = mutableMapOf<Int, KClass<out DbEntity>>()
     val renameHistory = mutableListOf<RenameRecord>()
     val milestones = mutableListOf<Pair<Int, MilestoneLambdas>>()
     
     /**
-     * Registers a schema bundle for a specific entity version and configures its optional column renames or milestone steps.
+     * Registers an entity class for a specific entity version and configures its optional column renames or milestone steps.
      *
      * @param version The entity version number.
-     * @param schemaBundle The schema bundle defining this version's entity class and structure.
+     * @param entityClass The entity class for this version.
      * @param block Configuration block for renames and milestones at this version.
      */
     fun <T : DbEntity> version(                               version: Int,
-                                                         schemaBundle: SchemaBundle<T>,
+                                                         entityClass: KClass<T>,
                                                                 block: VersionBuilder.()->Unit = {},
     ) {
         val verBuilder = VersionBuilder(version)
         verBuilder.block()
         
         // Class
-        versionedSchemaBundles[version] = schemaBundle
+        versionedClasses[version] = entityClass
         
         // Renames
         renameHistory.addAll(verBuilder.pendingRenames)

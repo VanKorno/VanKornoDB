@@ -4,7 +4,6 @@ import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.defineMigrations
 import com.vankorno.vankornodb.dbManagement.data.DbEntityWithId
-import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -13,40 +12,37 @@ import org.junit.Test
 
 class DefineMigrationsTest {
     class V1 : DbEntityWithId()
-    object OrmV1 : SchemaBundle<V1>(V1::class)
     class V2 : DbEntityWithId()
-    object OrmV2 : SchemaBundle<V2>(V2::class)
     
     class CurrV : DbEntityWithId()
-    object OrmCurr: SchemaBundle<CurrV>(CurrV::class)
     
     
     @Test
     fun `adds versioned orm bundles correctly`() {
-        val bundle = defineMigrations(2, OrmCurr) {
-            version(1, OrmV1)
-            version(2, OrmCurr)
+        val bundle = defineMigrations(2, CurrV::class) {
+            version(1, V1::class)
+            version(2, CurrV::class)
         }
-        assertEquals(2, bundle.versionedSchemaBundles.size)
-        assertEquals(OrmV1, bundle.versionedSchemaBundles[1])
-        assertEquals(OrmCurr, bundle.versionedSchemaBundles[2])
+        assertEquals(2, bundle.versionedClasses.size)
+        assertEquals(V1::class, bundle.versionedClasses[1])
+        assertEquals(CurrV::class, bundle.versionedClasses[2])
     }
     @Test
     fun `adds missing latest version and orm bundle`() {
-        val bundle = defineMigrations(3, OrmCurr) {
-            version(1, OrmV1)
-            version(2, OrmV2)
+        val bundle = defineMigrations(3, CurrV::class) {
+            version(1, V1::class)
+            version(2, V2::class)
         }
-        assertEquals(3, bundle.versionedSchemaBundles.size)
-        assertEquals(OrmV1, bundle.versionedSchemaBundles[1])
-        assertEquals(OrmV2, bundle.versionedSchemaBundles[2])
-        assertEquals(OrmCurr, bundle.versionedSchemaBundles[3])
+        assertEquals(3, bundle.versionedClasses.size)
+        assertEquals(V1::class, bundle.versionedClasses[1])
+        assertEquals(V2::class, bundle.versionedClasses[2])
+        assertEquals(CurrV::class, bundle.versionedClasses[3])
     }
     
     @Test
     fun `stores rename history correctly`() {
-        val bundle = defineMigrations(2, OrmCurr) {
-            version(1, OrmV1) {
+        val bundle = defineMigrations(2, CurrV::class) {
+            version(1, V1::class) {
                 rename {
                     "firstA" to "renamedToA"
                     "firstB" to "renamedToB"
@@ -62,8 +58,8 @@ class DefineMigrationsTest {
     
     @Test
     fun `stores milestone with column transformation`() {
-        val bundle = defineMigrations(2, OrmCurr) {
-            version(1, OrmV1) {
+        val bundle = defineMigrations(2, CurrV::class) {
+            version(1, V1::class) {
                 milestone("someField".modify {
                     fromInt = { it.toString() }
                 })
@@ -87,8 +83,8 @@ class DefineMigrationsTest {
     fun `stores milestone with processFinalEntity`() {
         val migrationFunc: (oldEntity: DbEntity, newEntity: DbEntity) -> DbEntity = { old, _ -> old }
         
-        val bundle = defineMigrations(2, OrmCurr) {
-            version(1, OrmV1) {
+        val bundle = defineMigrations(2, CurrV::class) {
+            version(1, V1::class) {
                 milestone(processFinalEntity = migrationFunc)
             }
         }
@@ -104,9 +100,9 @@ class DefineMigrationsTest {
     
     @Test
     fun `works with only latest version`() {
-        val bundle = defineMigrations(1, OrmCurr) { }
+        val bundle = defineMigrations(1, CurrV::class) { }
     
-        assertEquals(mapOf(1 to OrmCurr), bundle.versionedSchemaBundles)
+        assertEquals(mapOf(1 to CurrV::class), bundle.versionedClasses)
         assertTrue(bundle.renameHistory.isEmpty())
         assertTrue(bundle.milestones.isEmpty())
     }

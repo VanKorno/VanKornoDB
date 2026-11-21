@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.dbManagement.migration
 
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.add.internal.addEntitiesOut
 import com.vankorno.vankornodb.api.DbEntity
@@ -8,12 +9,12 @@ import com.vankorno.vankornodb.api.TransformColDsl
 import com.vankorno.vankornodb.api.toEntity
 import com.vankorno.vankornodb.core.data.DbConstants.RowID
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
-import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.using
 import com.vankorno.vankornodb.dbManagement.migration.data.MilestoneLambdas
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import com.vankorno.vankornodb.delete.deleteTable
+import com.vankorno.vankornodb.mappers.toEntt
 import com.vankorno.vankornodb.misc.dLog
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.wLog
@@ -60,11 +61,11 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(            table: String,
     val migrationBundle = entityMeta.migrationBundle.value
     val schemaBundle = entityMeta.schemaBundle
     
-    val versionedBundles = migrationBundle.versionedSchemaBundles
+    val versionedClasses = migrationBundle.versionedClasses
     val renameHistory = migrationBundle.renameHistory
     val milestones = migrationBundle.milestones
     
-    validateMigrationBundle(versionedBundles, renameHistory)
+    validateMigrationBundle(versionedClasses, renameHistory)
     // region LOG
         dLog("Starting migrateMultiStep()... Table = $table, oldVer = $oldVersion, newVer = $newVersion, allMilestone size = ${milestones.size}")
     // endregion
@@ -84,10 +85,10 @@ internal fun SQLiteDatabase.migrateMultiStepInternal(            table: String,
     
     val utils = MigrationUtils()
     
-    val oldObjects = utils.getEntitiesByVersion(this, table, oldVersion, versionedBundles)
+    val oldObjects = utils.getEntitiesByVersion(this, table, oldVersion, versionedClasses)
     
     val migratedObjects = oldObjects.map { original ->
-        utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedBundles, lambdas)
+        utils.convertThroughSteps(original, oldVersion, steps, renameHistory, versionedClasses, lambdas)
     }
     this.deleteTable(table)
     // region LOG
@@ -175,15 +176,15 @@ open class MigrationUtils {
     internal fun getEntitiesByVersion(                     db: SQLiteDatabase,
                                                         table: String,
                                                       version: Int,
-                                                schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
+                                                versionedClasses: Map<Int, KClass<out DbEntity>>,
     ): List<DbEntity> {
         // region LOG
             dLog("getEntitiesByVersion() starts. Table = $table, version = $version")
         // endregion
-        val fromBundle = schemaBundles[version]
-            ?: error("Missing schemaBundle for version $version")
+        val fromClass = versionedClasses[version]
+            ?: error("Missing entity class for version $version")
         
-        val elements = db.readMigrationRows(table using fromBundle)
+        val elements = db.readMigrationRows(table) { it.toEntt(fromClass) }
         // region LOG
             dLog("getEntitiesByVersion() ${elements.size} elements are read from DB and mapped to the old entity class.")
         // endregion
@@ -199,17 +200,17 @@ open class MigrationUtils {
                                                    oldVersion: Int,
                                                         steps: List<Int>,
                                                 renameHistory: List<RenameRecord>,
-                                                schemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
+                                                versionedClasses: Map<Int, KClass<out DbEntity>>,
                                                       lambdas: Map<Int, MilestoneLambdas>,
     ): DbEntity {
         var currentEntity = original
         var currentVer = oldVersion
         
         for (nextVer in steps) {
-            val targetBundle = schemaBundles[nextVer]
-            val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory, targetBundle)
+            val targetClass = versionedClasses[nextVer]
+            val renameSnapshot = getRenameSnapshot(currentVer, nextVer, renameHistory, targetClass)
             
-            val nextClass = targetBundle?.clazz ?: error("Missing entity class for version $nextVer")
+            val nextClass = targetClass ?: error("Missing entity class for version $nextVer")
             
             val previousEntity = currentEntity
             currentEntity = convertEntity(currentEntity, nextClass, renameSnapshot, lambdas[nextVer]?.transformColVal)
@@ -228,13 +229,13 @@ open class MigrationUtils {
      * @param fromVer The source version number.
      * @param toVer The target version number.
      * @param renameHistory Chronological list of all registered rename records.
-     * @param targetSchemaBundle Schema bundle of the target version.
+     * @param targetClass Entity class of the target version.
      * @return A map where each key is the target property name and value is its corresponding source property name.
      */
     internal fun getRenameSnapshot(                        fromVer: Int,
                                                              toVer: Int,
                                                      renameHistory: List<RenameRecord>,
-                                                targetSchemaBundle: SchemaBundle<out DbEntity>? = null,
+                                                targetClass: KClass<out DbEntity>? = null,
     ): Map<String, String> {
         val snapshot = mutableMapOf<String, String>()
         val relevantRecords = renameHistory
@@ -243,8 +244,7 @@ open class MigrationUtils {
         
         if (relevantRecords.isEmpty()) return snapshot //\/\/\/\/\/\
         
-        val targetColNames = targetSchemaBundle?.columns?.map { it.name }
-            ?: targetSchemaBundle?.clazz?.primaryConstructor?.parameters?.mapNotNull { it.name }
+        val targetColNames = targetClass?.primaryConstructor?.parameters?.mapNotNull { it.name }
             ?: return snapshot //\/\/\/\/\/\
         
         for (targetName in targetColNames) {
@@ -334,13 +334,14 @@ open class MigrationUtils {
 
 
 
-private fun <T : DbEntity> SQLiteDatabase.readMigrationRows(                     table: TableInfo<T>
+private fun <T : DbEntity> SQLiteDatabase.readMigrationRows(                          table: String,
+                                                              readRow: (Cursor)->T,
 ): List<T> {
-    val quotedName = "\"" + table.name.replace("\"", "\"\"") + "\""
+    val quotedName = "\"" + table.replace("\"", "\"\"") + "\""
     return rawQuery("SELECT * FROM $quotedName ORDER BY $RowID", null).use { cursor ->
         buildList {
             while (cursor.moveToNext())
-                add(cursor.toEntity(table.schema))
+                add(readRow(cursor))
         }
     }
 }
@@ -371,7 +372,7 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(     vararg tables: Tab
         dLog("migrateWithoutChange(): Migrating ${tables.size} table(s) without schema changes...")
     // endregion
     for (table in tables) {
-        val rows = readMigrationRows(table)
+        val rows = readMigrationRows(table.name) { it.toEntity(table.schema) }
         dropAndCreateEmptyTablesInternal(table)
         addEntitiesOut(table, rows)
     }
@@ -383,16 +384,16 @@ internal fun SQLiteDatabase.migrateWithoutChangeInternal(     vararg tables: Tab
 
 
 internal fun validateMigrationBundle(
-                                       versionedSchemaBundles: Map<Int, SchemaBundle<out DbEntity>>,
+                                       versionedClasses: Map<Int, KClass<out DbEntity>>,
                                                 renameHistory: List<RenameRecord>,
 ) {
     for (record in renameHistory) {
         val ver = record.version
-        val prevBundle = versionedSchemaBundles[ver - 1]
-        val currBundle = versionedSchemaBundles[ver]
+        val prevClass = versionedClasses[ver - 1]
+        val currClass = versionedClasses[ver]
         
-        if (prevBundle != null) {
-            val prevCols = prevBundle.columns?.map { it.name } ?: emptyList()
+        if (prevClass != null) {
+            val prevCols = prevClass.primaryConstructor?.parameters?.mapNotNull { it.name }.orEmpty()
             if (prevCols.isNotEmpty() && record.from !in prevCols) {
                 val closest = findClosestMatch(record.from, prevCols)
                 val hint = if (closest != null) " Did you mean '$closest'?" else ""
@@ -402,8 +403,8 @@ internal fun validateMigrationBundle(
             }
         }
         
-        if (currBundle != null) {
-            val currCols = currBundle.columns?.map { it.name } ?: emptyList()
+        if (currClass != null) {
+            val currCols = currClass.primaryConstructor?.parameters?.mapNotNull { it.name }.orEmpty()
             if (currCols.isNotEmpty() && record.to !in currCols) {
                 val closest = findClosestMatch(record.to, currCols)
                 val hint = if (closest != null) " Did you mean '$closest'?" else ""

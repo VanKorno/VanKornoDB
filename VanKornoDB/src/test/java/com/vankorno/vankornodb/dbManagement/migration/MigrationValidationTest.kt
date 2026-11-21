@@ -1,10 +1,6 @@
 package com.vankorno.vankornodb.dbManagement.migration
 
 import com.vankorno.vankornodb.dbManagement.data.DbEntityWithId
-import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
-import com.vankorno.vankornodb.dbManagement.data.buildColList
-import com.vankorno.vankornodb.dbManagement.data.iCol
-import com.vankorno.vankornodb.dbManagement.data.sCol
 import com.vankorno.vankornodb.dbManagement.migration.data.RenameRecord
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -17,27 +13,10 @@ import java.io.PrintStream
 class MigrationValidationTest {
     
     data class EntityV1(val usernam: String, val age: Int) : DbEntityWithId()
-    object SchemaV1 : SchemaBundle<EntityV1>(
-        clazz = EntityV1::class,
-        columns = buildColList {
-            +sCol("usernam")
-            +iCol("age")
-        },
-    )
     
     data class EntityV2(val username: String, val userAge: Int) : DbEntityWithId()
-    object SchemaV2 : SchemaBundle<EntityV2>(
-        clazz = EntityV2::class,
-        columns = buildColList {
-            +sCol("username")
-            +iCol("userAge")
-        },
-    )
     
     class EmptySchemaEntity : DbEntityWithId()
-    object SchemaWithoutCols : SchemaBundle<EmptySchemaEntity>(
-        clazz = EmptySchemaEntity::class,
-    )
     
     
     @Test
@@ -78,8 +57,8 @@ class MigrationValidationTest {
         try {
             System.setOut(PrintStream(outContent))
             val bundles = mapOf(
-                1 to SchemaV1,
-                2 to SchemaV2,
+                1 to EntityV1::class,
+                2 to EntityV2::class,
             )
             val history = listOf(
                 RenameRecord(version = 2, from = "usernam", to = "username"),
@@ -101,8 +80,8 @@ class MigrationValidationTest {
         try {
             System.setOut(PrintStream(outContent))
             val bundles = mapOf(
-                1 to SchemaV1,
-                2 to SchemaV2,
+                1 to EntityV1::class,
+                2 to EntityV2::class,
             )
             val history = listOf(
                 RenameRecord(version = 2, from = "usrnam", to = "username"),
@@ -125,8 +104,8 @@ class MigrationValidationTest {
         try {
             System.setOut(PrintStream(outContent))
             val bundles = mapOf(
-                1 to SchemaV1,
-                2 to SchemaV2,
+                1 to EntityV1::class,
+                2 to EntityV2::class,
             )
             val history = listOf(
                 RenameRecord(version = 2, from = "usernam", to = "usernme"),
@@ -143,14 +122,14 @@ class MigrationValidationTest {
     }
     
     @Test
-    fun `validateMigrationBundle skips check when schema columns is null`() {
+    fun `validateMigrationBundle skips check when constructor has no parameters`() {
         val originalOut = System.out
         val outContent = ByteArrayOutputStream()
         try {
             System.setOut(PrintStream(outContent))
             val bundles = mapOf(
-                1 to SchemaWithoutCols,
-                2 to SchemaWithoutCols,
+                1 to EmptySchemaEntity::class,
+                2 to EmptySchemaEntity::class,
             )
             val history = listOf(
                 RenameRecord(version = 2, from = "anySource", to = "anyTarget"),

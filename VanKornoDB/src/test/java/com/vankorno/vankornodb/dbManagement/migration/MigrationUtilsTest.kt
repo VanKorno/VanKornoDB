@@ -52,13 +52,6 @@ class MigrationUtilsTest : MigrationUtils() {
     
     
     data class DummyV3(val newA: String, val c: Int) : com.vankorno.vankornodb.dbManagement.data.DbEntityWithId()
-    object SchemaV3 : com.vankorno.vankornodb.dbManagement.data.SchemaBundle<DummyV3>(
-        clazz = DummyV3::class,
-        columns = com.vankorno.vankornodb.dbManagement.data.buildColList {
-            +com.vankorno.vankornodb.dbManagement.data.sCol("newA")
-            +com.vankorno.vankornodb.dbManagement.data.iCol("c")
-        },
-    )
 
     @Test
     fun `getRenameSnapshot traces column renames backwards across version steps`() {
@@ -72,7 +65,7 @@ class MigrationUtilsTest : MigrationUtils() {
             fromVer = 1,
             toVer = 3,
             renameHistory = history,
-            targetSchemaBundle = SchemaV3,
+            targetClass = DummyV3::class,
         )
 
         assertEquals("oldA", snapshot["newA"])
@@ -91,7 +84,7 @@ class MigrationUtilsTest : MigrationUtils() {
             fromVer = 1,
             toVer = 3,
             renameHistory = history,
-            targetSchemaBundle = SchemaV3,
+            targetClass = DummyV3::class,
         )
 
         assertEquals("oldA", snapshot["newA"])
