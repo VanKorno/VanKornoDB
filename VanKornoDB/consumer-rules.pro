@@ -1,10 +1,10 @@
 # Keep all classes implementing DbEntity and their primary constructors
--keep class * implements com.vankorno.vankornodb.dbManagement.data.BaseEntity {
+-keep class * implements com.vankorno.vankornodb.api.DbEntity {
     <init>(...);
 }
 
 # Keep all fields and methods (needed for defaultInstanceValueOf and reflection)
--keepclassmembers class * implements com.vankorno.vankornodb.dbManagement.data.BaseEntity {
+-keepclassmembers class * implements com.vankorno.vankornodb.api.DbEntity {
     <fields>;
     <methods>;
 }
