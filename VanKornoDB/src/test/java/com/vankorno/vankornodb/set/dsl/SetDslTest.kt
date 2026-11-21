@@ -1,6 +1,6 @@
 package com.vankorno.vankornodb.set.dsl
 
-import com.vankorno.vankornodb.core.dsl.EntityColumn
+import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
@@ -23,7 +23,7 @@ class SetDslTest {
     
     @Test
     fun `simple set and add produce correct ops`() {
-        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
+        val a = Field<TestScope, IntCol>(IntCol("a"))
         
         val ops = TestScope().apply {
             a setTo 5
@@ -42,7 +42,7 @@ class SetDslTest {
     
     @Test
     fun `int mult by one produces no op`() {
-        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
+        val a = Field<TestScope, IntCol>(IntCol("a"))
         
         val ops = TestScope().apply { a mult 1 }.ops
         
@@ -52,7 +52,7 @@ class SetDslTest {
     
     @Test
     fun `int mult by zero becomes set to zero`() {
-        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
+        val a = Field<TestScope, IntCol>(IntCol("a"))
         
         val ops = TestScope().apply { a mult 0 }.ops
         
@@ -61,8 +61,8 @@ class SetDslTest {
     
     @Test
     fun `bool flip and setAs`() {
-        val a = EntityColumn<TestScope, BoolCol>(BoolCol("a"))
-        val b = EntityColumn<TestScope, BoolCol>(BoolCol("b"))
+        val a = Field<TestScope, BoolCol>(BoolCol("a"))
+        val b = Field<TestScope, BoolCol>(BoolCol("b"))
         
         val ops = TestScope().apply {
             a.flip()
@@ -80,8 +80,8 @@ class SetDslTest {
     
     @Test
     fun `int setAs without math`() {
-        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
-        val b = EntityColumn<TestScope, IntCol>(IntCol("b"))
+        val a = Field<TestScope, IntCol>(IntCol("a"))
+        val b = Field<TestScope, IntCol>(IntCol("b"))
         
         val ops = TestScope().apply { a setAs b }.ops
         
@@ -90,8 +90,8 @@ class SetDslTest {
     
     @Test
     fun `bool setAs`() {
-        val a = EntityColumn<TestScope, BoolCol>(BoolCol("a"))
-        val b = EntityColumn<TestScope, BoolCol>(BoolCol("b"))
+        val a = Field<TestScope, BoolCol>(BoolCol("a"))
+        val b = Field<TestScope, BoolCol>(BoolCol("b"))
         
         val ops = TestScope().apply { a setAs b }.ops
         
@@ -100,8 +100,8 @@ class SetDslTest {
     
     @Test
     fun `mixed ops order preserved`() {
-        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
-        val b = EntityColumn<TestScope, IntCol>(IntCol("b"))
+        val a = Field<TestScope, IntCol>(IntCol("a"))
+        val b = Field<TestScope, IntCol>(IntCol("b"))
         
         val ops = TestScope().apply {
             a setTo 1
@@ -123,8 +123,8 @@ class SetDslTest {
     
     @Test
     fun `col to col with math setAs produces correct ops`() {
-        val a = EntityColumn<TestScope, IntCol>(IntCol("a"))
-        val b = EntityColumn<TestScope, IntCol>(IntCol("b"))
+        val a = Field<TestScope, IntCol>(IntCol("a"))
+        val b = Field<TestScope, IntCol>(IntCol("b"))
         
         val ops = TestScope().apply {
             a setAs (b andAdd 5)
@@ -148,8 +148,8 @@ class SetDslTest {
     
     @Test
     fun `long col to col with math setAs produces correct ops`() {
-        val a = EntityColumn<TestScope, LongCol>(LongCol("a"))
-        val b = EntityColumn<TestScope, LongCol>(LongCol("b"))
+        val a = Field<TestScope, LongCol>(LongCol("a"))
+        val b = Field<TestScope, LongCol>(LongCol("b"))
         
         val ops = TestScope().apply {
             a setAs (b andAdd 5L)
@@ -167,8 +167,8 @@ class SetDslTest {
     
     @Test
     fun `float col to col with math setAs produces correct ops`() {
-        val a = EntityColumn<TestScope, FloatCol>(FloatCol("a"))
-        val b = EntityColumn<TestScope, FloatCol>(FloatCol("b"))
+        val a = Field<TestScope, FloatCol>(FloatCol("a"))
+        val b = Field<TestScope, FloatCol>(FloatCol("b"))
         
         val ops = TestScope().apply {
             a setAs (b andAdd 5.5F)
@@ -193,14 +193,14 @@ class SetDslTest {
     
     // All functionality
     
-    private val bananas = EntityColumn<TestScope, IntCol>(IntCol("bananas"))
-    private val unicorns = EntityColumn<TestScope, LongCol>(LongCol("unicorns"))
-    private val magic = EntityColumn<TestScope, FloatCol>(FloatCol("magic"))
-    private val chaos = EntityColumn<TestScope, BoolCol>(BoolCol("chaos"))
+    private val bananas = Field<TestScope, IntCol>(IntCol("bananas"))
+    private val unicorns = Field<TestScope, LongCol>(LongCol("unicorns"))
+    private val magic = Field<TestScope, FloatCol>(FloatCol("magic"))
+    private val chaos = Field<TestScope, BoolCol>(BoolCol("chaos"))
 
     @Test
     fun `string column is set to cursed artifact`() {
-        val mysteryBox = EntityColumn<TestScope, StrCol>(StrCol("mystery_box"))
+        val mysteryBox = Field<TestScope, StrCol>(StrCol("mystery_box"))
         val b = TestScope().apply {
             mysteryBox setTo "💩42"
         }
@@ -341,7 +341,7 @@ class SetDslTest {
     
     @Test
     fun `unicorns copy values from suspicious source`() {
-        val sourceOfTruth = EntityColumn<TestScope, LongCol>(LongCol("source_of_truth"))
+        val sourceOfTruth = Field<TestScope, LongCol>(LongCol("source_of_truth"))
         val b = TestScope().apply {
             unicorns setAs sourceOfTruth
         }
@@ -354,7 +354,7 @@ class SetDslTest {
     
     @Test
     fun `magic steals power from neighbouring wizard`() {
-        val neighbourMagic = EntityColumn<TestScope, FloatCol>(FloatCol("neighbour_magic"))
+        val neighbourMagic = Field<TestScope, FloatCol>(FloatCol("neighbour_magic"))
         val b = TestScope().apply {
             magic setAs neighbourMagic
         }

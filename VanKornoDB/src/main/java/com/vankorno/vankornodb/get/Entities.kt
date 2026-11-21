@@ -5,15 +5,15 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.toEntity
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 
 /** Retrieves a list of entity objects mapped from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntities(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          orderBy: O.()->Unit = { raw("ROWID") },
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
@@ -24,7 +24,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntities(
 /** Retrieves a list of entity objects mapped from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntities(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          orderBy: O.()->Unit = { raw("ROWID") },
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
@@ -46,7 +46,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEnt
 /** Retrieves a map of entity objects from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntityMap(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          orderBy: O.()->Unit = { raw("ROWID") },
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
@@ -57,7 +57,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntityMap(
 /** Retrieves a map of entity objects from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntityMap(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          orderBy: O.()->Unit = { raw("ROWID") },
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},

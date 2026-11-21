@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.data.DbConstants.WHERE
 import com.vankorno.vankornodb.core.data.QueryWithArgs
-import com.vankorno.vankornodb.core.dsl.UpdateTable
+import com.vankorno.vankornodb.core.dsl.FullDslTable
 import com.vankorno.vankornodb.set.dsl.SetDsl
 import com.vankorno.vankornodb.set.dsl.data.FloatColOp
 import com.vankorno.vankornodb.set.dsl.data.IntColOp
@@ -17,14 +17,14 @@ import com.vankorno.vankornodb.set.noty.getBoolSafeVal
 
 /** Applies [actions] in declaration order to the rows matching [where].
  */
-fun <W, S : SetDsl<W>> Dbh.set(                                   table: UpdateTable<*, W, *, *, S>,
+fun <W, S : SetDsl<W>> Dbh.set(                                   table: FullDslTable<*, W, *, *, S>,
                                                                   where: W.()->Unit = {},
                                                                   async: Boolean = false,
                                                                 actions: S.()->Unit,
 ) = write("set", async) { db -> db.set(table, where, actions) }
 
 
-fun <W, S : SetDsl<W>> SQLiteDatabase.set(                        table: UpdateTable<*, W, *, *, S>,
+fun <W, S : SetDsl<W>> SQLiteDatabase.set(                        table: FullDslTable<*, W, *, *, S>,
                                                                   where: W.()->Unit = {},
                                                                 actions: S.()->Unit,
 ) {

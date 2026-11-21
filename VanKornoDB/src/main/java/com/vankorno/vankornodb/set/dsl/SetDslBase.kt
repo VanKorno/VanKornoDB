@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.vankornodb.set.dsl
 
-import com.vankorno.vankornodb.core.dsl.EntityColumn
+import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
@@ -61,51 +61,51 @@ abstract class SetDslBase<W> {
     // ----------------- Helpers for creating SetColOp instances -----------------
     
     @JvmName("andAddInt")
-    infix fun EntityColumn<W, IntCol>.andAdd(value: Number) = IntColOp<W>(definition.name, value, MathOp.Add)
+    infix fun Field<W, IntCol>.andAdd(value: Number) = IntColOp<W>(definition.name, value, MathOp.Add)
     @JvmName("andSubInt")
-    infix fun EntityColumn<W, IntCol>.andSub(value: Number) = IntColOp<W>(definition.name, value, MathOp.Sub)
+    infix fun Field<W, IntCol>.andSub(value: Number) = IntColOp<W>(definition.name, value, MathOp.Sub)
     @JvmName("andMultInt")
-    infix fun EntityColumn<W, IntCol>.andMult(value: Number) = IntColOp<W>(definition.name, value, MathOp.Mult)
+    infix fun Field<W, IntCol>.andMult(value: Number) = IntColOp<W>(definition.name, value, MathOp.Mult)
     @JvmName("andDivInt")
-    infix fun EntityColumn<W, IntCol>.andDiv(value: Number) = IntColOp<W>(definition.name, value, MathOp.Div)
+    infix fun Field<W, IntCol>.andDiv(value: Number) = IntColOp<W>(definition.name, value, MathOp.Div)
     @JvmName("andCapAtInt")
-    infix fun EntityColumn<W, IntCol>.andCapAt(value: Number) = IntColOp<W>(definition.name, value, MathOp.CapAt(value))
+    infix fun Field<W, IntCol>.andCapAt(value: Number) = IntColOp<W>(definition.name, value, MathOp.CapAt(value))
     @JvmName("andFloorAtInt")
-    infix fun EntityColumn<W, IntCol>.andFloorAt(value: Number) = IntColOp<W>(definition.name, value, MathOp.FloorAt(value))
+    infix fun Field<W, IntCol>.andFloorAt(value: Number) = IntColOp<W>(definition.name, value, MathOp.FloorAt(value))
     @JvmName("andCoerceInInt")
-    infix fun EntityColumn<W, IntCol>.andCoerceIn(range: IntRange) =
+    infix fun Field<W, IntCol>.andCoerceIn(range: IntRange) =
         IntColOp<W>(definition.name, range.first, MathOp.CoerceIn(range.first, range.last))
     
     @JvmName("andAddLong")
-    infix fun EntityColumn<W, LongCol>.andAdd(value: Number) = LongColOp<W>(definition.name, value, MathOp.Add)
+    infix fun Field<W, LongCol>.andAdd(value: Number) = LongColOp<W>(definition.name, value, MathOp.Add)
     @JvmName("andSubLong")
-    infix fun EntityColumn<W, LongCol>.andSub(value: Number) = LongColOp<W>(definition.name, value, MathOp.Sub)
+    infix fun Field<W, LongCol>.andSub(value: Number) = LongColOp<W>(definition.name, value, MathOp.Sub)
     @JvmName("andMultLong")
-    infix fun EntityColumn<W, LongCol>.andMult(value: Number) = LongColOp<W>(definition.name, value, MathOp.Mult)
+    infix fun Field<W, LongCol>.andMult(value: Number) = LongColOp<W>(definition.name, value, MathOp.Mult)
     @JvmName("andDivLong")
-    infix fun EntityColumn<W, LongCol>.andDiv(value: Number) = LongColOp<W>(definition.name, value, MathOp.Div)
+    infix fun Field<W, LongCol>.andDiv(value: Number) = LongColOp<W>(definition.name, value, MathOp.Div)
     @JvmName("andCapAtLong")
-    infix fun EntityColumn<W, LongCol>.andCapAt(value: Number) = LongColOp<W>(definition.name, value, MathOp.CapAt(value))
+    infix fun Field<W, LongCol>.andCapAt(value: Number) = LongColOp<W>(definition.name, value, MathOp.CapAt(value))
     @JvmName("andFloorAtLong")
-    infix fun EntityColumn<W, LongCol>.andFloorAt(value: Number) = LongColOp<W>(definition.name, value, MathOp.FloorAt(value))
+    infix fun Field<W, LongCol>.andFloorAt(value: Number) = LongColOp<W>(definition.name, value, MathOp.FloorAt(value))
     @JvmName("andCoerceInLong")
-    infix fun EntityColumn<W, LongCol>.andCoerceIn(range: LongRange) =
+    infix fun Field<W, LongCol>.andCoerceIn(range: LongRange) =
         LongColOp<W>(definition.name, range.first, MathOp.CoerceIn(range.first, range.last))
     
     @JvmName("andAddFloat")
-    infix fun EntityColumn<W, FloatCol>.andAdd(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Add)
+    infix fun Field<W, FloatCol>.andAdd(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Add)
     @JvmName("andSubFloat")
-    infix fun EntityColumn<W, FloatCol>.andSub(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Sub)
+    infix fun Field<W, FloatCol>.andSub(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Sub)
     @JvmName("andMultFloat")
-    infix fun EntityColumn<W, FloatCol>.andMult(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Mult)
+    infix fun Field<W, FloatCol>.andMult(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Mult)
     @JvmName("andDivFloat")
-    infix fun EntityColumn<W, FloatCol>.andDiv(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Div)
+    infix fun Field<W, FloatCol>.andDiv(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Div)
     @JvmName("andCapAtFloat")
-    infix fun EntityColumn<W, FloatCol>.andCapAt(value: Number) = FloatColOp<W>(definition.name, value, MathOp.CapAt(value))
+    infix fun Field<W, FloatCol>.andCapAt(value: Number) = FloatColOp<W>(definition.name, value, MathOp.CapAt(value))
     @JvmName("andFloorAtFloat")
-    infix fun EntityColumn<W, FloatCol>.andFloorAt(value: Number) = FloatColOp<W>(definition.name, value, MathOp.FloorAt(value))
+    infix fun Field<W, FloatCol>.andFloorAt(value: Number) = FloatColOp<W>(definition.name, value, MathOp.FloorAt(value))
     @JvmName("andCoerceInFloat")
-    infix fun EntityColumn<W, FloatCol>.andCoerceIn(range: ClosedFloatingPointRange<Float>) =
+    infix fun Field<W, FloatCol>.andCoerceIn(range: ClosedFloatingPointRange<Float>) =
         FloatColOp<W>(definition.name, range.start, MathOp.CoerceIn(range.start, range.endInclusive))
     
     

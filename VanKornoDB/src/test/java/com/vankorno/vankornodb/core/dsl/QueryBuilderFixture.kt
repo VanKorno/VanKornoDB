@@ -29,7 +29,7 @@ private val schema = SchemaBundle(BuilderRow::class)
 internal fun builderTable(name: String) =
     (name using schema).withDsl(::BuilderWhere, { BuilderOrder() }, { BuilderExtra() })
 
-internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> DbhColumns<W, O, X, *>.query(
+internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> TableColumns<W, O, X, *>.query(
     orderBy: O.()->Unit = {},
     where: W.()->Unit = {},
 ): Subquery {
@@ -39,7 +39,7 @@ internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> DbhColumns<W, O, X, *>.que
 
 internal fun testPredicate(block: BuilderWhere.()->Unit) = builderTable("Test").predicate("Test", block)
 
-internal fun <C : TypedColumn<*>> testColumn(definition: C) = EntityColumn<BuilderWhere, C>(definition)
+internal fun <C : TypedColumn<*>> testColumn(definition: C) = Field<BuilderWhere, C>(definition)
 
 internal fun testOrder(block: BuilderOrder.()->Unit): BuilderOrder {
     val table = builderTable("Test")

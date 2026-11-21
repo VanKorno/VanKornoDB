@@ -16,44 +16,45 @@ annotation class DslInject
 
 /** The owner is invariant so columns from different entity scopes cannot be interchanged.
  */
-sealed class SelectedColumn<W, out C : TypedColumn<*>>(internal val sql: String)
+sealed class SelectExpr<W, out C : TypedColumn<*>>(internal val sql: String)
 
 
-class EntityColumn<W, out C : TypedColumn<*>> internal constructor(internal val definition: C) :
-    SelectedColumn<W, C>(definition.name)
+class Field<W, out C : TypedColumn<*>> internal constructor(internal val definition: C) :
+    SelectExpr<W, C>(definition.name)
 
-private class RawColumn<W>(sql: String) : SelectedColumn<W, Nothing>(sql)
+private class RawExpr<W>(sql: String) : SelectExpr<W, Nothing>(sql)
 
 /** Emits the supplied SQL verbatim in a column selection. */
-fun <W> raw(sql: String): SelectedColumn<W, Nothing> = RawColumn(sql)
+fun <W> raw(sql: String): SelectExpr<W, Nothing> = RawExpr(sql)
 
 
-open class DbhColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
-    internal val table: QueryTable<*, W, O, X>,
-    internal val selectors: Array<out ColumnSelector<W, C>>,
+open class TableColumns<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
+    internal val table: DslTable<*, W, O, X>,
+    internal val selectors: Array<out FieldSelector<W, C>>,
 )
 
-class DbhColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
-    table: QueryTable<*, W, O, X>,
-    internal val selector: ColumnSelector<W, C>,
-) : DbhColumns<W, O, X, C>(table, arrayOf(selector))
+class TableColumn<W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>> internal constructor(
+    table: DslTable<*, W, O, X>,
+    internal val selector: FieldSelector<W, C>,
+) : TableColumns<W, O, X, C>(table, arrayOf(selector))
 
 
-typealias ColumnSelector<W, C> = W.()->SelectedColumn<W, C>
+typealias FieldSelector<W, C> = W.()->SelectExpr<W, C>
 
 
 
 /** The library supplies one context to each generated receiver.
  */
-class DslContext<W> internal constructor(                     internal val table: DbhTable<*, W>,
-                                                            internal val builder: WhereDslBase,
-                                                          internal val qualifier: String,
+class DslContext<W> internal constructor(                    internal val table: MiniDslTable<*, W>,
+                                                           internal val builder: WhereDslBase,
+                                                         internal val qualifier: String,
 )
 
 
 /** A physical table, its mapping, and the factory for its generated entity receiver.
  */
-open class DbhTable<out I : TableInfo<*>, W> internal constructor(     val info: I,
+open class MiniDslTable<out I : TableInfo<*>, W> internal constructor(
+                                                                       val info: I,
                                                            internal val factory: (DslContext<W>)->W,
 ) {
     val name get() = info.name
@@ -83,14 +84,14 @@ open class DbhTable<out I : TableInfo<*>, W> internal constructor(     val info:
     
     /** Selects one schema descriptor for APIs that accept a typed column directly.
      */
-    fun <C : TypedColumn<*>> select(column: W.()->EntityColumn<W, C>): C =
+    fun <C : TypedColumn<*>> select(column: W.()->Field<W, C>): C =
         selectionScope().column().definition
     
     
     
-    internal fun columnSql(column: ColumnSelector<W, *>): String = selectionScope().column().sql
+    internal fun columnSql(column: FieldSelector<W, *>): String = selectionScope().column().sql
 
-    internal fun select(                      columns: Array<out ColumnSelector<W, TypedColumn<*>>>
+    internal fun select(                      columns: Array<out FieldSelector<W, TypedColumn<*>>>
     ): Array<String> {
         val scope = selectionScope()
         return Array(columns.size) { idx -> columns[idx](scope).sql }
@@ -98,28 +99,28 @@ open class DbhTable<out I : TableInfo<*>, W> internal constructor(     val info:
 }
 
 
-open class QueryTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
+open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
                                                                            info: I,
                                                                         factory: (DslContext<W>)->W,
                                                        private val orderFactory: (W)->O,
                                                        private val extraFactory: (W)->X,
-) : DbhTable<I, W>(info, factory) {
-    fun <C : TypedColumn<*>> col(block: ColumnSelector<W, C>): DbhColumn<W, O, X, C> {
+) : MiniDslTable<I, W>(info, factory) {
+    fun <C : TypedColumn<*>> col(block: FieldSelector<W, C>): TableColumn<W, O, X, C> {
         val selected = selectionScope().block()
-        return DbhColumn(this) { selected }
+        return TableColumn(this) { selected }
     }
     
-    fun <C : TypedColumn<*>> columns(block: W.()->List<SelectedColumn<W, C>>): DbhColumns<W, O, X, C> {
+    fun <C : TypedColumn<*>> columns(block: W.()->List<SelectExpr<W, C>>): TableColumns<W, O, X, C> {
         val selected = selectionScope().block()
         require(selected.isNotEmpty()) { "An explicit projection must contain at least one column" }
-        val selectors = Array<ColumnSelector<W, C>>(selected.size) { idx ->
+        val selectors = Array<FieldSelector<W, C>>(selected.size) { idx ->
             val column = selected[idx]
             { column }
         }
-        return DbhColumns(this, selectors)
+        return TableColumns(this, selectors)
     }
     
-    internal fun query(        columns: Array<out ColumnSelector<W, TypedColumn<*>>> = emptyArray(),
+    internal fun query(        columns: Array<out FieldSelector<W, TypedColumn<*>>> = emptyArray(),
                                orderBy: O.()->Unit = {},
                                  extra: X.()->Unit = {},
                                  where: W.()->Unit = {},
@@ -157,23 +158,23 @@ open class QueryTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<
 }
 
 
-class UpdateTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> internal constructor(
+class FullDslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> internal constructor(
                                                                            info: I,
                                                                           where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
                                                         internal val setFactory: (W)->S,
-) : QueryTable<I, W, O, X>(info, where, order, extra)
+) : DslTable<I, W, O, X>(info, where, order, extra)
 
 fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> I.withDsl(
                                                                           where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
-) = QueryTable(this, where, order, extra)
+) = DslTable(this, where, order, extra)
 
 fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> I.withDsl(
                                                                           where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
                                                                             set: (W)->S,
-) = UpdateTable(this, where, order, extra, set)
+) = FullDslTable(this, where, order, extra, set)

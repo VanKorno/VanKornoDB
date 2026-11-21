@@ -5,10 +5,10 @@ import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.api.toEntity
-import com.vankorno.vankornodb.core.dsl.EntityColumn
+import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.TypedColumn
@@ -24,7 +24,7 @@ import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
  * Returns [default] if no result is found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.steal(
-                                                      ownerTable: QueryTable<TableInfo<*>, W, O, X>,
+                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                                      thiefSchema: SchemaBundle<T>,
                                                          default: T,
                                                          orderBy: O.()->Unit = {},
@@ -35,7 +35,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.steal(
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
-                                                      ownerTable: QueryTable<TableInfo<*>, W, O, X>,
+                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                                      thiefSchema: SchemaBundle<T>,
                                                          default: T,
                                                          orderBy: O.()->Unit = {},
@@ -43,7 +43,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
                                                            where: W.()->Unit,
 ): T {
     val definitions = checkedThiefColumns(thiefSchema, ownerTable.info.schema.columns)
-    val columns = ownerTable.columns { definitions.map { EntityColumn(it) } }
+    val columns = ownerTable.columns { definitions.map { Field(it) } }
     
     return useCursor(columns, orderBy, where = where,
         extra = {
@@ -72,7 +72,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
  * Returns an empty list if no result is found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.stealALot(
-                                                      ownerTable: QueryTable<TableInfo<*>, W, O, X>,
+                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                                      thiefSchema: SchemaBundle<T>,
                                                          orderBy: O.()->Unit = { raw("ROWID") },
                                                            extra: X.()->Unit = {},
@@ -82,14 +82,14 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.stealALot(
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.stealALot(
-                                                      ownerTable: QueryTable<TableInfo<*>, W, O, X>,
+                                                      ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                                      thiefSchema: SchemaBundle<T>,
                                                          orderBy: O.()->Unit = { raw("ROWID") },
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
 ): List<T> {
     val definitions = checkedThiefColumns(thiefSchema, ownerTable.info.schema.columns)
-    val columns = ownerTable.columns { definitions.map { EntityColumn(it) } }
+    val columns = ownerTable.columns { definitions.map { Field(it) } }
     
     return useCursor(columns, orderBy, extra, where) { cursor ->
         buildList {

@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.newTable
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.QueryTable
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.dbManagement.data.using
@@ -12,26 +12,26 @@ import com.vankorno.vankornodb.misc.dLog
 
 
 /** Creates the physical table described by [table]. */
-fun Dbh.createTable(                            table: QueryTable<TableInfo<out DbEntity>, *, *, *>,
+fun Dbh.createTable(                            table: DslTable<TableInfo<out DbEntity>, *, *, *>,
                                                 async: Boolean = false,
 ) = write("createTable", async) { db -> db.createTable(table) }
 
 
-fun SQLiteDatabase.createTable(table: QueryTable<TableInfo<out DbEntity>, *, *, *>) = createTable(table.info)
+fun SQLiteDatabase.createTable(table: DslTable<TableInfo<out DbEntity>, *, *, *>) = createTable(table.info)
 
 
 /** Creates each physical table in [tables]. */
-fun Dbh.createTables(                   vararg tables: QueryTable<TableInfo<out DbEntity>, *, *, *>,
+fun Dbh.createTables(                   vararg tables: DslTable<TableInfo<out DbEntity>, *, *, *>,
                                                 async: Boolean = false,
 ) = write("createTables", async) { db -> db.createTables(*tables) }
 
 
-fun SQLiteDatabase.createTables(         vararg tables: QueryTable<TableInfo<out DbEntity>, *, *, *>
+fun SQLiteDatabase.createTables(         vararg tables: DslTable<TableInfo<out DbEntity>, *, *, *>
 ) = tables.forEach { createTable(it) }
 
 
 /** Creates each physical table in [tables]. */
-fun Dbh.createTables(                    tables: List<QueryTable<TableInfo<out DbEntity>, *, *, *>>,
+fun Dbh.createTables(                    tables: List<DslTable<TableInfo<out DbEntity>, *, *, *>>,
                                           async: Boolean = false,
 ) = write("createTables", async) { db -> db.createTables(tables) }
 
@@ -40,7 +40,7 @@ fun SQLiteDatabase.createTables() = Unit
 
 
 @JvmName("createQueryTables")
-fun SQLiteDatabase.createTables(          tables: List<QueryTable<TableInfo<out DbEntity>, *, *, *>>
+fun SQLiteDatabase.createTables(          tables: List<DslTable<TableInfo<out DbEntity>, *, *, *>>
 ) = tables.forEach { createTable(it) }
 
 

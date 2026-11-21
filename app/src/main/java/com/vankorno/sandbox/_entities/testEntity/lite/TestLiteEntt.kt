@@ -2,7 +2,7 @@ package com.vankorno.sandbox._entities.testEntity.lite
 
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
-import com.vankorno.vankornodb.core.dsl.EntityColumn
+import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.WhereDsl
@@ -55,10 +55,10 @@ object _TestLite : SchemaBundle<TestLiteEntt>(
 
 
 interface TestLiteDslColumns {
-    val Id: EntityColumn<TestLiteDsl, LongCol>
-    val Name: EntityColumn<TestLiteDsl, StrCol>
-    val Position: EntityColumn<TestLiteDsl, LongCol>
-    val Enabled: EntityColumn<TestLiteDsl, BoolCol>
+    val Id: Field<TestLiteDsl, LongCol>
+    val Name: Field<TestLiteDsl, StrCol>
+    val Position: Field<TestLiteDsl, LongCol>
+    val Enabled: Field<TestLiteDsl, BoolCol>
 }
 
 class TestLiteOrderDsl internal constructor(                          columns: TestLiteDslColumns

@@ -4,16 +4,16 @@ package com.vankorno.vankornodb.get
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbhColumns
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
+import com.vankorno.vankornodb.core.dsl.TableColumns
 
 /**
  * Queries the database, lets you use [Cursor].
  * Selects all columns.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(           table: QueryTable<*, W, O, X>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(           table: DslTable<*, W, O, X>,
                                                                     orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},
@@ -26,7 +26,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(           table: Que
  * Selects all columns.
  */
 inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.useCursor(
-                                                                      table: QueryTable<*, W, O, X>,
+                                                                      table: DslTable<*, W, O, X>,
                                                            noinline orderBy: O.()->Unit = {},
                                                              noinline extra: X.()->Unit = {},
                                                              noinline where: W.()->Unit = {},
@@ -36,7 +36,7 @@ inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.useCursor(
 ).use(block)
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(         columns: DbhColumns<W, O, X, *>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(         columns: TableColumns<W, O, X, *>,
                                                                     orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},
@@ -46,7 +46,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.useCursor(         columns: Dbh
 }
 
 inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.useCursor(
-                                                                    columns: DbhColumns<W, O, X, *>,
+                                                                    columns: TableColumns<W, O, X, *>,
                                                            noinline orderBy: O.()->Unit = {},
                                                              noinline extra: X.()->Unit = {},
                                                              noinline where: W.()->Unit = {},
@@ -60,7 +60,7 @@ inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.useCursor(
  * Queries the database, lets you use [Cursor], and returns the result of that cursor usage.
  * Selects all columns.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> Dbh.getFromCursor(    table: QueryTable<*, W, O, X>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> Dbh.getFromCursor(    table: DslTable<*, W, O, X>,
                                                                     default: R,
                                                                     orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
@@ -74,7 +74,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> Dbh.getFromCursor(    table: Que
  * Selects all columns.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getCursor(
-                                                                      table: QueryTable<*, W, O, X>,
+                                                                      table: DslTable<*, W, O, X>,
                                                                     orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},
@@ -84,7 +84,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getCursor(
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> Dbh.getFromCursor(
-                                                                    columns: DbhColumns<W, O, X, *>,
+                                                                    columns: TableColumns<W, O, X, *>,
                                                                     default: R,
                                                                     orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
@@ -95,7 +95,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> Dbh.getFromCursor(
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getCursor(
-                                                                    columns: DbhColumns<W, O, X, *>,
+                                                                    columns: TableColumns<W, O, X, *>,
                                                                     orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},

@@ -3,9 +3,9 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbhColumns
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.TableColumns
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -18,7 +18,7 @@ import com.vankorno.vankornodb.misc.getBoolean
 /** Retrieves a 2D matrix of Ints from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableInts(
-                                                                columns: DbhColumns<W, O, X, IntCol>,
+                                                                columns: TableColumns<W, O, X, IntCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -28,7 +28,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableInts(
 /** Retrieves a 2D matrix of Ints from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableInts(
-                                                                columns: DbhColumns<W, O, X, IntCol>,
+                                                                columns: TableColumns<W, O, X, IntCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -44,7 +44,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableInts(
 /** Retrieves a 2D matrix of Strings from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableStrings(
-                                                                columns: DbhColumns<W, O, X, StrCol>,
+                                                                columns: TableColumns<W, O, X, StrCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -54,7 +54,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableStrings(
 /** Retrieves a 2D matrix of Strings from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableStrings(
-                                                                columns: DbhColumns<W, O, X, StrCol>,
+                                                                columns: TableColumns<W, O, X, StrCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -70,7 +70,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableStrings(
 /** Retrieves a 2D matrix of Booleans from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBools(
-                                                               columns: DbhColumns<W, O, X, BoolCol>,
+                                                               columns: TableColumns<W, O, X, BoolCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -80,7 +80,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBools(
 /** Retrieves a 2D matrix of Booleans from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBools(
-                                                               columns: DbhColumns<W, O, X, BoolCol>,
+                                                               columns: TableColumns<W, O, X, BoolCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -96,7 +96,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBools(
 /** Retrieves a 2D matrix of Longs from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableLongs(
-                                                               columns: DbhColumns<W, O, X, LongCol>,
+                                                               columns: TableColumns<W, O, X, LongCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -106,7 +106,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableLongs(
 /** Retrieves a 2D matrix of Longs from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableLongs(
-                                                               columns: DbhColumns<W, O, X, LongCol>,
+                                                               columns: TableColumns<W, O, X, LongCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -122,7 +122,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableLongs(
 /** Retrieves a 2D matrix of Floats from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableFloats(
-                                                              columns: DbhColumns<W, O, X, FloatCol>,
+                                                              columns: TableColumns<W, O, X, FloatCol>,
                                                               orderBy: O.()->Unit = {},
                                                                 extra: X.()->Unit = {},
                                                                 where: W.()->Unit = {},
@@ -132,7 +132,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableFloats(
 /** Retrieves a 2D matrix of Floats from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableFloats(
-                                                              columns: DbhColumns<W, O, X, FloatCol>,
+                                                              columns: TableColumns<W, O, X, FloatCol>,
                                                               orderBy: O.()->Unit = {},
                                                                 extra: X.()->Unit = {},
                                                                 where: W.()->Unit = {},
@@ -148,7 +148,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableFloats(
 /** Retrieves a 2D matrix of Blobs (ByteArray) from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBlobs(
-                                                               columns: DbhColumns<W, O, X, BlobCol>,
+                                                               columns: TableColumns<W, O, X, BlobCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -158,7 +158,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBlobs(
 /** Retrieves a 2D matrix of Blobs (ByteArray) from specified columns and rows.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBlobs(
-                                                               columns: DbhColumns<W, O, X, BlobCol>,
+                                                               columns: TableColumns<W, O, X, BlobCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},

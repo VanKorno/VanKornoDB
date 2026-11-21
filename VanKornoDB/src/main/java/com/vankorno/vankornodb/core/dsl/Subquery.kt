@@ -4,7 +4,7 @@ package com.vankorno.vankornodb.core.dsl
 import com.vankorno.vankornodb.core.data.Subquery
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> subquery(               columns: DbhColumns<W, O, X, *>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> subquery(               columns: TableColumns<W, O, X, *>,
                                                                      orderBy: O.()->Unit = {},
                                                                        extra: X.()->Unit = {},
                                                                        where: W.()->Unit = {},

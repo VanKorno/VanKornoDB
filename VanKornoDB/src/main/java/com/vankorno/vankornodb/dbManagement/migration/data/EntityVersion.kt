@@ -48,15 +48,15 @@ object _EntityVersion : SchemaBundle<EntityVersion>(
 
     withId = { obj, newId -> obj.copy(id = newId) }
 ) {
-    fun tableNamed(name: String): UpdateTable<TableInfo<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl, EntityVersionSetDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl, ::EntityVersionSetDsl)
+    fun tableNamed(name: String): FullDslTable<TableInfo<EntityVersion>, EntityVersionDsl, EntityVersionOrderDsl, EntityVersionExtraDsl, EntityVersionSetDsl> = (name using this).withDsl(::EntityVersionDsl, ::EntityVersionOrderDsl, ::EntityVersionExtraDsl, ::EntityVersionSetDsl)
 }
 
 
 interface EntityVersionDslColumns {
-    val Name: EntityColumn<EntityVersionDsl, StrCol>
-    val Version: EntityColumn<EntityVersionDsl, IntCol>
-    val Notes: EntityColumn<EntityVersionDsl, StrCol>
-    val Id: EntityColumn<EntityVersionDsl, LongCol>
+    val Name: Field<EntityVersionDsl, StrCol>
+    val Version: Field<EntityVersionDsl, IntCol>
+    val Notes: Field<EntityVersionDsl, StrCol>
+    val Id: Field<EntityVersionDsl, LongCol>
 }
 
 class EntityVersionOrderDsl internal constructor(                  columns: EntityVersionDslColumns

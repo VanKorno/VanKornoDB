@@ -2,8 +2,8 @@ package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
-import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.core.dsl.withDsl
@@ -117,25 +117,25 @@ object _V3_Test : SchemaBundle<V3_TestEntity>(
 
 
 interface V3_TestDslColumns {
-    val Id: EntityColumn<V3_TestDsl, LongCol>
-    val Name: EntityColumn<V3_TestDsl, StrCol>
-    val Position: EntityColumn<V3_TestDsl, LongCol>
-    val Enabled: EntityColumn<V3_TestDsl, BoolCol>
-    val Int1: EntityColumn<V3_TestDsl, IntCol>
-    val Int2: EntityColumn<V3_TestDsl, IntCol>
-    val Int3: EntityColumn<V3_TestDsl, IntCol>
-    val Str1: EntityColumn<V3_TestDsl, StrCol>
-    val Str2: EntityColumn<V3_TestDsl, StrCol>
-    val Str3: EntityColumn<V3_TestDsl, StrCol>
-    val Bool1: EntityColumn<V3_TestDsl, BoolCol>
-    val Bool2: EntityColumn<V3_TestDsl, BoolCol>
-    val Bool3: EntityColumn<V3_TestDsl, BoolCol>
-    val Long1: EntityColumn<V3_TestDsl, LongCol>
-    val Long2: EntityColumn<V3_TestDsl, LongCol>
-    val Long3: EntityColumn<V3_TestDsl, LongCol>
-    val Float1: EntityColumn<V3_TestDsl, FloatCol>
-    val Float2: EntityColumn<V3_TestDsl, FloatCol>
-    val Float3: EntityColumn<V3_TestDsl, FloatCol>
+    val Id: Field<V3_TestDsl, LongCol>
+    val Name: Field<V3_TestDsl, StrCol>
+    val Position: Field<V3_TestDsl, LongCol>
+    val Enabled: Field<V3_TestDsl, BoolCol>
+    val Int1: Field<V3_TestDsl, IntCol>
+    val Int2: Field<V3_TestDsl, IntCol>
+    val Int3: Field<V3_TestDsl, IntCol>
+    val Str1: Field<V3_TestDsl, StrCol>
+    val Str2: Field<V3_TestDsl, StrCol>
+    val Str3: Field<V3_TestDsl, StrCol>
+    val Bool1: Field<V3_TestDsl, BoolCol>
+    val Bool2: Field<V3_TestDsl, BoolCol>
+    val Bool3: Field<V3_TestDsl, BoolCol>
+    val Long1: Field<V3_TestDsl, LongCol>
+    val Long2: Field<V3_TestDsl, LongCol>
+    val Long3: Field<V3_TestDsl, LongCol>
+    val Float1: Field<V3_TestDsl, FloatCol>
+    val Float2: Field<V3_TestDsl, FloatCol>
+    val Float3: Field<V3_TestDsl, FloatCol>
 }
 
 class V3_TestOrderDsl internal constructor(                            columns: V3_TestDslColumns

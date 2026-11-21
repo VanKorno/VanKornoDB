@@ -15,7 +15,7 @@ abstract class ExtraDsl<W> {
         query.joinArgs += join.args
     }
     
-    fun groupBy(vararg columns: EntityColumn<W, *>) { query.groupBy = columns.joinToString(comma) { it.definition.name } }
+    fun groupBy(vararg columns: Field<W, *>) { query.groupBy = columns.joinToString(comma) { it.definition.name } }
     fun having(block: W.()->Unit) {
         val predicate = context.table.predicate(context.qualifier, block)
         query.having = predicate.buildStr()

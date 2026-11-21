@@ -4,16 +4,16 @@ package com.vankorno.vankornodb.get
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbhColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.TableColumn
 import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.eLog
 import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.misc.suppressValGetterErrorLog
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getInt(          column: DbhColumn<W, O, X, IntCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getInt(          column: TableColumn<W, O, X, IntCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -21,7 +21,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getInt(          column: DbhCol
     db.getInt(column, orderBy, extra, where)
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getInt(
-                                                                  column: DbhColumn<W, O, X, IntCol>,
+                                                                  column: TableColumn<W, O, X, IntCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -32,7 +32,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getInt(
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getStr(          column: DbhColumn<W, O, X, StrCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getStr(          column: TableColumn<W, O, X, StrCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -40,7 +40,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getStr(          column: DbhCol
     db.getStr(column, orderBy, extra, where)
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getStr(
-                                                                  column: DbhColumn<W, O, X, StrCol>,
+                                                                  column: TableColumn<W, O, X, StrCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -51,7 +51,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getStr(
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBool(        column: DbhColumn<W, O, X, BoolCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBool(        column: TableColumn<W, O, X, BoolCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -59,7 +59,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBool(        column: DbhColu
     db.getBool(column, orderBy, extra, where)
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBool(
-                                                                 column: DbhColumn<W, O, X, BoolCol>,
+                                                                 column: TableColumn<W, O, X, BoolCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -70,7 +70,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBool(
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLong(        column: DbhColumn<W, O, X, LongCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLong(        column: TableColumn<W, O, X, LongCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -78,7 +78,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLong(        column: DbhColu
     db.getLong(column, orderBy, extra, where)
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLong(
-                                                                 column: DbhColumn<W, O, X, LongCol>,
+                                                                 column: TableColumn<W, O, X, LongCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -89,7 +89,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLong(
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFloat(      column: DbhColumn<W, O, X, FloatCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFloat(      column: TableColumn<W, O, X, FloatCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -97,7 +97,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFloat(      column: DbhColum
     db.getFloat(column, orderBy, extra, where)
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFloat(
-                                                                column: DbhColumn<W, O, X, FloatCol>,
+                                                                column: TableColumn<W, O, X, FloatCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -109,7 +109,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFloat(
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBlob(        column: DbhColumn<W, O, X, BlobCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBlob(        column: TableColumn<W, O, X, BlobCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -117,7 +117,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBlob(        column: DbhColu
     db.getBlob(column, orderBy, extra, where)
 }
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBlob(
-                                                                 column: DbhColumn<W, O, X, BlobCol>,
+                                                                 column: TableColumn<W, O, X, BlobCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -133,7 +133,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBlob(
 
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getValue(
-                                                      column: DbhColumn<W, O, X, out TypedColumn<R>>,
+                                                      column: TableColumn<W, O, X, out TypedColumn<R>>,
                                                      default: R,
                                                      funName: String,
                                                      orderBy: O.()->Unit = {},

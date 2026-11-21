@@ -157,9 +157,9 @@ private object FlagSchema : SchemaBundle<Flag>(Flag::class, columns = buildColLi
 }
 
 private interface FlagDslColumns {
-    val OwnerId: EntityColumn<FlagDsl, LongCol>
-    val Active: EntityColumn<FlagDsl, BoolCol>
-    val Scores: List<EntityColumn<FlagDsl, IntCol>>
+    val OwnerId: Field<FlagDsl, LongCol>
+    val Active: Field<FlagDsl, BoolCol>
+    val Scores: List<Field<FlagDsl, IntCol>>
 }
 
 private class FlagOrderDsl(                                               columns: FlagDslColumns

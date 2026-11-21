@@ -3,9 +3,9 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
-import com.vankorno.vankornodb.core.dsl.DbhColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.TableColumn
 import com.vankorno.vankornodb.dbManagement.data.BlobCol
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -17,7 +17,7 @@ import com.vankorno.vankornodb.misc.getBoolean
 
 /** Retrieves a list of Ints from one column.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColInts(      column: DbhColumn<W, O, X, IntCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColInts(      column: TableColumn<W, O, X, IntCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -27,7 +27,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColInts(      column: DbhCol
 /** Retrieves a list of Ints from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColInts(
-                                                                  column: DbhColumn<W, O, X, IntCol>,
+                                                                  column: TableColumn<W, O, X, IntCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -43,7 +43,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColInts(
 /** Retrieves a list of Strings from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColStrings(
-                                                                  column: DbhColumn<W, O, X, StrCol>,
+                                                                  column: TableColumn<W, O, X, StrCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -53,7 +53,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColStrings(
 /** Retrieves a list of Strings from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColStrings(
-                                                                  column: DbhColumn<W, O, X, StrCol>,
+                                                                  column: TableColumn<W, O, X, StrCol>,
                                                                  orderBy: O.()->Unit = {},
                                                                    extra: X.()->Unit = {},
                                                                    where: W.()->Unit = {},
@@ -68,7 +68,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColStrings(
 
 /** Retrieves a list of Booleans from one column.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColBools(    column: DbhColumn<W, O, X, BoolCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColBools(    column: TableColumn<W, O, X, BoolCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -78,7 +78,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColBools(    column: DbhColu
 /** Retrieves a list of Booleans from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColBools(
-                                                                 column: DbhColumn<W, O, X, BoolCol>,
+                                                                 column: TableColumn<W, O, X, BoolCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -93,7 +93,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColBools(
 
 /** Retrieves a list of Longs from one column.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColLongs(    column: DbhColumn<W, O, X, LongCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColLongs(    column: TableColumn<W, O, X, LongCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -103,7 +103,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColLongs(    column: DbhColu
 /** Retrieves a list of Longs from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColLongs(
-                                                                 column: DbhColumn<W, O, X, LongCol>,
+                                                                 column: TableColumn<W, O, X, LongCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -119,7 +119,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColLongs(
 /** Retrieves a list of Floats from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColFloats(
-                                                                column: DbhColumn<W, O, X, FloatCol>,
+                                                                column: TableColumn<W, O, X, FloatCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -129,7 +129,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColFloats(
 /** Retrieves a list of Floats from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColFloats(
-                                                                column: DbhColumn<W, O, X, FloatCol>,
+                                                                column: TableColumn<W, O, X, FloatCol>,
                                                                orderBy: O.()->Unit = {},
                                                                  extra: X.()->Unit = {},
                                                                  where: W.()->Unit = {},
@@ -144,7 +144,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColFloats(
 
 /** Retrieves a list of Blobs (ByteArray) from one column.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColBlobs(    column: DbhColumn<W, O, X, BlobCol>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColBlobs(    column: TableColumn<W, O, X, BlobCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},
@@ -154,7 +154,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getColBlobs(    column: DbhColu
 /** Retrieves a list of Blobs (ByteArray) from one column.
  */
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getColBlobs(
-                                                                 column: DbhColumn<W, O, X, BlobCol>,
+                                                                 column: TableColumn<W, O, X, BlobCol>,
                                                                 orderBy: O.()->Unit = {},
                                                                   extra: X.()->Unit = {},
                                                                   where: W.()->Unit = {},

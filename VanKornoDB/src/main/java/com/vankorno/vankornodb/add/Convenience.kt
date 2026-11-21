@@ -4,9 +4,9 @@ package com.vankorno.vankornodb.add
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.get.getNextIDs
 import com.vankorno.vankornodb.get.getNextPositions
@@ -19,7 +19,7 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
  * Returns the assigned pairs in input order.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIDsAndPositions(
-                                                       table: QueryTable<TableInfo<T>, W, O, X>,
+                                                       table: DslTable<TableInfo<T>, W, O, X>,
                                                     entities: List<T>,
                                           positionConditions: W.()->Unit = {},
                                             setIdAndPosition: (T, Long, Long)->T,
@@ -28,7 +28,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIDsAndP
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIDsAndPositions(
-                                                       table: QueryTable<TableInfo<T>, W, O, X>,
+                                                       table: DslTable<TableInfo<T>, W, O, X>,
                                                     entities: List<T>,
                                           positionConditions: W.()->Unit = {},
                                             setIdAndPosition: (T, Long, Long)->T,
@@ -51,7 +51,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWit
  * Returns the assigned pair.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIdAndPosition(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                           entity: T,
                                               positionConditions: W.()->Unit = {},
                                                 setIdAndPosition: (T, Long, Long)->T,
@@ -60,7 +60,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIdAndPo
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIdAndPosition(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                           entity: T,
                                               positionConditions: W.()->Unit = {},
                                                 setIdAndPosition: (T, Long, Long)->T,

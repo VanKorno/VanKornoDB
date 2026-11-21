@@ -2,8 +2,8 @@ package com.vankorno.sandbox._entities.testEntity.old.to100.to10
 
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
-import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.core.dsl.withDsl
@@ -68,13 +68,13 @@ object _V1_Test : SchemaBundle<V1_TestEntity>(
 
 
 interface V1_TestDslColumns {
-    val Name: EntityColumn<V1_TestDsl, StrCol>
-    val Boo: EntityColumn<V1_TestDsl, BoolCol>
-    val Int1: EntityColumn<V1_TestDsl, IntCol>
-    val Str1: EntityColumn<V1_TestDsl, StrCol>
-    val Long1: EntityColumn<V1_TestDsl, LongCol>
-    val Float1: EntityColumn<V1_TestDsl, FloatCol>
-    val Id: EntityColumn<V1_TestDsl, LongCol>
+    val Name: Field<V1_TestDsl, StrCol>
+    val Boo: Field<V1_TestDsl, BoolCol>
+    val Int1: Field<V1_TestDsl, IntCol>
+    val Str1: Field<V1_TestDsl, StrCol>
+    val Long1: Field<V1_TestDsl, LongCol>
+    val Float1: Field<V1_TestDsl, FloatCol>
+    val Id: Field<V1_TestDsl, LongCol>
 }
 
 class V1_TestOrderDsl internal constructor(                            columns: V1_TestDslColumns

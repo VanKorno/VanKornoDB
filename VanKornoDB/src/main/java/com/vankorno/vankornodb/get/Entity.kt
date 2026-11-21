@@ -4,9 +4,9 @@ package com.vankorno.vankornodb.get
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.api.Dbh
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.mappers.toEntt
 import com.vankorno.vankornodb.misc.eLog
@@ -16,7 +16,7 @@ import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
  *  Returns [default] if no result found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          default: T,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
@@ -26,7 +26,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          default: T,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
@@ -44,7 +44,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEnt
  * Returns null if no result found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit,
@@ -53,7 +53,7 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntity(
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntity(
-                                                           table: QueryTable<TableInfo<T>, W, O, X>,
+                                                           table: DslTable<TableInfo<T>, W, O, X>,
                                                          orderBy: O.()->Unit = {},
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit,

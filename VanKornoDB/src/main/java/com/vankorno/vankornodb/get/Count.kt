@@ -3,11 +3,11 @@ package com.vankorno.vankornodb.get
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowCount(         table: QueryTable<*, W, O, X>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowCount(         table: DslTable<*, W, O, X>,
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},
 ): Int = read(0, "getRowCount") { db ->
@@ -15,7 +15,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRowCount(         table: Que
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowCount(
-                                                                      table: QueryTable<*, W, O, X>,
+                                                                      table: DslTable<*, W, O, X>,
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},
 ): Int {
@@ -36,7 +36,7 @@ fun SQLiteDatabase.getRowCount(                                                 
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.hasRows(             table: QueryTable<*, W, O, X>,
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.hasRows(             table: DslTable<*, W, O, X>,
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},
 ): Boolean = read(false, "hasRows") { db ->
@@ -44,7 +44,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.hasRows(             table: Que
 }
 
 fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.hasRows(
-                                                                      table: QueryTable<*, W, O, X>,
+                                                                      table: DslTable<*, W, O, X>,
                                                                       extra: X.()->Unit = {},
                                                                       where: W.()->Unit = {},
 ): Boolean {

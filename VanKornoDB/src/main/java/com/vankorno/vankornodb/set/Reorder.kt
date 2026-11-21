@@ -7,7 +7,7 @@ import com.vankorno.vankornodb.core.data.DbConstants._ID
 import com.vankorno.vankornodb.core.data.DbConstants._Position
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
-import com.vankorno.vankornodb.core.dsl.QueryTable
+import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.requirePositionColumn
 
@@ -15,7 +15,7 @@ import com.vankorno.vankornodb.dbManagement.data.requirePositionColumn
  * Returns false when the row has no available move.
  */
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.reorder(
-                                                                      table: QueryTable<*, W, O, X>,
+                                                                      table: DslTable<*, W, O, X>,
                                                                          id: Long,
                                                                moveUpOrBack: Boolean,
                                                             makeFirstOrLast: Boolean = false,
@@ -25,7 +25,7 @@ fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.reorder(
 }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorder(
-                                                                      table: QueryTable<*, W, O, X>,
+                                                                      table: DslTable<*, W, O, X>,
                                                                          id: Long,
                                                                moveUpOrBack: Boolean,
                                                             makeFirstOrLast: Boolean = false,
@@ -46,7 +46,7 @@ fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorde
 
 
 private fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorderRow(
-                                                                      table: QueryTable<*, W, O, X>,
+                                                                      table: DslTable<*, W, O, X>,
                                                                          id: Long,
                                                                moveUpOrBack: Boolean,
                                                             makeFirstOrLast: Boolean,

@@ -4,8 +4,8 @@ package com.vankorno.sandbox._entities.crashTester
 import android.os.Parcelable
 import com.vankorno.vankornodb.api.DbEntity
 import com.vankorno.vankornodb.core.dsl.DslContext
-import com.vankorno.vankornodb.core.dsl.EntityColumn
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
+import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.core.dsl.withDsl
@@ -154,26 +154,26 @@ object _CrashTester : SchemaBundle<CrashTester>(
 
 
 interface CrashTesterDslColumns {
-    val Name: EntityColumn<CrashTesterDsl, StrCol>
-    val Id: EntityColumn<CrashTesterDsl, LongCol>
-    val Position: EntityColumn<CrashTesterDsl, LongCol>
-    val Enabled: EntityColumn<CrashTesterDsl, BoolCol>
-    val Int1: EntityColumn<CrashTesterDsl, IntCol>
-    val Int2: EntityColumn<CrashTesterDsl, IntCol>
-    val Str1: EntityColumn<CrashTesterDsl, StrCol>
-    val Str2: EntityColumn<CrashTesterDsl, StrCol>
-    val Bool1: EntityColumn<CrashTesterDsl, BoolCol>
-    val Bool2: EntityColumn<CrashTesterDsl, BoolCol>
-    val Long1: EntityColumn<CrashTesterDsl, LongCol>
-    val Long2: EntityColumn<CrashTesterDsl, LongCol>
-    val Float1: EntityColumn<CrashTesterDsl, FloatCol>
-    val Float2: EntityColumn<CrashTesterDsl, FloatCol>
-    val BlobBa: EntityColumn<CrashTesterDsl, BlobCol>
-    val IsBullyList: List<EntityColumn<CrashTesterDsl, BoolCol>>
-    val DayList: List<EntityColumn<CrashTesterDsl, IntCol>>
-    val TextList: List<EntityColumn<CrashTesterDsl, StrCol>>
-    val TimeStampList: List<EntityColumn<CrashTesterDsl, LongCol>>
-    val DuckList: List<EntityColumn<CrashTesterDsl, FloatCol>>
+    val Name: Field<CrashTesterDsl, StrCol>
+    val Id: Field<CrashTesterDsl, LongCol>
+    val Position: Field<CrashTesterDsl, LongCol>
+    val Enabled: Field<CrashTesterDsl, BoolCol>
+    val Int1: Field<CrashTesterDsl, IntCol>
+    val Int2: Field<CrashTesterDsl, IntCol>
+    val Str1: Field<CrashTesterDsl, StrCol>
+    val Str2: Field<CrashTesterDsl, StrCol>
+    val Bool1: Field<CrashTesterDsl, BoolCol>
+    val Bool2: Field<CrashTesterDsl, BoolCol>
+    val Long1: Field<CrashTesterDsl, LongCol>
+    val Long2: Field<CrashTesterDsl, LongCol>
+    val Float1: Field<CrashTesterDsl, FloatCol>
+    val Float2: Field<CrashTesterDsl, FloatCol>
+    val BlobBa: Field<CrashTesterDsl, BlobCol>
+    val IsBullyList: List<Field<CrashTesterDsl, BoolCol>>
+    val DayList: List<Field<CrashTesterDsl, IntCol>>
+    val TextList: List<Field<CrashTesterDsl, StrCol>>
+    val TimeStampList: List<Field<CrashTesterDsl, LongCol>>
+    val DuckList: List<Field<CrashTesterDsl, FloatCol>>
 }
 
 
