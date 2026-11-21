@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vankorno.sandbox._entities.TestTableName
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox._navig.Navigator.goToScreen
 import com.vankorno.sandbox._navig.ScrDbBrowser
 import com.vankorno.sandbox._ui.composables.LargeBtn
@@ -43,7 +43,7 @@ fun BodyPlayground() {
         AccentColor.Red,
     ) {
         val tables = Array(1000) {
-            _Test.tableNamed(TestTableName + it)
+            _TestEntity.tableNamed(TestTableName + it)
         }
         dbh.createTables(*tables)
         goToScreen(ScrDbBrowser)
@@ -66,7 +66,7 @@ fun BodyPlayground() {
 }
 
 
-private val Snacks = _Test.tableNamed("PlaygroundSnackPoll")
+private val Snacks = _TestEntity.tableNamed("PlaygroundSnackPoll")
 
 private suspend fun loadSnackPoll(                                            voteFor: Long? = null
 ): List<TestEntity>? = withContext(Dispatchers.IO) {

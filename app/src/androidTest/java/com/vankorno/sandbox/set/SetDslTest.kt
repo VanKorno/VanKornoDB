@@ -5,7 +5,7 @@ import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.get.getEntity
@@ -21,7 +21,7 @@ import org.junit.Test
 class SetDslTest : BaseAndroidTest() {
     companion object {
         const val SetValsTestTable = "SetValsTestTable"
-        val SetValsTable = _Test.tableNamed(SetValsTestTable)
+        val SetValsTable = _TestEntity.tableNamed(SetValsTestTable)
     }
     
     @Test

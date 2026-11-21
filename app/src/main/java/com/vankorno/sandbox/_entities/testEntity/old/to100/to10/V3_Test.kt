@@ -11,10 +11,10 @@ import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.set.dsl.SetDsl
 
-data class V2_TestEntity(
+data class V3_Test(
                            override val id: Long = -1L,
                                   val name: String = "",
-                              val position: String = "",
+                              val position: Long = 0L,
                                val enabled: Boolean = false,
                                   val int1: Int = 0,
                                   val int2: Int = 0,
@@ -37,37 +37,16 @@ data class V2_TestEntity(
 
 
 
-object _V2_Test : SchemaBundle<V2_TestEntity>(
-    clazz = V2_TestEntity::class,
-    columns = buildColList {
-        +V2_TestFields.Id
-        +V2_TestFields.Name
-        +V2_TestFields.Position
-        +V2_TestFields.Enabled
-        +V2_TestFields.Int1
-        +V2_TestFields.Int2
-        +V2_TestFields.Int3
-        +V2_TestFields.Str1
-        +V2_TestFields.Str2
-        +V2_TestFields.Str3
-        +V2_TestFields.Bool1
-        +V2_TestFields.Bool2
-        +V2_TestFields.Bool3
-        +V2_TestFields.Long1
-        +V2_TestFields.Long2
-        +V2_TestFields.Long3
-        +V2_TestFields.Float1
-        +V2_TestFields.Float2
-        +V2_TestFields.Float3
-    },
+object _V3_Test : SchemaBundle<V3_Test>(
+    clazz = V3_Test::class,
 
     getter = { cursor ->
         var idx = 0
 
-        V2_TestEntity(
+        V3_Test(
             id = cursor.getLong(idx++),
             name = cursor.getString(idx++),
-            position = cursor.getString(idx++),
+            position = cursor.getLong(idx++),
             enabled = cursor.getBoolean(idx++),
             int1 = cursor.getInt(idx++),
             int2 = cursor.getInt(idx++),
@@ -110,71 +89,91 @@ object _V2_Test : SchemaBundle<V2_TestEntity>(
         cv
     },
 
-    withId = { obj, newId -> obj.copy(id = newId) }
+    withId = { obj, newId -> obj.copy(id = newId) },
+
+    columns = buildColList {
+        +V3_TestFields.Id
+        +V3_TestFields.Name
+        +V3_TestFields.Position
+        +V3_TestFields.Enabled
+        +V3_TestFields.Int1
+        +V3_TestFields.Int2
+        +V3_TestFields.Int3
+        +V3_TestFields.Str1
+        +V3_TestFields.Str2
+        +V3_TestFields.Str3
+        +V3_TestFields.Bool1
+        +V3_TestFields.Bool2
+        +V3_TestFields.Bool3
+        +V3_TestFields.Long1
+        +V3_TestFields.Long2
+        +V3_TestFields.Long3
+        +V3_TestFields.Float1
+        +V3_TestFields.Float2
+        +V3_TestFields.Float3
+    },
 ) {
-    fun table(name: String) = (name using this).withDsl(::V2_TestDsl, ::V2_TestOrderDsl, ::V2_TestExtraDsl, ::V2_TestSetDsl)
+    fun tableNamed(name: String) = (name using this).withDsl(::V3_TestDsl, ::V3_TestOrderDsl, ::V3_TestExtraDsl, ::V3_TestSetDsl)
 }
 
 
-interface V2_TestDslColumns {
-    val Id: Field<V2_TestDsl, LongCol>
-    val Name: Field<V2_TestDsl, StrCol>
-    val Position: Field<V2_TestDsl, StrCol>
-    val Enabled: Field<V2_TestDsl, BoolCol>
-    val Int1: Field<V2_TestDsl, IntCol>
-    val Int2: Field<V2_TestDsl, IntCol>
-    val Int3: Field<V2_TestDsl, IntCol>
-    val Str1: Field<V2_TestDsl, StrCol>
-    val Str2: Field<V2_TestDsl, StrCol>
-    val Str3: Field<V2_TestDsl, StrCol>
-    val Bool1: Field<V2_TestDsl, BoolCol>
-    val Bool2: Field<V2_TestDsl, BoolCol>
-    val Bool3: Field<V2_TestDsl, BoolCol>
-    val Long1: Field<V2_TestDsl, LongCol>
-    val Long2: Field<V2_TestDsl, LongCol>
-    val Long3: Field<V2_TestDsl, LongCol>
-    val Float1: Field<V2_TestDsl, FloatCol>
-    val Float2: Field<V2_TestDsl, FloatCol>
-    val Float3: Field<V2_TestDsl, FloatCol>
+interface V3_TestDslColumns {
+    val Id: Field<V3_TestDsl, LongCol>
+    val Name: Field<V3_TestDsl, StrCol>
+    val Position: Field<V3_TestDsl, LongCol>
+    val Enabled: Field<V3_TestDsl, BoolCol>
+    val Int1: Field<V3_TestDsl, IntCol>
+    val Int2: Field<V3_TestDsl, IntCol>
+    val Int3: Field<V3_TestDsl, IntCol>
+    val Str1: Field<V3_TestDsl, StrCol>
+    val Str2: Field<V3_TestDsl, StrCol>
+    val Str3: Field<V3_TestDsl, StrCol>
+    val Bool1: Field<V3_TestDsl, BoolCol>
+    val Bool2: Field<V3_TestDsl, BoolCol>
+    val Bool3: Field<V3_TestDsl, BoolCol>
+    val Long1: Field<V3_TestDsl, LongCol>
+    val Long2: Field<V3_TestDsl, LongCol>
+    val Long3: Field<V3_TestDsl, LongCol>
+    val Float1: Field<V3_TestDsl, FloatCol>
+    val Float2: Field<V3_TestDsl, FloatCol>
+    val Float3: Field<V3_TestDsl, FloatCol>
 }
 
-class V2_TestOrderDsl internal constructor(                            columns: V2_TestDslColumns
-) : OrderDsl<V2_TestDsl, V2_TestOrderDsl>(), V2_TestDslColumns by columns
 
-class V2_TestExtraDsl internal constructor(                            columns: V2_TestDslColumns
-) : ExtraDsl<V2_TestDsl>(), V2_TestDslColumns by columns
+class V3_TestOrderDsl internal constructor(columns: V3_TestDslColumns) : OrderDsl<V3_TestDsl, V3_TestOrderDsl>(), V3_TestDslColumns by columns
 
-class V2_TestSetDsl(                                                   columns: V2_TestDslColumns
-) : SetDsl<V2_TestDsl>(), V2_TestDslColumns by columns
+class V3_TestExtraDsl internal constructor(columns: V3_TestDslColumns) : ExtraDsl<V3_TestDsl>(), V3_TestDslColumns by columns
+
+class V3_TestSetDsl(columns: V3_TestDslColumns) : SetDsl<V3_TestDsl>(), V3_TestDslColumns by columns
 
 
-class V2_TestDsl internal constructor(                     context: DslContext<V2_TestDsl>
-) : WhereDsl<V2_TestDsl>(context), V2_TestDslColumns {
-    override val Id get() = column(V2_TestFields.Id)
-    override val Name get() = column(V2_TestFields.Name)
-    override val Position get() = column(V2_TestFields.Position)
-    override val Enabled get() = column(V2_TestFields.Enabled)
-    override val Int1 get() = column(V2_TestFields.Int1)
-    override val Int2 get() = column(V2_TestFields.Int2)
-    override val Int3 get() = column(V2_TestFields.Int3)
-    override val Str1 get() = column(V2_TestFields.Str1)
-    override val Str2 get() = column(V2_TestFields.Str2)
-    override val Str3 get() = column(V2_TestFields.Str3)
-    override val Bool1 get() = column(V2_TestFields.Bool1)
-    override val Bool2 get() = column(V2_TestFields.Bool2)
-    override val Bool3 get() = column(V2_TestFields.Bool3)
-    override val Long1 get() = column(V2_TestFields.Long1)
-    override val Long2 get() = column(V2_TestFields.Long2)
-    override val Long3 get() = column(V2_TestFields.Long3)
-    override val Float1 get() = column(V2_TestFields.Float1)
-    override val Float2 get() = column(V2_TestFields.Float2)
-    override val Float3 get() = column(V2_TestFields.Float3)
+class V3_TestDsl internal constructor(                     context: DslContext<V3_TestDsl>
+) : WhereDsl<V3_TestDsl>(context), V3_TestDslColumns {
+    override val Id get() = column(V3_TestFields.Id)
+    override val Name get() = column(V3_TestFields.Name)
+    override val Position get() = column(V3_TestFields.Position)
+    override val Enabled get() = column(V3_TestFields.Enabled)
+    override val Int1 get() = column(V3_TestFields.Int1)
+    override val Int2 get() = column(V3_TestFields.Int2)
+    override val Int3 get() = column(V3_TestFields.Int3)
+    override val Str1 get() = column(V3_TestFields.Str1)
+    override val Str2 get() = column(V3_TestFields.Str2)
+    override val Str3 get() = column(V3_TestFields.Str3)
+    override val Bool1 get() = column(V3_TestFields.Bool1)
+    override val Bool2 get() = column(V3_TestFields.Bool2)
+    override val Bool3 get() = column(V3_TestFields.Bool3)
+    override val Long1 get() = column(V3_TestFields.Long1)
+    override val Long2 get() = column(V3_TestFields.Long2)
+    override val Long3 get() = column(V3_TestFields.Long3)
+    override val Float1 get() = column(V3_TestFields.Float1)
+    override val Float2 get() = column(V3_TestFields.Float2)
+    override val Float3 get() = column(V3_TestFields.Float3)
 }
 
-private object V2_TestFields {
+private object V3_TestFields {
     val Id = lCol("id", -1L)
     val Name = sCol("name", "")
-    val Position = sCol("position", "")
+    val Position = lCol("position", 0L)
     val Enabled = bCol("enabled", false)
     val Int1 = iCol("int1", 0)
     val Int2 = iCol("int2", 0)

@@ -3,7 +3,7 @@ package com.vankorno.sandbox.add
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRatQuant
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.add.addWithNewIDsAndPositions
 import com.vankorno.vankornodb.add.addWithNewIdAndPosition
@@ -17,7 +17,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 private const val TestTableName = "AddConvenienceTable"
-private val _TestTable = _Test.tableNamed(TestTableName)
+private val _TestTable = _TestEntity.tableNamed(TestTableName)
 
 @MediumTest
 class AddConvenienceTest {
@@ -85,7 +85,7 @@ class AddConvenienceTest {
     @Test
     fun addWithNewIDsAndPositionsTest() {
         val table = "addWithNewIDsAndPositionsTest"
-        val tableInfo = _Test.tableNamed(table)
+        val tableInfo = _TestEntity.tableNamed(table)
         dbh.getLabRats(table)
         
         val rats = listOf(TestEntity(name = "Rat1"), TestEntity(name = "Rat2"))

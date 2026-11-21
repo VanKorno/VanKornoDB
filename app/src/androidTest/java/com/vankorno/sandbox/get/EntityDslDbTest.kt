@@ -2,7 +2,7 @@ package com.vankorno.sandbox.get
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
@@ -21,7 +21,7 @@ class EntityDslDbTest {
     fun readUpdateAndDeleteWithGeneratedReceivers() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val dbName = "entity-where-${UUID.randomUUID()}.db"
-        val items = _Test.tableNamed("Items")
+        val items = _TestEntity.tableNamed("Items")
         val versions = _EntityVersion.tableNamed("Versions")
         val dbh = Dbh(dbName, 1, context, emptyList(), mustHaveTables = listOf(items.info, versions.info))
         

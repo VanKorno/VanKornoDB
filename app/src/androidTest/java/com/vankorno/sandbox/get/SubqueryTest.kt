@@ -3,7 +3,7 @@ package com.vankorno.sandbox.get
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
@@ -18,10 +18,10 @@ import org.junit.Before
 import org.junit.Test
 
 private const val ItemsTableName = "SubqueryItemsTable"
-private val SubqueryItems = _Test.tableNamed(ItemsTableName)
+private val SubqueryItems = _TestEntity.tableNamed(ItemsTableName)
 
 private const val ConditionsTableName = "SubqueryConditionsTable"
-private val SubqueryConditions = _Test.tableNamed(ConditionsTableName)
+private val SubqueryConditions = _TestEntity.tableNamed(ConditionsTableName)
 
 @MediumTest
 class SubqueryTest : BaseAndroidTest() {

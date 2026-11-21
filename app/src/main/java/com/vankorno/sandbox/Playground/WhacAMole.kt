@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.get.getEntities
@@ -27,7 +27,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
-private val Holes = _Test.tableNamed("PlaygroundWhacAMole")
+private val Holes = _TestEntity.tableNamed("PlaygroundWhacAMole")
 private val gameLock = Mutex()
 private const val Rounds = 12
 

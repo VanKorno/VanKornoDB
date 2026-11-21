@@ -3,7 +3,7 @@ package com.vankorno.sandbox.set
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.get.getLong
@@ -33,7 +33,7 @@ class ReorderTest : BaseAndroidTest() {
     
     private fun prep() {
         for (idx in 1..6) {
-            val table = _Test.tableNamed(RoundKnightTable + idx)
+            val table = _TestEntity.tableNamed(RoundKnightTable + idx)
             dbh.createTable(table)
             
             val objects = List(10) { idx ->
@@ -47,12 +47,12 @@ class ReorderTest : BaseAndroidTest() {
         }
         // sanity
         assertTrue(dbh.tableExists(RoundKnightTable + 1))
-        assertTrue(dbh.hasRows(_Test.tableNamed(RoundKnightTable + 1)))
+        assertTrue(dbh.hasRows(_TestEntity.tableNamed(RoundKnightTable + 1)))
     }
     
     
     fun simpleReorderDown() {
-        val table = _Test.tableNamed(RoundKnightTable + 1)
+        val table = _TestEntity.tableNamed(RoundKnightTable + 1)
         
         // sanity
         assertEquals(1L, dbh.getLong(table.col { Position }) { Id equal 1L })
@@ -75,7 +75,7 @@ class ReorderTest : BaseAndroidTest() {
     
     
     fun simpleReorderUp() {
-        val table = _Test.tableNamed(RoundKnightTable + 2)
+        val table = _TestEntity.tableNamed(RoundKnightTable + 2)
         
         // sanity
         assertEquals(10L, dbh.getLong(table.col { Position }) { Id equal 10L })
@@ -97,7 +97,7 @@ class ReorderTest : BaseAndroidTest() {
     
     
     fun reorderToEnd() {
-        val table = _Test.tableNamed(RoundKnightTable + 3)
+        val table = _TestEntity.tableNamed(RoundKnightTable + 3)
         
         // sanity
         assertEquals(1L, dbh.getLong(table.col { Position }) { Id equal 1L })
@@ -118,7 +118,7 @@ class ReorderTest : BaseAndroidTest() {
 
 
     fun reorderToStart() {
-        val table = _Test.tableNamed(RoundKnightTable + 4)
+        val table = _TestEntity.tableNamed(RoundKnightTable + 4)
         
         // sanity
         assertEquals(10L, dbh.getLong(table.col { Position }) { Id equal 10L })
@@ -139,7 +139,7 @@ class ReorderTest : BaseAndroidTest() {
     
     
     fun reorderUp_whenAlreadyAtTop_doesNothing() {
-        val table = _Test.tableNamed(RoundKnightTable + 5)
+        val table = _TestEntity.tableNamed(RoundKnightTable + 5)
         
         val reordered = dbh.reorder(table, id = 1L, moveUpOrBack = true, makeFirstOrLast = false)
         
@@ -152,7 +152,7 @@ class ReorderTest : BaseAndroidTest() {
     
     
     fun reorderDown_whenAlreadyAtBottom_doesNothing() {
-        val table = _Test.tableNamed(RoundKnightTable + 6)
+        val table = _TestEntity.tableNamed(RoundKnightTable + 6)
         
         val reordered = dbh.reorder(table, id = 10L, moveUpOrBack = false, makeFirstOrLast = false)
         

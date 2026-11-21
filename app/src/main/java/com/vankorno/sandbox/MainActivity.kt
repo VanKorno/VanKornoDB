@@ -10,7 +10,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.vankorno.sandbox.AppStart._ui.DemoAppUI
 import com.vankorno.sandbox.AppStart.logic.launchApp
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox._navig.BackNav.goBack
 import com.vankorno.sandbox._ui.MainScaffold
 import com.vankorno.sandbox._ui.theme.AppColor
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
     companion object {
         lateinit var vm: VmShared
         val DummyTableName = "DummyTable"
-        val _DummyTable = _Test.tableNamed(DummyTableName)
+        val DummyTable = _TestEntity.tableNamed(DummyTableName)
     }
     
     override fun onCreate(                                            savedInstanceState: Bundle?
@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity() {
     }
     
     fun startupFirstLaunch() {
-        dbh.createTable(_DummyTable)
+        dbh.createTable(DummyTable)
     }
     fun startupNotFirstLaunch() {}
     fun startupLaunch() {}

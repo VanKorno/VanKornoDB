@@ -2,7 +2,7 @@ package com.vankorno.sandbox.add
 
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.add.addEntitiesWithoutIdCheck
 import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
@@ -13,7 +13,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 private const val TestTable = "AddWithoutIdCheckTable"
-private val _TestTable = _Test.tableNamed(TestTable)
+private val _TestTable = _TestEntity.tableNamed(TestTable)
 
 @MediumTest
 class AddEntityWithoutIdCheckTest {

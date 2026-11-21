@@ -2,7 +2,7 @@ package com.vankorno.sandbox.dbManagement.fix
 
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.add.addEntity
 import com.vankorno.vankornodb.api.DbRuntime.dbh
@@ -23,7 +23,7 @@ class FixDuplicatesTest {
     /** With a non-existent table functions return 0 */
     @Test
     fun nonExistentTable() {
-        val table = _Test.tableNamed("GodTable")
+        val table = _TestEntity.tableNamed("GodTable")
         assertAllFixFuns(table.name, 0, 0, 0)
     }
     
@@ -31,7 +31,7 @@ class FixDuplicatesTest {
     /** With an empty table functions return 0 */
     @Test
     fun emptyTable() {
-        val table = _Test.tableNamed("EmptyTable")
+        val table = _TestEntity.tableNamed("EmptyTable")
         dbh.createTable(table)
         assertAllFixFuns(table.name, 0, 0, 0)
         dbh.deleteTable(table)
@@ -41,7 +41,7 @@ class FixDuplicatesTest {
     /** With three rows containing unique values functions return 0 */
     @Test
     fun nothingToFix() {
-        val table = _Test.tableNamed("nothingToFix")
+        val table = _TestEntity.tableNamed("nothingToFix")
         dbh.createTable(table)
         
         dbh.addEntity(table, TestEntity(1L, "1", 10L, int1 = 100, long1 = 1000L))
@@ -59,7 +59,7 @@ class FixDuplicatesTest {
      */
     @Test
     fun twoDuplicateRows() {
-        val table = _Test.tableNamed("twoDuplicateRows")
+        val table = _TestEntity.tableNamed("twoDuplicateRows")
         dbh.createTable(table)
         
         dbh.addEntity(table, TestEntity(position = 10L, int1 = 100, long1 = 1000L))
@@ -75,7 +75,7 @@ class FixDuplicatesTest {
     /** With multiple duplicate groups, all duplicates are fixed */
     @Test
     fun multipleDuplicates() {
-        val table = _Test.tableNamed("multipleDuplicates")
+        val table = _TestEntity.tableNamed("multipleDuplicates")
         dbh.createTable(table)
         
         dbh.addEntities(table, listOf(
@@ -98,7 +98,7 @@ class FixDuplicatesTest {
     /** With three identical values, two duplicates are fixed */
     @Test
     fun tripleDuplicates() {
-        val table = _Test.tableNamed("tripleDuplicates")
+        val table = _TestEntity.tableNamed("tripleDuplicates")
         dbh.createTable(table)
         
         dbh.addEntities(table, listOf(
@@ -120,7 +120,7 @@ class FixDuplicatesTest {
     /** Only duplicates matching the where clause are fixed */
     @Test
     fun whereClause() {
-        val table = _Test.tableNamed("whereClause")
+        val table = _TestEntity.tableNamed("whereClause")
         dbh.createTable(table)
     
         dbh.addEntities(table, listOf(
@@ -150,7 +150,7 @@ class FixDuplicatesTest {
                                                                             expectedInts: Int,
                                                                         expectedPosition: Int,
     ) {
-        val table = _Test.tableNamed(tableName)
+        val table = _TestEntity.tableNamed(tableName)
         assertEquals(expectedLongs, dbh.fixDuplicateLongs(table.col { Long1 }))
         assertEquals(expectedInts, dbh.fixDuplicateInts(table.col { Int1 }))
         assertEquals(expectedPosition, dbh.fixDuplicatePosition(table))

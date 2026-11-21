@@ -8,6 +8,6 @@ import com.vankorno.vankornodb.api.defineMigrations
 fun migrationsTestEntity() = defineMigrations(EntityMeta.TestEntt) {
     version(1, _V1_Test)
     version(2, _V2_Test) { rename { "boo" to "bool1" } }
-    version(3, _Test)
+    version(3, _TestEntity)
     
 }

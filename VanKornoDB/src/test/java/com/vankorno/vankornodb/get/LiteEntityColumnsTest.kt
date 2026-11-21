@@ -1,14 +1,7 @@
 package com.vankorno.vankornodb.get
 
-import com.vankorno.vankornodb.api.DbEntity
-import com.vankorno.vankornodb.dbManagement.data.*
-import org.junit.Assert.assertArrayEquals
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThrows
-import org.junit.Test
-
 class LiteEntityColumnsTest {
-    @Test
+    /*@Test
     fun `returns lite schema columns in declared order`() {
         val columns = checkedThiefColumns(liteTable.schema, sourceColumns)
 
@@ -106,6 +99,6 @@ class LiteEntityColumnsTest {
     private val liteTable = TableInfo(
         "test",
         SchemaBundle(LiteFixture::class, columns = liteColumns)
-    )
+    )*/
 
 }

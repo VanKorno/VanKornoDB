@@ -42,29 +42,8 @@ data class TestEntity(
 
 
 
-object _Test : SchemaBundle<TestEntity>(
+object _TestEntity : SchemaBundle<TestEntity>(
     clazz = TestEntity::class,
-    columns = buildColList {
-        +TestFields.Id
-        +TestFields.Name
-        +TestFields.Position
-        +TestFields.Enabled
-        +TestFields.Int1
-        +TestFields.Int2
-        +TestFields.Int3
-        +TestFields.Str1
-        +TestFields.Str2
-        +TestFields.Str3
-        +TestFields.Bool1
-        +TestFields.Bool2
-        +TestFields.Bool3
-        +TestFields.Long1
-        +TestFields.Long2
-        +TestFields.Long3
-        +TestFields.Float1
-        +TestFields.Float2
-        +TestFields.Float3
-    },
 
     getter = { cursor ->
         var idx = 0
@@ -115,68 +94,88 @@ object _Test : SchemaBundle<TestEntity>(
         cv
     },
 
-    withId = { obj, newId -> obj.copy(id = newId) }
+    withId = { obj, newId -> obj.copy(id = newId) },
+
+    columns = buildColList {
+        +TestEntityFields.Id
+        +TestEntityFields.Name
+        +TestEntityFields.Position
+        +TestEntityFields.Enabled
+        +TestEntityFields.Int1
+        +TestEntityFields.Int2
+        +TestEntityFields.Int3
+        +TestEntityFields.Str1
+        +TestEntityFields.Str2
+        +TestEntityFields.Str3
+        +TestEntityFields.Bool1
+        +TestEntityFields.Bool2
+        +TestEntityFields.Bool3
+        +TestEntityFields.Long1
+        +TestEntityFields.Long2
+        +TestEntityFields.Long3
+        +TestEntityFields.Float1
+        +TestEntityFields.Float2
+        +TestEntityFields.Float3
+    },
 ) {
-    fun tableNamed(name: String) = (name using this).withDsl(::TestDsl, ::TestOrderDsl, ::TestExtraDsl, ::TestSetDsl)
+    fun tableNamed(name: String) = (name using this).withDsl(::TestEntityDsl, ::TestEntityOrderDsl, ::TestEntityExtraDsl, ::TestEntitySetDsl)
 }
 
 
-interface TestDslColumns {
-    val Id: Field<TestDsl, LongCol>
-    val Name: Field<TestDsl, StrCol>
-    val Position: Field<TestDsl, LongCol>
-    val Enabled: Field<TestDsl, BoolCol>
-    val Int1: Field<TestDsl, IntCol>
-    val Int2: Field<TestDsl, IntCol>
-    val Int3: Field<TestDsl, IntCol>
-    val Str1: Field<TestDsl, StrCol>
-    val Str2: Field<TestDsl, StrCol>
-    val Str3: Field<TestDsl, StrCol>
-    val Bool1: Field<TestDsl, BoolCol>
-    val Bool2: Field<TestDsl, BoolCol>
-    val Bool3: Field<TestDsl, BoolCol>
-    val Long1: Field<TestDsl, LongCol>
-    val Long2: Field<TestDsl, LongCol>
-    val Long3: Field<TestDsl, LongCol>
-    val Float1: Field<TestDsl, FloatCol>
-    val Float2: Field<TestDsl, FloatCol>
-    val Float3: Field<TestDsl, FloatCol>
+interface TestEntityDslColumns {
+    val Id: Field<TestEntityDsl, LongCol>
+    val Name: Field<TestEntityDsl, StrCol>
+    val Position: Field<TestEntityDsl, LongCol>
+    val Enabled: Field<TestEntityDsl, BoolCol>
+    val Int1: Field<TestEntityDsl, IntCol>
+    val Int2: Field<TestEntityDsl, IntCol>
+    val Int3: Field<TestEntityDsl, IntCol>
+    val Str1: Field<TestEntityDsl, StrCol>
+    val Str2: Field<TestEntityDsl, StrCol>
+    val Str3: Field<TestEntityDsl, StrCol>
+    val Bool1: Field<TestEntityDsl, BoolCol>
+    val Bool2: Field<TestEntityDsl, BoolCol>
+    val Bool3: Field<TestEntityDsl, BoolCol>
+    val Long1: Field<TestEntityDsl, LongCol>
+    val Long2: Field<TestEntityDsl, LongCol>
+    val Long3: Field<TestEntityDsl, LongCol>
+    val Float1: Field<TestEntityDsl, FloatCol>
+    val Float2: Field<TestEntityDsl, FloatCol>
+    val Float3: Field<TestEntityDsl, FloatCol>
 }
 
-class TestOrderDsl internal constructor(                                  columns: TestDslColumns
-) : OrderDsl<TestDsl, TestOrderDsl>(), TestDslColumns by columns
 
-class TestExtraDsl internal constructor(                                  columns: TestDslColumns
-) : ExtraDsl<TestDsl>(), TestDslColumns by columns
+class TestEntityOrderDsl internal constructor(columns: TestEntityDslColumns) : OrderDsl<TestEntityDsl, TestEntityOrderDsl>(), TestEntityDslColumns by columns
 
-class TestSetDsl(                                                         columns: TestDslColumns
-) : SetDsl<TestDsl>(), TestDslColumns by columns
+class TestEntityExtraDsl internal constructor(columns: TestEntityDslColumns) : ExtraDsl<TestEntityDsl>(), TestEntityDslColumns by columns
+
+class TestEntitySetDsl(columns: TestEntityDslColumns) : SetDsl<TestEntityDsl>(), TestEntityDslColumns by columns
 
 
-class TestDsl internal constructor(                     context: DslContext<TestDsl>
-) : WhereDsl<TestDsl>(context), TestDslColumns {
-    override val Id get() = column(TestFields.Id)
-    override val Name get() = column(TestFields.Name)
-    override val Position get() = column(TestFields.Position)
-    override val Enabled get() = column(TestFields.Enabled)
-    override val Int1 get() = column(TestFields.Int1)
-    override val Int2 get() = column(TestFields.Int2)
-    override val Int3 get() = column(TestFields.Int3)
-    override val Str1 get() = column(TestFields.Str1)
-    override val Str2 get() = column(TestFields.Str2)
-    override val Str3 get() = column(TestFields.Str3)
-    override val Bool1 get() = column(TestFields.Bool1)
-    override val Bool2 get() = column(TestFields.Bool2)
-    override val Bool3 get() = column(TestFields.Bool3)
-    override val Long1 get() = column(TestFields.Long1)
-    override val Long2 get() = column(TestFields.Long2)
-    override val Long3 get() = column(TestFields.Long3)
-    override val Float1 get() = column(TestFields.Float1)
-    override val Float2 get() = column(TestFields.Float2)
-    override val Float3 get() = column(TestFields.Float3)
+class TestEntityDsl internal constructor(                     context: DslContext<TestEntityDsl>
+) : WhereDsl<TestEntityDsl>(context), TestEntityDslColumns {
+    override val Id get() = column(TestEntityFields.Id)
+    override val Name get() = column(TestEntityFields.Name)
+    override val Position get() = column(TestEntityFields.Position)
+    override val Enabled get() = column(TestEntityFields.Enabled)
+    override val Int1 get() = column(TestEntityFields.Int1)
+    override val Int2 get() = column(TestEntityFields.Int2)
+    override val Int3 get() = column(TestEntityFields.Int3)
+    override val Str1 get() = column(TestEntityFields.Str1)
+    override val Str2 get() = column(TestEntityFields.Str2)
+    override val Str3 get() = column(TestEntityFields.Str3)
+    override val Bool1 get() = column(TestEntityFields.Bool1)
+    override val Bool2 get() = column(TestEntityFields.Bool2)
+    override val Bool3 get() = column(TestEntityFields.Bool3)
+    override val Long1 get() = column(TestEntityFields.Long1)
+    override val Long2 get() = column(TestEntityFields.Long2)
+    override val Long3 get() = column(TestEntityFields.Long3)
+    override val Float1 get() = column(TestEntityFields.Float1)
+    override val Float2 get() = column(TestEntityFields.Float2)
+    override val Float3 get() = column(TestEntityFields.Float3)
 }
 
-private object TestFields {
+private object TestEntityFields {
     val Id = lCol("id", -1L)
     val Name = sCol("name", "")
     val Position = lCol("position", 0L)

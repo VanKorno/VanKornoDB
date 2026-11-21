@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: MPL-2.0 */
 package com.vankorno.sandbox._entities
 
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox._entities.testEntity.migrationsTestEntity
 import com.vankorno.vankornodb.dbManagement.data.BaseEntityMeta
 import com.vankorno.vankornodb.dbManagement.data.SchemaBundle
@@ -38,10 +38,10 @@ enum class EntityMeta(                              override val currVersion: In
                                                 override val migrationBundle: Lazy<MigrationBundle>,
                                                  override val limitedToTable: String? = null,
 ): BaseEntityMeta {
-    TestEntt(3, "TestEntity", _Test, lazy { migrationsTestEntity() }, TestTableName),
+    TestEntt(3, "TestEntity", _TestEntity, lazy { migrationsTestEntity() }, TestTableName),
     
 }
 
 
 const val TestTableName = "TestTable"
-val TestTable = _Test.tableNamed(TestTableName)
+val TestTable = _TestEntity.tableNamed(TestTableName)

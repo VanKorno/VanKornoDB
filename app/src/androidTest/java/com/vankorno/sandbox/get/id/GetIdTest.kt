@@ -4,7 +4,7 @@ import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.LabRat
 import com.vankorno.sandbox.LabRatQuant
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
@@ -20,10 +20,10 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-private val GetLastIdTable = _Test.tableNamed("GetLastIdTestTable")
-private val GetIdTable = _Test.tableNamed("GetIdSingleTestTable")
-private val GetIDsTable = _Test.tableNamed("GetIDsTestTable")
-private val GetAllIDsTable = _Test.tableNamed("GetAllIDsTestTable")
+private val GetLastIdTable = _TestEntity.tableNamed("GetLastIdTestTable")
+private val GetIdTable = _TestEntity.tableNamed("GetIdSingleTestTable")
+private val GetIDsTable = _TestEntity.tableNamed("GetIDsTestTable")
+private val GetAllIDsTable = _TestEntity.tableNamed("GetAllIDsTestTable")
 
 @MediumTest
 class GetIdTest {

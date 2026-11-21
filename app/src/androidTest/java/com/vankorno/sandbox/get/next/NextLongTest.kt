@@ -2,7 +2,7 @@ package com.vankorno.sandbox.get.next
 
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.sandbox.getLabRats
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
@@ -24,7 +24,7 @@ class NextLongTest {
      */
     @Test
     fun emptyTable() {
-        val table = _Test.tableNamed("EmptyTable")
+        val table = _TestEntity.tableNamed("EmptyTable")
         dbh.createTable(table)
         assertBothFun(table.name, 1L, 2L)
         dbh.deleteTable(table)
@@ -36,7 +36,7 @@ class NextLongTest {
      */
     @Test
     fun standardLastValues() {
-        val table = _Test.tableNamed("standardLastValues")
+        val table = _TestEntity.tableNamed("standardLastValues")
         
         dbh.getLabRats(table.name)
         assertBothFun(table.name, 51L, 52L)
@@ -57,7 +57,7 @@ class NextLongTest {
     /** In an empty table with first values reserved, the allocator finds values after them */
     @Test
     fun reservedInEmptyTable() {
-        val table = _Test.tableNamed("reservedInEmptyTable")
+        val table = _TestEntity.tableNamed("reservedInEmptyTable")
         val reserved = setOf(1L, 2L, 3L)
         
         dbh.createTable(table)
@@ -69,7 +69,7 @@ class NextLongTest {
     /** In a filled table with next values reserved, the allocator finds values after all of them */
     @Test
     fun reservedInFilledTableSequential() {
-        val table = _Test.tableNamed("reservedInFilledTableSequential")
+        val table = _TestEntity.tableNamed("reservedInFilledTableSequential")
         val reserved = setOf(51L, 52L, 53L)
         
         dbh.getLabRats(table.name)
@@ -82,7 +82,7 @@ class NextLongTest {
     /** With even values reserved and odd values available, the allocator finds values after them */
     @Test
     fun reservedEvenNumbersIn() {
-        val table = _Test.tableNamed("reservedEvenNumbersIn")
+        val table = _TestEntity.tableNamed("reservedEvenNumbersIn")
         val reserved = setOf(2L, 4L, 6L)
 
         dbh.createTable(table)
@@ -94,7 +94,7 @@ class NextLongTest {
     /** With Long.MAX_VALUE in a single row, the allocator finds the first available values */
     @Test
     fun maxValueInSingleRowTable() {
-        val table = _Test.tableNamed("maxValueInSingleRowTable")
+        val table = _TestEntity.tableNamed("maxValueInSingleRowTable")
         
         dbh.createTable(table)
         dbh.addEntityWithoutIdCheck(table, TestEntity(id = Long.MAX_VALUE, name = "Max"))
@@ -107,7 +107,7 @@ class NextLongTest {
     /** With Long.MAX_VALUE reserved, the allocator finds the first available values */
     @Test
     fun maxValueInReserved() {
-        val table = _Test.tableNamed("maxValueInReserved")
+        val table = _TestEntity.tableNamed("maxValueInReserved")
         dbh.createTable(table)
         assertBothFun(table.name, 1L, 2L, setOf(50L, Long.MAX_VALUE))
         dbh.deleteTable(table)
@@ -121,7 +121,7 @@ class NextLongTest {
      */
     @Test
     fun closeToMax() {
-        val table = _Test.tableNamed("closeToMax")
+        val table = _TestEntity.tableNamed("closeToMax")
         
         dbh.createTable(table)
         dbh.addEntityWithoutIdCheck(table, TestEntity(id = Long.MAX_VALUE - 1, name = "Max"))
@@ -142,7 +142,7 @@ class NextLongTest {
      */
     @Test
     fun reservedCloseToMax() {
-        val table = _Test.tableNamed("reservedCloseToMax")
+        val table = _TestEntity.tableNamed("reservedCloseToMax")
         val reserved = setOf(100L, Long.MAX_VALUE - 1)
         
         dbh.createTable(table)
@@ -160,7 +160,7 @@ class NextLongTest {
     /** With even values already taken, fallback finds the available odd values */
     @Test
     fun takenEvenNumbersWithMaxValueCeiling() {
-        val table = _Test.tableNamed("takenEvenNumbersWithMaxValueCeiling")
+        val table = _TestEntity.tableNamed("takenEvenNumbersWithMaxValueCeiling")
         
         dbh.createTable(table)
         dbh.addEntities(table, listOf(
@@ -178,7 +178,7 @@ class NextLongTest {
     /** With even values reserved, fallback finds the available odd values */
     @Test
     fun reservedEvenNumbersWithMaxValueCeiling() {
-        val table = _Test.tableNamed("reservedEvenNumbersWithMaxValueCeiling")
+        val table = _TestEntity.tableNamed("reservedEvenNumbersWithMaxValueCeiling")
         val reserved = setOf(2L, 4L, 6L, Long.MAX_VALUE)
         
         dbh.createTable(table)
@@ -194,7 +194,7 @@ class NextLongTest {
      */
     @Test
     fun whereFilterStandard() {
-        val table = _Test.tableNamed("whereFilterStandardLong")
+        val table = _TestEntity.tableNamed("whereFilterStandardLong")
 
         dbh.createTable(table)
         dbh.addEntities(table, listOf(
@@ -230,7 +230,7 @@ class NextLongTest {
      */
     @Test
     fun whereFilterWithFallback() {
-        val table = _Test.tableNamed("whereFilterWithFallbackLong")
+        val table = _TestEntity.tableNamed("whereFilterWithFallbackLong")
 
         dbh.createTable(table)
         dbh.addEntities(table, listOf(
@@ -261,7 +261,7 @@ class NextLongTest {
      */
     @Test
     fun whereFilterWithReservedAndStartFrom() {
-        val table = _Test.tableNamed("whereFilterWithReservedAndStartFromLong")
+        val table = _TestEntity.tableNamed("whereFilterWithReservedAndStartFromLong")
 
         dbh.createTable(table)
         dbh.addEntities(table, listOf(
@@ -285,7 +285,7 @@ class NextLongTest {
                                                              secondExpected: Long,
                                                                    reserved: Set<Long> = emptySet(),
     ) {
-        val table = _Test.tableNamed(tableName)
+        val table = _TestEntity.tableNamed(tableName)
         val value1 = dbh.getNextLong(table.col { Id }, reserved = reserved)
         val values1 = dbh.getNextLongs(table.col { Id }, 2, reserved = reserved)
         assertEquals(firstExpected, value1)

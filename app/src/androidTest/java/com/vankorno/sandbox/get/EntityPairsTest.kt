@@ -3,7 +3,7 @@ package com.vankorno.sandbox.get
 import androidx.test.filters.MediumTest
 import com.vankorno.sandbox.BaseAndroidTest
 import com.vankorno.sandbox._entities.testEntity.TestEntity
-import com.vankorno.sandbox._entities.testEntity._Test
+import com.vankorno.sandbox._entities.testEntity._TestEntity
 import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.delete.clearTable
@@ -20,13 +20,13 @@ import org.junit.Before
 import org.junit.Test
 
 private const val ItemsTableName = "PairTestItemsTable"
-private val ItemsTable = _Test.tableNamed(ItemsTableName)
+private val ItemsTable = _TestEntity.tableNamed(ItemsTableName)
 
 private const val ConditionsTableName = "PairTestConditionsTable"
-private val ConditionsTable = _Test.tableNamed(ConditionsTableName)
+private val ConditionsTable = _TestEntity.tableNamed(ConditionsTableName)
 
 private const val MetaTableName = "PairTestMetaTable"
-private val MetaTable = _Test.tableNamed(MetaTableName)
+private val MetaTable = _TestEntity.tableNamed(MetaTableName)
 
 @MediumTest
 class EntityPairsTest : BaseAndroidTest() {

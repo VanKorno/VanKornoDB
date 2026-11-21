@@ -11,7 +11,7 @@ import com.vankorno.vankornodb.dbManagement.data.*
 import com.vankorno.vankornodb.misc.getBoolean
 import com.vankorno.vankornodb.set.dsl.SetDsl
 
-data class V1_TestEntity(
+data class V1_Test(
                                   val name: String = "",
                                    val boo: Boolean = false,
                                   val int1: Int = 0,
@@ -25,22 +25,13 @@ data class V1_TestEntity(
 
 
 
-object _V1_Test : SchemaBundle<V1_TestEntity>(
-    clazz = V1_TestEntity::class,
-    columns = buildColList {
-        +V1_TestFields.Name
-        +V1_TestFields.Boo
-        +V1_TestFields.Int1
-        +V1_TestFields.Str1
-        +V1_TestFields.Long1
-        +V1_TestFields.Float1
-        +V1_TestFields.Id
-    },
+object _V1_Test : SchemaBundle<V1_Test>(
+    clazz = V1_Test::class,
 
     getter = { cursor ->
         var idx = 0
 
-        V1_TestEntity(
+        V1_Test(
             name = cursor.getString(idx++),
             boo = cursor.getBoolean(idx++),
             int1 = cursor.getInt(idx++),
@@ -61,9 +52,20 @@ object _V1_Test : SchemaBundle<V1_TestEntity>(
         cv.put("id", e.id)
         cv
     },
-    withId = { obj, newId -> obj.copy(id = newId) }
+
+    withId = { obj, newId -> obj.copy(id = newId) },
+
+    columns = buildColList {
+        +V1_TestFields.Name
+        +V1_TestFields.Boo
+        +V1_TestFields.Int1
+        +V1_TestFields.Str1
+        +V1_TestFields.Long1
+        +V1_TestFields.Float1
+        +V1_TestFields.Id
+    },
 ) {
-    fun table(name: String) = (name using this).withDsl(::V1_TestDsl, ::V1_TestOrderDsl, ::V1_TestExtraDsl, ::V1_TestSetDsl)
+    fun tableNamed(name: String) = (name using this).withDsl(::V1_TestDsl, ::V1_TestOrderDsl, ::V1_TestExtraDsl, ::V1_TestSetDsl)
 }
 
 
@@ -77,14 +79,12 @@ interface V1_TestDslColumns {
     val Id: Field<V1_TestDsl, LongCol>
 }
 
-class V1_TestOrderDsl internal constructor(                            columns: V1_TestDslColumns
-) : OrderDsl<V1_TestDsl, V1_TestOrderDsl>(), V1_TestDslColumns by columns
 
-class V1_TestExtraDsl internal constructor(                            columns: V1_TestDslColumns
-) : ExtraDsl<V1_TestDsl>(), V1_TestDslColumns by columns
+class V1_TestOrderDsl internal constructor(columns: V1_TestDslColumns) : OrderDsl<V1_TestDsl, V1_TestOrderDsl>(), V1_TestDslColumns by columns
 
-class V1_TestSetDsl(                                                   columns: V1_TestDslColumns
-) : SetDsl<V1_TestDsl>(), V1_TestDslColumns by columns
+class V1_TestExtraDsl internal constructor(columns: V1_TestDslColumns) : ExtraDsl<V1_TestDsl>(), V1_TestDslColumns by columns
+
+class V1_TestSetDsl(columns: V1_TestDslColumns) : SetDsl<V1_TestDsl>(), V1_TestDslColumns by columns
 
 
 class V1_TestDsl internal constructor(                     context: DslContext<V1_TestDsl>
