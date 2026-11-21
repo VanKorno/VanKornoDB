@@ -36,6 +36,7 @@ data class CrashTester(
                                  val long2: Long = 0L,
                                 val float1: Float = 0F,
                                 val float2: Float = 0F,
+                                val blobBa: ByteArray = byteArrayOf(),
 
                            val isBullyList: List<Boolean> = List(20) { false },
                                val dayList: List<Int> = List(10) { 0 },
@@ -80,6 +81,7 @@ object _CrashTester : SchemaBundle<CrashTester>(
             long2 = cursor.getLong(idx++),
             float1 = cursor.getFloat(idx++),
             float2 = cursor.getFloat(idx++),
+            blobBa = cursor.getBlob(idx++),
             isBullyList = List(20) { cursor.getBoolean(idx++) },
             dayList = List(10) { cursor.getInt(idx++) },
             textList = List(3) { cursor.getString(idx++) },
@@ -103,6 +105,7 @@ object _CrashTester : SchemaBundle<CrashTester>(
         cv.put("long2", e.long2)
         cv.put("float1", e.float1)
         cv.put("float2", e.float2)
+        cv.put("blobBa", e.blobBa)
         for (i in 0 until 20) {
             cv.put("isBully${i + 1}", e.isBullyList[i])
         }
@@ -138,12 +141,13 @@ object _CrashTester : SchemaBundle<CrashTester>(
         +CrashTesterFields.Long2
         +CrashTesterFields.Float1
         +CrashTesterFields.Float2
+        +CrashTesterFields.BlobBa
         +CrashTesterFields.IsBullyList
         +CrashTesterFields.DayList
         +CrashTesterFields.TextList
         +CrashTesterFields.TimeStampList
         +CrashTesterFields.DuckList
-    }
+    },
 ) {
     fun tableNamed(name: String) = (name using this).withDsl(::CrashTesterDsl, ::CrashTesterOrderDsl, ::CrashTesterExtraDsl, ::CrashTesterSetDsl)
 }
@@ -164,6 +168,7 @@ interface CrashTesterDslColumns {
     val Long2: EntityColumn<CrashTesterDsl, LongCol>
     val Float1: EntityColumn<CrashTesterDsl, FloatCol>
     val Float2: EntityColumn<CrashTesterDsl, FloatCol>
+    val BlobBa: EntityColumn<CrashTesterDsl, BlobCol>
     val IsBullyList: List<EntityColumn<CrashTesterDsl, BoolCol>>
     val DayList: List<EntityColumn<CrashTesterDsl, IntCol>>
     val TextList: List<EntityColumn<CrashTesterDsl, StrCol>>
@@ -195,13 +200,13 @@ class CrashTesterDsl internal constructor(                     context: DslConte
     override val Long2 get() = column(CrashTesterFields.Long2)
     override val Float1 get() = column(CrashTesterFields.Float1)
     override val Float2 get() = column(CrashTesterFields.Float2)
+    override val BlobBa get() = column(CrashTesterFields.BlobBa)
     override val IsBullyList get() = column(CrashTesterFields.IsBullyList)
     override val DayList get() = column(CrashTesterFields.DayList)
     override val TextList get() = column(CrashTesterFields.TextList)
     override val TimeStampList get() = column(CrashTesterFields.TimeStampList)
     override val DuckList get() = column(CrashTesterFields.DuckList)
 }
-
 
 private object CrashTesterFields {
     val Name = sCol("name", "")
@@ -218,6 +223,7 @@ private object CrashTesterFields {
     val Long2 = lCol("long2", 0L)
     val Float1 = fCol("float1", 0F)
     val Float2 = fCol("float2", 0F)
+    val BlobBa = pCol("blobBa", byteArrayOf())
     val IsBullyList = bListCol("isBully", 20, false)
     val DayList = iListCol("day", 10, 0)
     val TextList = sListCol("text", 3, "")
