@@ -21,76 +21,76 @@ import com.vankorno.vankornodb.get.getLong
 import com.vankorno.vankornodb.get.getStr
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getIntById(
-                                                               column: TableColumn<W, O, X, IntCol>,
                                                                    id: Long,
+                                                               column: TableColumn<W, O, X, IntCol>,
 ): Int = getInt(column) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getIntById(
-                                                               column: TableColumn<W, O, X, IntCol>,
                                                                    id: Long,
+                                                               column: TableColumn<W, O, X, IntCol>,
 ): Int = getInt(column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getStrById(
-                                                               column: TableColumn<W, O, X, StrCol>,
                                                                    id: Long,
+                                                               column: TableColumn<W, O, X, StrCol>,
 ): String = getStr(column) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getStrById(
-                                                               column: TableColumn<W, O, X, StrCol>,
                                                                    id: Long,
+                                                               column: TableColumn<W, O, X, StrCol>,
 ): String = getStr(column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBoolById(
-                                                              column: TableColumn<W, O, X, BoolCol>,
                                                                   id: Long,
+                                                              column: TableColumn<W, O, X, BoolCol>,
 ): Boolean = getBool(column) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBoolById(
-                                                              column: TableColumn<W, O, X, BoolCol>,
                                                                   id: Long,
+                                                              column: TableColumn<W, O, X, BoolCol>,
 ): Boolean = getBool(column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLongById(
-                                                              column: TableColumn<W, O, X, LongCol>,
                                                                   id: Long,
+                                                              column: TableColumn<W, O, X, LongCol>,
 ): Long = getLong(column) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLongById(
-                                                              column: TableColumn<W, O, X, LongCol>,
                                                                   id: Long,
+                                                              column: TableColumn<W, O, X, LongCol>,
 ): Long = getLong(column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFloatById(
-                                                             column: TableColumn<W, O, X, FloatCol>,
                                                                  id: Long,
+                                                             column: TableColumn<W, O, X, FloatCol>,
 ): Float = getFloat(column) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFloatById(
-                                                             column: TableColumn<W, O, X, FloatCol>,
                                                                  id: Long,
+                                                             column: TableColumn<W, O, X, FloatCol>,
 ): Float = getFloat(column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBlobById(
-                                                              column: TableColumn<W, O, X, BlobCol>,
                                                                   id: Long,
+                                                              column: TableColumn<W, O, X, BlobCol>,
 ): ByteArray = getBlob(column) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBlobById(
-                                                              column: TableColumn<W, O, X, BlobCol>,
                                                                   id: Long,
+                                                              column: TableColumn<W, O, X, BlobCol>,
 ): ByteArray = getBlob(column) { Id equal id }

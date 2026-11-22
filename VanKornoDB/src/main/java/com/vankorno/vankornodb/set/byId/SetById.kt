@@ -8,15 +8,15 @@ import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.set.dsl.SetDsl
 import com.vankorno.vankornodb.set.set
 
-fun <W : WhereDsl<W>, S : SetDsl<W>> Dbh.setById(                table: FullDslTable<*, W, *, *, S>,
-                                                                    id: Long,
+fun <W : WhereDsl<W>, S : SetDsl<W>> Dbh.setById(                   id: Long,
+                                                                 table: FullDslTable<*, W, *, *, S>,
                                                                  async: Boolean = false,
                                                                actions: S.()->Unit,
 ) = set(table, where = { Id equal id }, async = async, actions = actions)
 
 
 
-fun <W : WhereDsl<W>, S : SetDsl<W>> SQLiteDatabase.setById(     table: FullDslTable<*, W, *, *, S>,
-                                                                    id: Long,
+fun <W : WhereDsl<W>, S : SetDsl<W>> SQLiteDatabase.setById(        id: Long,
+                                                                 table: FullDslTable<*, W, *, *, S>,
                                                                actions: S.()->Unit,
 ) = set(table, where = { Id equal id }, actions = actions)

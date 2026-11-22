@@ -11,14 +11,13 @@ import com.vankorno.vankornodb.set.setEntity
 
 /** Writes [entity] to rows matching [id] and returns the number updated.
  */
-fun <T : DbEntity, W : WhereDsl<W>> Dbh.setEntityById(
+fun <T : DbEntity, W : WhereDsl<W>> Dbh.setEntityById(            id: Long = entity.id,
                                                                table: MiniDslTable<TableInfo<T>, W>,
                                                               entity: T,
-                                                                  id: Long = entity.id,
 ): Int = setEntity(table, entity) { Id equal id }
 
 fun <T : DbEntity, W : WhereDsl<W>> SQLiteDatabase.setEntityById(
+                                                                  id: Long = entity.id,
                                                                table: MiniDslTable<TableInfo<T>, W>,
                                                               entity: T,
-                                                                  id: Long = entity.id,
 ): Int = setEntity(table, entity) { Id equal id }

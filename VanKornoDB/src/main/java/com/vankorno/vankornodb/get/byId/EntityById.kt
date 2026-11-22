@@ -12,13 +12,13 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.get.getEntity
 
 fun <T : DbEntity, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntityById(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
                                                                 id: Long,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
 ): T? = getEntity(table) { Id equal id }
 
 fun <T : DbEntity, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntityById(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
                                                                 id: Long,
+                                                             table: DslTable<TableInfo<T>, W, O, X>,
 ): T? = getEntity(table) { Id equal id }
 
 

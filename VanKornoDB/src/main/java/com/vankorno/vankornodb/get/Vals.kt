@@ -17,17 +17,17 @@ import com.vankorno.vankornodb.misc.getBoolean
 
 /** Retrieves a 2D matrix of Ints from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableInts(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getInts(
                                                          columns: TableColumns<W, O, X, IntCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
-): List<List<Int>> = read(emptyList(), "getTableInts") { db ->
-    db.getTableInts(columns, orderBy, extra, where)
+): List<List<Int>> = read(emptyList(), "getInts") { db ->
+    db.getInts(columns, orderBy, extra, where)
 }
 /** Retrieves a 2D matrix of Ints from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableInts(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getInts(
                                                                 columns: TableColumns<W, O, X, IntCol>,
                                                                 orderBy: O.()->Unit = columns.defaultOrder,
                                                                   extra: X.()->Unit = {},
@@ -43,17 +43,17 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableInts(
 
 /** Retrieves a 2D matrix of Strings from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableStrings(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getStrings(
                                                          columns: TableColumns<W, O, X, StrCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
-): List<List<String>> = read(emptyList(), "getTableStrings") { db ->
-    db.getTableStrings(columns, orderBy, extra, where)
+): List<List<String>> = read(emptyList(), "getStrings") { db ->
+    db.getStrings(columns, orderBy, extra, where)
 }
 /** Retrieves a 2D matrix of Strings from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableStrings(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getStrings(
                                                          columns: TableColumns<W, O, X, StrCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
@@ -69,17 +69,17 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableStrings(
 
 /** Retrieves a 2D matrix of Booleans from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBools(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBools(
                                                          columns: TableColumns<W, O, X, BoolCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
-): List<List<Boolean>> = read(emptyList(), "getTableBools") { db ->
-    db.getTableBools(columns, orderBy, extra, where)
+): List<List<Boolean>> = read(emptyList(), "getBools") { db ->
+    db.getBools(columns, orderBy, extra, where)
 }
 /** Retrieves a 2D matrix of Booleans from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBools(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBools(
                                                          columns: TableColumns<W, O, X, BoolCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
@@ -95,17 +95,17 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBools(
 
 /** Retrieves a 2D matrix of Longs from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableLongs(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLongs(
                                                          columns: TableColumns<W, O, X, LongCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
-): List<List<Long>> = read(emptyList(), "getTableLongs") { db ->
-    db.getTableLongs(columns, orderBy, extra, where)
+): List<List<Long>> = read(emptyList(), "getLongs") { db ->
+    db.getLongs(columns, orderBy, extra, where)
 }
 /** Retrieves a 2D matrix of Longs from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableLongs(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLongs(
                                                          columns: TableColumns<W, O, X, LongCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
@@ -121,17 +121,17 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableLongs(
 
 /** Retrieves a 2D matrix of Floats from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableFloats(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getFloats(
                                                          columns: TableColumns<W, O, X, FloatCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
-): List<List<Float>> = read(emptyList(), "getTableFloats") { db ->
-    db.getTableFloats(columns, orderBy, extra, where)
+): List<List<Float>> = read(emptyList(), "getFloats") { db ->
+    db.getFloats(columns, orderBy, extra, where)
 }
 /** Retrieves a 2D matrix of Floats from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableFloats(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFloats(
                                                          columns: TableColumns<W, O, X, FloatCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
@@ -147,17 +147,17 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableFloats(
 
 /** Retrieves a 2D matrix of Blobs (ByteArray) from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getTableBlobs(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getBlobs(
                                                          columns: TableColumns<W, O, X, BlobCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},
                                                            where: W.()->Unit = {},
-): List<List<ByteArray>> = read(emptyList(), "getTableBlobs") { db ->
-    db.getTableBlobs(columns, orderBy, extra, where)
+): List<List<ByteArray>> = read(emptyList(), "getBlobs") { db ->
+    db.getBlobs(columns, orderBy, extra, where)
 }
 /** Retrieves a 2D matrix of Blobs (ByteArray) from specified columns and rows.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getTableBlobs(
+fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBlobs(
                                                          columns: TableColumns<W, O, X, BlobCol>,
                                                          orderBy: O.()->Unit = columns.defaultOrder,
                                                            extra: X.()->Unit = {},

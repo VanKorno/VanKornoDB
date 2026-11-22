@@ -6,12 +6,12 @@ import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.dsl.MiniDslTable
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 
-fun <W : WhereDsl<W>> Dbh.deleteRowById(                                  table: MiniDslTable<*, W>,
-                                                                             id: Long,
+fun <W : WhereDsl<W>> Dbh.deleteRowById(                                     id: Long,
+                                                                          table: MiniDslTable<*, W>,
                                                                           async: Boolean = false,
 ) = deleteRows(table, async) { Id equal id }
 
 
-fun <W : WhereDsl<W>> SQLiteDatabase.deleteRowById(                       table: MiniDslTable<*, W>,
-                                                                             id: Long,
+fun <W : WhereDsl<W>> SQLiteDatabase.deleteRowById(                          id: Long,
+                                                                          table: MiniDslTable<*, W>,
 ): Int = deleteRows(table) { Id equal id }

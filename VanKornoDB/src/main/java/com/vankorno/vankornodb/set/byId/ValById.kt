@@ -21,94 +21,94 @@ import com.vankorno.vankornodb.set.setLong
 import com.vankorno.vankornodb.set.setStr
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setIntById(
+                                                                   id: Long,
                                                                 value: Int,
                                                                column: TableColumn<W, O, X, IntCol>,
-                                                                   id: Long,
                                                                 async: Boolean = false,
 ) = setInt(value, column, async) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setIntById(
+                                                                   id: Long,
                                                                 value: Int,
                                                                column: TableColumn<W, O, X, IntCol>,
-                                                                   id: Long,
 ) = setInt(value, column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setStrById(
+                                                                   id: Long,
                                                                 value: String,
                                                                column: TableColumn<W, O, X, StrCol>,
-                                                                   id: Long,
                                                                 async: Boolean = false,
 ) = setStr(value, column, async) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setStrById(
+                                                                   id: Long,
                                                                 value: String,
                                                                column: TableColumn<W, O, X, StrCol>,
-                                                                   id: Long,
 ) = setStr(value, column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBoolById(
-                                                                value: Boolean,
-                                                               column: TableColumn<W, O, X, BoolCol>,
-                                                                   id: Long,
-                                                                async: Boolean = false,
+                                                                  id: Long,
+                                                               value: Boolean,
+                                                              column: TableColumn<W, O, X, BoolCol>,
+                                                               async: Boolean = false,
 ) = setBool(value, column, async) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setBoolById(
-                                                                value: Boolean,
-                                                               column: TableColumn<W, O, X, BoolCol>,
-                                                                   id: Long,
+                                                                  id: Long,
+                                                               value: Boolean,
+                                                              column: TableColumn<W, O, X, BoolCol>,
 ) = setBool(value, column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setLongById(
-                                                                value: Long,
-                                                               column: TableColumn<W, O, X, LongCol>,
-                                                                   id: Long,
-                                                                async: Boolean = false,
+                                                                  id: Long,
+                                                               value: Long,
+                                                              column: TableColumn<W, O, X, LongCol>,
+                                                               async: Boolean = false,
 ) = setLong(value, column, async) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setLongById(
-                                                                value: Long,
-                                                               column: TableColumn<W, O, X, LongCol>,
-                                                                   id: Long,
+                                                                  id: Long,
+                                                               value: Long,
+                                                              column: TableColumn<W, O, X, LongCol>,
 ) = setLong(value, column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setFloatById(
-                                                                value: Float,
-                                                               column: TableColumn<W, O, X, FloatCol>,
-                                                                   id: Long,
-                                                                async: Boolean = false,
+                                                                 id: Long,
+                                                              value: Float,
+                                                             column: TableColumn<W, O, X, FloatCol>,
+                                                              async: Boolean = false,
 ) = setFloat(value, column, async) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setFloatById(
-                                                                value: Float,
-                                                               column: TableColumn<W, O, X, FloatCol>,
-                                                                   id: Long,
+                                                                 id: Long,
+                                                              value: Float,
+                                                             column: TableColumn<W, O, X, FloatCol>,
 ) = setFloat(value, column) { Id equal id }
 
 
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.setBlobById(
-                                                                value: ByteArray,
-                                                               column: TableColumn<W, O, X, BlobCol>,
-                                                                   id: Long,
-                                                                async: Boolean = false,
+                                                                  id: Long,
+                                                               value: ByteArray,
+                                                              column: TableColumn<W, O, X, BlobCol>,
+                                                               async: Boolean = false,
 ) = setBlob(value, column, async) { Id equal id }
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.setBlobById(
-                                                                value: ByteArray,
-                                                               column: TableColumn<W, O, X, BlobCol>,
-                                                                   id: Long,
+                                                                  id: Long,
+                                                               value: ByteArray,
+                                                              column: TableColumn<W, O, X, BlobCol>,
 ) = setBlob(value, column) { Id equal id }

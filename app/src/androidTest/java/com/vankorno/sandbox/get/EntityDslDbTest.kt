@@ -58,9 +58,9 @@ class EntityDslDbTest {
                 Name equal name
                 and { Int1 equalAny listOf(7, 8) }
             }
-            dbh.setById(items, id) { Id setTo 100L }
-            assertEquals(null, dbh.getEntityById(items, id))
-            assertEquals(9, dbh.getEntityById(items, 100L)?.int1)
+            dbh.setById(id, items) { Id setTo 100L }
+            assertEquals(null, dbh.getEntityById(id, items))
+            assertEquals(9, dbh.getEntityById(100L, items)?.int1)
             assertEquals(3, dbh.getInt(items.col { Int1 }) { Id equal otherId })
             
             dbh.deleteRows(items) { Int1 equal 9 }
