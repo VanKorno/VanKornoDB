@@ -33,7 +33,7 @@ open class TableColumns<
     W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>
     > internal constructor(
                                                  internal val table: DslTable<*, W, O, X>,
-                                             internal val selectors: Array<out FieldSelector<W, C>>,
+                                             internal val selectors: Array<out ColumnSelector<W, C>>,
                             @PublishedApi internal val defaultOrder: O.()->Unit = {},
                                           internal val defaultLimit: Int? = null,
 ) {
@@ -103,7 +103,7 @@ class TableColumn<
     W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>
     > internal constructor(
                                                                         table: DslTable<*, W, O, X>,
-                                                        internal val selector: FieldSelector<W, C>,
+                                                        internal val selector: ColumnSelector<W, C>,
                                                                  defaultOrder: O.()->Unit = {},
                                                                  defaultLimit: Int? = null,
 ) : TableColumns<W, O, X, C>(
@@ -145,7 +145,7 @@ class TableColumn<
 }
 
 
-typealias FieldSelector<W, C> = W.()->SelectExpr<W, C>
+typealias ColumnSelector<W, C> = W.()->SelectExpr<W, C>
 
 
 
@@ -195,10 +195,10 @@ open class MiniDslTable<out I : TableInfo<*>, W> internal constructor(
     
     
     
-    internal fun columnSql(column: FieldSelector<W, *>): String = selectionScope().column().sql
+    internal fun columnSql(column: ColumnSelector<W, *>): String = selectionScope().column().sql
     
     
-    internal fun select(                      columns: Array<out FieldSelector<W, TypedColumn<*>>>
+    internal fun select(                      columns: Array<out ColumnSelector<W, TypedColumn<*>>>
     ): Array<String> {
         val scope = selectionScope()
         return Array(columns.size) { idx -> columns[idx](scope).sql }
@@ -251,7 +251,7 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
     
     
     
-    fun <C : TypedColumn<*>> col(                                         block: FieldSelector<W, C>
+    fun <C : TypedColumn<*>> col(                                         block: ColumnSelector<W, C>
     ): TableColumn<W, O, X, C> {
         val selected = selectionScope().block()
         return TableColumn(this, selector = { selected })
@@ -264,7 +264,7 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
         
         require(selected.isNotEmpty()) { "An explicit projection must contain at least one column" }
         
-        val selectors = Array<FieldSelector<W, C>>(selected.size) { idx ->
+        val selectors = Array<ColumnSelector<W, C>>(selected.size) { idx ->
             val column = selected[idx]
             { column }
         }
@@ -273,7 +273,7 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
     
     
     
-    internal fun query(         columns: Array<out FieldSelector<W, TypedColumn<*>>> = emptyArray(),
+    internal fun query(         columns: Array<out ColumnSelector<W, TypedColumn<*>>> = emptyArray(),
                                 orderBy: O.()->Unit = {},
                                   extra: X.()->Unit = {},
                                   where: W.()->Unit = {},

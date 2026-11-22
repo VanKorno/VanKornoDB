@@ -8,10 +8,10 @@ class JoinDsl<W> internal constructor(private val context: DslContext<W>) {
     internal val clauses = mutableListOf<String>()
     internal val args = mutableListOf<String>()
     
-    fun <I, T> inner(table: MiniDslTable<*, I>, left: FieldSelector<W, TypedColumn<T>>, right: FieldSelector<I, TypedColumn<T>>) =
+    fun <I, T> inner(table: MiniDslTable<*, I>, left: ColumnSelector<W, TypedColumn<T>>, right: ColumnSelector<I, TypedColumn<T>>) =
         inner(table, "${context.qualifier}.${context.table.columnSql(left)}=${table.name}.${table.columnSql(right)}")
     
-    fun <I, T> left(table: MiniDslTable<*, I>, left: FieldSelector<W, TypedColumn<T>>, right: FieldSelector<I, TypedColumn<T>>) =
+    fun <I, T> left(table: MiniDslTable<*, I>, left: ColumnSelector<W, TypedColumn<T>>, right: ColumnSelector<I, TypedColumn<T>>) =
         left(table, "${context.qualifier}.${context.table.columnSql(left)}=${table.name}.${table.columnSql(right)}")
     
     fun inner(table: MiniDslTable<*, *>, on: String, vararg bindings: String) {

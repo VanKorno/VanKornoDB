@@ -148,7 +148,7 @@ abstract class WhereDsl<W>(                                      private val con
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
                                               outerColumn: Field<W, TypedColumn<T>>,
                                               innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
-                                             selectColumn: FieldSelector<I, TypedColumn<*>>? = null,
+                                             selectColumn: ColumnSelector<I, TypedColumn<*>>? = null,
                                                   orderBy: O.()->Unit = innerColumn.defaultOrder,
                                                     extra: X.()->Unit = {},
                                                     where: I.()->Unit = {},
