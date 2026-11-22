@@ -9,8 +9,8 @@ import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
-import com.vankorno.vankornodb.get.getNextIDs
 import com.vankorno.vankornodb.get.getNextPositions
+import com.vankorno.vankornodb.get.id.getNextIDs
 import com.vankorno.vankornodb.misc.data.DbIdAndPosition
 
 

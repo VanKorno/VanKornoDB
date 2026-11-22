@@ -10,10 +10,10 @@ import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteRows
-import com.vankorno.vankornodb.get.getAllIDs
-import com.vankorno.vankornodb.get.getIDs
-import com.vankorno.vankornodb.get.getId
-import com.vankorno.vankornodb.get.getLastId
+import com.vankorno.vankornodb.get.id.getAllIDs
+import com.vankorno.vankornodb.get.id.getIDs
+import com.vankorno.vankornodb.get.id.getId
+import com.vankorno.vankornodb.get.id.getLastId
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

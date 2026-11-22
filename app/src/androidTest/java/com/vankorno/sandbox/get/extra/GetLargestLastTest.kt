@@ -9,7 +9,13 @@ import com.vankorno.vankornodb.add.addEntities
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.delete.clearTable
 import com.vankorno.vankornodb.delete.deleteTable
-import com.vankorno.vankornodb.get.*
+import com.vankorno.vankornodb.get.getLargestInt
+import com.vankorno.vankornodb.get.getLargestLong
+import com.vankorno.vankornodb.get.getLastPosition
+import com.vankorno.vankornodb.get.getNextPosition
+import com.vankorno.vankornodb.get.getNextPositions
+import com.vankorno.vankornodb.get.id.getLastId
+import com.vankorno.vankornodb.get.isTableEmpty
 import com.vankorno.vankornodb.newTable.createTable
 import com.vankorno.vankornodb.set.reorder
 import com.vankorno.vankornodb.set.set

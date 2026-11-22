@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MPL-2.0 */
-package com.vankorno.vankornodb.get.byId
+package com.vankorno.vankornodb.get.id
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh

@@ -9,8 +9,8 @@ import com.vankorno.vankornodb.add.addEntityWithoutIdCheck
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.delete.deleteRows
 import com.vankorno.vankornodb.delete.deleteTable
-import com.vankorno.vankornodb.get.getNextIDs
-import com.vankorno.vankornodb.get.getNextId
+import com.vankorno.vankornodb.get.id.getNextIDs
+import com.vankorno.vankornodb.get.id.getNextId
 import com.vankorno.vankornodb.newTable.createTable
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -10,9 +10,9 @@ import com.vankorno.vankornodb.add.addWithNewIdAndPosition
 import com.vankorno.vankornodb.api.DbRuntime.dbh
 import com.vankorno.vankornodb.delete.deleteRows
 import com.vankorno.vankornodb.delete.deleteTable
-import com.vankorno.vankornodb.get.getLastId
 import com.vankorno.vankornodb.get.getLastPosition
 import com.vankorno.vankornodb.get.getLong
+import com.vankorno.vankornodb.get.id.getLastId
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

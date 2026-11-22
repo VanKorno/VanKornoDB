@@ -8,10 +8,10 @@ import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
 import com.vankorno.vankornodb.delete.deleteRows
-import com.vankorno.vankornodb.get.byId.getEntityById
 import com.vankorno.vankornodb.get.getColLongs
-import com.vankorno.vankornodb.get.getIDs
 import com.vankorno.vankornodb.get.getInt
+import com.vankorno.vankornodb.get.id.getEntityById
+import com.vankorno.vankornodb.get.id.getIDs
 import com.vankorno.vankornodb.set.byId.setById
 import com.vankorno.vankornodb.set.setInt
 import org.junit.Assert.assertEquals

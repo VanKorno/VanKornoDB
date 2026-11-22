@@ -11,8 +11,8 @@ import com.vankorno.vankornodb.core.dsl.MiniDslTable
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
-import com.vankorno.vankornodb.get.getNextIDs
-import com.vankorno.vankornodb.get.getNextId
+import com.vankorno.vankornodb.get.id.getNextIDs
+import com.vankorno.vankornodb.get.id.getNextId
 import com.vankorno.vankornodb.misc.wLog
 
 

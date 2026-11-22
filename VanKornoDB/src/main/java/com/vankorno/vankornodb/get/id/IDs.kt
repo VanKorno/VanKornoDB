@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: MPL-2.0 */
-package com.vankorno.vankornodb.get
+package com.vankorno.vankornodb.get.id
 
 import android.database.sqlite.SQLiteDatabase
 import com.vankorno.vankornodb.api.Dbh
@@ -7,6 +7,10 @@ import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.WhereDsl
+import com.vankorno.vankornodb.get.getColLongs
+import com.vankorno.vankornodb.get.getLargestLong
+import com.vankorno.vankornodb.get.getLong
+import com.vankorno.vankornodb.get.getNextLongs
 
 
 fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getLastId(
