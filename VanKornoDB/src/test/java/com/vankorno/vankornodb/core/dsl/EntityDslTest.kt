@@ -15,6 +15,28 @@ class EntityDslTest {
     private val versionTable = _EntityVersion.tableNamed("Versions")
     
     @Test
+    fun `ID ordering works on tables and projections`() {
+        assertEquals("SELECT * FROM Versions ORDER BY id", versionTable.orderById().query().query)
+        assertEquals("SELECT * FROM Versions ORDER BY id DESC", versionTable.orderByIdFlipped().query().query)
+        val names = versionTable.col { Name }.limit(3)
+        assertEquals("SELECT name FROM Versions ORDER BY id DESC LIMIT 3", subquery(names.orderByIdFlipped()).query)
+        assertEquals("SELECT name FROM Versions ORDER BY id LIMIT 3", subquery(names.orderById()).query)
+        val columns = versionTable.columns { Name then Version }
+        assertEquals("SELECT name, version FROM Versions ORDER BY id DESC", subquery(columns.orderByIdFlipped()).query)
+    }
+    
+    
+    @Test
+    fun `whole table flipped and conditional orders preserve the limit`() {
+        val sorted = versionTable.limit(4).orderFlip { Version }
+        assertEquals("SELECT * FROM Versions ORDER BY version DESC LIMIT 4",
+            sorted.orderIf(false) { error("unexpected selector call") }.query().query)
+        assertEquals("SELECT * FROM Versions ORDER BY name LIMIT 4",
+            sorted.orderIf(true) { Name }.query().query)
+    }
+    
+    
+    @Test
     fun `shared ID fields work across query receivers`() {
         val ids = versionTable.columns { Id then RowId }
         val query = subquery(ids, orderBy = { RowId.flip() }, extra = { groupBy(Id, RowId) }) {

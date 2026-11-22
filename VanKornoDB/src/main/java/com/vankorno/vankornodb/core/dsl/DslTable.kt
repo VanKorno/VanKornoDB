@@ -85,6 +85,14 @@ open class TableColumns<
     )
     
     
+    open fun orderById(): TableColumns<W, O, X, C> =
+        TableColumns(table, selectors, { Id.by() }, defaultLimit)
+    
+    
+    open fun orderByIdFlipped(): TableColumns<W, O, X, C> =
+        TableColumns(table, selectors, { Id.flip() }, defaultLimit)
+    
+    
     open fun orderIf(                                 condition: Boolean,
                                                           field: W.()->Field<W, AscendingColumn<*>>,
     ): TableColumns<W, O, X, C> =
@@ -120,6 +128,14 @@ class TableColumn<
         defaultOrder = fieldOrder(descending = true, selector = field),
         defaultLimit = defaultLimit
     )
+    
+    
+    override fun orderById(): TableColumn<W, O, X, C> =
+        TableColumn(table, selector, { Id.by() }, defaultLimit)
+    
+    
+    override fun orderByIdFlipped(): TableColumn<W, O, X, C> =
+        TableColumn(table, selector, { Id.flip() }, defaultLimit)
     
     
     override fun orderIf(                             condition: Boolean,
@@ -212,6 +228,26 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
         val selected = selectionScope().field()
         return DslTable(info, factory, orderFactory, extraFactory, { selected.by() }, tableLimit)
     }
+    
+    
+    fun orderFlip(                                         field: W.()->Field<W, AscendingColumn<*>>
+    ): DslTable<I, W, O, X> {
+        val selected = selectionScope().field()
+        return DslTable(info, factory, orderFactory, extraFactory, { selected.flip() }, tableLimit)
+    }
+    
+    
+    fun orderById(): DslTable<I, W, O, X> =
+        DslTable(info, factory, orderFactory, extraFactory, { Id.by() }, tableLimit)
+    
+    
+    fun orderByIdFlipped(): DslTable<I, W, O, X> =
+        DslTable(info, factory, orderFactory, extraFactory, { Id.flip() }, tableLimit)
+    
+    
+    fun orderIf(                                       condition: Boolean,
+                                                           field: W.()->Field<W, AscendingColumn<*>>,
+    ): DslTable<I, W, O, X> = if (condition) orderBy(field) else this
     
     
     
