@@ -15,6 +15,15 @@ class EntityDslTest {
     private val versionTable = _EntityVersion.tableNamed("Versions")
     
     @Test
+    fun `whole table order is a reusable default`() {
+        val sorted = versionTable.orderBy { Version }
+        assertEquals("SELECT * FROM Versions ORDER BY version", sorted.query().query)
+        assertEquals("SELECT * FROM Versions ORDER BY name DESC", sorted.query(orderBy = { Name.flip() }).query)
+        assertEquals("SELECT * FROM Versions", versionTable.query().query)
+    }
+    
+    
+    @Test
     fun `chained limit composes with ordering and explicit extras`() {
         val ids = versionTable.col { Id }
         val select = "SELECT id FROM Versions ORDER BY version"

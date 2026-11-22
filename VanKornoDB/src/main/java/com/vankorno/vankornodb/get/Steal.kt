@@ -72,21 +72,21 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
  * Returns an empty list if no result is found.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.stealALot(
-                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
-                                                       thiefSchema: SchemaBundle<T>,
-                                                           orderBy: O.()->Unit = { raw("ROWID") },
-                                                             extra: X.()->Unit = {},
-                                                             where: W.()->Unit = {},
+                                 ownerTable: DslTable<TableInfo<*>, W, O, X>,
+                                thiefSchema: SchemaBundle<T>,
+                                    orderBy: O.()->Unit = ownerTable.tableOrder ?: { raw("ROWID") },
+                                      extra: X.()->Unit = {},
+                                      where: W.()->Unit = {},
 ): List<T> = read(emptyList(), "stealALot") { db ->
     db.stealALot(ownerTable, thiefSchema, orderBy, extra, where)
 }
 
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.stealALot(
-                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
-                                                       thiefSchema: SchemaBundle<T>,
-                                                           orderBy: O.()->Unit = { raw("ROWID") },
-                                                             extra: X.()->Unit = {},
-                                                             where: W.()->Unit = {},
+                                 ownerTable: DslTable<TableInfo<*>, W, O, X>,
+                                thiefSchema: SchemaBundle<T>,
+                                    orderBy: O.()->Unit = ownerTable.tableOrder ?: { raw("ROWID") },
+                                      extra: X.()->Unit = {},
+                                      where: W.()->Unit = {},
 ): List<T> {
     val definitions = checkedThiefColumns(thiefSchema, ownerTable.info.schema.columns)
     val columns = ownerTable.columns { definitions.map { Field(it) } }

@@ -13,10 +13,10 @@ import com.vankorno.vankornodb.dbManagement.data.TableInfo
 /** Retrieves a list of entity objects mapped from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntities(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
-                                                           orderBy: O.()->Unit = { raw("ROWID") },
-                                                             extra: X.()->Unit = {},
-                                                             where: W.()->Unit = {},
+                                           table: DslTable<TableInfo<T>, W, O, X>,
+                                         orderBy: O.()->Unit = table.tableOrder ?: { raw("ROWID") },
+                                           extra: X.()->Unit = {},
+                                           where: W.()->Unit = {},
 ): List<T> = read(emptyList(), "getEntities") { db ->
     db.getEntities(table, orderBy, extra, where)
 }
@@ -24,12 +24,12 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntities(
 /** Retrieves a list of entity objects mapped from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntities(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
-                                                           orderBy: O.()->Unit = { raw("ROWID") },
-                                                             extra: X.()->Unit = {},
-                                                             where: W.()->Unit = {},
+                                           table: DslTable<TableInfo<T>, W, O, X>,
+                                         orderBy: O.()->Unit = table.tableOrder ?: { raw("ROWID") },
+                                           extra: X.()->Unit = {},
+                                           where: W.()->Unit = {},
 ): List<T> = useCursor(
-    table, orderBy = orderBy, extra = extra, where = where
+    table, orderBy, extra, where
 ) { cursor ->
     buildList {
         if (cursor.moveToFirst()) {
@@ -46,10 +46,10 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEnt
 /** Retrieves a map of entity objects from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntityMap(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
-                                                           orderBy: O.()->Unit = { raw("ROWID") },
-                                                             extra: X.()->Unit = {},
-                                                             where: W.()->Unit = {},
+                                           table: DslTable<TableInfo<T>, W, O, X>,
+                                         orderBy: O.()->Unit = table.tableOrder ?: { raw("ROWID") },
+                                           extra: X.()->Unit = {},
+                                           where: W.()->Unit = {},
 ): Map<Long, T> = read(emptyMap(), "getEntityMap") { db ->
     db.getEntityMap(table, orderBy, extra, where)
 }
@@ -57,12 +57,12 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getEntityMap(
 /** Retrieves a map of entity objects from the given table.
  */
 fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getEntityMap(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
-                                                           orderBy: O.()->Unit = { raw("ROWID") },
-                                                             extra: X.()->Unit = {},
-                                                             where: W.()->Unit = {},
+                                           table: DslTable<TableInfo<T>, W, O, X>,
+                                         orderBy: O.()->Unit = table.tableOrder ?: { raw("ROWID") },
+                                           extra: X.()->Unit = {},
+                                           where: W.()->Unit = {},
 ): Map<Long, T> = useCursor(
-    table, orderBy = orderBy, extra = extra, where = where
+    table, orderBy, extra, where
 ) { cursor ->
     buildMap {
         if (cursor.moveToFirst()) {

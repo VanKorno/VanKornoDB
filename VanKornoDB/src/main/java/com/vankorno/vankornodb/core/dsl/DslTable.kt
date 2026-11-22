@@ -195,7 +195,17 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
                                                                         factory: (DslContext<W>)->W,
                                                        private val orderFactory: (W)->O,
                                                        private val extraFactory: (W)->X,
+                                                        internal val tableOrder: (O.()->Unit)? = null,
 ) : MiniDslTable<I, W>(info, factory) {
+    
+    /** Returns a table whose reads default to ascending order by [field].
+     */
+    fun orderBy(                                           field: W.()->Field<W, AscendingColumn<*>>
+    ): DslTable<I, W, O, X> {
+        val selected = selectionScope().field()
+        return DslTable(info, factory, orderFactory, extraFactory) { selected.by() }
+    }
+
     
     fun <C : TypedColumn<*>> col(                                         block: FieldSelector<W, C>
     ): TableColumn<W, O, X, C> {
@@ -252,7 +262,9 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
         val options = extraFactory(scope)
         options.context = context
         options.extra()
-        return getQuery(source, columns, ordering().apply(orderBy), options.query, where)
+        val order = ordering().apply(orderBy)
+        if (order.terms.isEmpty()) tableOrder?.invoke(order)
+        return getQuery(source, columns, order, options.query, where)
     }
 }
 

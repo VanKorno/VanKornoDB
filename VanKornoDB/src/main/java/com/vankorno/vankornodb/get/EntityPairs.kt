@@ -117,7 +117,7 @@ fun <
     > Dbh.getEntityPairs(
                                                          tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
                                                           extra: XA.()->Unit = {},
                                                           where: WA.()->Unit = {},
 ): List<Pair<A, B>> = read(emptyList(), "getEntityPairs") { db ->
@@ -136,7 +136,7 @@ fun <
     > SQLiteDatabase.getEntityPairs(
                                                          tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
                                                           extra: XA.()->Unit = {},
                                                           where: WA.()->Unit = {},
 ): List<Pair<A, B>> {
@@ -171,7 +171,7 @@ fun <
     > Dbh.getEntityPairMap(
                                                          tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
                                                           extra: XA.()->Unit = {},
                                                           where: WA.()->Unit = {},
 ): Map<Long, Pair<A, B>> = read(emptyMap(), "getEntityPairMap") { db ->
@@ -190,7 +190,7 @@ fun <
     > SQLiteDatabase.getEntityPairMap(
                                                          tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
                                                           extra: XA.()->Unit = {},
                                                           where: WA.()->Unit = {},
 ): Map<Long, Pair<A, B>> {
@@ -343,7 +343,7 @@ fun <
                                                          tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                          tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
                                                           extra: XA.()->Unit = {},
                                                           where: WA.()->Unit = {},
 ): List<Triple<A, B, C>> = read(emptyList(), "getEntityTriples") { db ->
@@ -366,7 +366,7 @@ fun <
     > SQLiteDatabase.getEntityTriples(                   tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                          tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                        orderBy: OA.()->Unit = { raw("ROWID") },
+                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
                                                           extra: XA.()->Unit = {},
                                                           where: WA.()->Unit = {},
 ): List<Triple<A, B, C>> {
