@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.dbManagement.data.*
 
 @DslInject
 abstract class WhereDsl<W>(                                      private val context: DslContext<W>
-) {
+) : DslWithIdAndRowId<W> {
     infix fun <C : TypedColumn<*>> SelectExpr<W, C>.then(next: SelectExpr<W, C>) = listOf(this, next)
 
     infix fun <C : TypedColumn<*>> List<SelectExpr<W, C>>.then(next: SelectExpr<W, C>) = this + next

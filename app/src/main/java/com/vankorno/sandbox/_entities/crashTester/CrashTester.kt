@@ -150,7 +150,6 @@ object _CrashTester : SchemaBundle<CrashTester>(
 
 interface CrashTesterDslColumns {
     val Name: Field<CrashTesterDsl, StrCol>
-    val Id: Field<CrashTesterDsl, LongCol>
     val Position: Field<CrashTesterDsl, LongCol>
     val Enabled: Field<CrashTesterDsl, BoolCol>
     val Int1: Field<CrashTesterDsl, IntCol>
@@ -184,7 +183,6 @@ typealias CrashTesterT = FullDslTable<TableInfo<CrashTester>, CrashTesterDsl, Cr
 class CrashTesterDsl internal constructor(                     context: DslContext<CrashTesterDsl>
 ) : WhereDsl<CrashTesterDsl>(context), CrashTesterDslColumns {
     override val Name get() = column(CrashTesterFields.Name)
-    override val Id get() = column(CrashTesterFields.Id)
     override val Position get() = column(CrashTesterFields.Position)
     override val Enabled get() = column(CrashTesterFields.Enabled)
     override val Int1 get() = column(CrashTesterFields.Int1)

@@ -56,7 +56,6 @@ interface EntityVersionDslColumns {
     val Name: Field<EntityVersionDsl, StrCol>
     val Version: Field<EntityVersionDsl, IntCol>
     val Notes: Field<EntityVersionDsl, StrCol>
-    val Id: Field<EntityVersionDsl, LongCol>
 }
 
 class EntityVersionOrderDsl internal constructor(                  columns: EntityVersionDslColumns
@@ -75,7 +74,6 @@ class EntityVersionDsl internal constructor(                  context: DslContex
     override val Name get() = column(EntityVersionFields.Name)
     override val Version get() = column(EntityVersionFields.Version)
     override val Notes get() = column(EntityVersionFields.Notes)
-    override val Id get() = column(EntityVersionFields.Id)
 }
 
 private object EntityVersionFields {

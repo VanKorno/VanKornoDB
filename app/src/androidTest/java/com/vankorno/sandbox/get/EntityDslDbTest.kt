@@ -8,10 +8,11 @@ import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.dbManagement.migration.data.EntityVersion
 import com.vankorno.vankornodb.dbManagement.migration.data._EntityVersion
 import com.vankorno.vankornodb.delete.deleteRows
+import com.vankorno.vankornodb.get.byId.getEntityById
 import com.vankorno.vankornodb.get.getColLongs
-import com.vankorno.vankornodb.get.getEntity
 import com.vankorno.vankornodb.get.getIDs
 import com.vankorno.vankornodb.get.getInt
+import com.vankorno.vankornodb.set.byId.setById
 import com.vankorno.vankornodb.set.setInt
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -57,7 +58,9 @@ class EntityDslDbTest {
                 Name equal name
                 and { Int1 equalAny listOf(7, 8) }
             }
-            assertEquals(9, dbh.getEntity(items) { Id equal id }?.int1)
+            dbh.setById(items, id) { Id setTo 100L }
+            assertEquals(null, dbh.getEntityById(items, id))
+            assertEquals(9, dbh.getEntityById(items, 100L)?.int1)
             assertEquals(3, dbh.getInt(items.col { Int1 }) { Id equal otherId })
             
             dbh.deleteRows(items) { Int1 equal 9 }

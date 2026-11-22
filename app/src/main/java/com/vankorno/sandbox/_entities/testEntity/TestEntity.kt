@@ -118,7 +118,6 @@ object _TestEntity : SchemaBundle<TestEntity>(
 
 
 interface TestEntityDslColumns {
-    val Id: Field<TestEntityDsl, LongCol>
     val Name: Field<TestEntityDsl, StrCol>
     val Position: Field<TestEntityDsl, LongCol>
     val Enabled: Field<TestEntityDsl, BoolCol>
@@ -151,7 +150,6 @@ typealias TestEntityT = FullDslTable<TableInfo<TestEntity>, TestEntityDsl, TestE
 
 class TestEntityDsl internal constructor(                     context: DslContext<TestEntityDsl>
 ) : WhereDsl<TestEntityDsl>(context), TestEntityDslColumns {
-    override val Id get() = column(TestEntityFields.Id)
     override val Name get() = column(TestEntityFields.Name)
     override val Position get() = column(TestEntityFields.Position)
     override val Enabled get() = column(TestEntityFields.Enabled)

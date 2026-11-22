@@ -6,7 +6,6 @@ import com.vankorno.vankornodb.dbManagement.data.*
 
 internal class BuilderRow(override val id: Long) : DbEntity
 internal class BuilderWhere(context: DslContext<BuilderWhere>) : WhereDsl<BuilderWhere>(context) {
-    val Id = column(lCol("id"))
     val Name = column(sCol("name"))
     val Type = column(sCol("type"))
     val Position = column(fCol("position"))

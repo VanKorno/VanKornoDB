@@ -53,7 +53,6 @@ object _TestLite : SchemaBundle<TestLite>(
 
 
 interface TestLiteDslColumns {
-    val Id: Field<TestLiteDsl, LongCol>
     val Name: Field<TestLiteDsl, StrCol>
     val Position: Field<TestLiteDsl, LongCol>
     val Enabled: Field<TestLiteDsl, BoolCol>
@@ -71,7 +70,6 @@ typealias TestLiteT = FullDslTable<TableInfo<TestLite>, TestLiteDsl, TestLiteOrd
 
 class TestLiteDsl internal constructor(                     context: DslContext<TestLiteDsl>
 ) : WhereDsl<TestLiteDsl>(context), TestLiteDslColumns {
-    override val Id get() = column(TestLiteFields.Id)
     override val Name get() = column(TestLiteFields.Name)
     override val Position get() = column(TestLiteFields.Position)
     override val Enabled get() = column(TestLiteFields.Enabled)

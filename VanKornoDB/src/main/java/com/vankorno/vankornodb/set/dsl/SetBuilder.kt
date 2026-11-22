@@ -3,6 +3,7 @@ package com.vankorno.vankornodb.set.dsl
 
 import android.content.ContentValues
 import com.vankorno.vankornodb.core.dsl.DslInject
+import com.vankorno.vankornodb.core.dsl.DslWithId
 import com.vankorno.vankornodb.core.dsl.Field
 import com.vankorno.vankornodb.dbManagement.data.BoolCol
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
@@ -16,7 +17,7 @@ import com.vankorno.vankornodb.set.dsl.data.LongColOp
 import com.vankorno.vankornodb.set.dsl.data.SetOp
 
 @DslInject
-abstract class SetDsl<W> : SetDslBase<W>() {
+abstract class SetDsl<W> : SetDslBase<W>(), DslWithId<W> {
     fun setCV(cv: ContentValues) { _ops += SetOp.SetCV(cv) }
     fun setContentValues(cv: ContentValues) = setCV(cv)
     

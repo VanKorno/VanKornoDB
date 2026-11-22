@@ -5,7 +5,7 @@ import com.vankorno.vankornodb.core.data.DbConstants.comma
 import com.vankorno.vankornodb.core.data.ExtraDslHolder
 
 @DslInject
-abstract class ExtraDsl<W> {
+abstract class ExtraDsl<W> : DslWithIdAndRowId<W> {
     internal val query = ExtraDslHolder()
     internal lateinit var context: DslContext<W>
     

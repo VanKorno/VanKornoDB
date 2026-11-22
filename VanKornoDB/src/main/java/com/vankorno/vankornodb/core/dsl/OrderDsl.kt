@@ -8,7 +8,7 @@ import com.vankorno.vankornodb.core.data.OrderWhen
 import com.vankorno.vankornodb.dbManagement.data.AscendingColumn
 
 @DslInject
-abstract class OrderDsl<W, O : OrderDsl<W, O>> {
+abstract class OrderDsl<W, O : OrderDsl<W, O>> : DslWithIdAndRowId<W> {
     internal val terms = mutableListOf<String>()
     internal val args = mutableListOf<String>()
     internal lateinit var nested: ()->O

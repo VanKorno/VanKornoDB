@@ -15,6 +15,16 @@ class EntityDslTest {
     private val versionTable = _EntityVersion.tableNamed("Versions")
     
     @Test
+    fun `shared ID fields work across query receivers`() {
+        val ids = versionTable.columns { Id then RowId }
+        val query = subquery(ids, orderBy = { RowId.flip() }, extra = { groupBy(Id, RowId) }) {
+            RowId greater 0L
+        }
+        assertEquals("SELECT id, ROWID FROM Versions WHERE ROWID>? GROUP BY id, ROWID ORDER BY ROWID DESC", query.query)
+    }
+    
+    
+    @Test
     fun `whole table limit composes with ordering and projection limits`() {
         val limited = versionTable.limit(10)
         val expected = "SELECT * FROM Versions ORDER BY version LIMIT 10"
