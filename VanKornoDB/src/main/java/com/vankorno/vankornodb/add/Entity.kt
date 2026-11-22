@@ -9,6 +9,7 @@ import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.MiniDslTable
 import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.get.getNextIDs
 import com.vankorno.vankornodb.get.getNextId
@@ -18,15 +19,23 @@ import com.vankorno.vankornodb.misc.wLog
 /** Inserts [entity], assigning a new ID when its ID is less than 1.
  * Returns the inserted row ID, or -1 on failure.
  */
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addEntity(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.addEntity(                                         table: DslTable<TableInfo<T>, W, O, X>,
                                                             entity: T,
 ): Long = readWrite(-1L, "addEntity") { db ->
     db.addEntity(table, entity)
 }
 
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addEntity(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.addEntity(                              table: DslTable<TableInfo<T>, W, O, X>,
                                                             entity: T,
 ): Long {
     val modified = if (entity.id < 1L)
@@ -85,15 +94,23 @@ fun <T : DbEntity, W> SQLiteDatabase.addEntitiesWithoutIdCheck(
  * Explicit positive IDs in the batch are reserved before allocating any new IDs.
  * Returns the row IDs in input order, with -1 for each failed insert.
  */
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addEntities(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.addEntities(                                       table: DslTable<TableInfo<T>, W, O, X>,
                                                           entities: List<T>,
 ): List<Long> = readWrite(emptyList(), "addEntities") { db ->
     db.addEntities(table, entities)
 }
 
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addEntities(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.addEntities(                            table: DslTable<TableInfo<T>, W, O, X>,
                                                           entities: List<T>,
 ): List<Long> {
     val newIDs = getNextIDs(
@@ -122,12 +139,20 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addEnt
 
 /** Vararg overload of [addEntities]. Returns row IDs in input order.
  */
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addEntities(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.addEntities(                                       table: DslTable<TableInfo<T>, W, O, X>,
                                                    vararg entities: T,
 ): List<Long> = addEntities(table, entities.toList())
 
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addEntities(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.addEntities(                            table: DslTable<TableInfo<T>, W, O, X>,
                                                    vararg entities: T,
 ): List<Long> = addEntities(table, entities.toList())

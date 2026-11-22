@@ -7,6 +7,7 @@ import com.vankorno.vankornodb.api.Dbh
 import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.TableInfo
 import com.vankorno.vankornodb.get.getNextIDs
 import com.vankorno.vankornodb.get.getNextPositions
@@ -18,16 +19,29 @@ import com.vankorno.vankornodb.misc.data.DbIdAndPosition
  * [setIdAndPosition] copies each assigned pair into the entity before insertion.
  * Returns the assigned pairs in input order.
  */
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIDsAndPositions(
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.addWithNewIDsAndPositions(
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                           entities: List<T>,
                                                 positionConditions: W.()->Unit = {},
                                                   setIdAndPosition: (T, Long, Long)->T,
-): List<DbIdAndPosition> = readWrite(emptyList(), "addWithNewIDsAndPositions") { db ->
+): List<DbIdAndPosition> = readWrite(
+    default = emptyList(),
+    funName = "addWithNewIDsAndPositions"
+) { db ->
     db.addWithNewIDsAndPositions(table, entities, positionConditions, setIdAndPosition)
 }
 
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIDsAndPositions(
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.addWithNewIDsAndPositions(
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                           entities: List<T>,
                                                 positionConditions: W.()->Unit = {},
@@ -50,16 +64,29 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWit
  * [positionConditions] selects the rows whose positions are already occupied.
  * Returns the assigned pair.
  */
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.addWithNewIdAndPosition(
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.addWithNewIdAndPosition(
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                             entity: T,
                                                 positionConditions: W.()->Unit = {},
                                                   setIdAndPosition: (T, Long, Long)->T,
-): DbIdAndPosition = readWrite(DbIdAndPosition(), "addWithNewIdAndPosition") { db ->
+): DbIdAndPosition = readWrite(
+    default = DbIdAndPosition(),
+    funName = "addWithNewIdAndPosition"
+) { db ->
     db.addWithNewIdAndPosition(table, entity, positionConditions, setIdAndPosition)
 }
 
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.addWithNewIdAndPosition(
+fun <
+    T : DbEntity,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.addWithNewIdAndPosition(
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                             entity: T,
                                                 positionConditions: W.()->Unit = {},
