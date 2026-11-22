@@ -49,7 +49,7 @@ fun <
                                                                 id: Long,
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                            default: T,
-): T? = getEntity(table, default) { Id equal id }
+): T = getEntity(table, default) { Id equal id }
 
 fun <
     T : DbEntity,
@@ -60,5 +60,5 @@ fun <
                                                                 id: Long,
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                            default: T,
-): T? = getEntity(table, default) { Id equal id }
+): T = getEntity(table, default) { Id equal id }
 
