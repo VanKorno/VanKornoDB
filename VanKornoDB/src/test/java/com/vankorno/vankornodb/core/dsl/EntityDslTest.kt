@@ -15,6 +15,20 @@ class EntityDslTest {
     private val versionTable = _EntityVersion.tableNamed("Versions")
     
     @Test
+    fun `whole table limit composes with ordering and projection limits`() {
+        val limited = versionTable.limit(10)
+        val expected = "SELECT * FROM Versions ORDER BY version LIMIT 10"
+        assertEquals(expected, limited.orderBy { Version }.query().query)
+        assertEquals(expected, versionTable.orderBy { Version }.limit(10).query().query)
+        assertEquals("SELECT * FROM Versions LIMIT 2", limited.query(extra = { limit = 2 }).query)
+        val ids = limited.col { Id }
+        assertEquals("SELECT id FROM Versions LIMIT 10", subquery(ids).query)
+        assertEquals("SELECT id FROM Versions LIMIT 3", subquery(ids.limit(3)).query)
+        assertEquals("SELECT * FROM Versions", versionTable.query().query)
+    }
+    
+    
+    @Test
     fun `whole table order is a reusable default`() {
         val sorted = versionTable.orderBy { Version }
         assertEquals("SELECT * FROM Versions ORDER BY version", sorted.query().query)
