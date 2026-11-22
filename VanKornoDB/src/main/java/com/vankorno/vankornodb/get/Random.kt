@@ -7,6 +7,7 @@ import com.vankorno.vankornodb.core.dsl.DslTable
 import com.vankorno.vankornodb.core.dsl.ExtraDsl
 import com.vankorno.vankornodb.core.dsl.OrderDsl
 import com.vankorno.vankornodb.core.dsl.TableColumn
+import com.vankorno.vankornodb.core.dsl.WhereDsl
 import com.vankorno.vankornodb.dbManagement.data.FloatCol
 import com.vankorno.vankornodb.dbManagement.data.IntCol
 import com.vankorno.vankornodb.dbManagement.data.LongCol
@@ -87,13 +88,14 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomFloat(
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random ID from the table, or -1 if no rows match.
  */
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomId(           table: DslTable<*, W, O, X>,
+fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomId(
+                                                                        table: DslTable<*, W, O, X>,
                                                                         where: W.()->Unit = {},
 ): Long = read(-1L, "getRandomId") { db ->
     db.getRandomId(table, where)
 }
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomId(
+fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomId(
                                                                         table: DslTable<*, W, O, X>,
                                                                         where: W.()->Unit = {},
-): Long = getRandomLong(table.col(idColumn()), where)
+): Long = getRandomLong(table.col { Id }, where)

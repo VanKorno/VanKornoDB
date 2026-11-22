@@ -396,6 +396,6 @@ private fun <
                                                                ids: Set<Long>,
 ): Map<Long, T> = buildMap {
     for (batch in ids.chunked(900)) {
-        putAll(getEntityMap(table) { idColumn<W>()(this) equalAny batch })
+        putAll(getEntityMap(table) { Id equalAny batch })
     }
 }
