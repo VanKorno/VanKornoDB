@@ -13,7 +13,7 @@ import com.vankorno.sandbox._ui.composables.BotBar
 import com.vankorno.sandbox._ui.composables.TopBarShadow
 
 @Composable
-fun LayoutsHome(                                                       modifiers: LayoutModifiers
+fun LayoutsHome(                                                        modifiers: LayoutModifiers
 ) {
     val scrollState = rememberScrollState()
     
@@ -41,7 +41,8 @@ fun BottomHome() {
 }
 
 @Composable
-fun TopHome(modifier: Modifier) {
+fun TopHome(                                                                    modifier: Modifier
+) {
     
 }
 

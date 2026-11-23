@@ -19,9 +19,9 @@ abstract class SetDslBase<W> {
     
     
     
-    internal fun iMultDiv(                                                           col: IntCol,
-                                                                                   value: Number,
-                                                                                    oper: String,
+    internal fun iMultDiv(                                                         col: IntCol,
+                                                                                 value: Number,
+                                                                                  oper: String,
     ) {
         val v = value.toInt()
         if (v == 1) return //\/\/\/\/\/\
@@ -31,9 +31,9 @@ abstract class SetDslBase<W> {
                 else
                     SetOp.NumOp(col.name, v, oper)
     }
-    internal fun lMultDiv(                                                           col: LongCol,
-                                                                                   value: Number,
-                                                                                    oper: String,
+    internal fun lMultDiv(                                                         col: LongCol,
+                                                                                 value: Number,
+                                                                                  oper: String,
     ) {
         val v = value.toLong()
         if (v == 1L) return //\/\/\/\/\/\
@@ -44,9 +44,9 @@ abstract class SetDslBase<W> {
                     SetOp.NumOp(col.name, v, oper)
     }
     
-    internal fun fMultDiv(                                                           col: FloatCol,
-                                                                                   value: Number,
-                                                                                    oper: String,
+    internal fun fMultDiv(                                                         col: FloatCol,
+                                                                                 value: Number,
+                                                                                  oper: String,
     ) {
         val v = value.toFloat()
         if (v == 1f) return //\/\/\/\/\/\
@@ -73,8 +73,8 @@ abstract class SetDslBase<W> {
     @JvmName("andFloorAtInt")
     infix fun Field<W, IntCol>.andFloorAt(value: Number) = IntColOp<W>(definition.name, value, MathOp.FloorAt(value))
     @JvmName("andCoerceInInt")
-    infix fun Field<W, IntCol>.andCoerceIn(range: IntRange) =
-        IntColOp<W>(definition.name, range.first, MathOp.CoerceIn(range.first, range.last))
+    infix fun Field<W, IntCol>.andCoerceIn(                                      range: IntRange
+    ) = IntColOp<W>(definition.name, range.first, MathOp.CoerceIn(range.first, range.last))
     
     @JvmName("andAddLong")
     infix fun Field<W, LongCol>.andAdd(value: Number) = LongColOp<W>(definition.name, value, MathOp.Add)
@@ -89,8 +89,8 @@ abstract class SetDslBase<W> {
     @JvmName("andFloorAtLong")
     infix fun Field<W, LongCol>.andFloorAt(value: Number) = LongColOp<W>(definition.name, value, MathOp.FloorAt(value))
     @JvmName("andCoerceInLong")
-    infix fun Field<W, LongCol>.andCoerceIn(range: LongRange) =
-        LongColOp<W>(definition.name, range.first, MathOp.CoerceIn(range.first, range.last))
+    infix fun Field<W, LongCol>.andCoerceIn(                                     range: LongRange
+    ) = LongColOp<W>(definition.name, range.first, MathOp.CoerceIn(range.first, range.last))
     
     @JvmName("andAddFloat")
     infix fun Field<W, FloatCol>.andAdd(value: Number) = FloatColOp<W>(definition.name, value, MathOp.Add)
@@ -105,8 +105,8 @@ abstract class SetDslBase<W> {
     @JvmName("andFloorAtFloat")
     infix fun Field<W, FloatCol>.andFloorAt(value: Number) = FloatColOp<W>(definition.name, value, MathOp.FloorAt(value))
     @JvmName("andCoerceInFloat")
-    infix fun Field<W, FloatCol>.andCoerceIn(range: ClosedFloatingPointRange<Float>) =
-        FloatColOp<W>(definition.name, range.start, MathOp.CoerceIn(range.start, range.endInclusive))
+    infix fun Field<W, FloatCol>.andCoerceIn(               range: ClosedFloatingPointRange<Float>
+    ) = FloatColOp<W>(definition.name, range.start, MathOp.CoerceIn(range.start, range.endInclusive))
     
     
     

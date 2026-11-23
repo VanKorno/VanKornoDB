@@ -68,7 +68,7 @@ fun BodyPlayground() {
 
 private val Snacks = _TestEntity.tableNamed("PlaygroundSnackPoll")
 
-private suspend fun loadSnackPoll(                                            voteFor: Long? = null
+private suspend fun loadSnackPoll(                                           voteFor: Long? = null
 ): List<TestEntity>? = withContext(Dispatchers.IO) {
     dbh.createTable(Snacks)
     if (dbh.isTableEmpty(Snacks))
@@ -87,7 +87,8 @@ private fun SnackPoll() {
     var busy by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
     
-    suspend fun refresh(id: Long? = null) {
+    suspend fun refresh(                                                          id: Long? = null
+    ) {
         try {
             rows = loadSnackPoll(id)
         } finally {

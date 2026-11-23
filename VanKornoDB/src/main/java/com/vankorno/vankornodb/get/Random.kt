@@ -88,14 +88,20 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomFloat(
  * @param where Optional lambda to specify additional WHERE conditions.
  * @return A random ID from the table, or -1 if no rows match.
  */
-fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.getRandomId(
-                                                                        table: DslTable<*, W, O, X>,
+fun <
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.getRandomId(                                                  table: DslTable<*, W, O, X>,
                                                                         where: W.()->Unit = {},
 ): Long = read(-1L, "getRandomId") { db ->
     db.getRandomId(table, where)
 }
 
-fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRandomId(
-                                                                        table: DslTable<*, W, O, X>,
+fun <
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.getRandomId(                                       table: DslTable<*, W, O, X>,
                                                                         where: W.()->Unit = {},
 ): Long = getRandomLong(table.col { Id }, where)

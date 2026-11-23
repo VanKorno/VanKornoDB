@@ -14,8 +14,11 @@ import com.vankorno.vankornodb.dbManagement.data.requirePositionColumn
 /** Moves a row one position, or to the first or last position, among rows matching [where].
  * Returns false when the row has no available move.
  */
-fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.reorder(
-                                                                        table: DslTable<*, W, O, X>,
+fun <
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.reorder(                                                      table: DslTable<*, W, O, X>,
                                                                            id: Long,
                                                                  moveUpOrBack: Boolean,
                                                               makeFirstOrLast: Boolean = false,
@@ -24,8 +27,11 @@ fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.reorder(
     db.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
 }
 
-fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorder(
-                                                                        table: DslTable<*, W, O, X>,
+fun <
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.reorder(                                           table: DslTable<*, W, O, X>,
                                                                            id: Long,
                                                                  moveUpOrBack: Boolean,
                                                               makeFirstOrLast: Boolean = false,
@@ -45,8 +51,11 @@ fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorde
 
 
 
-private fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.reorderRow(
-                                                                        table: DslTable<*, W, O, X>,
+private fun <
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.reorderRow(                                        table: DslTable<*, W, O, X>,
                                                                            id: Long,
                                                                  moveUpOrBack: Boolean,
                                                               makeFirstOrLast: Boolean,
@@ -65,7 +74,9 @@ private fun <W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabas
         arrayOf(id.toString(), *predicate.args),
     ).use { if (it.moveToFirst()) it.getLong(0) else null } ?: return false //\/\/\/\/\/\
     
-    fun setPosition(rowId: Long, value: Long) {
+    fun setPosition(                                                             rowId: Long,
+                                                                                 value: Long,
+    ) {
         execSQL("UPDATE $source SET $pos = ? WHERE $key = ?", arrayOf(value, rowId))
     }
     

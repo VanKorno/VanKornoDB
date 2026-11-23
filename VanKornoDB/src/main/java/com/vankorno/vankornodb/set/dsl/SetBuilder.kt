@@ -18,6 +18,7 @@ import com.vankorno.vankornodb.set.dsl.data.SetOp
 
 @DslInject
 abstract class SetDsl<W> : SetDslBase<W>(), DslWithId<W> {
+    
     fun setCV(cv: ContentValues) { _ops += SetOp.SetCV(cv) }
     fun setContentValues(cv: ContentValues) = setCV(cv)
     
@@ -65,17 +66,17 @@ abstract class SetDsl<W> : SetDslBase<W>(), DslWithId<W> {
     
     
     @JvmName("coerceInInt")
-    infix fun Field<W, IntCol>.coerceIn(                                           range: IntRange
+    infix fun Field<W, IntCol>.coerceIn(                                         range: IntRange
     ) {
         _ops += SetOp.CoerceIn(definition.name, range.first, range.last)
     }
     @JvmName("coerceInLong")
-    infix fun Field<W, LongCol>.coerceIn(                                          range: LongRange
+    infix fun Field<W, LongCol>.coerceIn(                                        range: LongRange
     ) {
         _ops += SetOp.CoerceIn(definition.name, range.first, range.last)
     }
     @JvmName("coerceInFloat")
-    infix fun Field<W, FloatCol>.coerceIn(                    range: ClosedFloatingPointRange<Float>
+    infix fun Field<W, FloatCol>.coerceIn(                  range: ClosedFloatingPointRange<Float>
     ) {
         _ops += SetOp.CoerceIn(definition.name, range.start, range.endInclusive)
     }
@@ -95,15 +96,18 @@ abstract class SetDsl<W> : SetDslBase<W>(), DslWithId<W> {
     
     
     @JvmName("setAsInt")
-    infix fun Field<W, IntCol>.setAs(colWithOp: IntColOp<W>) {
+    infix fun Field<W, IntCol>.setAs(                                       colWithOp: IntColOp<W>
+    ) {
         _ops += SetOp.SetAsModified(definition.name, colWithOp)
     }
     @JvmName("setAsLong")
-    infix fun Field<W, LongCol>.setAs(colWithOp: LongColOp<W>) {
+    infix fun Field<W, LongCol>.setAs(                                     colWithOp: LongColOp<W>
+    ) {
         _ops += SetOp.SetAsModified(definition.name, colWithOp)
     }
     @JvmName("setAsFloat")
-    infix fun Field<W, FloatCol>.setAs(colWithOp: FloatColOp<W>) {
+    infix fun Field<W, FloatCol>.setAs(                                   colWithOp: FloatColOp<W>
+    ) {
         _ops += SetOp.SetAsModified(definition.name, colWithOp)
     }
     

@@ -19,8 +19,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > Dbh.getEntityById(
-                                                                id: Long,
+    > Dbh.getEntityById(                                        id: Long,
                                                              table: DslTable<TableInfo<T>, W, O, X>,
 ): T? = getEntity(table) { Id equal id }
 
@@ -29,8 +28,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > SQLiteDatabase.getEntityById(
-                                                                id: Long,
+    > SQLiteDatabase.getEntityById(                             id: Long,
                                                              table: DslTable<TableInfo<T>, W, O, X>,
 ): T? = getEntity(table) { Id equal id }
 
@@ -45,8 +43,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > Dbh.getEntityById(
-                                                                id: Long,
+    > Dbh.getEntityById(                                        id: Long,
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                            default: T,
 ): T = getEntity(table, default) { Id equal id }
@@ -56,8 +53,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > SQLiteDatabase.getEntityById(
-                                                                id: Long,
+    > SQLiteDatabase.getEntityById(                             id: Long,
                                                              table: DslTable<TableInfo<T>, W, O, X>,
                                                            default: T,
 ): T = getEntity(table, default) { Id equal id }

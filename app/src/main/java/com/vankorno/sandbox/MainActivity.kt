@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         val DummyTable = _TestEntity.tableNamed(DummyTableName)
     }
     
-    override fun onCreate(                                            savedInstanceState: Bundle?
+    override fun onCreate(                                          savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
         }
     }
     
-    private fun startup(                                              savedInstanceState: Bundle?
+    private fun startup(                                            savedInstanceState: Bundle?
     ) {
         launchApp()
         when {

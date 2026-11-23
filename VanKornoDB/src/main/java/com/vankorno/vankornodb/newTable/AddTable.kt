@@ -28,7 +28,7 @@ fun Dbh.createTables(                     vararg tables: DslTable<TableInfo<out 
 ) = write("createTables", async) { db -> db.createTables(*tables) }
 
 
-fun SQLiteDatabase.createTables(           vararg tables: DslTable<TableInfo<out DbEntity>, *, *, *>
+fun SQLiteDatabase.createTables(          vararg tables: DslTable<TableInfo<out DbEntity>, *, *, *>
 ) = tables.forEach { createTable(it) }
 
 
@@ -45,7 +45,7 @@ fun SQLiteDatabase.createTables() = Unit
 
 
 @JvmName("createQueryTables")
-fun SQLiteDatabase.createTables(            tables: List<DslTable<TableInfo<out DbEntity>, *, *, *>>
+fun SQLiteDatabase.createTables(           tables: List<DslTable<TableInfo<out DbEntity>, *, *, *>>
 ) = tables.forEach { createTable(it) }
 
 
@@ -57,7 +57,7 @@ fun SQLiteDatabase.createTable(tableInfo: TableInfo<out DbEntity>) = createTable
 
 /** Creates multiple tables in the database given a list of TableInfo (table name + schema bundle).
  */
-fun SQLiteDatabase.createTables(                               tables: List<TableInfo<out DbEntity>>
+fun SQLiteDatabase.createTables(                              tables: List<TableInfo<out DbEntity>>
 ) = createTables(*tables.toTypedArray())
 
 
@@ -77,7 +77,7 @@ fun SQLiteDatabase.createTables(                               tables: List<Tabl
  *
  * @param tables One or more table descriptors containing table name and schema source.
  */
-fun SQLiteDatabase.createTables(                              vararg tables: TableInfo<out DbEntity>
+fun SQLiteDatabase.createTables(                             vararg tables: TableInfo<out DbEntity>
 ) {
     for (table in tables) {
         val schemaBundle = table.schema
@@ -97,7 +97,7 @@ fun SQLiteDatabase.createTables(                              vararg tables: Tab
  * DbHelper/DbManager already runs this fun by default, if you don't disable it by setting the
  * 'createExclusiveTables' param to false.
  */
-fun SQLiteDatabase.createExclusiveTables(                  allEntityMeta: Collection<BaseEntityMeta>
+fun SQLiteDatabase.createExclusiveTables(                 allEntityMeta: Collection<BaseEntityMeta>
 ) {
     // region LOG
         dLog("createExclusiveTables() runs")

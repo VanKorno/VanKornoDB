@@ -24,8 +24,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > Dbh.addWithNewIDsAndPositions(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+    > Dbh.addWithNewIDsAndPositions(                         table: DslTable<TableInfo<T>, W, O, X>,
                                                           entities: List<T>,
                                                 positionConditions: W.()->Unit = {},
                                                   setIdAndPosition: (T, Long, Long)->T,
@@ -41,8 +40,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > SQLiteDatabase.addWithNewIDsAndPositions(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+    > SQLiteDatabase.addWithNewIDsAndPositions(              table: DslTable<TableInfo<T>, W, O, X>,
                                                           entities: List<T>,
                                                 positionConditions: W.()->Unit = {},
                                                   setIdAndPosition: (T, Long, Long)->T,
@@ -69,8 +67,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > Dbh.addWithNewIdAndPosition(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+    > Dbh.addWithNewIdAndPosition(                           table: DslTable<TableInfo<T>, W, O, X>,
                                                             entity: T,
                                                 positionConditions: W.()->Unit = {},
                                                   setIdAndPosition: (T, Long, Long)->T,
@@ -86,8 +83,7 @@ fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > SQLiteDatabase.addWithNewIdAndPosition(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+    > SQLiteDatabase.addWithNewIdAndPosition(                table: DslTable<TableInfo<T>, W, O, X>,
                                                             entity: T,
                                                 positionConditions: W.()->Unit = {},
                                                   setIdAndPosition: (T, Long, Long)->T,

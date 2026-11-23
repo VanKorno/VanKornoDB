@@ -11,12 +11,16 @@ import com.vankorno.vankornodb.dbManagement.data.TypedColumn
 /**
  * For internal use with the type-safe getColVals... functions.
  */
-internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getColVals(
-                                                         column: TableColumn<W, O, X, TypedColumn<R>>,
-                                                        orderBy: O.()->Unit = column.defaultOrder,
-                                                          extra: X.()->Unit = {},
-                                                          where: W.()->Unit = {},
-                                                 getCursorValue: (Cursor)->R,
+internal fun <
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>,
+    R
+    > SQLiteDatabase.getColVals(                       column: TableColumn<W, O, X, TypedColumn<R>>,
+                                                      orderBy: O.()->Unit = column.defaultOrder,
+                                                        extra: X.()->Unit = {},
+                                                        where: W.()->Unit = {},
+                                               getCursorValue: (Cursor)->R,
 ): List<R> = baseGetVals(
     column, orderBy = orderBy, extra = extra, where = where
 ) { cursor, _ ->

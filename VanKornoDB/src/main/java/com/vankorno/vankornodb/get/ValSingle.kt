@@ -138,8 +138,12 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getBlob(
 
 
 
-fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getValue(
-                                                   column: TableColumn<W, O, X, out TypedColumn<R>>,
+fun <
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>,
+    R
+    > SQLiteDatabase.getValue(                     column: TableColumn<W, O, X, out TypedColumn<R>>,
                                                   default: R,
                                                   funName: String,
                                                   orderBy: O.()->Unit = column.defaultOrder,

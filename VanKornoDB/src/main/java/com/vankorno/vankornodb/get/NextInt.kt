@@ -30,7 +30,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextInts(
                                                              reserved: Set<Int> = emptySet(),
                                                                 where: W.()->Unit = {},
 ): List<Int> {
-    if (count <= 0) return emptyList() ///\/\/\/\/\/\
+    if (count <= 0) return emptyList() //\/\/\/\/\/\
     require(startFrom > 0) { "startFrom must be positive" } //\/\/\
     
     val maxReservedValue = reserved.maxOrNull() ?: Int.MIN_VALUE
@@ -77,7 +77,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getFreeIntsFromStart
                                                              reserved: Set<Int> = emptySet(),
                                                                 where: W.()->Unit = {},
 ): List<Int> {
-    if (count <= 0) return emptyList() ///\/\/\/\/\/\
+    if (count <= 0) return emptyList() //\/\/\/\/\/\
     require(startFrom > 0) { "startFrom must be positive" } //\/\/\
     
     val unavailableValues = getColInts(column, where = where).toSet() + reserved

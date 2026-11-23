@@ -12,12 +12,16 @@ import com.vankorno.vankornodb.get.getCursor
 /**
  * Reads the first matching row in projection order.
  */
-internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getRowVals(
-                                                        columns: TableColumns<W, O, X, TypedColumn<R>>,
-                                                        orderBy: O.()->Unit = columns.defaultOrder,
-                                                          extra: X.()->Unit = {},
-                                                          where: W.()->Unit = {},
-                                                 getCursorValue: (Cursor, Int)->R,
+internal fun <
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>,
+    R
+    > SQLiteDatabase.getRowVals(                     columns: TableColumns<W, O, X, TypedColumn<R>>,
+                                                     orderBy: O.()->Unit = columns.defaultOrder,
+                                                       extra: X.()->Unit = {},
+                                                       where: W.()->Unit = {},
+                                              getCursorValue: (Cursor, Int)->R,
 ): List<R> = getCursor(
     columns, orderBy = orderBy, where = where,
     extra = {

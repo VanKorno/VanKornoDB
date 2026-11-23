@@ -11,8 +11,12 @@ import com.vankorno.vankornodb.get.getCursor
 
 /** Base fun for getting multiple values from db
 */
-internal fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.baseGetVals(
-                                                     columns: TableColumns<W, O, X, TypedColumn<R>>,
+internal fun <
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>,
+    R
+    > SQLiteDatabase.baseGetVals(                    columns: TableColumns<W, O, X, TypedColumn<R>>,
                                                      orderBy: O.()->Unit = columns.defaultOrder,
                                                        extra: X.()->Unit = {},
                                                        where: W.()->Unit = {},

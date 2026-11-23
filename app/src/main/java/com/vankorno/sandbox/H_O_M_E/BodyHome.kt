@@ -48,9 +48,9 @@ private fun NavBtns() {
 
 
 @Composable
-private fun NavBtn(                                                      targetScr: Screen,
-                                                                              text: String,
-                                                                       accentColor: AccentColor,
+private fun NavBtn(                                                         targetScr: Screen,
+                                                                                 text: String,
+                                                                          accentColor: AccentColor,
 ) {
     LargeBtn(text, accentColor) { goToScreen(targetScr) }
 }

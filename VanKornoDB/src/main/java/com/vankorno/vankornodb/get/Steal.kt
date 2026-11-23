@@ -23,8 +23,12 @@ import com.vankorno.vankornodb.misc.suppressEntityGetterErrorLog
  * 
  * Returns [default] if no result is found.
  */
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.steal(
-                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
+fun <
+    T : DbEntity,
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.steal(                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                                        thiefSchema: SchemaBundle<T>,
                                                            default: T,
                                                            orderBy: O.()->Unit = {},
@@ -34,8 +38,12 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.steal(
     db.steal(ownerTable, thiefSchema, default, orderBy, extra, where)
 }
 
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
-                                                        ownerTable: DslTable<TableInfo<*>, W, O, X>,
+fun <
+    T : DbEntity,
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.steal(                             ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                                        thiefSchema: SchemaBundle<T>,
                                                            default: T,
                                                            orderBy: O.()->Unit = {},
@@ -71,8 +79,12 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.steal(
  * 
  * Returns an empty list if no result is found.
  */
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.stealALot(
-                                 ownerTable: DslTable<TableInfo<*>, W, O, X>,
+fun <
+    T : DbEntity,
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > Dbh.stealALot(             ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                 thiefSchema: SchemaBundle<T>,
                                     orderBy: O.()->Unit = ownerTable.tableOrder ?: { raw("ROWID") },
                                       extra: X.()->Unit = {},
@@ -81,7 +93,12 @@ fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> Dbh.stealALot(
     db.stealALot(ownerTable, thiefSchema, orderBy, extra, where)
 }
 
-fun <T : DbEntity, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.stealALot(
+fun <
+    T : DbEntity,
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > SQLiteDatabase.stealALot(
                                  ownerTable: DslTable<TableInfo<*>, W, O, X>,
                                 thiefSchema: SchemaBundle<T>,
                                     orderBy: O.()->Unit = ownerTable.tableOrder ?: { raw("ROWID") },

@@ -41,8 +41,12 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getLargestLong(
 
 
 
-private inline fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>, R> SQLiteDatabase.getLargestValue(
-                                                                    column: TableColumn<W, O, X, *>,
+private inline fun <
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>,
+    R
+    > SQLiteDatabase.getLargestValue(                               column: TableColumn<W, O, X, *>,
                                                             noinline where: W.()->Unit,
                                                                  readValue: (Cursor)->R,
 ): R {

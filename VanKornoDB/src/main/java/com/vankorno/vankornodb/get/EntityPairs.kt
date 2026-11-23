@@ -23,8 +23,7 @@ fun <
     WB : WhereDsl<WB>,
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
-    > Dbh.getEntityPair(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > Dbh.getEntityPair(                                 tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                              id: Long,
 ): Pair<A, B>? = read(null, "getEntityPair") { db ->
@@ -40,8 +39,7 @@ fun <
     WB : WhereDsl<WB>,
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
-    > SQLiteDatabase.getEntityPair(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > SQLiteDatabase.getEntityPair(                      tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                              id: Long,
 ): Pair<A, B>? {
@@ -66,8 +64,7 @@ fun <
     WB : WhereDsl<WB>,
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
-    > Dbh.getEntityPair(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > Dbh.getEntityPair(                                 tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                         orderBy: OA.()->Unit = {},
                                                           extra: XA.()->Unit = {},
@@ -85,8 +82,7 @@ fun <
     WB : WhereDsl<WB>,
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
-    > SQLiteDatabase.getEntityPair(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > SQLiteDatabase.getEntityPair(                      tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                         orderBy: OA.()->Unit = {},
                                                           extra: XA.()->Unit = {},
@@ -114,12 +110,11 @@ fun <
     WB : WhereDsl<WB>,
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
-    > Dbh.getEntityPairs(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
-                                                          extra: XA.()->Unit = {},
-                                                          where: WA.()->Unit = {},
+    > Dbh.getEntityPairs(               tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                        tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                       orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
+                                         extra: XA.()->Unit = {},
+                                         where: WA.()->Unit = {},
 ): List<Pair<A, B>> = read(emptyList(), "getEntityPairs") { db ->
     db.getEntityPairs(tableA, tableB, orderBy, extra, where)
 }
@@ -133,12 +128,11 @@ fun <
     WB : WhereDsl<WB>,
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
-    > SQLiteDatabase.getEntityPairs(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
-                                                          extra: XA.()->Unit = {},
-                                                          where: WA.()->Unit = {},
+    > SQLiteDatabase.getEntityPairs(    tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                        tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                       orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
+                                         extra: XA.()->Unit = {},
+                                         where: WA.()->Unit = {},
 ): List<Pair<A, B>> {
     val mapA = getEntityMap(tableA, orderBy, extra, where)
     if (mapA.isEmpty()) return emptyList() //\/\/\/\/\/\
@@ -168,12 +162,11 @@ fun <
     WB : WhereDsl<WB>,
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
-    > Dbh.getEntityPairMap(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
-                                                          extra: XA.()->Unit = {},
-                                                          where: WA.()->Unit = {},
+    > Dbh.getEntityPairMap(             tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                        tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                       orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
+                                         extra: XA.()->Unit = {},
+                                         where: WA.()->Unit = {},
 ): Map<Long, Pair<A, B>> = read(emptyMap(), "getEntityPairMap") { db ->
     db.getEntityPairMap(tableA, tableB, orderBy, extra, where)
 }
@@ -188,11 +181,11 @@ fun <
     OB : OrderDsl<WB, OB>,
     XB : ExtraDsl<WB>
     > SQLiteDatabase.getEntityPairMap(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
-                                                          extra: XA.()->Unit = {},
-                                                          where: WA.()->Unit = {},
+                                        tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                        tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                       orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
+                                         extra: XA.()->Unit = {},
+                                         where: WA.()->Unit = {},
 ): Map<Long, Pair<A, B>> {
     val mapA = getEntityMap(tableA, orderBy, extra, where)
     if (mapA.isEmpty()) return emptyMap() //\/\/\/\/\/\
@@ -226,8 +219,7 @@ fun <
     WC : WhereDsl<WC>,
     OC : OrderDsl<WC, OC>,
     XC : ExtraDsl<WC>
-    > Dbh.getEntityTriple(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > Dbh.getEntityTriple(                               tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                          tableC: DslTable<TableInfo<C>, WC, OC, XC>,
                                                              id: Long,
@@ -248,8 +240,7 @@ fun <
     WC : WhereDsl<WC>,
     OC : OrderDsl<WC, OC>,
     XC : ExtraDsl<WC>
-    > SQLiteDatabase.getEntityTriple(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > SQLiteDatabase.getEntityTriple(                    tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                          tableC: DslTable<TableInfo<C>, WC, OC, XC>,
                                                              id: Long,
@@ -280,8 +271,7 @@ fun <
     WC : WhereDsl<WC>,
     OC : OrderDsl<WC, OC>,
     XC : ExtraDsl<WC>
-    > Dbh.getEntityTriple(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > Dbh.getEntityTriple(                               tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                          tableC: DslTable<TableInfo<C>, WC, OC, XC>,
                                                         orderBy: OA.()->Unit = {},
@@ -304,8 +294,7 @@ fun <
     WC : WhereDsl<WC>,
     OC : OrderDsl<WC, OC>,
     XC : ExtraDsl<WC>
-    > SQLiteDatabase.getEntityTriple(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+    > SQLiteDatabase.getEntityTriple(                    tableA: DslTable<TableInfo<A>, WA, OA, XA>,
                                                          tableB: DslTable<TableInfo<B>, WB, OB, XB>,
                                                          tableC: DslTable<TableInfo<C>, WC, OC, XC>,
                                                         orderBy: OA.()->Unit = {},
@@ -339,13 +328,12 @@ fun <
     WC : WhereDsl<WC>,
     OC : OrderDsl<WC, OC>,
     XC : ExtraDsl<WC>
-    > Dbh.getEntityTriples(
-                                                         tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
-                                                          extra: XA.()->Unit = {},
-                                                          where: WA.()->Unit = {},
+    > Dbh.getEntityTriples(             tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                        tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                        tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                       orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
+                                         extra: XA.()->Unit = {},
+                                         where: WA.()->Unit = {},
 ): List<Triple<A, B, C>> = read(emptyList(), "getEntityTriples") { db ->
     db.getEntityTriples(tableA, tableB, tableC, orderBy, extra, where)
 }
@@ -363,12 +351,13 @@ fun <
     WC : WhereDsl<WC>,
     OC : OrderDsl<WC, OC>,
     XC : ExtraDsl<WC>
-    > SQLiteDatabase.getEntityTriples(                   tableA: DslTable<TableInfo<A>, WA, OA, XA>,
-                                                         tableB: DslTable<TableInfo<B>, WB, OB, XB>,
-                                                         tableC: DslTable<TableInfo<C>, WC, OC, XC>,
-                                                        orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
-                                                          extra: XA.()->Unit = {},
-                                                          where: WA.()->Unit = {},
+    > SQLiteDatabase.getEntityTriples(
+                                        tableA: DslTable<TableInfo<A>, WA, OA, XA>,
+                                        tableB: DslTable<TableInfo<B>, WB, OB, XB>,
+                                        tableC: DslTable<TableInfo<C>, WC, OC, XC>,
+                                       orderBy: OA.()->Unit = tableA.tableOrder ?: { raw("ROWID") },
+                                         extra: XA.()->Unit = {},
+                                         where: WA.()->Unit = {},
 ): List<Triple<A, B, C>> {
     val mapA = getEntityMap(tableA, orderBy, extra, where)
     if (mapA.isEmpty()) return emptyList() //\/\/\/\/\/\
@@ -391,8 +380,7 @@ private fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
     X : ExtraDsl<W>
-    > SQLiteDatabase.entitiesByIds(
-                                                             table: DslTable<TableInfo<T>, W, O, X>,
+    > SQLiteDatabase.entitiesByIds(                          table: DslTable<TableInfo<T>, W, O, X>,
                                                                ids: Set<Long>,
 ): Map<Long, T> = buildMap {
     for (batch in ids.chunked(900)) {

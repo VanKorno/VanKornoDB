@@ -30,7 +30,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getNextLongs(
                                                             reserved: Set<Long> = emptySet(),
                                                                where: W.()->Unit = {},
 ): List<Long> {
-    if (count <= 0) return emptyList() ///\/\/\/\/\/\
+    if (count <= 0) return emptyList() //\/\/\/\/\/\
     
     require(startFrom > 0L) { "startFrom must be positive" } //\/\/\
     
