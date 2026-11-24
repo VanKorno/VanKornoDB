@@ -19,7 +19,7 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.getRowCount(
                                                                         extra: X.()->Unit = {},
                                                                         where: W.()->Unit = {},
 ): Int {
-    val query = table.existenceQuery({}, extra, where)
+    val query = table.existenceQuery(extra, where)
     return rawQuery(query.query, query.args).use { it.count }
 }
 
@@ -48,7 +48,6 @@ fun <W, O : OrderDsl<W, O>, X : ExtraDsl<W>> SQLiteDatabase.hasRows(    table: D
                                                                         where: W.()->Unit = {},
 ): Boolean {
     val query = table.existenceQuery(
-        orderBy = {},
         extra = {
             extra()
             limit = 1

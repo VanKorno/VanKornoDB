@@ -287,11 +287,18 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
     
     
     
-    internal fun existenceQuery(                                               orderBy: O.()->Unit,
-                                                                                 extra: X.()->Unit,
-                                                                                 where: W.()->Unit,
+    internal fun existenceQuery(                                                 extra: X.()->Unit = {},
+                                                                                 where: W.()->Unit = {},
     ): Subquery {
-        val result = render(name, name, arrayOf("1"), predicate(name, where), orderBy, extra)
+        val result = render(
+            source = name,
+            qualifier = name,
+            columns = arrayOf("1"),
+            where = predicate(name, where),
+            orderBy = {},
+            extra = extra,
+            ignoreTableOrder = true,
+        )
         return Subquery(result.query, result.args)
     }
     
@@ -303,6 +310,7 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
                                                                               where: WhereDslBase,
                                                                             orderBy: O.()->Unit,
                                                                               extra: X.()->Unit,
+                                                                   ignoreTableOrder: Boolean = false,
     ): QueryWithArgs {
         val context = DslContext(this, WhereDslBase(), qualifier)
         val scope = factory(context)
@@ -315,7 +323,7 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
         if (tableLimit != null) options.limit = tableLimit
         options.extra()
         val order = ordering().apply(orderBy)
-        if (order.terms.isEmpty()) tableOrder?.invoke(order)
+        if (order.terms.isEmpty() && !ignoreTableOrder) tableOrder?.invoke(order)
         return getQuery(source, columns, order, options.query, where)
     }
 }

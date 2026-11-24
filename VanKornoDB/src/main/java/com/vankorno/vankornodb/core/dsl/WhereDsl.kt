@@ -127,19 +127,17 @@ abstract class WhereDsl<W>(                                      private val con
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.inSubquery(
                                                        column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                      orderBy: O.()->Unit = column.defaultOrder,
                                                         extra: X.()->Unit = {},
                                                         where: I.()->Unit = {},
-    ) = this inSubquery subquery(column, orderBy, extra, where)
+    ) = this inSubquery subquery(column, extra = extra, where = where)
     
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.notInSubquery(
                                                        column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                      orderBy: O.()->Unit = column.defaultOrder,
                                                         extra: X.()->Unit = {},
                                                         where: I.()->Unit = {},
-    ) = this notInSubquery subquery(column, orderBy, extra, where)
+    ) = this notInSubquery subquery(column, extra = extra, where = where)
     
     
     
@@ -182,8 +180,9 @@ abstract class WhereDsl<W>(                                      private val con
             qualifier = qualifier,
             columns = arrayOf(projection),
             where = correlation,
-            orderBy = innerColumn.orderWithFallback(orderBy),
-            extra = innerColumn.extraWithLimit(extra)
+            orderBy = if (selectColumn == null) ({}) else innerColumn.orderWithFallback(orderBy),
+            extra = innerColumn.extraWithLimit(extra),
+            ignoreTableOrder = selectColumn == null,
         )
         return Subquery(result.query, result.args)
     }
@@ -192,35 +191,31 @@ abstract class WhereDsl<W>(                                      private val con
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(
                                               matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
                                                   equalTo: Field<W, TypedColumn<T>>,
-                                                  orderBy: O.()->Unit = matchColumn.defaultOrder,
                                                     extra: X.()->Unit = {},
                                                     where: I.()->Unit = {},
-    ) = exists(subquery(equalTo, matchColumn, orderBy = orderBy, extra = extra, where = where))
+    ) = exists(subquery(equalTo, matchColumn, extra = extra, where = where))
     
     
     fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(
                                               matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
                                                   equalTo: Field<W, TypedColumn<T>>,
-                                                  orderBy: O.()->Unit = matchColumn.defaultOrder,
                                                     extra: X.()->Unit = {},
                                                     where: I.()->Unit = {},
-    ) = notExists(subquery(equalTo, matchColumn, orderBy = orderBy, extra = extra, where = where))
+    ) = notExists(subquery(equalTo, matchColumn, extra = extra, where = where))
     
     
     fun exists(subquery: Subquery) = rawClause("EXISTS (${subquery.query})", *subquery.args)
     fun notExists(subquery: Subquery) = rawClause("NOT EXISTS (${subquery.query})", *subquery.args)
     
     fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(              table: DslTable<*, I, O, X>,
-                                                                    orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
                                                                       where: I.()->Unit = {},
-    ) = exists(table.existenceQuery(orderBy, extra, where))
+    ) = exists(table.existenceQuery(extra, where))
 
     fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(           table: DslTable<*, I, O, X>,
-                                                                    orderBy: O.()->Unit = {},
                                                                       extra: X.()->Unit = {},
                                                                       where: I.()->Unit = {},
-    ) = notExists(table.existenceQuery(orderBy, extra, where))
+    ) = notExists(table.existenceQuery(extra, where))
 
     infix fun Subquery.equal(value: String) = builder.subqueryCondition(this, "=", value.toWhereArg())
     infix fun Subquery.equal(value: Boolean) = builder.subqueryCondition(this, "=", value.toWhereArg())

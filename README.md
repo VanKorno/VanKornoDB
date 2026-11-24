@@ -122,11 +122,9 @@ db.getCursor(
         
         // Correlated EXISTS subquery
         exists(
-            subquery(
-                outerColumn = Id,
-                innerColumn = Subscriptions.col { UserId },
-                where = { Active equal true },
-            )
+            matchColumn = Id,
+            equalTo = Subscriptions.col { UserId },
+            where = { Active equal true },
         )
         
         // Direct column comparison to scalar subquery

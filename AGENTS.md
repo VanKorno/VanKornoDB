@@ -39,6 +39,9 @@ class myClass() {
     
 }
 ```
+Also stop removing damn empty lines in general if you didn't put them there, agents!
+
+
 
 2. I like trailing commas in multi-line blocks.
 ```kotlin
@@ -73,69 +76,12 @@ row(
 ```
 
 
-4. I use multi-line fun params almost always, if it's not a one-line function.
-
-```kotlin
-fun myFun(                                                                           arg: Int
-) {
-    first(arg)
-    second()
-}
-
-fun singleLineFun(arg: Int) = otherFun(Int)
-```
-
-5. Multi-line fun params are placed in a special way:
- - on the right side of the "page"
- - centered around the colon (all arg colons have the same position on a line)
- - the param with the longest right side (type and defaults) determines how far to the right all params will be placed.
- - the first param is usually on the same line as the fun name (but only if it can easily fit, otherwise it goes on the next line).
- - there are other rules I'm not getting into right here.
- - comments next to params should not affect param placement at all.
-
-```kotlin
-fun myFun(                                                                 arg1: Int, /* A comment doesn't affect shit */
-                                                                           arg2: Long,
-                                                                           arg3: List<List<String>>, // A comment doesn't affect shit
-) {
-    
-}
-
-fun myFun(                                                   arg1: Int,
-                 reallyLoooooooooooooooooooooooooooooongParamName: Long,
-                                                             arg3: LoooooooooooooooooooongRightSide,
-                                               anotherNormalParam: String = "",
-) {
-    
-}
-```
-AI agents are not required to emulate this param placement style. But they are required not to break placement if it's already in place.
-I have an IDE plugin that does the formatting automatically after a fun is made, so AI agents don't need to bother generating functions with my exact style,
-but it's better if they at least try to put params on the right side, to make it easier for me to read generated code.
+4. I have my own way of formatting multi-line fun/class params (centered around the colon and placed further to the right).
+My IDE plugin does the aligning automatically. AI don't have to try to emulate that style.
 
 
 
-
-
-6. Class constructor params are also placed similarly to my fun param style.
-Normal classes, put things closer to the right page limiter, data classes put things in the middle
-
-```kotlin
-class myClass(                                                                val param1: Int,
-                                                                                  param2: String,
-) {
-    
-}
-
-data class myDataClass(
-                                val param1: Int = -1,
-                                val param2: String,
-)
-```
-Again, AI agents don't have to follow this formatting, but it would be nice if they at least try.
-
-
-7. Return statements that break the flow of a fun are marked with this exact symbol combo: //\/\/\/\/\/\
+5. Return statements that break the flow of a fun are marked with this exact symbol combo: //\/\/\/\/\/\
 Return statements that are all close to each other at the end of the fun don't have to be marked that way,
 but statements that do break the flow of a fun, all have to be marked like that.
 Sometimes I can use a shorter version "//\/\/\" for less flow-breaking things like the continue-statements in a loop.
@@ -157,7 +103,7 @@ fun myFun() {
 ```
 
 
-8. Log statements.
+6. Log statements.
 I use my own logger with functions:
 ```kotlin
 fun dLog(                                                                            tag: String,
@@ -183,7 +129,8 @@ I put my log statements inside custom regions. That makes code more readable, be
 ```
 
 
-9. Preferred continuation indent: 4 (not 8) spaces
+
+7. Preferred continuation indent: 4 (not 8) spaces
 ```kotlin
 Modifier
     .fillMaxSize()
@@ -192,7 +139,7 @@ Modifier
 
 
 
-10. Space between fun
+8. Space between fun
 In general I like to have more space between functions.
 Space between a wrapper-fun and a base fun can be 0-1 lines.
 Overloads - 1-2 lines.
@@ -201,16 +148,6 @@ Normal fun - 2 and more.
 Don't remove spaces anywhere in the file unless you created that space yourself!
 And don't add more space than reasonably needed (if I need more space - I'll add it myself)
 
-
-
-11. KDoc
-Default style for multiline KDoc-descriptions, but single-line descriptions should look like this (with the closing symbols on the next line):
-```kotlin
-
-/** Some stuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuff.
- */
-fun someFun() {}
-```
 
 
 
@@ -233,45 +170,4 @@ with this import:
 import org.junit.Assert.*
 
 
-
-===================================================================================================
-
-# Constants/vals I'm using
-
-DB Constants:
-```Java
-package com.vankorno.vankornodb.core.data;
-
-public class DbConstants {
-    public static final String
-        InMemoryDB = ":memory:",
-        DbTAG = "VanKornoDB",
-        _ID = "id", // Reserved name for int IDs. Entity data classes should have this exact param name.
-        RowID = "ROWID",
-        _Name = "name",
-        _Position = "position",
-        _Type = "type",
-        DbTypeTable = "table",
-        
-        TABLE_EntityVersions = "EntityVersions",
-        EntityVersion = "version",
-        TABLE_AndroidMetadata = "android_metadata",
-        TABLE_Master = "sqlite_master",
-        
-        SELECT = "SELECT ",  FROM = " FROM ",   SELECT_ALL_FROM = "SELECT * FROM ",
-        CREATE_TABLE = "CREATE TABLE IF NOT EXISTS ",
-        DEFAULT = " DEFAULT ",
-        WHERE = " WHERE ",
-        and = " AND ",   or = " OR ",
-        comma = ", ",
-        countAll = "COUNT(*)",
-        ORDER_BY = " ORDER BY ",   ASCENDING = " ASC",    DESCENDING = " DESC",
-        LIKE = " LIKE ",        NOT_LIKE = " NOT LIKE ",
-        IN = " IN ",            NOT_IN = " NOT IN ",
-        LIMIT = " LIMIT ",
-        OFFSET = " OFFSET ",
-        RANDOM = "RANDOM()"
-    ;
-}
-```
 
