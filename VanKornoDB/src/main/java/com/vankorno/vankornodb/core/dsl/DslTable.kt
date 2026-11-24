@@ -25,19 +25,20 @@ class Field<W, out C : TypedColumn<*>> internal constructor(     internal val de
 
 private class RawExpr<W>(sql: String) : SelectExpr<W, Nothing>(sql)
 
-/** Emits the supplied SQL verbatim in a column selection. */
+/** Emits the supplied SQL verbatim in a column selection.
+*/
 fun <W> raw(sql: String): SelectExpr<W, Nothing> = RawExpr(sql)
 
 
 open class TableColumns<
     W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>
-    > internal constructor(
-                                                 internal val table: DslTable<*, W, O, X>,
-                                             internal val selectors: Array<out ColumnSelector<W, C>>,
-                            @PublishedApi internal val defaultOrder: O.()->Unit = {},
-                                          internal val defaultLimit: Int? = null,
+    > internal constructor(                     internal val table: DslTable<*, W, O, X>,
+                                            internal val selectors: Array<out ColumnSelector<W, C>>,
+                           @PublishedApi internal val defaultOrder: O.()->Unit = {},
+                                         internal val defaultLimit: Int? = null,
 ) {
-    internal fun extraWithLimit(extra: X.()->Unit): X.()->Unit {
+    internal fun extraWithLimit(                                                 extra: X.()->Unit
+    ): X.()->Unit {
         val count = defaultLimit ?: return extra //\/\/\/\/\/\
         return {
             limit = count
@@ -49,7 +50,7 @@ open class TableColumns<
     open fun limit(count: Int): TableColumns<W, O, X, C> = TableColumns(table, selectors, defaultOrder, count)
     
     
-    internal fun orderWithFallback(                                              orderBy: O.()->Unit
+    internal fun orderWithFallback(                                            orderBy: O.()->Unit
     ): O.()->Unit =
         if (orderBy === defaultOrder) orderBy else fun O.() {
             orderBy()
@@ -57,8 +58,8 @@ open class TableColumns<
         }
     
     
-    internal fun fieldOrder(                         descending: Boolean,
-                                                       selector: W.()->Field<W, AscendingColumn<*>>,
+    internal fun fieldOrder(                        descending: Boolean,
+                                                      selector: W.()->Field<W, AscendingColumn<*>>,
     ): O.()->Unit {
         val field = table.selectionScope().selector()
         return if (descending) ({ field.flip() }) else ({ field.by() })
@@ -67,7 +68,7 @@ open class TableColumns<
     
     /** Returns a new selection ordered by [field] unless the query supplies its own order.
      */
-    open fun orderBy(                                      field: W.()->Field<W, AscendingColumn<*>>
+    open fun orderBy(                                    field: W.()->Field<W, AscendingColumn<*>>
     ): TableColumns<W, O, X, C> = TableColumns(
         table = table,
         selectors = selectors,
@@ -76,7 +77,7 @@ open class TableColumns<
     )
     
     
-    open fun orderFlip(                                    field: W.()->Field<W, AscendingColumn<*>>
+    open fun orderFlip(                                  field: W.()->Field<W, AscendingColumn<*>>
     ): TableColumns<W, O, X, C> = TableColumns(
         table = table,
         selectors = selectors,
@@ -93,16 +94,15 @@ open class TableColumns<
         TableColumns(table, selectors, { Id.flip() }, defaultLimit)
     
     
-    open fun orderIf(                                 condition: Boolean,
-                                                          field: W.()->Field<W, AscendingColumn<*>>,
+    open fun orderIf(                                condition: Boolean,
+                                                         field: W.()->Field<W, AscendingColumn<*>>,
     ): TableColumns<W, O, X, C> =
         if (condition) orderBy(field) else this
 }
 
 class TableColumn<
     W, O : OrderDsl<W, O>, X : ExtraDsl<W>, out C : TypedColumn<*>
-    > internal constructor(
-                                                                        table: DslTable<*, W, O, X>,
+    > internal constructor(                                             table: DslTable<*, W, O, X>,
                                                         internal val selector: ColumnSelector<W, C>,
                                                                  defaultOrder: O.()->Unit = {},
                                                                  defaultLimit: Int? = null,
@@ -112,7 +112,7 @@ class TableColumn<
     override fun limit(count: Int): TableColumn<W, O, X, C> = TableColumn(table, selector, defaultOrder, count)
     
     
-    override fun orderBy(                                  field: W.()->Field<W, AscendingColumn<*>>
+    override fun orderBy(                                field: W.()->Field<W, AscendingColumn<*>>
     ): TableColumn<W, O, X, C> = TableColumn(
         table = table,
         selector = selector,
@@ -121,7 +121,7 @@ class TableColumn<
     )
     
     
-    override fun orderFlip(                                field: W.()->Field<W, AscendingColumn<*>>
+    override fun orderFlip(                              field: W.()->Field<W, AscendingColumn<*>>
     ): TableColumn<W, O, X, C> = TableColumn(
         table = table,
         selector = selector,
@@ -138,8 +138,8 @@ class TableColumn<
         TableColumn(table, selector, { Id.flip() }, defaultLimit)
     
     
-    override fun orderIf(                             condition: Boolean,
-                                                          field: W.()->Field<W, AscendingColumn<*>>,
+    override fun orderIf(                            condition: Boolean,
+                                                         field: W.()->Field<W, AscendingColumn<*>>,
     ): TableColumn<W, O, X, C> =
         if (condition) orderBy(field) else this
 }
@@ -174,7 +174,7 @@ open class MiniDslTable<out I : TableInfo<*>, W> internal constructor(
         return state
     }
     
-    fun where(                                                                     block: W.()->Unit
+    fun where(                                                                   block: W.()->Unit
     ): QueryWithArgs {
         val predicate = predicate(name, block)
         return QueryWithArgs(predicate.buildStr(), predicate.args.toTypedArray())
@@ -190,7 +190,8 @@ open class MiniDslTable<out I : TableInfo<*>, W> internal constructor(
     
     /** Selects one schema descriptor for APIs that accept a typed column directly.
      */
-    fun <C : TypedColumn<*>> select(column: W.()->Field<W, C>): C =
+    fun <C : TypedColumn<*>> select(                                     column: W.()->Field<W, C>
+    ): C =
         selectionScope().column().definition
     
     
@@ -198,7 +199,7 @@ open class MiniDslTable<out I : TableInfo<*>, W> internal constructor(
     internal fun columnSql(column: ColumnSelector<W, *>): String = selectionScope().column().sql
     
     
-    internal fun select(                      columns: Array<out ColumnSelector<W, TypedColumn<*>>>
+    internal fun select(                     columns: Array<out ColumnSelector<W, TypedColumn<*>>>
     ): Array<String> {
         val scope = selectionScope()
         return Array(columns.size) { idx -> columns[idx](scope).sql }
@@ -206,13 +207,17 @@ open class MiniDslTable<out I : TableInfo<*>, W> internal constructor(
 }
 
 
-open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>> internal constructor(
-                                                                           info: I,
-                                                                        factory: (DslContext<W>)->W,
-                                                       private val orderFactory: (W)->O,
-                                                       private val extraFactory: (W)->X,
-                                                        internal val tableOrder: (O.()->Unit)? = null,
-                                                         private val tableLimit: Int? = null,
+open class DslTable<
+    out I : TableInfo<*>,
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > internal constructor(                                              info: I,
+                                                                      factory: (DslContext<W>)->W,
+                                                     private val orderFactory: (W)->O,
+                                                     private val extraFactory: (W)->X,
+                                                      internal val tableOrder: (O.()->Unit)? = null,
+                                                       private val tableLimit: Int? = null,
 ) : MiniDslTable<I, W>(info, factory) {
     
     /** Returns a table whose reads use [count] as their default row limit.
@@ -223,14 +228,14 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
     
     /** Returns a table whose reads default to ascending order by [field].
      */
-    fun orderBy(                                           field: W.()->Field<W, AscendingColumn<*>>
+    fun orderBy(                                         field: W.()->Field<W, AscendingColumn<*>>
     ): DslTable<I, W, O, X> {
         val selected = selectionScope().field()
         return DslTable(info, factory, orderFactory, extraFactory, { selected.by() }, tableLimit)
     }
     
     
-    fun orderFlip(                                         field: W.()->Field<W, AscendingColumn<*>>
+    fun orderFlip(                                       field: W.()->Field<W, AscendingColumn<*>>
     ): DslTable<I, W, O, X> {
         val selected = selectionScope().field()
         return DslTable(info, factory, orderFactory, extraFactory, { selected.flip() }, tableLimit)
@@ -245,20 +250,20 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
         DslTable(info, factory, orderFactory, extraFactory, { Id.flip() }, tableLimit)
     
     
-    fun orderIf(                                       condition: Boolean,
-                                                           field: W.()->Field<W, AscendingColumn<*>>,
+    fun orderIf(                                     condition: Boolean,
+                                                         field: W.()->Field<W, AscendingColumn<*>>,
     ): DslTable<I, W, O, X> = if (condition) orderBy(field) else this
     
     
     
-    fun <C : TypedColumn<*>> col(                                         block: ColumnSelector<W, C>
+    fun <C : TypedColumn<*>> col(                                      block: ColumnSelector<W, C>
     ): TableColumn<W, O, X, C> {
         val selected = selectionScope().block()
         return TableColumn(this, selector = { selected })
     }
     
     
-    fun <C : TypedColumn<*>> columns(                            block: W.()->List<SelectExpr<W, C>>
+    fun <C : TypedColumn<*>> columns(                          block: W.()->List<SelectExpr<W, C>>
     ): TableColumns<W, O, X, C> {
         val selected = selectionScope().block()
         
@@ -273,10 +278,10 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
     
     
     
-    internal fun query(         columns: Array<out ColumnSelector<W, TypedColumn<*>>> = emptyArray(),
-                                orderBy: O.()->Unit = {},
-                                  extra: X.()->Unit = {},
-                                  where: W.()->Unit = {},
+    internal fun query(       columns: Array<out ColumnSelector<W, TypedColumn<*>>> = emptyArray(),
+                              orderBy: O.()->Unit = {},
+                                extra: X.()->Unit = {},
+                                where: W.()->Unit = {},
     ): QueryWithArgs {
         val names = if (columns.isEmpty())
                         arrayOf("*")
@@ -287,8 +292,8 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
     
     
     
-    internal fun existenceQuery(                                                 extra: X.()->Unit = {},
-                                                                                 where: W.()->Unit = {},
+    internal fun existenceQuery(                                            extra: X.()->Unit = {},
+                                                                            where: W.()->Unit = {},
     ): Subquery {
         val result = render(
             source = name,
@@ -304,13 +309,13 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
     
     
     
-    internal fun render(                                                     source: String,
-                                                                          qualifier: String,
-                                                                            columns: Array<String>,
-                                                                              where: WhereDslBase,
-                                                                            orderBy: O.()->Unit,
-                                                                              extra: X.()->Unit,
-                                                                   ignoreTableOrder: Boolean = false,
+    internal fun render(                                                   source: String,
+                                                                        qualifier: String,
+                                                                          columns: Array<String>,
+                                                                            where: WhereDslBase,
+                                                                          orderBy: O.()->Unit,
+                                                                            extra: X.()->Unit,
+                                                                 ignoreTableOrder: Boolean = false,
     ): QueryWithArgs {
         val context = DslContext(this, WhereDslBase(), qualifier)
         val scope = factory(context)
@@ -329,8 +334,13 @@ open class DslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>
 }
 
 
-class FullDslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> internal constructor(
-                                                                           info: I,
+class FullDslTable<
+    out I : TableInfo<*>,
+    W,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>,
+    S : SetDsl<W>
+    > internal constructor(                                                info: I,
                                                                           where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
@@ -338,16 +348,25 @@ class FullDslTable<out I : TableInfo<*>, W, O : OrderDsl<W, O>, X : ExtraDsl<W>,
 ) : DslTable<I, W, O, X>(info, where, order, extra)
 
 
-
-fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>> I.withDsl(
-                                                                          where: (DslContext<W>)->W,
+fun <
+    E : DbEntity,
+    I : TableInfo<E>,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>
+    > I.withDsl(                                                          where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
 ) = DslTable(this, where, order, extra)
 
-
-fun <E : DbEntity, I : TableInfo<E>, W : WhereDsl<W>, O : OrderDsl<W, O>, X : ExtraDsl<W>, S : SetDsl<W>> I.withDsl(
-                                                                          where: (DslContext<W>)->W,
+fun <
+    E : DbEntity,
+    I : TableInfo<E>,
+    W : WhereDsl<W>,
+    O : OrderDsl<W, O>,
+    X : ExtraDsl<W>,
+    S : SetDsl<W>
+    > I.withDsl(                                                          where: (DslContext<W>)->W,
                                                                           order: (W)->O,
                                                                           extra: (W)->X,
                                                                             set: (W)->S,

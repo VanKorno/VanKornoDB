@@ -7,12 +7,13 @@ import com.vankorno.vankornodb.core.data.Subquery
 import com.vankorno.vankornodb.dbManagement.data.*
 
 @DslInject
-abstract class WhereDsl<W>(                                      private val context: DslContext<W>
+abstract class WhereDsl<W>(                                     private val context: DslContext<W>
 ) : DslWithIdAndRowId<W> {
+    
     infix fun <C : TypedColumn<*>> SelectExpr<W, C>.then(next: SelectExpr<W, C>) = listOf(this, next)
-
+    
     infix fun <C : TypedColumn<*>> List<SelectExpr<W, C>>.then(next: SelectExpr<W, C>) = this + next
-
+    
     private val builder get() = context.builder
     
     private fun appendGroup(                                                  operator: String,
@@ -27,16 +28,16 @@ abstract class WhereDsl<W>(                                      private val con
         }
     }
     
-    fun rawClause(                                                                   sql: String,
-                                                                             vararg args: String,
+    fun rawClause(                                                                 sql: String,
+                                                                           vararg args: String,
     ) {
         builder.clauses += (if (builder.clauses.isEmpty()) "" else "AND ") + sql
         builder.args += args
     }
     
-    private fun likeValues(                                                 name: String,
-                                                                          values: Array<out String>,
-                                                                        positive: Boolean,
+    private fun likeValues(                                                name: String,
+                                                                         values: Array<out String>,
+                                                                       positive: Boolean,
     ) {
         builder.multCompareRaw(
             column = name,
@@ -49,8 +50,7 @@ abstract class WhereDsl<W>(                                      private val con
     
     protected fun <C : TypedColumn<*>> column(definition: C) = Field<W, C>(definition)
     
-    
-    protected fun <C : TypedColumn<*>> column(                               definitions: List<C>
+    protected fun <C : TypedColumn<*>> column(                             definitions: List<C>
     ): List<Field<W, C>> =
         object : AbstractList<Field<W, C>>() {
             override val size get() = definitions.size
@@ -70,13 +70,39 @@ abstract class WhereDsl<W>(                                      private val con
     infix fun <T : Number> Field<W, NumberColumn<T>>.less(value: T) = builder.condition(definition.name, "<", value.toWhereArg())
     infix fun <T : Number> Field<W, NumberColumn<T>>.lessEqual(value: T) = builder.condition(definition.name, "<=", value.toWhereArg())
     
-    infix fun <T> Field<W, AscendingColumn<T>>.equalCol(other: Field<W, AscendingColumn<T>>) = builder.conditionRaw(definition.name, "=", other.definition.name)
-    infix fun <T> Field<W, AscendingColumn<T>>.notEqualCol(other: Field<W, AscendingColumn<T>>) = builder.conditionRaw(definition.name, "!=", other.definition.name)
     
-    infix fun <T : Number> Field<W, NumberColumn<T>>.greaterCol(other: Field<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, ">", other.definition.name)
-    infix fun <T : Number> Field<W, NumberColumn<T>>.greaterEqualCol(other: Field<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, ">=", other.definition.name)
-    infix fun <T : Number> Field<W, NumberColumn<T>>.lessCol(other: Field<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, "<", other.definition.name)
-    infix fun <T : Number> Field<W, NumberColumn<T>>.lessEqualCol(other: Field<W, NumberColumn<T>>) = builder.conditionRaw(definition.name, "<=", other.definition.name)
+    infix fun <T> Field<W, AscendingColumn<T>>.equalCol(       other: Field<W, AscendingColumn<T>>
+    ) = builder.conditionRaw(
+        definition.name, "=", other.definition.name
+    )
+    
+    infix fun <T> Field<W, AscendingColumn<T>>.notEqualCol(    other: Field<W, AscendingColumn<T>>
+    ) = builder.conditionRaw(
+        definition.name, "!=", other.definition.name
+    )
+    
+    infix fun <T : Number> Field<W, NumberColumn<T>>.greaterCol(
+                                                                  other: Field<W, NumberColumn<T>>
+    ) = builder.conditionRaw(
+        definition.name, ">", other.definition.name
+    )
+    
+    infix fun <T : Number> Field<W, NumberColumn<T>>.greaterEqualCol(
+                                                                  other: Field<W, NumberColumn<T>>
+    ) = builder.conditionRaw(
+        definition.name, ">=", other.definition.name
+    )
+    
+    infix fun <T : Number> Field<W, NumberColumn<T>>.lessCol(     other: Field<W, NumberColumn<T>>
+    ) = builder.conditionRaw(
+        definition.name, "<", other.definition.name
+    )
+    
+    infix fun <T : Number> Field<W, NumberColumn<T>>.lessEqualCol(
+                                                                  other: Field<W, NumberColumn<T>>
+    ) = builder.conditionRaw(
+        definition.name, "<=", other.definition.name
+    )
     
     infix fun Field<W, StrCol>.like(value: String) = builder.condition(definition.name, " LIKE ", value.toWhereArg())
     infix fun Field<W, StrCol>.notLike(value: String) = builder.condition(definition.name, " NOT LIKE ", value.toWhereArg())
@@ -85,8 +111,21 @@ abstract class WhereDsl<W>(                                      private val con
     
     fun Field<W, StrCol>.likeAny(vararg values: String) = likeValues(definition.name, values, true)
     fun Field<W, StrCol>.notLikeAny(vararg values: String) = likeValues(definition.name, values, false)
-    fun Field<W, StrCol>.likeAnyCol(vararg others: Field<W, StrCol>) = builder.multCompareRaw(definition.name, " LIKE ", others.map { it.definition.name }.toTypedArray(), true)
-    fun Field<W, StrCol>.notLikeAnyCol(vararg others: Field<W, StrCol>) = builder.multCompareRaw(definition.name, " NOT LIKE ", others.map { it.definition.name }.toTypedArray(), false)
+    
+    fun Field<W, StrCol>.likeAnyCol(                               vararg others: Field<W, StrCol>
+    ) = builder.multCompareRaw(
+        column = definition.name,
+        operator = " LIKE ",
+        otherCols = others.map { it.definition.name }.toTypedArray(),
+        positive = true
+    )
+    fun Field<W, StrCol>.notLikeAnyCol(                            vararg others: Field<W, StrCol>
+    ) = builder.multCompareRaw(
+        column = definition.name,
+        operator = " NOT LIKE ",
+        otherCols = others.map { it.definition.name }.toTypedArray(),
+        positive = false
+    )
     
     
     private fun Field<W, *>.compareAny(                                  operator: String,
@@ -124,32 +163,40 @@ abstract class WhereDsl<W>(                                      private val con
     infix fun Field<W, TypedColumn<*>>.notEqualAny(subquery: Subquery) = this notInSubquery subquery
     
     
-    
-    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.inSubquery(
-                                                       column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                        extra: X.()->Unit = {},
-                                                        where: I.()->Unit = {},
+    fun <
+        I,
+        T,
+        O : OrderDsl<I, O>,
+        X : ExtraDsl<I>
+        > Field<W, TypedColumn<T>>.inSubquery(        column: TableColumn<I, O, X, TypedColumn<T>>,
+                                                       extra: X.()->Unit = {},
+                                                       where: I.()->Unit = {},
     ) = this inSubquery subquery(column, extra = extra, where = where)
     
-    
-    
-    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> Field<W, TypedColumn<T>>.notInSubquery(
-                                                       column: TableColumn<I, O, X, TypedColumn<T>>,
-                                                        extra: X.()->Unit = {},
-                                                        where: I.()->Unit = {},
+    fun <
+        I,
+        T,
+        O : OrderDsl<I, O>,
+        X : ExtraDsl<I>
+        > Field<W, TypedColumn<T>>.notInSubquery(     column: TableColumn<I, O, X, TypedColumn<T>>,
+                                                       extra: X.()->Unit = {},
+                                                       where: I.()->Unit = {},
     ) = this notInSubquery subquery(column, extra = extra, where = where)
-    
     
     
     /** Correlates the selected inner and outer columns. With no projection, selects 1 for EXISTS.
      */
-    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> subquery(
-                                              outerColumn: Field<W, TypedColumn<T>>,
-                                              innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
-                                             selectColumn: ColumnSelector<I, TypedColumn<*>>? = null,
-                                                  orderBy: O.()->Unit = innerColumn.defaultOrder,
-                                                    extra: X.()->Unit = {},
-                                                    where: I.()->Unit = {},
+    fun <
+        I,
+        T,
+        O : OrderDsl<I, O>,
+        X : ExtraDsl<I>
+        > subquery(                         outerColumn: Field<W, TypedColumn<T>>,
+                                            innerColumn: TableColumn<I, O, X, TypedColumn<T>>,
+                                           selectColumn: ColumnSelector<I, TypedColumn<*>>? = null,
+                                                orderBy: O.()->Unit = innerColumn.defaultOrder,
+                                                  extra: X.()->Unit = {},
+                                                  where: I.()->Unit = {},
     ): Subquery {
         val table = innerColumn.table
         val outer = context.qualifier
@@ -188,35 +235,42 @@ abstract class WhereDsl<W>(                                      private val con
     }
     
     
-    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(
-                                              matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
-                                                  equalTo: Field<W, TypedColumn<T>>,
-                                                    extra: X.()->Unit = {},
-                                                    where: I.()->Unit = {},
+    fun <
+        I,
+        T,
+        O : OrderDsl<I, O>,
+        X : ExtraDsl<I>
+        > exists(                                matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
+                                                     equalTo: Field<W, TypedColumn<T>>,
+                                                       extra: X.()->Unit = {},
+                                                       where: I.()->Unit = {},
     ) = exists(subquery(equalTo, matchColumn, extra = extra, where = where))
     
-    
-    fun <I, T, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(
-                                              matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
-                                                  equalTo: Field<W, TypedColumn<T>>,
-                                                    extra: X.()->Unit = {},
-                                                    where: I.()->Unit = {},
+    fun <
+        I,
+        T,
+        O : OrderDsl<I, O>,
+        X : ExtraDsl<I>
+        > notExists(                             matchColumn: TableColumn<I, O, X, TypedColumn<T>>,
+                                                     equalTo: Field<W, TypedColumn<T>>,
+                                                       extra: X.()->Unit = {},
+                                                       where: I.()->Unit = {},
     ) = notExists(subquery(equalTo, matchColumn, extra = extra, where = where))
     
     
     fun exists(subquery: Subquery) = rawClause("EXISTS (${subquery.query})", *subquery.args)
     fun notExists(subquery: Subquery) = rawClause("NOT EXISTS (${subquery.query})", *subquery.args)
     
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(              table: DslTable<*, I, O, X>,
-                                                                      extra: X.()->Unit = {},
-                                                                      where: I.()->Unit = {},
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> exists(               table: DslTable<*, I, O, X>,
+                                                                       extra: X.()->Unit = {},
+                                                                       where: I.()->Unit = {},
     ) = exists(table.existenceQuery(extra, where))
-
-    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(           table: DslTable<*, I, O, X>,
-                                                                      extra: X.()->Unit = {},
-                                                                      where: I.()->Unit = {},
+    
+    fun <I, O : OrderDsl<I, O>, X : ExtraDsl<I>> notExists(            table: DslTable<*, I, O, X>,
+                                                                       extra: X.()->Unit = {},
+                                                                       where: I.()->Unit = {},
     ) = notExists(table.existenceQuery(extra, where))
-
+    
     infix fun Subquery.equal(value: String) = builder.subqueryCondition(this, "=", value.toWhereArg())
     infix fun Subquery.equal(value: Boolean) = builder.subqueryCondition(this, "=", value.toWhereArg())
     infix fun Subquery.equal(value: Number) = builder.subqueryCondition(this, "=", value.toString())
