@@ -27,6 +27,10 @@ fun <
     db.reorder(table, id, moveUpOrBack, makeFirstOrLast, where)
 }
 
+
+/** Moves a row one position, or to the first or last position, among rows matching [where].
+ * Returns false when the row has no available move.
+ */
 fun <
     W : WhereDsl<W>,
     O : OrderDsl<W, O>,
@@ -38,41 +42,28 @@ fun <
                                                                         where: W.()->Unit = {},
 ): Boolean {
     table.info.requirePositionColumn()
-    beginTransaction()
-    try {
-        val moved = reorderRow(table, id, moveUpOrBack, makeFirstOrLast, where)
-        setTransactionSuccessful()
-        return moved
-    } finally {
-        endTransaction()
-    }
-}
-
-
-
-
-private fun <
-    W : WhereDsl<W>,
-    O : OrderDsl<W, O>,
-    X : ExtraDsl<W>
-    > SQLiteDatabase.reorderRow(                                        table: DslTable<*, W, O, X>,
-                                                                           id: Long,
-                                                                 moveUpOrBack: Boolean,
-                                                              makeFirstOrLast: Boolean,
-                                                                        where: W.()->Unit,
-): Boolean {
+    
     fun identifier(name: String) = "\"" + name.replace("\"", "\"\"") + "\""
     
     val source = identifier(table.name)
     val pos = _Position
     val key = identifier(_ID)
     val predicate = table.where(where)
-    val filter = if (predicate.query.isBlank()) "" else " AND (${predicate.query})"
+    
+    val filter = if (predicate.query.isBlank())
+                    ""
+                else
+                    " AND (${predicate.query})"
     
     val position = rawQuery(
         "SELECT $pos FROM $source WHERE $key = ?$filter",
         arrayOf(id.toString(), *predicate.args),
-    ).use { if (it.moveToFirst()) it.getLong(0) else null } ?: return false //\/\/\/\/\/\
+    ).use {
+        if (it.moveToFirst())
+            it.getLong(0)
+        else
+            null
+    } ?: return false //\/\/\/\/\/\
     
     fun setPosition(                                                             rowId: Long,
                                                                                  value: Long,
@@ -103,11 +94,15 @@ private fun <
     
     val comparison = if (moveUpOrBack) "<" else ">"
     val direction = if (moveUpOrBack) "DESC" else "ASC"
+    
     val neighbour = rawQuery(
         "SELECT $key, $pos FROM $source WHERE $pos $comparison ?$filter ORDER BY $pos $direction LIMIT 1",
         arrayOf(position.toString(), *predicate.args),
     ).use { cursor ->
-        if (cursor.moveToFirst()) cursor.getLong(0) to cursor.getLong(1) else null
+        if (cursor.moveToFirst())
+            cursor.getLong(0) to cursor.getLong(1)
+        else
+            null
     } ?: return false //\/\/\/\/\/\
     
     setPosition(id, neighbour.second)
